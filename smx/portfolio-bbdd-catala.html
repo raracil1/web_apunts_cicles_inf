@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bases de Dades — LibreOffice Base</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0d1117;--surface:#161b22;--surface2:#21262d;
+  --border:#30363d;--accent:#58a6ff;--accent2:#3fb950;
+  --accent3:#f78166;--accent4:#d2a8ff;--accent5:#ffa657;
+  --text:#e6edf3;--text2:#8b949e;--text3:#c9d1d9;
+  --keyword:#ff7b72;--type:#79c0ff;--string:#a5d6ff;
+  --comment:#6e7681;--func:#d2a8ff;--num:#f2cc60;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-height:100vh;overflow-x:hidden;font-size:16px;line-height:1.6}
+
+/* SIDEBAR NAV */
+#sidebar{
+  position:fixed;left:0;top:0;height:100vh;width:260px;
+  background:var(--surface);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;z-index:100;overflow-y:auto;
+  transition:transform .3s ease;
+}
+.logo{padding:28px 24px 20px;border-bottom:1px solid var(--border)}
+.logo h1{font-size:1.1rem;font-weight:800;color:var(--accent);letter-spacing:-.02em}
+.logo p{font-size:.78rem;color:var(--text2);margin-top:4px;line-height:1.4}
+.nav-items{padding:12px 0;flex:1}
+.nav-group{margin-bottom:4px}
+.nav-group-label{font-size:.68rem;font-weight:800;color:var(--text2);text-transform:uppercase;
+  letter-spacing:.1em;padding:8px 20px 4px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 20px;
+  cursor:pointer;border-left:3px solid transparent;
+  color:var(--text2);font-size:.88rem;font-weight:600;
+  transition:all .2s;text-decoration:none}
+.nav-item:hover{color:var(--text);background:rgba(88,166,255,.06);border-left-color:var(--accent)}
+.nav-item.active{color:var(--accent);background:rgba(88,166,255,.1);border-left-color:var(--accent)}
+.nav-item .icon{font-size:1rem;width:20px;text-align:center}
+.sidebar-footer{padding:16px 20px;border-top:1px solid var(--border)}
+.badge{display:inline-block;background:rgba(63,185,80,.15);color:var(--accent2);
+  font-size:.68rem;font-weight:700;padding:2px 8px;border-radius:20px;border:1px solid rgba(63,185,80,.3)}
+
+/* MAIN */
+#main{margin-left:260px;padding:48px 52px;max-width:calc(100% - 260px)}
+.page{display:none;animation:fadeUp .4s ease}
+.page.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,rgba(88,166,255,.08) 0%,rgba(210,168,255,.06) 100%);
+  border:1px solid var(--border);border-radius:16px;padding:44px 48px;margin-bottom:36px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-80px;right:-80px;width:300px;height:300px;
+  background:radial-gradient(circle,rgba(88,166,255,.12) 0%,transparent 70%);pointer-events:none}
+.hero h2{font-size:2.2rem;font-weight:800;letter-spacing:-.04em;margin-bottom:12px}
+.hero h2 span{color:var(--accent)}
+.hero p{color:var(--text2);line-height:1.8;max-width:600px;font-size:1rem}
+.hero-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:20px}
+.tag{background:var(--surface2);border:1px solid var(--border);color:var(--text3);
+  font-size:.76rem;font-weight:700;padding:4px 12px;border-radius:20px}
+
+/* SECTION TITLES */
+.section-title{font-size:1.45rem;font-weight:800;color:var(--text);margin:36px 0 16px;
+  display:flex;align-items:center;gap:10px;letter-spacing:-.02em}
+.section-title::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* CARDS */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;
+  padding:24px 28px;margin-bottom:20px}
+.card h3{font-size:1.05rem;font-weight:700;color:var(--text);margin-bottom:12px;
+  display:flex;align-items:center;gap:8px}
+.card p{color:var(--text2);line-height:1.8;font-size:.94rem;margin-bottom:10px}
+.card p:last-child{margin-bottom:0}
+.card ul,.card ol{color:var(--text2);padding-left:20px;font-size:.94rem;line-height:2}
+.card li strong{color:var(--text3)}
+
+/* GRID CARDS */
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-bottom:20px}
+.grid-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:22px}
+.grid-card .icon{font-size:1.8rem;margin-bottom:12px}
+.grid-card h4{font-size:.95rem;font-weight:800;color:var(--text);margin-bottom:8px}
+.grid-card p{font-size:.88rem;color:var(--text2);line-height:1.7}
+
+/* CALLOUTS */
+.callout{border-radius:10px;padding:16px 20px;margin:16px 0;display:flex;gap:12px;font-size:.9rem;line-height:1.7}
+.callout-icon{font-size:1.1rem;flex-shrink:0;margin-top:1px}
+.callout.info{background:rgba(88,166,255,.08);border:1px solid rgba(88,166,255,.2);color:var(--text3)}
+.callout.warning{background:rgba(255,166,87,.08);border:1px solid rgba(255,166,87,.2);color:var(--text3)}
+.callout.success{background:rgba(63,185,80,.08);border:1px solid rgba(63,185,80,.2);color:var(--text3)}
+
+/* CODE */
+pre{background:#0d1117;border:1px solid var(--border);border-radius:10px;padding:20px 22px;
+  overflow-x:auto;margin:14px 0;position:relative}
+pre code{font-family:'JetBrains Mono',monospace;font-size:.82rem;line-height:1.8;color:var(--text3)}
+.lang-label{position:absolute;top:8px;right:14px;font-family:'JetBrains Mono',monospace;
+  font-size:.65rem;color:var(--text2);text-transform:uppercase;letter-spacing:.08em}
+.k{color:var(--keyword)}
+.t{color:var(--type)}
+.s{color:var(--string)}
+.c{color:var(--comment);font-style:italic}
+.f{color:var(--func)}
+.n{color:var(--num)}
+
+/* TABLES */
+.table-wrap{overflow-x:auto;margin:16px 0;border-radius:10px;border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;font-size:.9rem}
+th{background:var(--surface2);color:var(--text);font-weight:800;padding:12px 16px;text-align:left;
+  border-bottom:1px solid var(--border)}
+td{padding:11px 16px;color:var(--text2);border-bottom:1px solid rgba(48,54,61,.7)}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(88,166,255,.04)}
+code{font-family:'JetBrains Mono',monospace;font-size:.8rem;
+  background:rgba(88,166,255,.1);color:var(--accent);padding:2px 7px;border-radius:5px}
+
+/* STEPS */
+.steps{counter-reset:step;margin:14px 0}
+.step{display:flex;gap:16px;margin-bottom:16px;padding:18px 20px;
+  background:var(--surface);border:1px solid var(--border);border-radius:10px}
+.step::before{counter-increment:step;content:counter(step);
+  background:var(--accent);color:#0d1117;font-weight:800;font-size:.85rem;
+  min-width:26px;height:26px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;flex-shrink:0;margin-top:1px}
+.step-content h4{font-size:.94rem;font-weight:700;color:var(--text);margin-bottom:4px}
+.step-content p{font-size:.88rem;color:var(--text2);line-height:1.7;margin:0}
+
+/* RELATIONS DIAGRAM */
+.rel-diagram{display:flex;align-items:center;justify-content:center;gap:0;
+  margin:20px 0;flex-wrap:wrap}
+.rel-table{background:var(--surface2);border:1px solid var(--border);border-radius:10px;
+  min-width:170px;overflow:hidden}
+.rel-header{background:rgba(88,166,255,.15);border-bottom:1px solid var(--border);
+  padding:10px 14px;font-size:.88rem;font-weight:700;color:var(--accent);
+  display:flex;align-items:center;gap:6px}
+.rel-field{padding:7px 14px;font-size:.82rem;color:var(--text2);border-bottom:1px solid rgba(48,54,61,.5);
+  display:flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace}
+.rel-field:last-child{border-bottom:none}
+.pk{color:var(--num);font-size:.72rem;font-weight:700;border:1px solid var(--num);
+  padding:1px 5px;border-radius:4px}
+.fk{color:var(--accent5);font-size:.72rem;font-weight:700;border:1px solid var(--accent5);
+  padding:1px 5px;border-radius:4px}
+.rel-arrow{font-size:1.4rem;color:var(--text2);padding:0 8px}
+
+/* EXERCISE CARD */
+.exercise{border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:20px}
+.exercise-header{background:var(--surface2);padding:18px 24px;
+  display:flex;align-items:center;gap:12px;cursor:pointer;
+  justify-content:space-between}
+.exercise-header h3{font-size:1rem;font-weight:700;color:var(--text);
+  display:flex;align-items:center;gap:10px}
+.exercise-body{padding:24px;background:var(--surface)}
+.exercise-body p{color:var(--text2);font-size:.92rem;line-height:1.8;margin-bottom:12px}
+.difficulty{font-size:.72rem;font-weight:700;padding:3px 10px;border-radius:20px}
+.diff-easy{background:rgba(63,185,80,.15);color:var(--accent2)}
+.diff-med{background:rgba(255,166,87,.15);color:var(--accent5)}
+.diff-hard{background:rgba(247,129,102,.15);color:var(--accent3)}
+
+/* MOBILE TOGGLE */
+#menu-toggle{display:none;position:fixed;top:16px;left:16px;z-index:200;
+  background:var(--surface);border:1px solid var(--border);color:var(--text);
+  width:40px;height:40px;border-radius:8px;font-size:1.2rem;cursor:pointer}
+@media(max-width:800px){
+  #sidebar{transform:translateX(-100%)}
+  #sidebar.open{transform:translateX(0)}
+  #main{margin-left:0;padding:24px 20px;max-width:100%;padding-top:64px}
+  #menu-toggle{display:flex;align-items:center;justify-content:center}
+  .hero{padding:28px 24px}
+  .hero h2{font-size:1.6rem}
+}
+
+/* PROGRESS BAR */
+#progress{position:fixed;top:0;left:0;height:2px;background:var(--accent);z-index:1000;
+  transition:width .3s ease;width:0}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+<button id="menu-toggle" onclick="toggleSidebar()">☰</button>
+
+<aside id="sidebar">
+  <div class="logo">
+    <h1>📊 DB Portfolio</h1>
+    <p>LibreOffice Base · Grau Mitjà</p>
+  </div>
+  <nav class="nav-items">
+    <div class="nav-group">
+      <div class="nav-group-label">Fonaments</div>
+      <a class="nav-item active" onclick="showPage('intro')"><span class="icon">🏠</span> Introducció</a>
+      <a class="nav-item" onclick="showPage('relacional')"><span class="icon">🔗</span> Model Relacional</a>
+      <a class="nav-item" onclick="showPage('tipus')"><span class="icon">🏷️</span> Camps i Tipus</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-label">Pràctica SQL</div>
+      <a class="nav-item" onclick="showPage('taules')"><span class="icon">🛠️</span> Crear Taules</a>
+      <a class="nav-item" onclick="showPage('inserir')"><span class="icon">➕</span> Inserir Dades</a>
+      <a class="nav-item" onclick="showPage('consultes')"><span class="icon">🔍</span> Consultes SELECT</a>
+      <a class="nav-item" onclick="showPage('dml')"><span class="icon">✏️</span> UPDATE &amp; DELETE</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-label">LibreOffice Base</div>
+      <a class="nav-item" onclick="showPage('grafic')"><span class="icon">🖱️</span> Interfície Gràfica</a>
+      <a class="nav-item" onclick="showPage('formularis')"><span class="icon">📋</span> Formularis</a>
+      <a class="nav-item" onclick="showPage('informes')"><span class="icon">📄</span> Informes</a>
+    </div>
+    <div class="nav-group">
+      <div class="nav-group-label">Exercicis</div>
+      <a class="nav-item" onclick="showPage('exercicis')"><span class="icon">💪</span> Exercicis Pràctics</a>
+      <a class="nav-item" onclick="showPage('projecte')"><span class="icon">🚀</span> Projecte Final</a>
+    </div>
+  </nav>
+  <div class="sidebar-footer">
+    <span class="badge">HSQLDB 2.x</span>&nbsp;
+    <span class="badge" style="background:rgba(210,168,255,.15);color:var(--accent4);border-color:rgba(210,168,255,.3)">SQL:2003</span>
+  </div>
+</aside>
+
+<main id="main">
+
+<!-- ═══════════════ INTRO ═══════════════ -->
+<section id="intro" class="page active">
+  <div class="hero">
+    <h2>Bases de Dades amb<br><span>LibreOffice Base</span></h2>
+    <p>Portafoli complet de teoria i pràctica per al mòdul d'Ofimàtica, Grau Mitjà d'Informàtica. Aprendràs des dels conceptes fonamentals fins a la creació de formularis i informes.</p>
+    <div class="hero-tags">
+      <span class="tag">🗄️ Model Relacional</span>
+      <span class="tag">📝 SQL</span>
+      <span class="tag">🖱️ LibreOffice Base</span>
+      <span class="tag">📋 Formularis</span>
+      <span class="tag">🔍 Consultes</span>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="grid-card">
+      <div class="icon">🗄️</div>
+      <h4>Què és una Base de Dades?</h4>
+      <p>Conjunt organitzat de dades emmagatzemades electrònicament, estructurades per facilitar-ne l'accés, la gestió i l'actualització eficient.</p>
+    </div>
+    <div class="grid-card">
+      <div class="icon">⚙️</div>
+      <h4>SGBD</h4>
+      <p>Sistema Gestor de Bases de Dades: programari que gestiona l'emmagatzematge, l'accés i la seguretat de les dades. LibreOffice Base utilitza el motor <strong>HSQLDB</strong>.</p>
+    </div>
+    <div class="grid-card">
+      <div class="icon">🔒</div>
+      <h4>Avantatges</h4>
+      <p>Elimina redundàncies, garanteix la integritat de les dades, permet l'accés multiusuari i facilita consultes complexes de manera eficient.</p>
+    </div>
+    <div class="grid-card">
+      <div class="icon">🧩</div>
+      <h4>Conceptes clau</h4>
+      <p><strong>Taula</strong> = files + columnes. <strong>Registre</strong> = una fila. <strong>Camp</strong> = una columna. <strong>Clau</strong> = identificador únic.</p>
+    </div>
+  </div>
+
+  <div class="section-title">Anatomia d'una taula</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>🔑 ID_Alumne (PK)</th><th>DNI</th><th>Nom</th><th>Cognoms</th><th>Correu</th><th>Data_Alta</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>12345678A</td><td>Joan</td><td>García López</td><td>joan@correu.cat</td><td>2024-09-01</td></tr>
+        <tr><td>2</td><td>87654321B</td><td>Maria</td><td>Pérez Ruiz</td><td>maria@correu.cat</td><td>2024-09-01</td></tr>
+        <tr><td>3</td><td>11223344C</td><td>Carles</td><td>Martínez Sanz</td><td>carles@correu.cat</td><td>2024-09-02</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout info"><span class="callout-icon">💡</span><div>Cada <strong>fila</strong> és un registre. Cada <strong>columna</strong> és un camp. El camp <strong>ID_Alumne</strong> és la clau primària: identifica de manera única cada registre i mai no es pot repetir ni ser NULL.</div></div>
+</section>
+
+<!-- ═══════════════ MODEL RELACIONAL ═══════════════ -->
+<section id="relacional" class="page">
+  <div class="hero">
+    <h2>Model <span>Relacional</span></h2>
+    <p>Les dades s'organitzen en taules que es relacionen entre elles mitjançant claus. Dissenyat per E.F. Codd el 1970, continua sent el model dominant avui dia.</p>
+  </div>
+
+  <div class="section-title">Clau Primària (PRIMARY KEY)</div>
+  <div class="card">
+    <p>Camp (o conjunt de camps) que <strong style="color:var(--accent)">identifica de manera única</strong> cada fila de la taula.</p>
+    <ul>
+      <li>✅ Valor <strong>únic</strong> a tota la taula</li>
+      <li>✅ Mai no pot ser <strong>NULL</strong></li>
+      <li>✅ No hauria de canviar al llarg del temps</li>
+      <li>✅ L'ideal és que sigui un nombre enter autoincremental (<code>IDENTITY</code>)</li>
+    </ul>
+  </div>
+
+  <div class="section-title">Clau Forània (FOREIGN KEY)</div>
+  <div class="card">
+    <p>Camp en una taula que <strong style="color:var(--accent5)">fa referència</strong> a la clau primària d'una altra taula. Estableix la relació entre taules i garanteix la integritat referencial.</p>
+  </div>
+
+  <div class="section-title">Diagrama de relació — Exemple Botiga</div>
+  <div class="rel-diagram">
+    <div class="rel-table">
+      <div class="rel-header">🧑 CLIENTS</div>
+      <div class="rel-field"><span class="pk">PK</span> ID_Client</div>
+      <div class="rel-field">DNI</div>
+      <div class="rel-field">Nom</div>
+      <div class="rel-field">Correu</div>
+    </div>
+    <div class="rel-arrow">1──▶</div>
+    <div class="rel-table">
+      <div class="rel-header">🛒 COMANDES</div>
+      <div class="rel-field"><span class="pk">PK</span> ID_Comanda</div>
+      <div class="rel-field"><span class="fk">FK</span> ID_Client</div>
+      <div class="rel-field">Data</div>
+      <div class="rel-field">Total</div>
+    </div>
+    <div class="rel-arrow">N──▶</div>
+    <div class="rel-table">
+      <div class="rel-header">📦 LÍNIES</div>
+      <div class="rel-field"><span class="pk">PK</span> ID_Linia</div>
+      <div class="rel-field"><span class="fk">FK</span> ID_Comanda</div>
+      <div class="rel-field"><span class="fk">FK</span> ID_Producte</div>
+      <div class="rel-field">Quantitat</div>
+    </div>
+  </div>
+
+  <div class="section-title">Tipus de relacions</div>
+  <div class="grid">
+    <div class="grid-card">
+      <div class="icon">1️⃣</div>
+      <h4>Un a Un (1:1)</h4>
+      <p>Un registre d'A es relaciona amb un únic registre de B.</p>
+      <p><strong>Ex:</strong> Persona ↔ Passaport</p>
+    </div>
+    <div class="grid-card">
+      <div class="icon">🔁</div>
+      <h4>Un a Molts (1:N)</h4>
+      <p>Un registre d'A es relaciona amb diversos de B. La FK va a la taula del costat "molts".</p>
+      <p><strong>Ex:</strong> Client → Comandes</p>
+    </div>
+    <div class="grid-card">
+      <div class="icon">🔀</div>
+      <h4>Molts a Molts (N:M)</h4>
+      <p>Es resol amb una <strong>taula intermèdia</strong> que conté les FK de les dues taules.</p>
+      <p><strong>Ex:</strong> Alumnes ↔ Assignatures</p>
+    </div>
+  </div>
+
+  <div class="callout warning"><span class="callout-icon">⚠️</span><div><strong>Integritat referencial:</strong> No pots inserir una FK que no existeixi a la taula referenciada. Tampoc pots eliminar un registre pare si té fills relacionats (tret que facis servir <code>ON DELETE CASCADE</code>).</div></div>
+</section>
+
+<!-- ═══════════════ CAMPS I TIPUS ═══════════════ -->
+<section id="tipus" class="page">
+  <div class="hero">
+    <h2>Camps i <span>Tipus de Dades</span></h2>
+    <p>Cada camp d'una taula té un tipus que defineix quina mena d'informació pot emmagatzemar i quant espai ocupa.</p>
+  </div>
+
+  <div class="section-title">Tipus de dades a HSQLDB</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Tipus</th><th>Descripció</th><th>Rang / Format</th><th>Exemple</th></tr></thead>
+      <tbody>
+        <tr><td><code>INTEGER</code></td><td>Enter estàndard</td><td>-2.147.483.648 a 2.147.483.647</td><td>25, -10</td></tr>
+        <tr><td><code>BIGINT</code></td><td>Enter gran</td><td>±9,2 × 10¹⁸</td><td>9000000000</td></tr>
+        <tr><td><code>SMALLINT</code></td><td>Enter petit</td><td>-32.768 a 32.767</td><td>100</td></tr>
+        <tr><td><code>DECIMAL(p,s)</code></td><td>Decimal exacte</td><td>p dígits, s decimals</td><td>DECIMAL(10,2) → 12345.67</td></tr>
+        <tr><td><code>DOUBLE</code></td><td>Decimal aproximat</td><td>Doble precisió IEEE 754</td><td>3.14159</td></tr>
+        <tr><td><code>VARCHAR(n)</code></td><td>Text variable</td><td>Fins a n caràcters</td><td>VARCHAR(100)</td></tr>
+        <tr><td><code>CHAR(n)</code></td><td>Text fix</td><td>Exactament n caràcters</td><td>CHAR(2) → 'CA'</td></tr>
+        <tr><td><code>BOOLEAN</code></td><td>Lògic</td><td>TRUE / FALSE</td><td>TRUE</td></tr>
+        <tr><td><code>DATE</code></td><td>Data</td><td>YYYY-MM-DD</td><td>'2024-09-15'</td></tr>
+        <tr><td><code>TIME</code></td><td>Hora</td><td>HH:MM:SS</td><td>'14:30:00'</td></tr>
+        <tr><td><code>TIMESTAMP</code></td><td>Data i hora</td><td>YYYY-MM-DD HH:MM:SS</td><td>'2024-09-15 14:30:00'</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section-title">Restriccions de camp</div>
+  <div class="grid">
+    <div class="grid-card"><h4><code>NOT NULL</code></h4><p>El camp no pot quedar buit. Obligatori en camps essencials.</p></div>
+    <div class="grid-card"><h4><code>UNIQUE</code></h4><p>Tots els valors han de ser diferents. Per a camps com DNI o correu electrònic.</p></div>
+    <div class="grid-card"><h4><code>DEFAULT valor</code></h4><p>Valor per defecte si no s'especifica. Ex: <code>DEFAULT CURRENT_DATE</code></p></div>
+    <div class="grid-card"><h4><code>IDENTITY</code></h4><p>Autoincrement. El motor assigna el número següent automàticament. Ideal per a PKs.</p></div>
+    <div class="grid-card"><h4><code>CHECK (condició)</code></h4><p>Valida que el valor compleixi la condició. Ex: <code>CHECK (Edat >= 0)</code></p></div>
+    <div class="grid-card"><h4><code>PRIMARY KEY</code></h4><p>Combinació de NOT NULL + UNIQUE. Identifica de manera única el registre.</p></div>
+  </div>
+
+  <div class="callout info"><span class="callout-icon">💡</span><div>Per a diners fes servir sempre <code>DECIMAL</code>, mai <code>DOUBLE</code> (els decimals aproximats acumulen errors d'arrodoniment). Per a textos de longitud variable, <code>VARCHAR</code> és més eficient que <code>CHAR</code>.</div></div>
+</section>
+
+<!-- ═══════════════ CREAR TAULES ═══════════════ -->
+<section id="taules" class="page">
+  <div class="hero">
+    <h2>Crear <span>Taules</span></h2>
+    <p>Dos mètodes: la interfície gràfica de LibreOffice Base o sentències SQL. Tots dos creen el mateix resultat.</p>
+  </div>
+
+  <div class="section-title">Mètode 1 — Vista Disseny (Gràfic)</div>
+  <div class="steps">
+    <div class="step"><div class="step-content"><h4>Obrir la vista disseny</h4><p>Panell esquerre → Taules → "Crea una taula en la vista Disseny…"</p></div></div>
+    <div class="step"><div class="step-content"><h4>Definir els camps</h4><p>Per a cada camp: escriu el <strong>Nom</strong>, selecciona el <strong>Tipus</strong> i al panell inferior configura la longitud, el valor predeterminat, l'entrada requerida (NOT NULL) i el valor automàtic (IDENTITY).</p></div></div>
+    <div class="step"><div class="step-content"><h4>Establir la Clau Primària</h4><p>Clic dret sobre la fila del camp → "Clau primària". Apareixerà la icona 🔑.</p></div></div>
+    <div class="step"><div class="step-content"><h4>Desar</h4><p>Ctrl+S → Assigna un nom a la taula → Accepta.</p></div></div>
+  </div>
+
+  <div class="section-title">Mètode 2 — SQL (CREATE TABLE)</div>
+  <pre><code><span class="lang-label">SQL</span><span class="c">-- Taula bàsica de clients</span>
+<span class="k">CREATE TABLE</span> CLIENTS (
+    ID_Client   <span class="t">INTEGER</span>      <span class="k">IDENTITY PRIMARY KEY</span>,
+    DNI         <span class="t">VARCHAR</span>(<span class="n">9</span>)   <span class="k">NOT NULL UNIQUE</span>,
+    Nom         <span class="t">VARCHAR</span>(<span class="n">50</span>)  <span class="k">NOT NULL</span>,
+    Cognoms     <span class="t">VARCHAR</span>(<span class="n">100</span>) <span class="k">NOT NULL</span>,
+    Correu      <span class="t">VARCHAR</span>(<span class="n">100</span>),
+    Telefon     <span class="t">VARCHAR</span>(<span class="n">15</span>),
+    Actiu       <span class="t">BOOLEAN</span>      <span class="k">DEFAULT</span> <span class="k">TRUE</span>,
+    Data_Alta   <span class="t">DATE</span>         <span class="k">DEFAULT</span> CURRENT_DATE
+);</code></pre>
+
+  <pre><code><span class="lang-label">SQL</span><span class="c">-- Taula amb clau forània</span>
+<span class="k">CREATE TABLE</span> COMANDES (
+    ID_Comanda  <span class="t">INTEGER</span>       <span class="k">IDENTITY PRIMARY KEY</span>,
+    ID_Client   <span class="t">INTEGER</span>       <span class="k">NOT NULL</span>,
+    Data        <span class="t">DATE</span>          <span class="k">DEFAULT</span> CURRENT_DATE,
+    Total       <span class="t">DECIMAL</span>(<span class="n">10</span>,<span class="n">2</span>) <span class="k">NOT NULL</span>,
+    Estat       <span class="t">VARCHAR</span>(<span class="n">20</span>)   <span class="k">DEFAULT</span> <span class="s">'Pendent'</span>,
+    <span class="k">FOREIGN KEY</span> (ID_Client) <span class="k">REFERENCES</span> CLIENTS(ID_Client)
+);</code></pre>
+
+  <div class="section-title">Modificar i eliminar taules</div>
+  <pre><code><span class="lang-label">SQL</span><span class="c">-- Afegir columna</span>
+<span class="k">ALTER TABLE</span> CLIENTS <span class="k">ADD COLUMN</span> Adreca <span class="t">VARCHAR</span>(<span class="n">200</span>);
+
+<span class="c">-- Eliminar columna</span>
+<span class="k">ALTER TABLE</span> CLIENTS <span class="k">DROP COLUMN</span> Adreca;
+
+<span class="c">-- Canviar tipus (HSQLDB)</span>
+<span class="k">ALTER TABLE</span> CLIENTS <span class="k">ALTER COLUMN</span> Correu <span class="k">SET DATA TYPE</span> <span class="t">VARCHAR</span>(<span class="n">150</span>);
+
+<span class="c">-- Eliminar taula completa (IRREVERSIBLE!)</span>
+<span class="k">DROP TABLE</span> COMANDES;
+<span class="k">DROP TABLE</span> CLIENTS;</code></pre>
+  <div class="callout warning"><span class="callout-icon">⚠️</span><div>Per eliminar taules amb FK, primer elimina les taules <strong>fill</strong> (les que tenen la FK) i després la taula <strong>pare</strong>.</div></div>
+</section>
+
+<!-- ═══════════════ INSERIR DADES ═══════════════ -->
+<section id="inserir" class="page">
+  <div class="hero">
+    <h2>Inserir <span>Dades</span></h2>
+    <p>Pots introduir dades directament al full de dades o fent servir la sentència SQL <code>INSERT INTO</code>.</p>
+  </div>
+
+  <div class="section-title">Mètode gràfic</div>
+  <div class="card">
+    <p>Doble clic sobre la taula al panell de Taules → S'obre el full de dades → Escriu directament a les cel·les → En canviar de fila, les dades es desen automàticament.</p>
+    <div class="callout info" style="margin-top:12px"><span class="callout-icon">💡</span><div>Els camps amb <code>IDENTITY</code> s'omplen sols. Els camps amb <code>DEFAULT</code> es poden deixar en blanc i s'aplicarà el valor predeterminat.</div></div>
+  </div>
+
+  <div class="section-title">INSERT INTO — Sintaxi SQL</div>
+  <pre><code><span class="lang-label">SQL</span><span class="c">-- Un sol registre (especificant columnes)</span>
+<span class="k">INSERT INTO</span> CLIENTS (DNI, Nom, Cognoms, Correu)
+<span class="k">VALUES</span> (<span class="s">'12345678A'</span>, <span class="s">'Joan'</span>, <span class="s">'García López'</span>, <span class="s">'joan@correu.cat'</span>);
+
+<span class="c">-- Diversos registres alhora</span>
+<span class="k">INSERT INTO</span> CLIENTS (DNI, Nom, Cognoms, Correu, Telefon)
+<span class="k">VALUES</span>
+    (<span class="s">'11111111A'</span>, <span class="s">'Anna'</span>,  <span class="s">'López Vera'</span>,    <span class="s">'anna@correu.cat'</span>,  <span class="s">'611000001'</span>),
+    (<span class="s">'22222222B'</span>, <span class="s">'Pere'</span>,  <span class="s">'Sanz Ruiz'</span>,     <span class="s">'pere@correu.cat'</span>,  <span class="s">'622000002'</span>),
+    (<span class="s">'33333333C'</span>, <span class="s">'Laura'</span>, <span class="s">'Fernández Gil'</span>, <span class="s">'laura@correu.cat'</span>, <span class="s">'633000003'</span>);
+
+<span class="c">-- Amb FK (ID_Client ha d'existir a CLIENTS)</span>
+<span class="k">INSERT INTO</span> COMANDES (ID_Client, Total, Estat)
+<span class="k">VALUES</span> (<span class="n">1</span>, <span class="n">245.50</span>, <span class="s">'Enviat'</span>);
+
+<span class="c">-- Fent servir funcions de data</span>
+<span class="k">INSERT INTO</span> COMANDES (ID_Client, Total)
+<span class="k">VALUES</span> (<span class="n">2</span>, <span class="n">89.99</span>); <span class="c">-- Data = CURRENT_DATE, Estat = 'Pendent' (per defecte)</span></code></pre>
+
+  <div class="section-title">Tipus de valors a INSERT</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Tipus de dada</th><th>Format</th><th>Exemple</th></tr></thead>
+      <tbody>
+        <tr><td>Nombre enter</td><td>Sense cometes</td><td><code>42</code>, <code>-10</code></td></tr>
+        <tr><td>Nombre decimal</td><td>Amb punt (sense cometes)</td><td><code>3.14</code>, <code>199.99</code></td></tr>
+        <tr><td>Text</td><td>Entre cometes simples <code>' '</code></td><td><code>'Joan García'</code></td></tr>
+        <tr><td>Data</td><td>Cometes simples YYYY-MM-DD</td><td><code>'2024-09-15'</code></td></tr>
+        <tr><td>Booleà</td><td>Sense cometes</td><td><code>TRUE</code>, <code>FALSE</code></td></tr>
+        <tr><td>Buit</td><td>Sense cometes</td><td><code>NULL</code></td></tr>
+        <tr><td>Data actual</td><td>Funció sense cometes</td><td><code>CURRENT_DATE</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══════════════ CONSULTES ═══════════════ -->
+<section id="consultes" class="page">
+  <div class="hero">
+    <h2>Consultes <span>SELECT</span></h2>
+    <p>La sentència més usada en SQL. Permet recuperar, filtrar, ordenar i agrupar dades d'una o diverses taules.</p>
+  </div>
+
+  <div class="section-title">Estructura general</div>
+  <pre><code><span class="lang-label">SQL</span><span class="k">SELECT</span>   camps           <span class="c">-- què mostrar</span>
+<span class="k">FROM</span>     taula(es)       <span class="c">-- d'on</span>
+<span class="k">WHERE</span>    condició        <span class="c">-- filtre de files</span>
+<span class="k">GROUP BY</span> camp           <span class="c">-- agrupar</span>
+<span class="k">HAVING</span>   condició       <span class="c">-- filtre de grups</span>
+<span class="k">ORDER BY</span> camp [ASC|DESC] <span class="c">-- ordenar</span>
+<span class="k">LIMIT</span>    n;             <span class="c">-- limitar resultats</span></code></pre>
+
+  <div class="section-title">Exemples bàsics</div>
+  <pre><code><span class="lang-label">SQL</span><span class="c">-- Tots els camps</span>
+<span class="k">SELECT</span> * <span class="k">FROM</span> CLIENTS;
+
+<span class="c">-- Camps específics</span>
+<span class="k">SELECT</span> Nom, Cognoms, Correu <span class="k">FROM</span> CLIENTS;
+
+<span class="c">-- Àlies de columna</span>
+<span class="k">SELECT</span> Nom <span class="k">AS</span> <span class="s">'Nom Client'</span>, Correu <span class="k">AS</span> <span class="s">'Adreça electrònica'</span> <span class="k">FROM</span> CLIENTS;
+
+<span class="c">-- Sense duplicats</span>
+<span class="k">SELECT DISTINCT</span> Estat <span class="k">FROM</span> COMANDES;</code></pre>
+
+  <div class="section-title">Filtres amb WHERE</div>
+  <pre><code><span class="lang-label">SQL</span><span class="c">-- Comparació exacta</span>
+<span class="k">SELECT</span> * <span class="k">FROM</span> CLIENTS <span class="k">WHERE</span> DNI = <span class="s">'12345678A'</span>;
+
+<span class="c">-- Major/menor</span>
+<span class="k">SELECT</span> * <span class="k">FROM</span> PRODUCTES <span class="k">WHERE</span> Preu > <span class="n">50</span>;
+
+<span class="c">-- AND / OR / NOT</span>
+<span class="k">SELECT</span> * <span class="k">FROM</span> PRODUCTES <span class="k">WHERE</span> Preu > <span class="n">50</span> <span class="k">AND</span> Stock < <span class="n">20</span>;
+<span class="k">SELECT</span> * <span class="k">FROM</span> CLIENTS   <span class="k">WHERE</span> Nom = <span class="s">'Anna'</span> <span class="k">OR</span> Nom = <span class="s">'Joan'</span>;
+
+<span class="c">-- BETWEEN (rang inclusiu)</span>
+<span class="k">SELECT</span> * <span class="k">FROM</span> PRODUCTES <span class="k">WHERE</span> Preu <span class="k">BETWEEN</span> <span class="n">20</span> <span class="k">AND</span> <span class="n">100</span>;
+
+<span class="c">-- IN (llista de valors)</span>
+<span class="k">SELECT</span> * <span class="k">FROM</span> COMANDES  <span class="k">WHERE</span> Estat <span class="k">IN</span> (<span class="s">'Pendent'</span>, <span class="s">'En procés'</span>);
+
+<span class="c">-- LIKE (patrons): % = diversos caràcters, _ = un sol caràcter</span>
+<span class="k">SELECT</span> * <span class="k">FROM</span> CLIENTS   <span class="k">WHERE</span> Nom     <span class="k">LIKE</span> <span class="s">'J%'</span>;        <span class="c">-- comença per J</span>
+<span class="k">SELECT</span> * <span class="k">FROM</span> CLIENTS   <span class="k">WHERE</span> Correu  <span class="k">LIKE</span> <span class="s">'%@gmail.com'</span>;
+<span class="k">SELECT</span> * <span class="k">FROM</span> CLIENTS   <span class="k">WHERE</span> Cognoms <span class="k">LIKE</span> <span class="s">'%García%'</span>;
+
+<span class="c">-- IS NULL / IS NOT NULL</span>
+<span class="k">SELECT</span> * <span class="k">FROM</span> CLIENTS   <span class="k">WHERE</span> Correu <span class="k">IS NULL</span>;</code></pre>
+
+  <div class="section-title">Ordenar i limitar</div>
+  <pre><code><span class="lang-label">SQL</span><span class="c">-- Ordenar (ASC per defecte)</span>
+<span class="k">SELECT</span> * <span class="k">FROM</span> PRODUCTES <span class="k">ORDER BY</span> Preu <span class="k">DESC</span>;
+<span class="k">SELECT</span> * <span class="k">FROM</span> CLIENTS   <span class="k">ORDER BY</span> Cognoms <span class="k">ASC</span>, Nom <span class="k">ASC</span>;
+
+<span class="c">-- Top 5 (HSQLDB fa servir TOP n abans del camp, o LIMIT al final)</span>
+<span class="k">SELECT TOP</span> <span class="n">5</span> * <span class="k">FROM</span> PRODUCTES <span class="k">ORDER BY</span> Preu <span class="k">DESC</span>;</code></pre>
+
+  <div class="section-title">Funcions d'agregació</div>
+  <pre><code><span class="lang-label">SQL</span><span class="k">SELECT</span> <span class="f">COUNT</span>(*)           <span class="k">AS</span> Total_Clients    <span class="k">FROM</span> CLIENTS;
+<span class="k">SELECT</span> <span class="f">SUM</span>(Total)          <span class="k">AS</span> Vendes_Totals    <span class="k">FROM</span> COMANDES;
+<span class="k">SELECT</span> <span class="f">AVG</span>(Preu)           <span class="k">AS</span> Preu_Mitja       <span class="k">FROM</span> PRODUCTES;
+<span class="k">SELECT</span> <span class="f">MAX</span>(Preu), <span class="f">MIN</span>(Preu)               <span class="k">FROM</span> PRODUCTES;
+
+<span class="c">-- GROUP BY: agrupa i aplica funcions per grup</span>
+<span class="k">SELECT</span>   ID_Client, <span class="f">COUNT</span>(*) <span class="k">AS</span> Num_Comandes, <span class="f">SUM</span>(Total) <span class="k">AS</span> Total_Gastat
+<span class="k">FROM</span>     COMANDES
+<span class="k">GROUP BY</span> ID_Client
+<span class="k">HAVING</span>   <span class="f">SUM</span>(Total) > <span class="n">200</span>   <span class="c">-- HAVING filtra GRUPS (no files)</span>
+<span class="k">ORDER BY</span> Total_Gastat <span class="k">DESC</span>;</code></pre>
+
+  <div class="section-title">JOIN — Consultes multitaula</div>
+  <pre><code><span class="lang-label">SQL</span><span class="c">-- INNER JOIN: només files amb coincidència a les dues taules</span>
+<span class="k">SELECT</span> C.Nom, C.Cognoms, P.Data, P.Total
+<span class="k">FROM</span>   COMANDES P
+<span class="k">INNER JOIN</span> CLIENTS C <span class="k">ON</span> P.ID_Client = C.ID_Client;
+
+<span class="c">-- LEFT JOIN: tots els clients (tinguin o no comandes)</span>
+<span class="k">SELECT</span> C.Nom, C.Cognoms, P.ID_Comanda, P.Total
+<span class="k">FROM</span>   CLIENTS C
+<span class="k">LEFT JOIN</span> COMANDES P <span class="k">ON</span> C.ID_Client = P.ID_Client;
+
+<span class="c">-- JOIN triple: comanda + client + producte</span>
+<span class="k">SELECT</span> C.Nom, P.Data, PR.Nom <span class="k">AS</span> Producte, L.Quantitat
+<span class="k">FROM</span>   LINIES_COMANDA L
+<span class="k">JOIN</span>   COMANDES  P  <span class="k">ON</span> L.ID_Comanda  = P.ID_Comanda
+<span class="k">JOIN</span>   CLIENTS   C  <span class="k">ON</span> P.ID_Client   = C.ID_Client
+<span class="k">JOIN</span>   PRODUCTES PR <span class="k">ON</span> L.ID_Producte = PR.ID_Producte;</code></pre>
+
+  <div class="callout info"><span class="callout-icon">💡</span><div>Fes servir <strong>àlies de taula</strong> (la lletra darrere del nom) per escurçar les consultes amb JOIN. Ex: <code>FROM COMANDES P</code> — després pots escriure <code>P.Total</code> en lloc de <code>COMANDES.Total</code>.</div></div>
+</section>
+
+<!-- ═══════════════ UPDATE & DELETE ═══════════════ -->
+<section id="dml" class="page">
+  <div class="hero">
+    <h2>UPDATE i <span>DELETE</span></h2>
+    <p>Modificar i eliminar registres amb SQL. Utilitza sempre <code>WHERE</code> per no afectar tota la taula.</p>
+  </div>
+
+  <div class="section-title">UPDATE — Modificar dades</div>
+  <pre><code><span class="lang-label">SQL</span><span class="c">-- Actualitzar un camp d'un registre concret</span>
+<span class="k">UPDATE</span> CLIENTS
+<span class="k">SET</span>    Correu = <span class="s">'nou@correu.cat'</span>
+<span class="k">WHERE</span>  ID_Client = <span class="n">1</span>;
+
+<span class="c">-- Actualitzar diversos camps alhora</span>
+<span class="k">UPDATE</span> CLIENTS
+<span class="k">SET</span>    Nom = <span class="s">'Maria Josep'</span>, Telefon = <span class="s">'699000001'</span>
+<span class="k">WHERE</span>  DNI = <span class="s">'22222222B'</span>;
+
+<span class="c">-- Actualitzar amb càlcul</span>
+<span class="k">UPDATE</span> PRODUCTES
+<span class="k">SET</span>    Preu = Preu * <span class="n">1.05</span>   <span class="c">-- pujada del 5%</span>
+<span class="k">WHERE</span>  ID_Categoria = <span class="n">3</span>;
+
+<span class="c">-- Actualitzar basat en una altra taula (subconsulta)</span>
+<span class="k">UPDATE</span> COMANDES
+<span class="k">SET</span>    Estat = <span class="s">'Completat'</span>
+<span class="k">WHERE</span>  Data < <span class="s">'2024-01-01'</span> <span class="k">AND</span> Estat = <span class="s">'Enviat'</span>;</code></pre>
+
+  <div class="callout warning"><span class="callout-icon">⚠️</span><div>Un <code>UPDATE</code> <strong>sense</strong> <code>WHERE</code> modifica <em>tots</em> els registres de la taula. Abans d'executar-lo, prova el <code>WHERE</code> amb un <code>SELECT</code> per comprovar quines files afecta.</div></div>
+
+  <div class="section-title">DELETE — Eliminar dades</div>
+  <pre><code><span class="lang-label">SQL</span><span class="c">-- Eliminar un registre concret</span>
+<span class="k">DELETE FROM</span> CLIENTS <span class="k">WHERE</span> ID_Client = <span class="n">5</span>;
+
+<span class="c">-- Eliminar diversos amb condició</span>
+<span class="k">DELETE FROM</span> COMANDES <span class="k">WHERE</span> Estat = <span class="s">'Cancel·lat'</span> <span class="k">AND</span> Data < <span class="s">'2023-01-01'</span>;
+
+<span class="c">-- Buidar taula (però mantenir l'estructura)</span>
+<span class="k">DELETE FROM</span> REGISTRES_SISTEMA;   <span class="c">-- esborra totes les files, la taula segueix existint</span></code></pre>
+  <div class="callout warning"><span class="callout-icon">⚠️</span><div>No pots eliminar un registre <strong>pare</strong> si té registres <strong>fill</strong> relacionats (FK). Primer elimina els fills o fes servir <code>ON DELETE CASCADE</code> a la definició de la FK.</div></div>
+</section>
+
+<!-- ═══════════════ INTERFÍCIE GRÀFICA ═══════════════ -->
+<section id="grafic" class="page">
+  <div class="hero">
+    <h2>Interfície <span>Gràfica</span> de Base</h2>
+    <p>LibreOffice Base ofereix eines visuals per treballar amb taules, consultes i relacions sense escriure SQL.</p>
+  </div>
+
+  <div class="section-title">Crear taules gràficament</div>
+  <div class="steps">
+    <div class="step"><div class="step-content"><h4>Noves taules</h4><p>Panell esquerre → <strong>Taules</strong> → "Crea una taula en la vista Disseny…"</p></div></div>
+    <div class="step"><div class="step-content"><h4>Definir cada camp</h4><p>Escriu el nom, selecciona el tipus al desplegable. Al panell inferior configura: longitud, valor predeterminat, entrada requerida (NOT NULL) i valor automàtic (IDENTITY).</p></div></div>
+    <div class="step"><div class="step-content"><h4>Clau primària</h4><p>Clic dret sobre la fila del camp → "Clau primària". Apareixerà la icona 🔑.</p></div></div>
+    <div class="step"><div class="step-content"><h4>Desar</h4><p>Ctrl+S. Base preguntarà si vols crear una clau primària si no n'hi ha cap de definida.</p></div></div>
+  </div>
+
+  <div class="section-title">Eina de Relacions</div>
+  <div class="card">
+    <h3>🔗 Crear relacions entre taules</h3>
+    <p>Ves a <strong>Eines → Relacions…</strong> S'obre una finestra on pots:</p>
+    <ul>
+      <li>Afegir les taules que participen en la relació</li>
+      <li>Arrossegar el camp FK d'una taula al camp PK de l'altra</li>
+      <li>Configurar la <strong>integritat referencial</strong>: què passa en actualitzar o eliminar (Res, Cascada, Establir NULL)</li>
+    </ul>
+    <div class="callout info" style="margin-top:14px"><span class="callout-icon">💡</span><div>Les relacions creades aquí s'utilitzen automàticament després en construir consultes i formularis amb subformularis.</div></div>
+  </div>
+
+  <div class="section-title">Consultes amb l'assistent gràfic</div>
+  <div class="steps">
+    <div class="step"><div class="step-content"><h4>Panell Consultes</h4><p>Fes clic a <strong>Consultes</strong> → "Crea una consulta en la vista Disseny…"</p></div></div>
+    <div class="step"><div class="step-content"><h4>Afegir taules</h4><p>Selecciona les taules o consultes que necessites. Les relacions s'afegeixen automàticament si les vas definir abans.</p></div></div>
+    <div class="step"><div class="step-content"><h4>Seleccionar camps</h4><p>Doble clic sobre cada camp per afegir-lo a la graella inferior. Configura criteris, ordre i agrupació a la graella.</p></div></div>
+    <div class="step"><div class="step-content"><h4>Executar / Desar</h4><p>F5 o botó "Executa la consulta" per veure els resultats. Desa-la amb un nom descriptiu.</p></div></div>
+  </div>
+</section>
+
+<!-- ═══════════════ FORMULARIS ═══════════════ -->
+<section id="formularis" class="page">
+  <div class="hero">
+    <h2><span>Formularis</span></h2>
+    <p>Interfícies gràfiques per introduir, visualitzar i editar dades de manera còmoda. Molt més pràctic que la vista de full de dades.</p>
+  </div>
+
+  <div class="section-title">Crear un formulari amb l'Assistent</div>
+  <div class="steps">
+    <div class="step"><div class="step-content"><h4>Accedir a l'assistent</h4><p>Panell esquerre → <strong>Formularis</strong> → "Utilitza l'assistent per a crear formularis…"</p></div></div>
+    <div class="step"><div class="step-content"><h4>Seleccionar taula i camps</h4><p>Tria la taula font. Mou els camps desitjats al panell dret amb els botons <strong>&gt;</strong> o <strong>&gt;&gt;</strong>.</p></div></div>
+    <div class="step"><div class="step-content"><h4>Subformulari (opcional)</h4><p>Si necessites mostrar dades d'una taula relacionada (p. ex: comandes d'un client), activa el subformulari i tria la taula secundària.</p></div></div>
+    <div class="step"><div class="step-content"><h4>Disposició</h4><p>Tria com es distribueixen els controls: <strong>Columnes</strong> (etiqueta a l'esquerra), <strong>Tabular</strong> (files de registres), <strong>Full de dades</strong>, etc.</p></div></div>
+    <div class="step"><div class="step-content"><h4>Estil i nom</h4><p>Tria colors/estil, assigna un nom al formulari i selecciona "Treballar amb el formulari" o "Modificar el formulari".</p></div></div>
+  </div>
+
+  <div class="section-title">Controls principals</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Control</th><th>Ús habitual</th><th>Camp idoni</th></tr></thead>
+      <tbody>
+        <tr><td>📝 Camp de text</td><td>Entrada lliure de text</td><td>Nom, Correu, Adreça</td></tr>
+        <tr><td>🔢 Quadre numèric</td><td>Entrada de nombres amb validació</td><td>Edat, Quantitat, Preu</td></tr>
+        <tr><td>📅 Camp de data</td><td>Selector de data amb calendari</td><td>Data_Naixement, Data_Alta</td></tr>
+        <tr><td>✅ Casella de verificació</td><td>Valors Sí/No</td><td>Actiu, Disponible, Pagat</td></tr>
+        <tr><td>🔽 Llista desplegable</td><td>Selecció d'una llista fixa</td><td>Estat, Gènere, País</td></tr>
+        <tr><td>📋 Quadre de llista</td><td>Selecció de registres d'una altra taula</td><td>ID_Client, ID_Producte</td></tr>
+        <tr><td>🔘 Botó d'opció</td><td>Selecció exclusiva entre pocs valors</td><td>Tipus de pagament</td></tr>
+        <tr><td>🖱️ Botó</td><td>Accions: desar, cercar, navegar</td><td>—</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section-title">Propietats clau d'un control</div>
+  <div class="card">
+    <p>Clic dret sobre un control → "Propietats del control" (o F4). Propietats més importants:</p>
+    <ul>
+      <li><strong>Camp de dades:</strong> a quina columna de la taula està vinculat</li>
+      <li><strong>Longitud màxima:</strong> nombre màxim de caràcters permesos</li>
+      <li><strong>Entrada requerida:</strong> si és Sí, no es pot desar el registre sense aquest valor</li>
+      <li><strong>Només lectura:</strong> l'usuari pot veure però no editar (ideal per a IDs)</li>
+      <li><strong>Ordre de tabulació:</strong> la seqüència de camps en prémer Tab</li>
+    </ul>
+  </div>
+
+  <div class="section-title">Barra de navegació</div>
+  <div class="card">
+    <p>LibreOffice Base afegeix automàticament una barra de navegació al formulari amb els botons:</p>
+    <p style="font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--accent);letter-spacing:.05em">
+      |◄  ◄  ●  ►  ►|  |  +  –  ✓  ✗
+    </p>
+    <ul>
+      <li><code>|◄ ◄ ► ►|</code> — Navegar entre registres</li>
+      <li><code>+</code> — Nou registre en blanc</li>
+      <li><code>–</code> — Eliminar el registre actual</li>
+      <li><code>✓</code> — Desar canvis / <code>✗</code> — Descartar canvis</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ═══════════════ INFORMES ═══════════════ -->
+<section id="informes" class="page">
+  <div class="hero">
+    <h2><span>Informes</span></h2>
+    <p>Els informes permeten presentar les dades de manera estructurada i llesta per imprimir o exportar.</p>
+  </div>
+
+  <div class="section-title">Crear un informe amb l'Assistent</div>
+  <div class="steps">
+    <div class="step"><div class="step-content"><h4>Panell Informes</h4><p>Panell esquerre → <strong>Informes</strong> → "Utilitza l'assistent per a crear informes…"</p></div></div>
+    <div class="step"><div class="step-content"><h4>Seleccionar l'origen</h4><p>Tria la taula o consulta que servirà de font de dades. Afegeix els camps que vols mostrar.</p></div></div>
+    <div class="step"><div class="step-content"><h4>Agrupació</h4><p>Pots agrupar les dades per un camp (p. ex: agrupar comandes per client) per obtenir subtotals.</p></div></div>
+    <div class="step"><div class="step-content"><h4>Criteris d'ordenació</h4><p>Defineix fins a 4 camps d'ordenació amb la seva direcció (ASC/DESC).</p></div></div>
+    <div class="step"><div class="step-content"><h4>Disseny i títol</h4><p>Tria l'orientació (vertical/horitzontal), l'estil visual i escriu el títol de l'informe.</p></div></div>
+  </div>
+
+  <div class="section-title">Tipus d'informes</div>
+  <div class="grid">
+    <div class="grid-card"><div class="icon">📊</div><h4>Informe estàtic</h4><p>Genera una "fotografia" de les dades en aquell moment. Es desa com a document ODF.</p></div>
+    <div class="grid-card"><div class="icon">🔄</div><h4>Informe dinàmic</h4><p>S'actualitza automàticament amb les dades actuals cada vegada que s'obre.</p></div>
+  </div>
+
+  <div class="callout info"><span class="callout-icon">💡</span><div>Si necessites un informe amb totals o subtotals, crea primer una <strong>consulta SQL</strong> que calculi aquests valors (amb <code>GROUP BY</code> i <code>SUM</code>) i utilitza aquesta consulta com a font de l'informe.</div></div>
+</section>
+
+<!-- ═══════════════ EXERCICIS ═══════════════ -->
+<section id="exercicis" class="page">
+  <div class="hero">
+    <h2>Exercicis <span>Pràctics</span></h2>
+    <p>Exercicis progressius per consolidar els conceptes. Realitza cadascun a LibreOffice Base.</p>
+  </div>
+
+  <div class="exercise">
+    <div class="exercise-header" onclick="toggleEx(this)">
+      <h3><span>📚</span> Exercici 1 — Biblioteca</h3>
+      <span class="difficulty diff-easy">Bàsic</span>
+    </div>
+    <div class="exercise-body">
+      <p>Crea la base de dades d'una biblioteca amb les taules i relacions següents:</p>
+      <div class="rel-diagram" style="justify-content:flex-start;gap:8px;flex-wrap:wrap">
+        <div class="rel-table"><div class="rel-header">📖 AUTORS</div><div class="rel-field"><span class="pk">PK</span> ID_Autor</div><div class="rel-field">Nom</div><div class="rel-field">Cognoms</div><div class="rel-field">Nacionalitat</div></div>
+        <div class="rel-arrow">1→N</div>
+        <div class="rel-table"><div class="rel-header">📕 LLIBRES</div><div class="rel-field"><span class="pk">PK</span> ID_Llibre</div><div class="rel-field">ISBN UNIQUE</div><div class="rel-field"><span class="fk">FK</span> ID_Autor</div><div class="rel-field">Titol</div><div class="rel-field">Disponible</div></div>
+        <div class="rel-arrow">1→N</div>
+        <div class="rel-table"><div class="rel-header">👤 SOCIS</div><div class="rel-field"><span class="pk">PK</span> ID_Soci</div><div class="rel-field">DNI UNIQUE</div><div class="rel-field">Nom</div><div class="rel-field">Cognoms</div></div>
+        <div class="rel-arrow">1→N</div>
+        <div class="rel-table"><div class="rel-header">📋 PRÉSTECS</div><div class="rel-field"><span class="pk">PK</span> ID_Prestec</div><div class="rel-field"><span class="fk">FK</span> ID_Llibre</div><div class="rel-field"><span class="fk">FK</span> ID_Soci</div><div class="rel-field">Data_Dev</div></div>
+      </div>
+      <p><strong>Tasques:</strong></p>
+      <ul>
+        <li>Crea les 4 taules (AUTORS, LLIBRES, SOCIS, PRÉSTECS) amb SQL</li>
+        <li>Insereix almenys 3 autors, 5 llibres, 3 socis i 4 préstecs</li>
+        <li>Consulta els llibres disponibles (<code>WHERE Disponible = TRUE</code>)</li>
+        <li>Consulta llibres amb nom d'autor (INNER JOIN)</li>
+        <li>Crea un formulari per gestionar SOCIS</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="exercise">
+    <div class="exercise-header" onclick="toggleEx(this)">
+      <h3><span>🎓</span> Exercici 2 — Centre Educatiu</h3>
+      <span class="difficulty diff-med">Mitjà</span>
+    </div>
+    <div class="exercise-body">
+      <p>Dissenya la base de dades d'un centre educatiu amb alumnes, assignatures, professors i matrícula:</p>
+      <ul>
+        <li><strong>ALUMNES:</strong> ID_Alumne, DNI, Nom, Cognoms, Data_Naixement, Correu</li>
+        <li><strong>ASSIGNATURES:</strong> ID_Assignatura, Codi UNIQUE, Nom, Hores, Curs</li>
+        <li><strong>PROFESSORS:</strong> ID_Professor, DNI, Nom, Cognoms, Especialitat</li>
+        <li><strong>MATRICULES:</strong> ID_Matricula, FK ID_Alumne, FK ID_Assignatura, Any, Nota DECIMAL(4,2)</li>
+        <li><strong>IMPARTEIX:</strong> ID_Imparteix, FK ID_Professor, FK ID_Assignatura, Aula, Horari</li>
+      </ul>
+      <p><strong>Consultes a realitzar:</strong></p>
+      <ul>
+        <li>Alumnes matriculats a cada assignatura (GROUP BY + COUNT)</li>
+        <li>Nota mitjana de cada alumne (GROUP BY + AVG)</li>
+        <li>Alumnes amb nota &gt; 7 (WHERE + JOIN)</li>
+        <li>Assignatures sense professor assignat (LEFT JOIN + IS NULL)</li>
+      </ul>
+      <p><strong>Repte addicional:</strong> Crea un formulari d'ALUMNES amb subformulari de MATRÍCULES i un informe amb les notes de cada alumne agrupat per assignatura.</p>
+    </div>
+  </div>
+
+  <div class="exercise">
+    <div class="exercise-header" onclick="toggleEx(this)">
+      <h3><span>🛒</span> Exercici 3 — Botiga en línia</h3>
+      <span class="difficulty diff-hard">Avançat</span>
+    </div>
+    <div class="exercise-body">
+      <p>Implementa el model complet d'una botiga en línia:</p>
+      <ul>
+        <li><strong>CATEGORIES:</strong> ID_Categoria, Nom, Descripcio</li>
+        <li><strong>PRODUCTES:</strong> ID_Producte, Codi UNIQUE, Nom, FK ID_Categoria, Preu, Stock, Actiu</li>
+        <li><strong>CLIENTS:</strong> ID_Client, DNI, Nom, Cognoms, Correu, Adreca</li>
+        <li><strong>COMANDES:</strong> ID_Comanda, FK ID_Client, Data, Total, Estat</li>
+        <li><strong>LINIES_COMANDA:</strong> ID_Linia, FK ID_Comanda, FK ID_Producte, Quantitat, Preu_Unitari</li>
+      </ul>
+      <p><strong>Reptes:</strong></p>
+      <ul>
+        <li>Vendes totals per categoria (3 JOINs + GROUP BY)</li>
+        <li>Top 5 clients per despesa total</li>
+        <li>Productes amb stock &lt; 5 unitats</li>
+        <li>Actualitzar el camp Total de COMANDES sumant les seves línies (UPDATE + subconsulta)</li>
+        <li>Formulari de comandes amb subformulari de línies</li>
+        <li>Informe de vendes mensual agrupat per categoria</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ PROJECTE FINAL ═══════════════ -->
+<section id="projecte" class="page">
+  <div class="hero">
+    <h2>Projecte <span>Final</span></h2>
+    <p>Desenvolupa de manera autònoma una base de dades completa escollint un dels tres supòsits. Hauràs de lliurar el fitxer <code>.odb</code> i una memòria breu.</p>
+  </div>
+
+  <div class="grid">
+    <div class="grid-card">
+      <div class="icon">🏨</div>
+      <h4>Opció A — Hotel</h4>
+      <p>Habitacions, clients, reserves, serveis addicionals. Gestió de check-in/check-out amb dates i preu per nit.</p>
+    </div>
+    <div class="grid-card">
+      <div class="icon">🏥</div>
+      <h4>Opció B — Clínica</h4>
+      <p>Pacients, metges, especialitats, cites i diagnòstics. Historial mèdic amb dates i tractaments.</p>
+    </div>
+    <div class="grid-card">
+      <div class="icon">🎬</div>
+      <h4>Opció C — Videoclub</h4>
+      <p>Pel·lícules, directors, gèneres, socis i lloguers. Control d'estoc i devolucions amb penalitzacions.</p>
+    </div>
+  </div>
+
+  <div class="section-title">Requisits mínims</div>
+  <div class="card">
+    <ul>
+      <li>✅ Mínim <strong>4 taules</strong> amb claus primàries correctes</li>
+      <li>✅ Almenys <strong>2 relacions</strong> amb clau forània i integritat referencial</li>
+      <li>✅ <strong>15 registres</strong> de dades de prova per taula principal</li>
+      <li>✅ <strong>5 consultes SQL</strong> diferents (filtres, JOINs, agregació)</li>
+      <li>✅ <strong>1 formulari</strong> amb navegació completa</li>
+      <li>✅ <strong>1 formulari</strong> amb subformulari</li>
+      <li>✅ <strong>1 informe</strong> amb agrupació i totals</li>
+    </ul>
+  </div>
+
+  <div class="section-title">Criteris d'avaluació</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Criteri</th><th>Pes</th></tr></thead>
+      <tbody>
+        <tr><td>Disseny del model relacional (normalització, PK/FK)</td><td>25%</td></tr>
+        <tr><td>Creació correcta de taules amb SQL</td><td>20%</td></tr>
+        <tr><td>Consultes SQL funcionals i variades</td><td>25%</td></tr>
+        <tr><td>Formularis i informes a LibreOffice Base</td><td>20%</td></tr>
+        <tr><td>Memòria explicativa i presentació</td><td>10%</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+</main>
+
+<script>
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.currentTarget.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(window.innerWidth<=800) document.getElementById('sidebar').classList.remove('open');
+  updateProgress();
+}
+function toggleSidebar(){
+  document.getElementById('sidebar').classList.toggle('open');
+}
+function toggleEx(el){
+  const body = el.nextElementSibling;
+  body.style.display = body.style.display==='none'?'block':'none';
+}
+function updateProgress(){
+  const pages=['intro','relacional','tipus','taules','inserir','consultes','dml','grafic','formularis','informes','exercicis','projecte'];
+  const active=document.querySelector('.page.active');
+  const idx=pages.indexOf(active.id);
+  document.getElementById('progress').style.width=((idx+1)/pages.length*100)+'%';
+}
+window.addEventListener('click',e=>{
+  if(window.innerWidth<=800&&!e.target.closest('#sidebar')&&!e.target.closest('#menu-toggle')){
+    document.getElementById('sidebar').classList.remove('open');
+  }
+});
+updateProgress();
+</script>
+</body>
+</html>
