@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cicles Formatius</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #1e3c72, #2a5298);
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 40px;
+      font-size: 2.5rem;
+    }
+
+    .cards {
+      display: flex;
+      gap: 30px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 30px;
+      border-radius: 20px;
+      width: 200px;
+      text-decoration: none;
+      color: white;
+      transition: transform 0.3s, background 0.3s;
+      backdrop-filter: blur(10px);
+    }
+
+    .card:hover {
+      transform: translateY(-10px);
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .card h2 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Benvingut als Cicles Formatius</h1>
+    <div class="cards">
+      <a href="asix/index.html" class="card">
+        <h2>ASIX</h2>
+      </a>
+      <a href="smx/index.html" class="card">
+        <h2>SMX</h2>
+      </a>
+    </div>
+  </div>
+</body>
+</html>
+
+<!-- ===== Exemple estructura ASIX ===== -->
+<!-- Guarda aquest fitxer com /asix/index.html -->
+
+<!--
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <title>ASIX</title>
+</head>
+<body>
+  <h1>Cicle ASIX</h1>
+  <ul>
+    <li><a href="assignatures/m01.html">M01 - Implantació de Sistemes Operatius</a></li>
+    <li><a href="assignatures/m02.html">M02 - Bases de Dades</a></li>
+    <li><a href="assignatures/m03.html">M03 - Programació</a></li>
+  </ul>
+  <a href="../index.html">Tornar</a>
+</body>
+</html>
+-->
+
+<!-- ===== Exemple estructura SMX ===== -->
+<!-- Guarda aquest fitxer com /smx/index.html -->
+
+<!--
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <title>SMX</title>
+</head>
+<body>
+  <h1>Cicle SMX</h1>
+  <ul>
+    <li><a href="assignatures/ofimatica.html">Ofimàtica</a></li>
+    <li><a href="assignatures/digitalitzacio.html">Digitalització</a></li>
+  </ul>
+  <a href="../index.html">Tornar</a>
+</body>
+</html>
+-->
