@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pràctica Google Sites – Digitalització</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --ink:       #1a2332;
+      --paper:     #f0f5fb;
+      --blue:      #2563eb;
+      --blue-lt:   #3b82f6;
+      --blue-pale: #dbeafe;
+      --sky:       #e0f2fe;
+      --accent:    #0ea5e9;
+      --mist:      #64748b;
+      --white:     #ffffff;
+      --green:     #16a34a;
+      --green-pale:#dcfce7;
+      --amber:     #d97706;
+      --amber-pale:#fef3c7;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.65;
+    }
+
+    /* ── TOP BAR ─────────────────────────────────────── */
+    .topbar {
+      background: linear-gradient(135deg, #1d4ed8 0%, #0ea5e9 100%);
+      padding: 14px 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .topbar a {
+      color: rgba(255,255,255,0.75);
+      text-decoration: none;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: color 0.2s;
+    }
+    .topbar a:hover { color: white; }
+
+    .topbar .breadcrumb {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .topbar .breadcrumb span { color: rgba(255,255,255,0.25); }
+
+    /* ── HERO BAND ───────────────────────────────────── */
+    .hero {
+      background: linear-gradient(135deg, #1d4ed8 0%, #0ea5e9 100%);
+      padding: 50px 60px 60px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      width: 320px; height: 320px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.05);
+      top: -100px; right: -60px;
+      pointer-events: none;
+    }
+
+    .hero-tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.55);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .hero-tag::before {
+      content: '';
+      width: 20px; height: 1px;
+      background: rgba(255,255,255,0.4);
+      display: inline-block;
+    }
+
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+      font-weight: 900;
+      color: white;
+      line-height: 1.1;
+      max-width: 620px;
+    }
+
+    .hero h1 em { font-style: italic; color: rgba(255,255,255,0.7); }
+
+    .hero-meta {
+      display: flex;
+      gap: 24px;
+      margin-top: 24px;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+      color: white;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 6px 14px;
+      border-radius: 40px;
+      backdrop-filter: blur(4px);
+    }
+
+    /* ── LAYOUT ──────────────────────────────────────── */
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 40px;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 60px 40px 80px;
+    }
+
+    /* ── CARD BASE ───────────────────────────────────── */
+    .card {
+      background: var(--white);
+      border-radius: 6px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      overflow: hidden;
+      margin-bottom: 28px;
+    }
+
+    .card-header {
+      padding: 22px 28px 18px;
+      border-bottom: 1px solid var(--blue-pale);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .card-icon {
+      width: 36px; height: 36px;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    .icon-blue   { background: var(--blue-pale); }
+    .icon-green  { background: var(--green-pale); }
+    .icon-amber  { background: var(--amber-pale); }
+
+    .card-header h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .card-header .sub {
+      font-size: 0.78rem;
+      color: var(--mist);
+      margin-top: 2px;
+    }
+
+    .card-body { padding: 24px 28px; }
+
+    /* ── ENUNCIAT ────────────────────────────────────── */
+    .enunciat p {
+      font-size: 0.93rem;
+      color: var(--ink);
+      margin-bottom: 14px;
+    }
+
+    .enunciat strong { color: var(--blue); }
+
+    /* ── OBJECTIUS LIST ──────────────────────────────── */
+    .obj-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .obj-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: 0.88rem;
+      color: var(--ink);
+    }
+
+    .obj-num {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      background: var(--blue-pale);
+      color: var(--blue);
+      padding: 3px 8px;
+      border-radius: 4px;
+      min-width: 32px;
+      text-align: center;
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+
+    /* ── ESTRUCTURA ──────────────────────────────────── */
+    .structure-tree {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .tree-node {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .tree-line {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 4px;
+    }
+
+    .tree-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--blue);
+      flex-shrink: 0;
+    }
+
+    .tree-dot.child { background: var(--accent); width: 8px; height: 8px; }
+
+    .tree-connector {
+      width: 2px;
+      background: var(--blue-pale);
+      flex: 1;
+      min-height: 16px;
+    }
+
+    .tree-content {
+      flex: 1;
+      padding-bottom: 4px;
+    }
+
+    .tree-label {
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    .tree-desc {
+      font-size: 0.78rem;
+      color: var(--mist);
+      margin-top: 2px;
+    }
+
+    .tree-children {
+      margin-left: 24px;
+      margin-top: 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    /* ── GUIA STEPS ──────────────────────────────────── */
+    .steps {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .step {
+      display: flex;
+      gap: 18px;
+      position: relative;
+    }
+
+    .step-left {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 36px;
+      flex-shrink: 0;
+    }
+
+    .step-num {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: var(--blue);
+      color: white;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      font-weight: 500;
+    }
+
+    .step-connector {
+      width: 2px;
+      background: var(--blue-pale);
+      flex: 1;
+      margin: 4px 0;
+      min-height: 20px;
+    }
+
+    .step:last-child .step-connector { display: none; }
+
+    .step-body {
+      padding-bottom: 28px;
+      flex: 1;
+    }
+
+    .step-title {
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 6px;
+      padding-top: 4px;
+    }
+
+    .step-desc {
+      font-size: 0.84rem;
+      color: var(--mist);
+      line-height: 1.6;
+    }
+
+    .step-tip {
+      margin-top: 10px;
+      background: var(--sky);
+      border-left: 3px solid var(--accent);
+      padding: 10px 14px;
+      border-radius: 0 4px 4px 0;
+      font-size: 0.8rem;
+      color: var(--ink);
+    }
+
+    .step-tip strong {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 3px;
+    }
+
+    /* ── AVALUACIÓ ───────────────────────────────────── */
+    .rubric {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+    }
+
+    .rubric th {
+      background: var(--blue-pale);
+      color: var(--blue);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 10px 14px;
+      text-align: left;
+    }
+
+    .rubric td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--blue-pale);
+      color: var(--ink);
+      vertical-align: top;
+    }
+
+    .rubric tr:last-child td { border-bottom: none; }
+    .rubric tr:hover td { background: #f8fbff; }
+
+    .pts {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--blue);
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    /* ── SIDEBAR ─────────────────────────────────────── */
+    .sidebar { }
+
+    .sidebar-card {
+      background: var(--white);
+      border-radius: 6px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .sidebar-header {
+      padding: 14px 20px;
+      background: var(--blue-pale);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--blue);
+      font-weight: 500;
+    }
+
+    .sidebar-body { padding: 16px 20px; }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--blue-pale);
+      font-size: 0.82rem;
+    }
+
+    .info-row:last-child { border-bottom: none; }
+    .info-row .label { color: var(--mist); }
+    .info-row .value { font-weight: 500; color: var(--ink); }
+
+    .entrega-badge {
+      display: block;
+      text-align: center;
+      background: var(--green-pale);
+      color: var(--green);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 10px;
+      border-radius: 4px;
+      margin-top: 14px;
+      font-weight: 500;
+    }
+
+    .ra-pill {
+      display: inline-flex;
+      align-items: center;
+      background: var(--blue-pale);
+      color: var(--blue);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.08em;
+      padding: 4px 10px;
+      border-radius: 20px;
+      margin: 3px 2px;
+      font-weight: 500;
+    }
+
+    .ra-pills { padding: 4px 0 2px; }
+
+    .link-btn {
+      display: block;
+      text-align: center;
+      background: var(--blue);
+      color: white;
+      text-decoration: none;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 12px;
+      border-radius: 4px;
+      transition: background 0.2s;
+      margin-top: 4px;
+    }
+    .link-btn:hover { background: #1d4ed8; }
+
+    /* ── FOOTER ──────────────────────────────────────── */
+    footer {
+      background: #1e3a5f;
+      color: rgba(255,255,255,0.4);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 22px 60px;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    footer .dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--accent);
+      display: inline-block;
+    }
+
+    /* ── RESPONSIVE ──────────────────────────────────── */
+    @media (max-width: 800px) {
+      .layout { grid-template-columns: 1fr; padding: 30px 20px 60px; }
+      .topbar, .hero, footer { padding-left: 20px; padding-right: 20px; }
+      .hero { padding-top: 36px; padding-bottom: 44px; }
+      .sidebar { order: -1; }
+    }
+
+    /* ── ANIMATIONS ──────────────────────────────────── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .hero-tag { animation: fadeUp 0.5s 0.05s both; }
+    .hero h1  { animation: fadeUp 0.5s 0.15s both; }
+    .hero-meta { animation: fadeUp 0.5s 0.25s both; }
+  </style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <a href="../index.html">← Tornar a l'inici</a>
+  <div class="breadcrumb">
+    SMX <span>/</span> Digitalització <span>/</span> Pràctica Google Sites
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-tag">Pràctica · Digitalització</div>
+  <h1>Crea el teu lloc web amb<br><em>Google Sites</em></h1>
+  <div class="hero-meta">
+    <span class="badge">📋 Treball individual</span>
+    <span class="badge">🌐 Google Sites</span>
+    <span class="badge">⏱ 3 sessions</span>
+  </div>
+</div>
+
+<!-- LAYOUT -->
+<div class="layout">
+  <main>
+
+    <!-- ENUNCIAT -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon icon-blue">📄</div>
+        <div>
+          <h2>Enunciat de la pràctica</h2>
+          <div class="sub">Llegeix atentament abans de començar</div>
+        </div>
+      </div>
+      <div class="card-body enunciat">
+        <p>
+          En aquesta pràctica hauràs de crear un <strong>lloc web amb Google Sites</strong> que actuï com a diari digital d'aprenentatge de la unitat de <strong>Digitalització</strong>. El lloc ha de recollir i explicar, amb les teves pròpies paraules, els continguts més importants treballats als Resultats d'Aprenentatge (RA) de la assignatura.
+        </p>
+        <p>
+          L'objectiu és demostrar que has comprès els conceptes fonamentals de la digitalització i que ets capaç de comunicar-los de manera clara, organitzada i visual en un entorn web real.
+        </p>
+        <p>
+          El lloc web haurà de tenir una <strong>pàgina principal</strong> i com a mínim <strong>dues subpàgines</strong>, cadascuna dedicada a un tema diferent dels RA treballats. Les pàgines han d'estar enllaçades entre si mitjançant la navegació de Google Sites.
+        </p>
+      </div>
+    </div>
+
+    <!-- OBJECTIUS -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon icon-green">🎯</div>
+        <div>
+          <h2>Objectius de la pràctica</h2>
+          <div class="sub">Què aprendràs i demostraràs</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="obj-list">
+          <div class="obj-item">
+            <span class="obj-num">1</span>
+            Explicar el concepte de digitalització i el seu impacte en la societat i les empreses.
+          </div>
+          <div class="obj-item">
+            <span class="obj-num">2</span>
+            Identificar i descriure tecnologies digitals clau (núvol, IoT, IA, big data...).
+          </div>
+          <div class="obj-item">
+            <span class="obj-num">3</span>
+            Reflexionar sobre la seguretat, la privacitat i la identitat digital.
+          </div>
+          <div class="obj-item">
+            <span class="obj-num">4</span>
+            Utilitzar eines digitals col·laboratives per crear i compartir contingut.
+          </div>
+          <div class="obj-item">
+            <span class="obj-num">5</span>
+            Organitzar la informació de forma clara i estructurada en un entorn web.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ESTRUCTURA DEL LLOC WEB -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon icon-blue">🗂️</div>
+        <div>
+          <h2>Estructura del lloc web</h2>
+          <div class="sub">Com ha d'estar organitzat el teu Google Sites</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="structure-tree">
+
+          <div class="tree-node">
+            <div class="tree-line">
+              <div class="tree-dot"></div>
+              <div class="tree-connector"></div>
+            </div>
+            <div class="tree-content">
+              <div class="tree-label">🏠 Pàgina principal — <em>Inici</em></div>
+              <div class="tree-desc">Presentació del lloc web, qui ets i de què tracta. Breu resum de la unitat de Digitalització i per a què serveix aquest lloc.</div>
+              <div class="tree-children">
+                <div class="tree-node">
+                  <div class="tree-line">
+                    <div class="tree-dot child"></div>
+                    <div class="tree-connector"></div>
+                  </div>
+                  <div class="tree-content">
+                    <div class="tree-label">📘 Subpàgina 1 — <em>Conceptes de Digitalització</em></div>
+                    <div class="tree-desc">Explica 3 o més conceptes treballats als RA (p.ex.: transformació digital, IoT, núvol, big data, IA...). Pots incloure imatges, icones o esquemes.</div>
+                  </div>
+                </div>
+                <div class="tree-node">
+                  <div class="tree-line">
+                    <div class="tree-dot child"></div>
+                  </div>
+                  <div class="tree-content">
+                    <div class="tree-label">🔐 Subpàgina 2 — <em>Seguretat i Identitat Digital</em></div>
+                    <div class="tree-desc">Reflexió sobre la petjada digital, la privacitat a internet, les contrasenyes segures i la identitat en línia. Inclou almenys un consell pràctic.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- GUIA D'ÚS -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon icon-amber">🛠️</div>
+        <div>
+          <h2>Guia ràpida de Google Sites</h2>
+          <div class="sub">Com crear el teu lloc pas a pas</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="steps">
+
+          <div class="step">
+            <div class="step-left">
+              <div class="step-num">1</div>
+              <div class="step-connector"></div>
+            </div>
+            <div class="step-body">
+              <div class="step-title">Accedeix a Google Sites</div>
+              <div class="step-desc">Obre el navegador i ves a <strong>sites.google.com</strong>. Inicia sessió amb el teu compte de Google (o el compte del centre). Fes clic a <em>"+"</em> o <em>"En blanc"</em> per crear un nou lloc web.</div>
+              <div class="step-tip"><strong>💡 Consell</strong>Anomena el lloc amb el teu nom i curs, per exemple: <em>"Digitalització – 1r SMX A – Nom Cognom"</em>.</div>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-left">
+              <div class="step-num">2</div>
+              <div class="step-connector"></div>
+            </div>
+            <div class="step-body">
+              <div class="step-title">Edita la pàgina principal</div>
+              <div class="step-desc">Fes clic a qualsevol àrea per editar el text. Al panell dret veuràs els elements que pots inserir: text, imatges, botons, separadors, YouTube, etc. Canvia el títol de la pàgina i afegeix una breu presentació.</div>
+              <div class="step-tip"><strong>💡 Consell</strong>Utilitza un <em>bàner</em> o <em>capçalera amb imatge</em> per donar un aspecte professional a l'inici.</div>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-left">
+              <div class="step-num">3</div>
+              <div class="step-connector"></div>
+            </div>
+            <div class="step-body">
+              <div class="step-title">Crea les subpàgines</div>
+              <div class="step-desc">Al panell dret, fes clic a la pestanya <strong>"Pàgines"</strong>. Fes clic a <em>"+"</em> per afegir una pàgina nova. Escriu el nom (p.ex. <em>"Conceptes"</em>) i prem <em>Enter</em>. Repeteix per crear la segona subpàgina.</div>
+              <div class="step-tip"><strong>💡 Consell</strong>Crea primer totes les pàgines i després omple el contingut de cadascuna.</div>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-left">
+              <div class="step-num">4</div>
+              <div class="step-connector"></div>
+            </div>
+            <div class="step-body">
+              <div class="step-title">Omple les subpàgines de contingut</div>
+              <div class="step-desc">Navega a cada subpàgina fent clic al seu nom al panell. Afegeix els textos, imatges i elements que necessitis. Pots inserir taules, vídeos de YouTube, documents de Drive o fins i tot mapes de Google.</div>
+              <div class="step-tip"><strong>💡 Consell</strong>Fes servir <em>dissenys de columnes</em> (disponibles al menú d'inserció) per organitzar el contingut de manera atractiva.</div>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-left">
+              <div class="step-num">5</div>
+              <div class="step-connector"></div>
+            </div>
+            <div class="step-body">
+              <div class="step-title">Comprova la navegació entre pàgines</div>
+              <div class="step-desc">Google Sites crea automàticament un menú de navegació a la part superior amb totes les pàgines. Comprova que les pàgines apareixen al menú i que és fàcil moure's entre elles. Si vols, pots afegir <strong>botons d'enllaç</strong> al cos de les pàgines per guiar el visitant.</div>
+              <div class="step-tip"><strong>💡 Consell</strong>Per inserir un botó: <em>Inserir → Botó</em> i selecciona la pàgina de destí del teu propi lloc.</div>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-left">
+              <div class="step-num">6</div>
+              <div class="step-connector"></div>
+            </div>
+            <div class="step-body">
+              <div class="step-title">Publica i comparteix l'enllaç</div>
+              <div class="step-desc">Quan el lloc estigui a punt, fes clic al botó <strong>"Publicar"</strong> (dalt a la dreta). Estableix la visibilitat (pots deixar-lo accessible a <em>"Tothom a internet"</em> o limitat a persones amb l'enllaç). Copia l'URL del lloc publicat i lliura-la al professor.</div>
+              <div class="step-tip"><strong>💡 Consell</strong>Revisa el lloc en mode previsualització (<em>icona d'ull</em>) abans de publicar per veure com queda.</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- AVALUACIÓ -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon icon-green">📊</div>
+        <div>
+          <h2>Criteris d'avaluació</h2>
+          <div class="sub">Rúbrica de qualificació</div>
+        </div>
+      </div>
+      <div class="card-body" style="padding: 0;">
+        <table class="rubric">
+          <thead>
+            <tr>
+              <th>Criteri</th>
+              <th>Descripció</th>
+              <th>Punts</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Estructura</strong></td>
+              <td>El lloc té pàgina principal i 5 subpàgines correctament creades i enllaçades.</td>
+              <td class="pts">3 pts</td>
+            </tr>
+            <tr>
+              <td><strong>Contingut</strong></td>
+              <td>Els conceptes dels RA estan explicats amb les pròpies paraules, de forma clara i completa.</td>
+              <td class="pts">3 pts</td>
+            </tr>
+            <tr>
+              <td><strong>Disseny</strong></td>
+              <td>El lloc té un aspecte net i organitzat. S'utilitzen imatges, colors i elements visuals coherents.</td>
+              <td class="pts">2 pts</td>
+            </tr>
+            <tr>
+              <td><strong>Navegació</strong></td>
+              <td>Les pàgines s'enllacen correctament i la navegació és intuïtiva.</td>
+              <td class="pts">2 pts</td>
+            </tr>
+
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+
+    <div class="sidebar-card">
+      <div class="sidebar-header">Informació de la pràctica</div>
+      <div class="sidebar-body">
+        <div class="info-row">
+          <span class="label">Modalitat</span>
+          <span class="value">Individual</span>
+        </div>
+        <div class="info-row">
+          <span class="label">Durada</span>
+          <span class="value">3 sessions</span>
+        </div>
+        <div class="info-row">
+          <span class="label">Eina</span>
+          <span class="value">Google Sites</span>
+        </div>
+        <div class="info-row">
+          <span class="label">Qualificació</span>
+          <span class="value">10 punts</span>
+        </div>
+        <div class="entrega-badge">✓ Entrega: URL del lloc publicat</div>
+      </div>
+    </div>
+
+    <div class="sidebar-card">
+      <div class="sidebar-header">Resultats d'aprenentatge</div>
+      <div class="sidebar-body">
+        <div class="ra-pills">
+          <span class="ra-pill">RA 1</span>
+          <span class="ra-pill">RA 2</span>
+          <span class="ra-pill">RA 3</span>
+          <span class="ra-pill">RA 4</span>
+          <span class="ra-pill">RA 5</span>
+        </div>
+        <p style="font-size:0.78rem; color:var(--mist); margin-top:12px; line-height:1.5;">
+          Aquesta pràctica avalua la comprensió global de la unitat de Digitalització, integrant conceptes de tots els RA treballats.
+        </p>
+      </div>
+    </div>
+
+    <div class="sidebar-card">
+      <div class="sidebar-header">Eines i recursos</div>
+      <div class="sidebar-body" style="display:flex; flex-direction:column; gap:8px;">
+        <a class="link-btn" href="https://sites.google.com" target="_blank">→ Obrir Google Sites</a>
+        <a class="link-btn" href="digitalitzacio_smx.html" style="background: var(--accent);">→ Teoria Digitalització</a>
+        <a class="link-btn" href="preguntes_teoriques_digitalitzacio.html" style="background: var(--mist);">→ Preguntes teòriques</a>
+      </div>
+    </div>
+
+  </aside>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <span>© 2026 Recursos Educatius</span>
+  <span class="dot"></span>
+  <span>SMX · Digitalització</span>
+</footer>
+
+</body>
+</html>
