@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RA3 — Fulls de Càlcul amb Google Sheets · SMX</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink:     #0d0f1a;
+    --paper:   #f4f2ed;
+    --cream:   #eceae3;
+    --navy:    #1a1f4e;
+    --cobalt:  #2d3bb5;
+    --sky:     #4a6cf7;
+    --gsheets: #0f9d58;
+    --gsheets-d: #0b7a44;
+    --gblue:   #4285f4;
+    --gyellow: #fbbc04;
+    --gred:    #ea4335;
+    --purple:  #7c3aed;
+    --amber:   #d97706;
+    --muted:   #6b6f85;
+    --border:  #d6d2c9;
+    --card:    #ffffff;
+    --radius:  16px;
+    --radius-sm: 8px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    font-size: 16px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(244,242,237,0.94);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 62px;
+  }
+  .nav-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1rem; color: var(--navy); letter-spacing: -0.02em; }
+  .nav-logo span { color: var(--gsheets); }
+  .nav-pills { display: flex; gap: .4rem; list-style: none; }
+  .nav-pills a {
+    text-decoration: none; font-size: 0.78rem; font-weight: 600;
+    padding: .3rem .85rem; border-radius: 100px;
+    color: var(--muted); transition: all .2s;
+    border: 1px solid transparent;
+  }
+  .nav-pills a:hover { color: var(--gsheets); border-color: var(--gsheets); background: rgba(15,157,88,0.07); }
+  .nav-pills a.sheets { color: var(--gsheets); }
+  .nav-pills a.prac   { color: var(--purple); }
+  .nav-pills a.pregs  { color: var(--amber); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh; display: grid; place-items: center;
+    background: var(--navy); color: white;
+    position: relative; overflow: hidden; padding: 8rem 2rem 4rem;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 75% 25%, rgba(15,157,88,0.3) 0%, transparent 65%),
+      radial-gradient(ellipse 50% 40% at 20% 70%, rgba(66,133,244,0.18) 0%, transparent 65%),
+      radial-gradient(ellipse 40% 35% at 55% 90%, rgba(251,188,4,0.12) 0%, transparent 60%);
+  }
+  .hero-dots {
+    position: absolute; inset: 0; opacity: 0.07;
+    background-image: radial-gradient(rgba(255,255,255,.6) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+  .hero-content { position: relative; z-index: 1; text-align: center; max-width: 840px; }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: .5rem;
+    background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.85); font-size: 0.78rem; font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    padding: .35rem 1rem; border-radius: 100px; margin-bottom: 1.5rem;
+  }
+  .hero h1 {
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: clamp(2.6rem, 6.5vw, 5rem); line-height: 1.06;
+    letter-spacing: -0.03em; margin-bottom: 1.5rem;
+  }
+  .hero h1 .g  { color: #0f9d58; }
+  .hero h1 .r  { color: #ea4335; }
+  .hero h1 .y  { color: #fbbc04; }
+  .hero h1 .gn { color: #4285f4; }
+  .hero p { font-size: 1.1rem; color: rgba(255,255,255,0.6); max-width: 560px; margin: 0 auto 2.5rem; }
+  .hero-apps { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+  .hero-app {
+    display: flex; align-items: center; gap: .6rem;
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+    padding: .6rem 1.2rem; border-radius: 12px; font-size: 0.88rem; font-weight: 500;
+    color: white; text-decoration: none; transition: all .25s;
+  }
+  .hero-app:hover { background: rgba(255,255,255,0.15); transform: translateY(-2px); }
+  .hero-app .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .scroll-hint {
+    position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: .4rem;
+    color: rgba(255,255,255,0.3); font-size: 0.72rem; letter-spacing: 0.1em;
+  }
+  .scroll-hint::after {
+    content: ''; display: block; width: 1px; height: 36px;
+    background: linear-gradient(to bottom, rgba(255,255,255,.35), transparent);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:.3} 50%{opacity:1} }
+
+  /* ── LAYOUT ── */
+  section { padding: 6rem 2rem; }
+  .container { max-width: 1080px; margin: 0 auto; }
+  .section-tag {
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em;
+    text-transform: uppercase; display: flex; align-items: center; gap: .5rem;
+    margin-bottom: .9rem;
+  }
+  .section-tag::before { content: ''; display: block; width: 20px; height: 2px; }
+  .tag-cobalt   { color: var(--cobalt); } .tag-cobalt::before   { background: var(--cobalt); }
+  .tag-sheets   { color: var(--gsheets);} .tag-sheets::before   { background: var(--gsheets); }
+  .tag-practica { color: var(--purple); } .tag-practica::before { background: var(--purple); }
+  .tag-pregs    { color: var(--amber);  } .tag-pregs::before    { background: var(--amber); }
+  .tag-green    { color: var(--gsheets);} .tag-green::before    { background: var(--gsheets); }
+  .tag-blue     { color: var(--gblue); } .tag-blue::before     { background: var(--gblue); }
+
+  h2 {
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: clamp(1.7rem, 3.5vw, 2.6rem); line-height: 1.1;
+    letter-spacing: -0.025em; color: var(--navy); margin-bottom: .9rem;
+  }
+  h3 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.15rem; color: var(--navy); margin-bottom: .65rem; }
+  h4 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.95rem; color: var(--navy); margin-bottom: .4rem; }
+  .lead { font-size: 1.05rem; color: var(--muted); max-width: 700px; margin-bottom: 3rem; line-height: 1.7; }
+
+  /* ── CARDS ── */
+  .grid { display: grid; gap: 1.25rem; }
+  .g2 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+  .g3 { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+  .g4 { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+  .card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 1.75rem;
+    transition: transform .2s, box-shadow .2s;
+  }
+  .card:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(26,31,78,0.1); }
+  .card p { color: var(--muted); font-size: 0.92rem; }
+  .card-icon {
+    width: 44px; height: 44px; border-radius: 10px;
+    display: grid; place-items: center; font-size: 1.3rem; margin-bottom: .9rem;
+  }
+  .bl        { border-left: 3px solid var(--cobalt); }
+  .bl-sheets { border-left: 3px solid var(--gsheets); }
+  .bl-blue   { border-left: 3px solid var(--gblue); }
+  .bl-amber  { border-left: 3px solid var(--amber); }
+  .bl-purp   { border-left: 3px solid var(--purple); }
+  .bl-red    { border-left: 3px solid var(--gred); }
+
+  /* ── EXAMPLE BOX ── */
+  .ex { background: var(--cream); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1rem 1.25rem; margin: .65rem 0; }
+  .ex .ex-lbl { font-size: 0.68rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; margin-bottom: .3rem; }
+  .ex p { font-size: 0.87rem; color: var(--ink); }
+  .ex-sheets .ex-lbl { color: var(--gsheets); }
+  .ex-blue   .ex-lbl { color: var(--gblue); }
+  .ex-amber  .ex-lbl { color: var(--amber); }
+
+  /* ── CALLOUT ── */
+  .callout {
+    border-radius: var(--radius); padding: 1.6rem 2rem; margin: 1.5rem 0;
+    display: flex; gap: 1rem; align-items: flex-start;
+  }
+  .callout-icon { font-size: 1.4rem; flex-shrink: 0; margin-top: .1rem; }
+  .callout p, .callout li { font-size: 0.92rem; }
+  .callout ul { padding-left: 1.2rem; }
+  .callout li { margin-bottom: .25rem; }
+  .cl-green  { background: rgba(15,157,88,0.08);   border: 1px solid rgba(15,157,88,0.2); }
+  .cl-blue   { background: rgba(66,133,244,0.08);  border: 1px solid rgba(66,133,244,0.2); }
+  .cl-amber  { background: rgba(251,188,4,0.1);    border: 1px solid rgba(251,188,4,0.3); }
+  .cl-purp   { background: rgba(124,58,237,0.07);  border: 1px solid rgba(124,58,237,0.2); }
+  .cl-red    { background: rgba(234,67,53,0.07);   border: 1px solid rgba(234,67,53,0.2); }
+
+  /* ── TABLE ── */
+  .ptable { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+  .ptable th, .ptable td { padding: .85rem 1rem; text-align: left; border-bottom: 1px solid var(--border); }
+  .ptable th { background: var(--navy); color: white; font-family: 'Syne', sans-serif; font-weight: 700; }
+  .ptable th:first-child { border-radius: 8px 0 0 0; } .ptable th:last-child { border-radius: 0 8px 0 0; }
+  .ptable tr:hover td { background: var(--cream); }
+  .badge { display: inline-block; padding: .15rem .55rem; border-radius: 100px; font-size: 0.72rem; font-weight: 700; font-family: 'Syne', sans-serif; }
+  .b-sheets { background: rgba(15,157,88,0.12);  color: #0b7a44; }
+  .b-blue   { background: rgba(66,133,244,0.12); color: #1a56d6; }
+  .b-amber  { background: rgba(251,188,4,0.18);  color: #8a6500; }
+  .b-purp   { background: rgba(124,58,237,0.12); color: #5b21b6; }
+  .b-red    { background: rgba(234,67,53,0.12);  color: #b31412; }
+
+  /* ── SECTION THEMES ── */
+  .s-dark { background: var(--navy); color: white; }
+  .s-dark h2, .s-dark h3, .s-dark h4 { color: white; }
+  .s-dark .lead { color: rgba(255,255,255,0.58); }
+  .s-dark .card { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1); }
+  .s-dark .card h3 { color: white; } .s-dark .card p { color: rgba(255,255,255,0.6); }
+  .s-cream  { background: var(--cream); }
+  .s-sheets { background: #f0fdf4; }
+  .s-blue   { background: #f0f4ff; }
+
+  /* ── RA BANNER ── */
+  .ra-banner {
+    border-radius: var(--radius); padding: 1.5rem 2rem;
+    display: flex; align-items: center; gap: 1.25rem; margin-bottom: 3rem; color: white;
+  }
+  .ra-num { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 2.4rem; opacity: .25; flex-shrink: 0; line-height: 1; }
+  .ra-banner h2 { color: white; font-size: 1.35rem; margin-bottom: .2rem; }
+  .ra-banner p  { color: rgba(255,255,255,0.7); font-size: 0.88rem; }
+  .ra-sheets    { background: linear-gradient(135deg, #0b7a44, #0f9d58); }
+  .ra-practica  { background: linear-gradient(135deg, #5b21b6, #7c3aed); }
+  .ra-preguntes { background: linear-gradient(135deg, #92400e, #d97706); }
+  .ra-resum     { background: linear-gradient(135deg, #064e3b, #0f9d58); }
+  .ra-blue      { background: linear-gradient(135deg, #1a56d6, #4285f4); }
+
+  /* ── PRACTICE CARDS ── */
+  .practice-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius); overflow: hidden;
+    transition: transform .2s, box-shadow .2s;
+  }
+  .practice-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,0.1); }
+  .practice-header {
+    padding: 1.5rem 2rem; display: flex; align-items: center; gap: 1rem; color: white;
+  }
+  .practice-num { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.8rem; opacity: .35; line-height: 1; flex-shrink:0; }
+  .practice-header h3 { color: white; font-size: 1.15rem; margin: 0; }
+  .practice-header p  { color: rgba(255,255,255,0.7); font-size: 0.82rem; margin: .2rem 0 0; }
+  .practice-body { padding: 2rem; }
+  .p1-bg { background: linear-gradient(135deg, #0b7a44, #0f9d58); }
+  .p2-bg { background: linear-gradient(135deg, #0a5e36, #15803d); }
+  .p3-bg { background: linear-gradient(135deg, #1a56d6, #4285f4); }
+  .p4-bg { background: linear-gradient(135deg, #92400e, #d97706); }
+  .p5-bg { background: linear-gradient(135deg, #5b21b6, #7c3aed); }
+  .p6-bg { background: linear-gradient(135deg, #0d1a3a, #1a1f4e); }
+
+  /* ── STEPS ── */
+  .steps { counter-reset: st; list-style: none; display: flex; flex-direction: column; gap: .85rem; }
+  .steps li {
+    counter-increment: st; display: flex; gap: .9rem; align-items: flex-start;
+    padding: .9rem 1.1rem; background: var(--cream); border-radius: var(--radius-sm); font-size: 0.9rem;
+  }
+  .steps li::before {
+    content: counter(st); flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%;
+    background: var(--gsheets); color: white; display: grid; place-items: center;
+    font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.8rem;
+  }
+  .steps li p { color: var(--ink); margin: 0; } .steps li strong { color: var(--navy); }
+
+  /* ── CODE INLINE ── */
+  code { background: var(--cream); border: 1px solid var(--border); border-radius: 4px; padding: .1rem .45rem; font-size: 0.85em; font-family: 'Courier New', monospace; color: #0b7a44; }
+
+  /* ── QUESTION CARDS ── */
+  .q-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 1.5rem 2rem;
+    display: flex; gap: 1.25rem; align-items: flex-start;
+    transition: transform .2s, box-shadow .2s;
+  }
+  .q-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+  .q-num {
+    flex-shrink: 0; width: 36px; height: 36px; border-radius: 50%;
+    background: var(--cream); border: 2px solid var(--border);
+    display: grid; place-items: center;
+    font-family: 'Syne', sans-serif; font-weight: 800; font-size: 0.88rem; color: var(--gsheets);
+  }
+  .q-body h4 { margin-bottom: .35rem; color: var(--navy); font-size: 0.95rem; }
+  .q-body p  { color: var(--muted); font-size: 0.85rem; font-style: italic; }
+  .q-tag { display: inline-block; padding: .15rem .6rem; border-radius: 100px; font-size: 0.7rem; font-weight: 700; margin-top: .5rem; margin-right: .3rem; }
+  .qt-sheets { background: rgba(15,157,88,0.1);   color: #0b7a44; }
+  .qt-form   { background: rgba(66,133,244,0.1);  color: #1a56d6; }
+  .qt-collab { background: rgba(124,58,237,0.1);  color: #5b21b6; }
+  .qt-avan   { background: rgba(217,119,6,0.1);   color: #92400e; }
+  .qt-diseny { background: rgba(234,67,53,0.1);   color: #b31412; }
+
+  /* ── SHORTCUTS ── */
+  .shortcuts { display: flex; flex-direction: column; gap: .45rem; }
+  .sc-item { display: flex; align-items: center; gap: .75rem; }
+  .sc-key {
+    font-family: 'Syne', sans-serif; font-size: 0.72rem; font-weight: 700;
+    background: var(--navy); color: white; padding: .2rem .55rem; border-radius: 5px;
+    white-space: nowrap; min-width: fit-content; letter-spacing: 0.03em;
+  }
+  .sc-desc { font-size: 0.87rem; color: var(--muted); }
+
+  /* ── PILLS ── */
+  .pills { display: flex; flex-wrap: wrap; gap: .35rem; }
+  .pill { font-size: 0.72rem; font-weight: 700; padding: .2rem .65rem; border-radius: 100px; font-family: 'Syne', sans-serif; }
+  .pill-s { background: rgba(15,157,88,0.1);  color: #0b7a44; }
+  .pill-b { background: rgba(66,133,244,0.1); color: #1a56d6; }
+  .pill-v { background: rgba(124,58,237,0.1); color: #5b21b6; }
+  .pill-a { background: rgba(217,119,6,0.1);  color: #92400e; }
+
+  /* ── FORMULA BOX ── */
+  .formula-box {
+    background: #0d1a3a; border-radius: var(--radius-sm); padding: 1rem 1.5rem;
+    font-family: 'Courier New', monospace; font-size: 0.9rem; color: #0f9d58;
+    margin: .75rem 0; overflow-x: auto;
+  }
+  .formula-box .comment { color: rgba(255,255,255,0.35); }
+
+  /* ── FADE IN ── */
+  .fi { opacity: 0; transform: translateY(22px); transition: opacity .55s ease, transform .55s ease; }
+  .fi.in { opacity: 1; transform: none; }
+
+  footer {
+    background: var(--navy); color: rgba(255,255,255,0.5); text-align: center;
+    padding: 2.5rem 2rem; font-size: 0.85rem;
+  }
+  footer strong { color: white; }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════ NAV ══════════════════ -->
+<nav>
+  <div class="nav-logo">SMX · <span>RA3</span> · Ofimàtica</div>
+  <ul class="nav-pills">
+    <li><a href="#teoria" class="sheets">Teoria</a></li>
+    <li><a href="#practiques" class="prac">Pràctiques</a></li>
+    <li><a href="#preguntes" class="pregs">Preguntes</a></li>
+  </ul>
+</nav>
+
+<!-- ══════════════════ HERO ══════════════════ -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-dots"></div>
+  <div class="hero-content">
+    <div class="hero-badge">📊 SMX · Ofimàtica · Resultat d'Aprenentatge 3</div>
+    <h1>
+      <span class="g">G</span><span class="r">o</span><span class="y">o</span><span class="g">g</span><span class="gn">l</span><span class="r">e</span><br>
+      Sheets
+    </h1>
+    <p>Elabora documents i plantilles de càlcul, descrivint i aplicant opcions avançades de fulls de càlcul.</p>
+    <div class="hero-apps">
+      <div class="hero-app"><span class="dot" style="background:#0f9d58"></span>Google Sheets</div>
+      <div class="hero-app"><span class="dot" style="background:#fbbc04"></span>Fórmules avançades</div>
+      <div class="hero-app"><span class="dot" style="background:#4285f4"></span>Gràfics i dades</div>
+      <div class="hero-app"><span class="dot" style="background:#ea4335"></span>Macros i Scripts</div>
+    </div>
+  </div>
+  <div class="scroll-hint">DESPLAÇA</div>
+</section>
+
+<!-- ══════════════════ INTRODUCCIÓ ══════════════════ -->
+<section id="intro">
+  <div class="container fi">
+    <div class="section-tag tag-cobalt">Resultat d'Aprenentatge 3</div>
+    <h2>Fulls de càlcul amb Google Sheets</h2>
+    <p class="lead">Elabora documents i plantilles de càlcul, descrivint i aplicant opcions avançades de fulls de càlcul. Treballarem amb <strong>Google Sheets</strong> com a eina principal de tot el bloc.</p>
+
+    <div class="grid g3 fi">
+      <div class="card bl-sheets">
+        <div class="card-icon" style="background:#f0fdf4">📐</div>
+        <h3>Fórmules i Funcions</h3>
+        <p>Dominar les funcions matemàtiques, estadístiques, lògiques, de text i de cerca per automatitzar càlculs i processar dades.</p>
+        <div class="pills" style="margin-top:.75rem">
+          <span class="pill pill-s">SUMA</span>
+          <span class="pill pill-s">SI</span>
+          <span class="pill pill-s">BUSCARV</span>
+        </div>
+      </div>
+      <div class="card bl-blue">
+        <div class="card-icon" style="background:#eff6ff">📊</div>
+        <h3>Gràfics i Visualització</h3>
+        <p>Crear gràfics professionals, taules dinàmiques i panells de control per visualitzar i analitzar conjunts de dades complexos.</p>
+        <div class="pills" style="margin-top:.75rem">
+          <span class="pill pill-b">Gràfics</span>
+          <span class="pill pill-b">Pivot</span>
+          <span class="pill pill-b">Panell</span>
+        </div>
+      </div>
+      <div class="card bl-purp">
+        <div class="card-icon" style="background:#f5f3ff">⚙️</div>
+        <h3>Automatització i Macros</h3>
+        <p>Usar format condicional, validació de dades, protecció de cel·les, i macros amb Google Apps Script per automatitzar tasques.</p>
+        <div class="pills" style="margin-top:.75rem">
+          <span class="pill pill-v">Macros</span>
+          <span class="pill pill-v">Scripts</span>
+          <span class="pill pill-v">Protecció</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout cl-green fi" style="margin-top:2rem">
+      <span class="callout-icon">🎓</span>
+      <div>
+        <strong>Criteri d'avaluació principal:</strong>
+        <p style="margin-top:.3rem">L'alumnat ha de ser capaç de crear fulls de càlcul professionals, aplicar fórmules avançades, generar gràfics representatius, usar taules dinàmiques i crear plantilles reutilitzables amb Google Sheets.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ TEORIA BLOC 1 — INTERFÍCIE I CONCEPTES BÀSICS ══════════════════ -->
+<section id="teoria" class="s-sheets">
+  <div class="container">
+    <div class="ra-banner ra-sheets fi">
+      <div class="ra-num">1</div>
+      <div>
+        <h2>Interfície i conceptes fonamentals</h2>
+        <p>Estructura de Google Sheets, navegació, gestió de fulls i opcions de configuració essencials.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-sheets fi">L'entorn de treball</div>
+    <h2 class="fi">La interfície de Google Sheets</h2>
+    <p class="lead fi">Google Sheets és una eina de càlcul en núvol integrada a Google Workspace. Funciona al navegador sense necessitat d'instal·lació i permet la col·laboració en temps real.</p>
+
+    <div class="grid g2 fi">
+      <div class="card bl-sheets">
+        <div class="card-icon" style="background:#f0fdf4">🗂️</div>
+        <h3>Elements principals de la interfície</h3>
+        <ul style="list-style:none; padding:0;">
+          <li style="padding:.35rem 0; border-bottom:1px solid var(--border); font-size:.9rem; color:var(--muted)">📌 <strong style="color:var(--ink)">Barra de fórmules:</strong> mostra i edita el contingut de la cel·la activa.</li>
+          <li style="padding:.35rem 0; border-bottom:1px solid var(--border); font-size:.9rem; color:var(--muted)">🔤 <strong style="color:var(--ink)">Quadre de nom:</strong> indica la referència de la cel·la activa (p.ex. A1).</li>
+          <li style="padding:.35rem 0; border-bottom:1px solid var(--border); font-size:.9rem; color:var(--muted)">📑 <strong style="color:var(--ink)">Pestanyes de full:</strong> a la part inferior, permeten gestionar múltiples fulls dins el mateix fitxer.</li>
+          <li style="padding:.35rem 0; border-bottom:1px solid var(--border); font-size:.9rem; color:var(--muted)">🔢 <strong style="color:var(--ink)">Capçaleres de columna/fila:</strong> lletres (columnes) i números (files) que identifiquen cada cel·la.</li>
+          <li style="padding:.35rem 0; font-size:.9rem; color:var(--muted)">🔍 <strong style="color:var(--ink)">Barra d'estat:</strong> a la part inferior dreta, mostra suma, mitjana i recompte de la selecció actual.</li>
+        </ul>
+      </div>
+      <div class="card bl-sheets">
+        <div class="card-icon" style="background:#f0fdf4">⌨️</div>
+        <h3>Dreceres de teclat essencials</h3>
+        <div class="shortcuts">
+          <div class="sc-item"><span class="sc-key">Ctrl + C / V</span><span class="sc-desc">Copiar / Enganxar</span></div>
+          <div class="sc-item"><span class="sc-key">Ctrl + Z / Y</span><span class="sc-desc">Desfer / Refer</span></div>
+          <div class="sc-item"><span class="sc-key">Ctrl + F</span><span class="sc-desc">Cerca al full</span></div>
+          <div class="sc-item"><span class="sc-key">Ctrl + H</span><span class="sc-desc">Cerca i substitueix</span></div>
+          <div class="sc-item"><span class="sc-key">Ctrl + Maj + V</span><span class="sc-desc">Enganxar sense format</span></div>
+          <div class="sc-item"><span class="sc-key">Ctrl + Intro</span><span class="sc-desc">Emplenar cap avall el rang seleccionat</span></div>
+          <div class="sc-item"><span class="sc-key">F2</span><span class="sc-desc">Editar la cel·la activa</span></div>
+          <div class="sc-item"><span class="sc-key">Ctrl + Maj + :</span><span class="sc-desc">Inserir data d'avui</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-tag tag-sheets fi" style="margin-top:4rem">Tipus de dades i format</div>
+    <h2 class="fi">Dades, cel·les i format</h2>
+    <p class="lead fi">Una cel·la pot contenir quatre tipus de dades: text, números, dates/hores i fórmules. El format visual no canvia el valor intern de la cel·la.</p>
+
+    <div class="grid g3 fi">
+      <div class="card bl-sheets">
+        <div class="card-icon" style="background:#f0fdf4">🔢</div>
+        <h3>Tipus de dades</h3>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.3rem 0;font-size:.9rem;color:var(--muted);border-bottom:1px solid var(--border)"><strong style="color:var(--ink)">Text:</strong> alineat a l'esquerra per defecte.</li>
+          <li style="padding:.3rem 0;font-size:.9rem;color:var(--muted);border-bottom:1px solid var(--border)"><strong style="color:var(--ink)">Número:</strong> alineat a la dreta. Inclou enters, decimals i percentatges.</li>
+          <li style="padding:.3rem 0;font-size:.9rem;color:var(--muted);border-bottom:1px solid var(--border)"><strong style="color:var(--ink)">Data/Hora:</strong> internament emmagatzemat com un número. El format visual és independent del valor.</li>
+          <li style="padding:.3rem 0;font-size:.9rem;color:var(--muted)"><strong style="color:var(--ink)">Fórmula:</strong> comença sempre amb <code>=</code> i calcula un resultat dinàmic.</li>
+        </ul>
+      </div>
+      <div class="card bl-sheets">
+        <div class="card-icon" style="background:#f0fdf4">🎨</div>
+        <h3>Format de cel·les</h3>
+        <p style="margin-bottom:.6rem;font-size:.9rem">Accessible des de <strong>Format → Número</strong> o fent clic dret → Format de cel·les:</p>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.28rem 0;font-size:.88rem;color:var(--muted)">💰 <strong style="color:var(--ink)">Moneda:</strong> afegeix símbol i decimals fixos.</li>
+          <li style="padding:.28rem 0;font-size:.88rem;color:var(--muted)">📅 <strong style="color:var(--ink)">Data personalitzada:</strong> dd/mm/aaaa, mmm-aa, etc.</li>
+          <li style="padding:.28rem 0;font-size:.88rem;color:var(--muted)">% <strong style="color:var(--ink)">Percentatge:</strong> multiplica per 100 i afegeix %.</li>
+          <li style="padding:.28rem 0;font-size:.88rem;color:var(--muted)">🔢 <strong style="color:var(--ink)">Número personalitzat:</strong> p.ex. <code>0.000</code> per tres decimals.</li>
+        </ul>
+      </div>
+      <div class="card bl-amber">
+        <div class="card-icon" style="background:#fffbeb">⚠️</div>
+        <h3>Errors comuns</h3>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.28rem 0;font-size:.88rem;color:var(--muted)"><code>#DIV/0!</code> Divisió per zero.</li>
+          <li style="padding:.28rem 0;font-size:.88rem;color:var(--muted)"><code>#VALOR!</code> Tipus de dada incorrecte.</li>
+          <li style="padding:.28rem 0;font-size:.88rem;color:var(--muted)"><code>#REF!</code> Referència no vàlida (cel·la eliminada).</li>
+          <li style="padding:.28rem 0;font-size:.88rem;color:var(--muted)"><code>#NOM?</code> Nom de funció desconegut.</li>
+          <li style="padding:.28rem 0;font-size:.88rem;color:var(--muted)"><code>#N/A</code> Valor no disponible (habitual en BUSCARV).</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ TEORIA BLOC 2 — FÓRMULES I FUNCIONS ══════════════════ -->
+<section class="s-blue">
+  <div class="container">
+    <div class="ra-banner ra-blue fi">
+      <div class="ra-num">2</div>
+      <div>
+        <h2>Fórmules i funcions avançades</h2>
+        <p>Funcions matemàtiques, estadístiques, lògiques, de text, de cerca i de data per automatitzar qualsevol càlcul.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-blue fi">Tipus de referències</div>
+    <h2 class="fi">Referències relatives, absolutes i mixtes</h2>
+    <p class="lead fi">Entendre les referències és fonamental per copiar fórmules correctament. Una referència indica quines cel·les participa en el càlcul.</p>
+
+    <div class="grid g3 fi">
+      <div class="card bl-sheets">
+        <div class="card-icon" style="background:#f0fdf4">↔️</div>
+        <h3>Referència relativa</h3>
+        <p>S'ajusta automàticament en copiar la fórmula. Exemple: <code>A1</code>. Si copies la fórmula una fila cap avall, es converteix en <code>A2</code>.</p>
+        <div class="formula-box">=A1*B1</div>
+        <p style="font-size:.85rem;margin-top:.5rem">Ideal per aplicar la mateixa operació a totes les files d'una taula.</p>
+      </div>
+      <div class="card bl-blue">
+        <div class="card-icon" style="background:#eff6ff">📌</div>
+        <h3>Referència absoluta</h3>
+        <p>No canvia en copiar la fórmula. S'indica amb <code>$</code> davant la lletra i el número. Drecera: <kbd>F4</kbd>.</p>
+        <div class="formula-box">=$A$1*B1</div>
+        <p style="font-size:.85rem;margin-top:.5rem">Ideal quan una cel·la actua com a constant global (p.ex. IVA, tipus de canvi).</p>
+      </div>
+      <div class="card bl-amber">
+        <div class="card-icon" style="background:#fffbeb">🔀</div>
+        <h3>Referència mixta</h3>
+        <p>Fixa només la columna (<code>$A1</code>) o només la fila (<code>A$1</code>). Útil en taules de multiplicar o conversions.</p>
+        <div class="formula-box">=$A1*B$1</div>
+        <p style="font-size:.85rem;margin-top:.5rem">Premeu <kbd>F4</kbd> repetidament per ciclar entre els quatre tipus de referència.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-blue fi" style="margin-top:4rem">Funcions per categoria</div>
+    <h2 class="fi">Funcions essencials de Google Sheets</h2>
+
+    <div class="grid g2 fi">
+      <div class="card bl-sheets">
+        <div class="card-icon" style="background:#f0fdf4">➕</div>
+        <h3>Funcions matemàtiques i estadístiques</h3>
+        <table class="ptable" style="margin-top:.5rem">
+          <thead><tr><th>Funció</th><th>Descripció</th></tr></thead>
+          <tbody>
+            <tr><td><code>SUMA(rang)</code></td><td>Suma tots els valors del rang.</td></tr>
+            <tr><td><code>SUMASI(rang;criteri)</code></td><td>Suma condicionalment.</td></tr>
+            <tr><td><code>SUMASICONJUNTO</code></td><td>Suma amb múltiples criteris.</td></tr>
+            <tr><td><code>PROMEDI(rang)</code></td><td>Mitjana aritmètica.</td></tr>
+            <tr><td><code>MAX / MIN</code></td><td>Valor màxim i mínim.</td></tr>
+            <tr><td><code>COMPTAR(rang)</code></td><td>Compta cel·les amb números.</td></tr>
+            <tr><td><code>COMPTARSI(rang;criteri)</code></td><td>Compta condicionalment.</td></tr>
+            <tr><td><code>ARRODONIR(n;decimals)</code></td><td>Arrodoneix un nombre.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card bl-blue">
+        <div class="card-icon" style="background:#eff6ff">🔀</div>
+        <h3>Funcions lògiques</h3>
+        <table class="ptable" style="margin-top:.5rem">
+          <thead><tr><th>Funció</th><th>Descripció</th></tr></thead>
+          <tbody>
+            <tr><td><code>SI(cond;V;F)</code></td><td>Si la condició és certa retorna V, si no F.</td></tr>
+            <tr><td><code>SI.CONJUNT(...)</code></td><td>Múltiples condicions encadenades.</td></tr>
+            <tr><td><code>I(cond1;cond2)</code></td><td>Cert si totes les condicions són certes.</td></tr>
+            <tr><td><code>O(cond1;cond2)</code></td><td>Cert si almenys una condició és certa.</td></tr>
+            <tr><td><code>NO(cond)</code></td><td>Inverteix el resultat lògic.</td></tr>
+            <tr><td><code>SIIERROR(valor;si_err)</code></td><td>Captura errors i retorna un valor alternatiu.</td></tr>
+          </tbody>
+        </table>
+        <div class="ex ex-sheets" style="margin-top:.75rem">
+          <div class="ex-lbl">💡 Exemple SI anidado</div>
+          <div class="formula-box">=SI(B2>=9;"Excel·lent";SI(B2>=5;"Aprovat";"Suspès"))</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid g2 fi" style="margin-top:1.25rem">
+      <div class="card bl-sheets">
+        <div class="card-icon" style="background:#f0fdf4">🔍</div>
+        <h3>Funcions de cerca i referència</h3>
+        <table class="ptable" style="margin-top:.5rem">
+          <thead><tr><th>Funció</th><th>Descripció</th></tr></thead>
+          <tbody>
+            <tr><td><code>BUSCARV</code></td><td>Cerca vertical per la primera columna d'un rang.</td></tr>
+            <tr><td><code>BUSCAH</code></td><td>Cerca horitzontal per la primera fila d'un rang.</td></tr>
+            <tr><td><code>ÍNDEX + COINCIDIR</code></td><td>Cerca flexible en qualsevol direcció (recomanada).</td></tr>
+            <tr><td><code>XLOOKUP</code></td><td>Versió moderna i potent de BUSCARV.</td></tr>
+            <tr><td><code>IMPORTRANGE</code></td><td>Importa dades d'un altre full de càlcul de Google.</td></tr>
+          </tbody>
+        </table>
+        <div class="ex ex-sheets" style="margin-top:.75rem">
+          <div class="ex-lbl">💡 Exemple BUSCARV</div>
+          <div class="formula-box">=BUSCARV(A2;Productes!A:C;2;FALS)</div>
+        </div>
+      </div>
+      <div class="card bl-purp">
+        <div class="card-icon" style="background:#f5f3ff">🔤</div>
+        <h3>Funcions de text i data</h3>
+        <table class="ptable" style="margin-top:.5rem">
+          <thead><tr><th>Funció</th><th>Descripció</th></tr></thead>
+          <tbody>
+            <tr><td><code>CONCATENAR / &</code></td><td>Uneix text de múltiples cel·les.</td></tr>
+            <tr><td><code>ESQUERRA / DRETA</code></td><td>Extreu caràcters de l'esquerra/dreta.</td></tr>
+            <tr><td><code>MIG(text;ini;num)</code></td><td>Extreu caràcters del mig.</td></tr>
+            <tr><td><code>MAJÚSCULES / MINÚSCULES</code></td><td>Canvia majúscules/minúscules.</td></tr>
+            <tr><td><code>LARGO(text)</code></td><td>Compta el nombre de caràcters.</td></tr>
+            <tr><td><code>AVUI() / ARA()</code></td><td>Data d'avui / data i hora actuals.</td></tr>
+            <tr><td><code>DIA / MES / ANY</code></td><td>Extreu parts d'una data.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="callout cl-green fi" style="margin-top:2rem">
+      <span class="callout-icon">💡</span>
+      <div>
+        <strong>Consell: Funcions d'array (ARRAYFORMULA)</strong>
+        <p style="margin-top:.3rem">La funció <code>ARRAYFORMULA</code> permet aplicar una fórmula a tot un rang de cop, sense necessitat de copiar-la cel·la per cel·la. Exemple: <code>=ARRAYFORMULA(A2:A100*B2:B100)</code> calcula el producte de dues columnes amb una sola fórmula.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ TEORIA BLOC 3 — GRÀFICS I DADES ══════════════════ -->
+<section class="s-sheets">
+  <div class="container">
+    <div class="ra-banner ra-sheets fi">
+      <div class="ra-num">3</div>
+      <div>
+        <h2>Gràfics, taules dinàmiques i anàlisi de dades</h2>
+        <p>Visualitzar la informació de manera professional i analitzar conjunts de dades complexos.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-sheets fi">Gràfics</div>
+    <h2 class="fi">Creació i personalització de gràfics</h2>
+    <p class="lead fi">Un gràfic ben triat comunica en un segon el que una taula de dades trigaria minuts a transmetre. A Google Sheets els gràfics s'actualitzen automàticament quan canvien les dades.</p>
+
+    <div class="grid g2 fi">
+      <div class="card bl-sheets">
+        <div class="card-icon" style="background:#f0fdf4">📊</div>
+        <h3>Tipus de gràfics i quan usar-los</h3>
+        <table class="ptable" style="margin-top:.5rem">
+          <thead><tr><th>Tipus</th><th>Ideal per a...</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge b-sheets">Barres / Columnes</span></td><td>Comparar categories discretes.</td></tr>
+            <tr><td><span class="badge b-blue">Línies</span></td><td>Evolució al llarg del temps (tendències).</td></tr>
+            <tr><td><span class="badge b-amber">Sectors (Pastís)</span></td><td>Proporcions d'un total (màx. 5-6 sectors).</td></tr>
+            <tr><td><span class="badge b-purp">Dispersió (XY)</span></td><td>Correlació entre dues variables numèriques.</td></tr>
+            <tr><td><span class="badge b-red">Àrea</span></td><td>Evolució acumulada de diverses sèries.</td></tr>
+            <tr><td><span class="badge b-sheets">Combinat</span></td><td>Dues sèries amb escales diferents (barres + línia).</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card bl-blue">
+        <div class="card-icon" style="background:#eff6ff">⚙️</div>
+        <h3>Personalització avançada de gràfics</h3>
+        <p style="margin-bottom:.6rem;font-size:.9rem">Al panell lateral "Editor de gràfics" → pestanya "Personalitza":</p>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted);border-bottom:1px solid var(--border)">🎨 <strong style="color:var(--ink)">Estil del gràfic:</strong> colors, fons, contorn del gràfic.</li>
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted);border-bottom:1px solid var(--border)">📝 <strong style="color:var(--ink)">Títol i eixos:</strong> títol del gràfic, etiquetes dels eixos X i Y.</li>
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted);border-bottom:1px solid var(--border)">📌 <strong style="color:var(--ink)">Sèries:</strong> color de cada sèrie, línies de tendència, barres d'error.</li>
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted);border-bottom:1px solid var(--border)">🗒️ <strong style="color:var(--ink)">Llegenda:</strong> posició i format de la llegenda.</li>
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted)">🔢 <strong style="color:var(--ink)">Etiquetes de dades:</strong> mostrar el valor de cada punt/barra.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section-tag tag-sheets fi" style="margin-top:4rem">Taules dinàmiques</div>
+    <h2 class="fi">Taules dinàmiques (Pivot Tables)</h2>
+    <p class="lead fi">Les taules dinàmiques permeten resumir, agrupar i analitzar grans conjunts de dades en segons, sense alterar les dades originals.</p>
+
+    <div class="grid g2 fi">
+      <div class="card bl-sheets">
+        <div class="card-icon" style="background:#f0fdf4">🔄</div>
+        <h3>Com crear una taula dinàmica</h3>
+        <ol class="steps">
+          <li><p>Selecciona el rang de dades (inclou les capçaleres).</p></li>
+          <li><p>Ves a <strong>Insereix → Taula dinàmica</strong>.</p></li>
+          <li><p>Tria si la vols al full actual o en un de nou.</p></li>
+          <li><p>Al panell lateral arrossega camps a <strong>Files, Columnes, Valors i Filtres</strong>.</p></li>
+          <li><p>A "Valors" tria l'operació: Suma, Comptatge, Mitjana, Màx, Mín…</p></li>
+          <li><p>Ordena o filtra els resultats directament a la taula dinàmica.</p></li>
+        </ol>
+      </div>
+      <div class="card bl-blue">
+        <div class="card-icon" style="background:#eff6ff">✅</div>
+        <h3>Bones pràctiques per a l'ús de dades</h3>
+        <div class="callout cl-green" style="margin-bottom:.75rem;padding:.9rem 1rem">
+          <span class="callout-icon">✅</span>
+          <div><p><strong>La primera fila sempre ha de ser la capçalera.</strong> Cada columna representa un camp (atribut) i cada fila representa un registre. No combineu cel·les en les dades originals.</p></div>
+        </div>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted);border-bottom:1px solid var(--border)">🚫 No deixis files o columnes buides al mig de les dades.</li>
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted);border-bottom:1px solid var(--border)">🔤 Usa noms de columna descriptius i sense espais (o amb guions baixos).</li>
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted)">📅 Assegura't que les dates siguin reconegudes com a dates, no com a text.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section-tag tag-sheets fi" style="margin-top:4rem">Format condicional i validació</div>
+    <h2 class="fi">Format condicional i validació de dades</h2>
+    <div class="grid g2 fi">
+      <div class="card bl-sheets">
+        <div class="card-icon" style="background:#f0fdf4">🎨</div>
+        <h3>Format condicional</h3>
+        <p style="margin-bottom:.6rem;font-size:.9rem">Aplica format visual automàtic basant-se en el valor de les cel·les: <strong>Format → Format condicional</strong>.</p>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted);border-bottom:1px solid var(--border)">🟢 <strong style="color:var(--ink)">Escales de color:</strong> de vermell a verd per representar rangs de valors.</li>
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted);border-bottom:1px solid var(--border)">📏 <strong style="color:var(--ink)">Barres de dades:</strong> minibarra dins de la cel·la proporcional al valor.</li>
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted)">📐 <strong style="color:var(--ink)">Regles personalitzades:</strong> basades en fórmules. Ex: ressaltar files duplicades o cel·les per sota d'una mitjana.</li>
+        </ul>
+        <div class="formula-box" style="margin-top:.75rem">=COUNTIF($A:$A;A1)>1 <span class="comment"> ← duplicats</span></div>
+      </div>
+      <div class="card bl-blue">
+        <div class="card-icon" style="background:#eff6ff">✅</div>
+        <h3>Validació de dades</h3>
+        <p style="margin-bottom:.6rem;font-size:.9rem"><strong>Dades → Validació de dades</strong>: controla el tipus de valor que es pot introduir a una cel·la.</p>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted);border-bottom:1px solid var(--border)">📋 <strong style="color:var(--ink)">Llista d'elements:</strong> crea un menú desplegable amb opcions predefinides.</li>
+          <li style="padding:.3rem 0;font-size:.88mm;color:var(--muted);border-bottom:1px solid var(--border)">🔢 <strong style="color:var(--ink)">Número en rang:</strong> p.ex. entre 1 i 100.</li>
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted);border-bottom:1px solid var(--border)">📅 <strong style="color:var(--ink)">Data vàlida:</strong> evita introduir text en camps de data.</li>
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted)">⚠️ <strong style="color:var(--ink)">Missatge d'error personalitzat:</strong> informa l'usuari quan introdueix un valor incorrecte.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ TEORIA BLOC 4 — COL·LABORACIÓ I MACROS ══════════════════ -->
+<section class="s-blue">
+  <div class="container">
+    <div class="ra-banner ra-blue fi">
+      <div class="ra-num">4</div>
+      <div>
+        <h2>Col·laboració, protecció i automatització</h2>
+        <p>Compartir fulls de càlcul de manera segura, protegir dades crítiques i automatitzar tasques repetitives amb macros.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-blue fi">Protecció i permisos</div>
+    <h2 class="fi">Protecció de cel·les, fulls i fitxers</h2>
+    <div class="grid g2 fi">
+      <div class="card bl-sheets">
+        <div class="card-icon" style="background:#f0fdf4">🔒</div>
+        <h3>Protecció de rangs i fulls</h3>
+        <p style="margin-bottom:.6rem;font-size:.9rem">Accedeix a <strong>Dades → Protegeix els fulls i els intervals</strong>:</p>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted);border-bottom:1px solid var(--border)">🔐 <strong style="color:var(--ink)">Protegir un rang:</strong> impedeix que altres usuaris modifiquin cel·les específiques (p.ex. fórmules crítiques).</li>
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted);border-bottom:1px solid var(--border)">📋 <strong style="color:var(--ink)">Protegir un full sencer:</strong> permet llegir però no editar.</li>
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted)">👥 <strong style="color:var(--ink)">Excepcions:</strong> pots permetre que determinats usuaris sí que editin el rang protegit.</li>
+        </ul>
+      </div>
+      <div class="card bl-blue">
+        <div class="card-icon" style="background:#eff6ff">👥</div>
+        <h3>Permisos de compartició</h3>
+        <table class="ptable" style="margin-top:.5rem">
+          <thead><tr><th>Rol</th><th>Permet</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge b-purp">Visualitzador</span></td><td>Llegir el document. No pot editar ni comentar.</td></tr>
+            <tr><td><span class="badge b-amber">Comentarista</span></td><td>Llegir i afegir comentaris. No pot editar dades.</td></tr>
+            <tr><td><span class="badge b-sheets">Editor</span></td><td>Modificar tot el contingut del full.</td></tr>
+          </tbody>
+        </table>
+        <div class="callout cl-blue" style="margin-top:.75rem;padding:.9rem 1rem">
+          <span class="callout-icon">💡</span>
+          <p>Compartir via <strong>"Qualsevol persona amb l'enllaç"</strong> és útil per a informes de lectura pública, però mai ho facis amb dades sensibles.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-tag tag-blue fi" style="margin-top:4rem">Macros i Apps Script</div>
+    <h2 class="fi">Macros i Google Apps Script</h2>
+    <p class="lead fi">Les macros permeten gravar i reproduir una seqüència d'accions. Per a automatitzacions avançades s'usa Google Apps Script, basat en JavaScript.</p>
+
+    <div class="grid g2 fi">
+      <div class="card bl-sheets">
+        <div class="card-icon" style="background:#f0fdf4">⏺️</div>
+        <h3>Gravar una macro</h3>
+        <ol class="steps">
+          <li><p>Ves a <strong>Extensions → Macros → Grava una macro</strong>.</p></li>
+          <li><p>Tria <strong>Referència absoluta</strong> o <strong>relativa</strong> (relativa si vols aplicar-la a qualsevol cel·la seleccionada).</p></li>
+          <li><p>Realitza les accions que vols automatitzar (formats, insercions, càlculs).</p></li>
+          <li><p>Fes clic a <strong>Desa</strong>, posa-li un nom i opcionalment assigna una drecera de teclat.</p></li>
+          <li><p>Executa-la des de <strong>Extensions → Macros → [nom de la macro]</strong>.</p></li>
+        </ol>
+      </div>
+      <div class="card bl-purp">
+        <div class="card-icon" style="background:#f5f3ff">📝</div>
+        <h3>Google Apps Script bàsic</h3>
+        <p style="margin-bottom:.6rem;font-size:.9rem">Accedeix a l'editor des de <strong>Extensions → Apps Script</strong>:</p>
+        <div class="formula-box">
+function enviarCorreu() {<br>
+&nbsp;&nbsp;var full = SpreadsheetApp<br>
+&nbsp;&nbsp;&nbsp;&nbsp;.getActiveSheet();<br>
+&nbsp;&nbsp;var valor = full.getRange("A1")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;.getValue();<br>
+&nbsp;&nbsp;MailApp.sendEmail({<br>
+&nbsp;&nbsp;&nbsp;&nbsp;to: "professor@escola.cat",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;subject: "Informe automàtic",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;body: "Valor A1: " + valor<br>
+&nbsp;&nbsp;});<br>
+}
+        </div>
+        <p style="font-size:.82rem;margin-top:.5rem;color:var(--muted)">Les macros gravades generen automàticament codi Apps Script que es pot editar i millorar.</p>
+      </div>
+    </div>
+
+    <div class="callout cl-purp fi" style="margin-top:2rem">
+      <span class="callout-icon">🚀</span>
+      <div>
+        <strong>Funcions personalitzades amb Apps Script</strong>
+        <p style="margin-top:.3rem">Pots crear les teves pròpies funcions de full de càlcul amb Apps Script. Defineix una funció JavaScript amb el nom que vulguis i podràs usar-la directament a les cel·les amb <code>=NOMFUNCIO(arguments)</code>, igual que qualsevol funció integrada.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ PRÀCTIQUES ══════════════════ -->
+<section id="practiques" class="s-dark">
+  <div class="container">
+    <div class="section-tag fi" style="color:rgba(255,255,255,0.5)">Activitats pràctiques</div>
+    <h2 class="fi" style="color:white">6 Pràctiques · De bàsica a avançada</h2>
+    <p class="lead fi">Les pràctiques estan ordenades progressivament: les primeres cobreixen operacions bàsiques i les últimes treballen escenaris professionals complexos amb múltiples funcionalitats integrades.</p>
+
+    <!-- P1 -->
+    <div class="practice-card fi" style="margin-bottom:2rem">
+      <div class="practice-header p1-bg">
+        <div class="practice-num">01</div>
+        <div>
+          <h3>Full de pressupost familiar mensual</h3>
+          <p>Bàsic · Introducció de dades, format i funcions bàsiques</p>
+        </div>
+      </div>
+      <div class="practice-body">
+        <div class="grid g2">
+          <div>
+            <h4>📋 Descripció</h4>
+            <p style="font-size:.92rem;color:var(--muted);margin-bottom:1rem">Crea un full de càlcul per controlar ingressos i despeses d'una llar durant un mes. L'objectiu és familiaritzar-se amb la introducció de dades, els formats bàsics i les funcions essencials.</p>
+            <h4>🎯 Objectius d'aprenentatge</h4>
+            <ul class="steps" style="margin-top:.5rem">
+              <li><p>Crear i reanomenar fulls dins d'un mateix fitxer.</p></li>
+              <li><p>Aplicar format de número, moneda i percentatge.</p></li>
+              <li><p>Usar <code>SUMA</code>, <code>PROMEDI</code>, <code>MAX</code> i <code>MIN</code>.</p></li>
+              <li><p>Ajustar amplada de columnes i alçada de files. Congelar la fila de capçalera.</p></li>
+            </ul>
+          </div>
+          <div>
+            <h4>📝 Tasques</h4>
+            <ul style="padding-left:1.2rem;font-size:.9rem;color:var(--muted)">
+              <li style="margin-bottom:.5rem">Crea un full amb les columnes: Data, Categoria, Descripció, Import (€), Tipus (Ingrés/Despesa).</li>
+              <li style="margin-bottom:.5rem">Introdueix almenys 20 registres reals o inventats (barreja ingressos i despeses de categories com: alimentació, transport, lleure, habitatge, salut).</li>
+              <li style="margin-bottom:.5rem">Crea una secció de "Resum" al costat o en un altre full amb el total d'ingressos, total de despeses, balanç net i percentatge estalviat.</li>
+              <li>Aplica color de fons diferent per a la fila de capçalera i per a les files d'ingressos vs despeses.</li>
+            </ul>
+            <div class="callout cl-green" style="margin-top:1rem;padding:.85rem 1rem">
+              <span class="callout-icon">📦</span>
+              <p><strong>Entrega:</strong> fitxer Google Sheets compartit amb permís de visualització. Captura de pantalla del resum.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- P2 -->
+    <div class="practice-card fi" style="margin-bottom:2rem">
+      <div class="practice-header p2-bg">
+        <div class="practice-num">02</div>
+        <div>
+          <h3>Registre de notes d'una classe</h3>
+          <p>Elemental · Funcions condicionals i format automàtic</p>
+        </div>
+      </div>
+      <div class="practice-body">
+        <div class="grid g2">
+          <div>
+            <h4>📋 Descripció</h4>
+            <p style="font-size:.92rem;color:var(--muted);margin-bottom:1rem">Crea un full per registrar i analitzar les notes de 20 alumnes en 4 assignatures. Usa funcions <code>SI</code> per calcular la qualificació final i aplica format condicional per visualitzar l'estat de cada alumne.</p>
+            <h4>🎯 Objectius d'aprenentatge</h4>
+            <ul class="steps" style="margin-top:.5rem">
+              <li><p>Usar funcions <code>SI</code> i <code>SI</code> anidat per assignar qualificacions (Suspès/Aprovat/Notable/Excel·lent).</p></li>
+              <li><p>Calcular la nota mitja ponderada usant <code>PROMEDI</code>.</p></li>
+              <li><p>Aplicar format condicional per ressaltar notes suspeses en vermell i excel·lents en verd.</p></li>
+            </ul>
+          </div>
+          <div>
+            <h4>📝 Tasques</h4>
+            <ul style="padding-left:1.2rem;font-size:.9rem;color:var(--muted)">
+              <li style="margin-bottom:.5rem">Columnes: Nom alumne, Nota 1ª Av, Nota 2ª Av, Nota 3ª Av, Examen final (pes 40%), Nota final, Qualificació.</li>
+              <li style="margin-bottom:.5rem">La Nota Final ha de combinar la nota de les avaluacions (60%) amb l'examen (40%).</li>
+              <li style="margin-bottom:.5rem">La columna "Qualificació" ha d'usar un <code>SI</code> anidat: ≥9 Excel·lent, ≥7 Notable, ≥5 Aprovat, &lt;5 Suspès.</li>
+              <li>Crea una fila de resum amb: nota mínima, màxima, mitja, nombre d'aprovats i suspesos de la classe.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- P3 -->
+    <div class="practice-card fi" style="margin-bottom:2rem">
+      <div class="practice-header p3-bg">
+        <div class="practice-num">03</div>
+        <div>
+          <h3>Catàleg de productes amb BUSCARV</h3>
+          <p>Intermedi · Funcions de cerca i validació de dades</p>
+        </div>
+      </div>
+      <div class="practice-body">
+        <div class="grid g2">
+          <div>
+            <h4>📋 Descripció</h4>
+            <p style="font-size:.92rem;color:var(--muted);margin-bottom:1rem">Simula el sistema de gestió d'una botiga. En un full tens el catàleg de productes i en un altre full crees un formulari de comanda on, en introduir el codi del producte, s'omplen automàticament el nom, preu i categoria usant <code>BUSCARV</code>.</p>
+            <h4>🎯 Objectius d'aprenentatge</h4>
+            <ul class="steps" style="margin-top:.5rem">
+              <li><p>Usar <code>BUSCARV</code> per cercar dades entre fulls.</p></li>
+              <li><p>Crear llistes desplegables amb validació de dades.</p></li>
+              <li><p>Usar <code>SIIERROR</code> per gestionar errors de cerca.</p></li>
+              <li><p>Calcular subtotals, IVA i total amb referències absolutes.</p></li>
+            </ul>
+          </div>
+          <div>
+            <h4>📝 Tasques</h4>
+            <ul style="padding-left:1.2rem;font-size:.9rem;color:var(--muted)">
+              <li style="margin-bottom:.5rem"><strong>Full "Catàleg":</strong> Codi, Nom, Categoria, Preu unitari, Estoc. Mínim 15 productes.</li>
+              <li style="margin-bottom:.5rem"><strong>Full "Comanda":</strong> columnes Codi (s'introdueix manualment), Nom (BUSCARV automàtic), Preu (BUSCARV), Quantitat, Subtotal.</li>
+              <li style="margin-bottom:.5rem">Afegeix una validació de dades a la columna Codi per mostrar un advertiment si el codi no existeix al catàleg.</li>
+              <li>Calcula el total de la comanda amb IVA (21%). Usa una cel·la amb el valor de l'IVA en referència absoluta.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- P4 -->
+    <div class="practice-card fi" style="margin-bottom:2rem">
+      <div class="practice-header p4-bg">
+        <div class="practice-num">04</div>
+        <div>
+          <h3>Anàlisi de vendes amb gràfics i taula dinàmica</h3>
+          <p>Intermedi-Alt · Taules dinàmiques, gràfics i SUMASI</p>
+        </div>
+      </div>
+      <div class="practice-body">
+        <div class="grid g2">
+          <div>
+            <h4>📋 Descripció</h4>
+            <p style="font-size:.92rem;color:var(--muted);margin-bottom:1rem">Treballaràs amb un conjunt de dades de vendes d'una empresa amb almenys 100 registres (pots usar dades inventades o descarregar un dataset de mostra). L'objectiu és analitzar les vendes per regió, producte i mes usant taules dinàmiques i gràfics.</p>
+            <h4>🎯 Objectius d'aprenentatge</h4>
+            <ul class="steps" style="margin-top:.5rem">
+              <li><p>Crear taules dinàmiques per resumir dades per múltiples dimensions.</p></li>
+              <li><p>Generar gràfics de columnes i de línies a partir de la taula dinàmica.</p></li>
+              <li><p>Usar <code>SUMASI</code> i <code>COMPTARSI</code> per calcular KPIs.</p></li>
+            </ul>
+          </div>
+          <div>
+            <h4>📝 Tasques</h4>
+            <ul style="padding-left:1.2rem;font-size:.9rem;color:var(--muted)">
+              <li style="margin-bottom:.5rem">Dataset amb camps: Data, Venedor, Regió, Producte, Quantitat, Preu unitari, Total venda.</li>
+              <li style="margin-bottom:.5rem">Taula dinàmica 1: Vendes totals per Regió i Producte.</li>
+              <li style="margin-bottom:.5rem">Taula dinàmica 2: Evolució mensual de vendes (files = Mesos, columnes = Regions).</li>
+              <li style="margin-bottom:.5rem">Gràfic de columnes agrupades per la taula 1 i gràfic de línies per la taula 2.</li>
+              <li>Full "KPIs": usa <code>SUMASI</code> per calcular vendes per venedor i per trimestre.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- P5 -->
+    <div class="practice-card fi" style="margin-bottom:2rem">
+      <div class="practice-header p5-bg">
+        <div class="practice-num">05</div>
+        <div>
+          <h3>Planificador de projecte amb Gantt i macros</h3>
+          <p>Avançat · Gràfic de Gantt, format condicional avançat i macros</p>
+        </div>
+      </div>
+      <div class="practice-body">
+        <div class="grid g2">
+          <div>
+            <h4>📋 Descripció</h4>
+            <p style="font-size:.92rem;color:var(--muted);margin-bottom:1rem">Crea una eina de gestió de projectes amb un diagrama de Gantt interactiu. El diagrama es genera automàticament a partir d'una taula de tasques usant format condicional basat en fórmules.</p>
+            <h4>🎯 Objectius d'aprenentatge</h4>
+            <ul class="steps" style="margin-top:.5rem">
+              <li><p>Construir un gràfic de Gantt amb format condicional basat en fórmules de data.</p></li>
+              <li><p>Usar funcions de data: <code>AVUI()</code>, <code>DIES()</code>, <code>DATA()</code>.</p></li>
+              <li><p>Gravar i executar una macro per formatar l'informe automàticament.</p></li>
+              <li><p>Protegir el full Gantt per evitar modificacions accidentals.</p></li>
+            </ul>
+          </div>
+          <div>
+            <h4>📝 Tasques</h4>
+            <ul style="padding-left:1.2rem;font-size:.9rem;color:var(--muted)">
+              <li style="margin-bottom:.5rem">Taula de tasques: ID, Nom tasca, Responsable, Data inici, Data fi, % Completat, Estat (pendent/en curs/completat).</li>
+              <li style="margin-bottom:.5rem">El Gantt: cada columna representa un dia (o setmana). Usa format condicional amb la fórmula <code>=I(E$1>=$C2;E$1&lt;=$D2)</code> per omplir de color les cel·les corresponents.</li>
+              <li style="margin-bottom:.5rem">Usa una escala de color diferent per a les tasques completades vs en curs.</li>
+              <li>Grava una macro que ordeni la taula per data d'inici i apliqui el format de capçalera automàticament.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- P6 -->
+    <div class="practice-card fi">
+      <div class="practice-header p6-bg">
+        <div class="practice-num">06</div>
+        <div>
+          <h3>Panell de control empresarial complet (Dashboard)</h3>
+          <p>Molt avançat · Dashboard professional integrant totes les competències del RA3</p>
+        </div>
+      </div>
+      <div class="practice-body">
+        <div class="grid g2">
+          <div>
+            <h4>📋 Descripció</h4>
+            <p style="font-size:.92rem;color:var(--muted);margin-bottom:1rem">Crea un panell de control (dashboard) professional per a una empresa fictícia. El fitxer ha de tenir diverses pestanyes de dades i un full de "Panell" que consolida tots els indicadors clau de negoci (KPIs) amb gràfics, fórmules avançades, format condicional, validació, protecció i una macro d'actualització.</p>
+            <h4>🎯 Objectius d'aprenentatge</h4>
+            <ul class="steps" style="margin-top:.5rem">
+              <li><p>Integrar múltiples fulls amb <code>IMPORTRANGE</code> i referències creuades.</p></li>
+              <li><p>Usar <code>ÍNDEX+COINCIDIR</code> o <code>XLOOKUP</code> per cerques avançades.</p></li>
+              <li><p>Crear gràfics combinats (barres + línia) i gràfics de velocímetre.</p></li>
+              <li><p>Protegir rangs crítics i aplicar permisos de col·laboració adequats.</p></li>
+              <li><p>Escriure un script Apps Script per enviar un resum per correu o generar un PDF.</p></li>
+            </ul>
+          </div>
+          <div>
+            <h4>📝 Estructura del fitxer</h4>
+            <ul style="padding-left:1.2rem;font-size:.9rem;color:var(--muted)">
+              <li style="margin-bottom:.5rem"><strong>Full "Vendes":</strong> dataset de vendes mensuals per producte i regió (mínim 200 registres).</li>
+              <li style="margin-bottom:.5rem"><strong>Full "RH":</strong> empleats, departament, salari, antiguitat, avaluació de rendiment.</li>
+              <li style="margin-bottom:.5rem"><strong>Full "Finances":</strong> ingressos, despeses, benefici per mes. Ràtios financers calculats.</li>
+              <li style="margin-bottom:.5rem"><strong>Full "Panell":</strong> KPIs visuals (vendes totals, creixement %, empleats actius, benefici net), gràfic d'evolució mensual, top 5 productes, alertes automàtiques amb format condicional si algun KPI és negatiu.</li>
+              <li style="margin-bottom:.5rem">Slicer o validació desplegable per filtrar el Panell per any o trimestre.</li>
+              <li><strong>Script:</strong> funció que generi un resum en text de tots els KPIs i l'enviï per correu electrònic o el guardi en un nou document de Google Docs.</li>
+            </ul>
+            <div class="callout cl-purp" style="margin-top:1rem;padding:.85rem 1rem">
+              <span class="callout-icon">🏆</span>
+              <p><strong>Criteri d'excel·lència:</strong> el Panell ha de ser llegible i funcional per a algú que no sap d'Sheets. Protegeix les fórmules crítiques. Presenta el resultat en classe.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ PREGUNTES TEÒRIQUES ══════════════════ -->
+<section id="preguntes">
+  <div class="container">
+    <div class="ra-banner ra-preguntes fi">
+      <div class="ra-num">?</div>
+      <div>
+        <h2>10 Preguntes Teòriques</h2>
+        <p>Reflexiona i respon amb els teus propis mots. Sense respostes guia: l'important és el raonament.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-sheets fi">Fonaments i fórmules</div>
+    <h2 class="fi">Preguntes sobre fórmules i funcions</h2>
+    <div class="grid fi" style="gap:.9rem;margin-bottom:3rem">
+
+      <div class="q-card">
+        <div class="q-num">1</div>
+        <div class="q-body">
+          <h4>Explica la diferència entre una referència relativa, una d'absoluta i una de mixta a Google Sheets. Per a cada tipus, posa un exemple pràctic on l'ús incorrecte del tipus de referència provoqués un error de càlcul en copiar la fórmula.</h4>
+          <p>Com usaries la tecla F4 per ciclar entre els quatre tipus de referència? En quin ordre canvien?</p>
+          <span class="q-tag qt-sheets">Fórmules</span>
+          <span class="q-tag qt-form">referències</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">2</div>
+        <div class="q-body">
+          <h4>Descriu la diferència entre <code>BUSCARV</code> i la combinació <code>ÍNDEX+COINCIDIR</code>. Quin dels dos és més recomanable en un entorn professional i per quins motius? Inclou un cas on <code>BUSCARV</code> donaria un resultat incorrecte però <code>ÍNDEX+COINCIDIR</code> no.</h4>
+          <p>Quan apareix l'error <code>#N/A</code> en un BUSCARV i com s'evita amb <code>SIIERROR</code>?</p>
+          <span class="q-tag qt-sheets">Cerca</span>
+          <span class="q-tag qt-form">BUSCARV</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">3</div>
+        <div class="q-body">
+          <h4>Explica com funciona la funció <code>SUMASICONJUNTO</code> i en quins casos és necessari usar-la en lloc de <code>SUMASI</code>. Posa un exemple amb tres criteris simultanis (per exemple: vendes d'un venedor concret, en una regió específica i durant un mes determinat).</h4>
+          <p>Pots usar comodins (com <code>*</code> o <code>?</code>) dins dels criteris de <code>SUMASI</code>? En quines situacions seria útil?</p>
+          <span class="q-tag qt-sheets">Funcions</span>
+          <span class="q-tag qt-form">SUMASI</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">4</div>
+        <div class="q-body">
+          <h4>Quina diferència hi ha entre les funcions <code>COMPTAR</code>, <code>COMPTARA</code> i <code>COMPTARSI</code>? Dissenya un cas pràctic on necessites usar les tres en el mateix full i explica per a cadascuna per a quina tasca la fas servir.</h4>
+          <p>Quin resultat dóna <code>COMPTAR</code> si el rang conté una barreja de números, text i cel·les buides?</p>
+          <span class="q-tag qt-sheets">Funcions</span>
+          <span class="q-tag qt-form">COMPTAR</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-tag tag-blue fi">Dades i visualització</div>
+    <h2 class="fi">Preguntes sobre gràfics i dades</h2>
+    <div class="grid fi" style="gap:.9rem;margin-bottom:3rem">
+
+      <div class="q-card">
+        <div class="q-num">5</div>
+        <div class="q-body">
+          <h4>Un company ha creat un gràfic de sectors (pastís) amb 12 categories per representar les despeses mensuals d'una empresa. Explica per quins motius no és la millor elecció i quin tipus de gràfic seria més adequat. Quina regla general s'aplica sobre el nombre màxim de sectors en un gràfic de pastís?</h4>
+          <p>Quins elements obligatoris ha de tenir sempre un gràfic professional (títol, etiquetes, llegenda, font de dades)?</p>
+          <span class="q-tag qt-sheets">Gràfics</span>
+          <span class="q-tag qt-diseny">Visualització</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">6</div>
+        <div class="q-body">
+          <h4>Explica el concepte de "taula dinàmica" (Pivot Table). Quin problema resoldrà en comparació amb usar <code>SUMASI</code> manualment? Descriu els quatre zones d'una taula dinàmica (Files, Columnes, Valors, Filtres) i posa un exemple pràctic per a cada zona.</h4>
+          <p>Si les dades originals canvien, la taula dinàmica s'actualitza automàticament o cal fer alguna acció?</p>
+          <span class="q-tag qt-sheets">Pivot</span>
+          <span class="q-tag qt-form">Anàlisi</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">7</div>
+        <div class="q-body">
+          <h4>Descriu com funciona el format condicional basat en fórmules personalitzades a Google Sheets. Posa tres exemples de regles basades en fórmules que siguin pràcticament útils (p.ex. ressaltar tota una fila si la cel·la d'una columna concreta compleix una condició).</h4>
+          <p>Quan s'apliquen múltiples regles de format condicional a un rang, quina té prioritat? Com es gestiona l'ordre de les regles?</p>
+          <span class="q-tag qt-sheets">Format</span>
+          <span class="q-tag qt-form">Condicional</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-tag tag-pregs fi">Avançat i professional</div>
+    <h2 class="fi">Preguntes sobre opcions avançades</h2>
+    <div class="grid fi" style="gap:.9rem">
+
+      <div class="q-card">
+        <div class="q-num">8</div>
+        <div class="q-body">
+          <h4>Explica la diferència entre "protegir un rang" i "protegir un full sencer" a Google Sheets. En quins escenaris professionals seria imprescindible protegir només un rang específic i deixar la resta editable? Com s'afegeixen excepcions per a determinats usuaris?</h4>
+          <p>Si protegeixes un rang amb fórmules però comparteixes el full com a "Editor", les fórmules estan realment protegides? Quines limitacions té la protecció de Google Sheets?</p>
+          <span class="q-tag qt-collab">Protecció</span>
+          <span class="q-tag qt-avan">Seguretat</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">9</div>
+        <div class="q-body">
+          <h4>Qu'és <code>ARRAYFORMULA</code> i en quines situacions la faries servir en lloc de copiar una fórmula a totes les files d'una columna? Quins avantatges i inconvenients té en comparació amb copiar la fórmula cel·la a cel·la?</h4>
+          <p>Explica per quin motiu <code>=ARRAYFORMULA(A2:A100*B2:B100)</code> pot donar resultats inesperats si algunes files del rang estan buides, i com ho solucionaries.</p>
+          <span class="q-tag qt-avan">ARRAYFORMULA</span>
+          <span class="q-tag qt-sheets">Array</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">10</div>
+        <div class="q-body">
+          <h4>Compara Google Sheets amb Microsoft Excel en tres aspectes concrets: capacitat màxima de files/columnes, funcions exclusives de cadascun i les opcions de col·laboració en temps real. En quin entorn professional triaries Excel i en quin triaries Sheets, i per quins motius?</h4>
+          <p>Quins formats d'exportació admet Google Sheets (xlsx, csv, pdf, ods…)? Per a cada format, indica un cas d'ús professional concret on és el format més adequat.</p>
+          <span class="q-tag qt-avan">Comparació</span>
+          <span class="q-tag qt-collab">Eines</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ RESUM FINAL ══════════════════ -->
+<section class="s-cream">
+  <div class="container fi">
+    <div class="section-tag tag-cobalt">Resum del RA3</div>
+    <h2>El que heu après</h2>
+    <p class="lead">Un repàs ràpid dels conceptes clau del RA3 i la seva aplicació professional com a tècnics SMX.</p>
+    <div class="grid g3 fi">
+      <div class="card bl-sheets">
+        <div class="card-icon" style="background:#f0fdf4">📐</div>
+        <h3>Fórmules i Funcions</h3>
+        <p><strong>SUMA/SUMASI:</strong> sumes simples i condicionals. <strong>SI/SI.CONJUNT:</strong> lògica condicional. <strong>BUSCARV/ÍNDEX+COINCIDIR:</strong> cerca de dades. <strong>SIIERROR:</strong> gestió d'errors. <strong>ARRAYFORMULA:</strong> operacions en massa. Drecera clau: <em>F4</em> per canviar el tipus de referència.</p>
+      </div>
+      <div class="card bl-blue">
+        <div class="card-icon" style="background:#eff6ff">📊</div>
+        <h3>Dades i Visualització</h3>
+        <p><strong>Taules dinàmiques:</strong> resumir grans datasets. <strong>Gràfics:</strong> triar el tipus correcte per a cada dada. <strong>Format condicional:</strong> visualitzar patrons automàticament. <strong>Validació:</strong> controlar l'entrada de dades. <strong>Bones pràctiques:</strong> una capçalera, cap fila buida, dates com a dates.</p>
+      </div>
+      <div class="card bl-purp">
+        <div class="card-icon" style="background:#f5f3ff">⚙️</div>
+        <h3>Automatització i Col·laboració</h3>
+        <p><strong>Macros gravades:</strong> automatitzar tasques repetitives. <strong>Apps Script:</strong> personalitzar comportaments amb JavaScript. <strong>Protecció de rangs:</strong> preservar fórmules crítiques. <strong>Permisos:</strong> Visualitzador / Comentarista / Editor. <strong>Exportació:</strong> xlsx, csv, PDF.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p><strong>RA3 — Fulls de Càlcul amb Google Sheets · SMX · Ofimàtica</strong></p>
+  <p style="margin-top:.4rem">Fórmules · Funcions · Gràfics · Taules dinàmiques · Format condicional · Macros · Apps Script</p>
+  <p style="margin-top:.4rem">Departament d'Informàtica · Sistemes Microinformàtics i Xarxes</p>
+</footer>
+
+<script>
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+  }, { threshold: 0.07, rootMargin: '0px 0px -30px 0px' });
+  document.querySelectorAll('.fi').forEach(el => io.observe(el));
+</script>
+</body>
+</html>

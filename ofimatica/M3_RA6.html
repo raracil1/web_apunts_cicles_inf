@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RA6 — Manipulació de Seqüències de Vídeo · SMX</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink:     #0d0f1a;
+    --paper:   #f4f2ed;
+    --cream:   #eceae3;
+    --navy:    #1a1f4e;
+    --cobalt:  #2d3bb5;
+    --accent:  #dc2626;
+    --accent-d:#b91c1c;
+    --orange:  #ea580c;
+    --amber:   #d97706;
+    --violet:  #7c3aed;
+    --green:   #16a34a;
+    --teal:    #0891b2;
+    --muted:   #6b6f85;
+    --border:  #d6d2c9;
+    --card:    #ffffff;
+    --radius:  16px;
+    --radius-sm: 8px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--paper); color: var(--ink); font-size: 16px; line-height: 1.7; overflow-x: hidden; }
+
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(244,242,237,0.94); backdrop-filter: blur(14px); border-bottom: 1px solid var(--border); padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 62px; }
+  .nav-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1rem; color: var(--navy); letter-spacing: -0.02em; }
+  .nav-logo span { color: var(--accent); }
+  .nav-pills { display: flex; gap: .4rem; list-style: none; }
+  .nav-pills a { text-decoration: none; font-size: 0.78rem; font-weight: 600; padding: .3rem .85rem; border-radius: 100px; color: var(--muted); transition: all .2s; border: 1px solid transparent; }
+  .nav-pills a:hover { color: var(--accent); border-color: var(--accent); background: rgba(220,38,38,0.07); }
+  .nav-pills a.teoria { color: var(--accent); }
+  .nav-pills a.prac   { color: var(--violet); }
+  .nav-pills a.pregs  { color: var(--amber); }
+
+  .hero { min-height: 100vh; display: grid; place-items: center; background: var(--navy); color: white; position: relative; overflow: hidden; padding: 8rem 2rem 4rem; }
+  .hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 60% 50% at 75% 25%, rgba(220,38,38,0.35) 0%, transparent 65%), radial-gradient(ellipse 50% 40% at 20% 70%, rgba(234,88,12,0.2) 0%, transparent 65%), radial-gradient(ellipse 40% 35% at 55% 90%, rgba(124,58,237,0.12) 0%, transparent 60%); }
+  .hero-dots { position: absolute; inset: 0; opacity: 0.07; background-image: radial-gradient(rgba(255,255,255,.6) 1px, transparent 1px); background-size: 28px 28px; }
+  .hero-content { position: relative; z-index: 1; text-align: center; max-width: 840px; }
+  .hero-badge { display: inline-flex; align-items: center; gap: .5rem; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.85); font-size: 0.78rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; padding: .35rem 1rem; border-radius: 100px; margin-bottom: 1.5rem; }
+  .hero h1 { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(2.6rem, 6.5vw, 5rem); line-height: 1.06; letter-spacing: -0.03em; margin-bottom: 1.5rem; }
+  .hero h1 em { font-style: normal; color: var(--accent); }
+  .hero p { font-size: 1.1rem; color: rgba(255,255,255,0.6); max-width: 560px; margin: 0 auto 2.5rem; }
+  .hero-apps { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+  .hero-app { display: flex; align-items: center; gap: .6rem; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); padding: .6rem 1.2rem; border-radius: 12px; font-size: 0.88rem; font-weight: 500; color: white; text-decoration: none; transition: all .25s; }
+  .hero-app:hover { background: rgba(255,255,255,0.15); transform: translateY(-2px); }
+  .hero-app .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .scroll-hint { position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: .4rem; color: rgba(255,255,255,0.3); font-size: 0.72rem; letter-spacing: 0.1em; }
+  .scroll-hint::after { content: ''; display: block; width: 1px; height: 36px; background: linear-gradient(to bottom, rgba(255,255,255,.35), transparent); animation: pulse 2s ease-in-out infinite; }
+  @keyframes pulse { 0%,100%{opacity:.3} 50%{opacity:1} }
+
+  section { padding: 6rem 2rem; }
+  .container { max-width: 1080px; margin: 0 auto; }
+  .section-tag { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; display: flex; align-items: center; gap: .5rem; margin-bottom: .9rem; }
+  .section-tag::before { content: ''; display: block; width: 20px; height: 2px; }
+  .tag-cobalt { color: var(--cobalt); } .tag-cobalt::before { background: var(--cobalt); }
+  .tag-accent { color: var(--accent); } .tag-accent::before { background: var(--accent); }
+  .tag-orange { color: var(--orange); } .tag-orange::before { background: var(--orange); }
+  .tag-violet { color: var(--violet); } .tag-violet::before { background: var(--violet); }
+  .tag-amber  { color: var(--amber);  } .tag-amber::before  { background: var(--amber); }
+  .tag-green  { color: var(--green);  } .tag-green::before  { background: var(--green); }
+  .tag-teal   { color: var(--teal);   } .tag-teal::before   { background: var(--teal); }
+
+  h2 { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(1.7rem, 3.5vw, 2.6rem); line-height: 1.1; letter-spacing: -0.025em; color: var(--navy); margin-bottom: .9rem; }
+  h3 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.15rem; color: var(--navy); margin-bottom: .65rem; }
+  h4 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.95rem; color: var(--navy); margin-bottom: .4rem; }
+  .lead { font-size: 1.05rem; color: var(--muted); max-width: 700px; margin-bottom: 3rem; line-height: 1.7; }
+
+  .grid { display: grid; gap: 1.25rem; }
+  .g2 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+  .g3 { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+  .g4 { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.75rem; transition: transform .2s, box-shadow .2s; }
+  .card:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(26,31,78,0.1); }
+  .card p { color: var(--muted); font-size: 0.92rem; }
+  .card-icon { width: 44px; height: 44px; border-radius: 10px; display: grid; place-items: center; font-size: 1.3rem; margin-bottom: .9rem; }
+  .bl-accent { border-left: 3px solid var(--accent); }
+  .bl-orange { border-left: 3px solid var(--orange); }
+  .bl-violet { border-left: 3px solid var(--violet); }
+  .bl-green  { border-left: 3px solid var(--green); }
+  .bl-amber  { border-left: 3px solid var(--amber); }
+  .bl-teal   { border-left: 3px solid var(--teal); }
+  .bl-cobalt { border-left: 3px solid var(--cobalt); }
+
+  .ex { background: var(--cream); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1rem 1.25rem; margin: .65rem 0; }
+  .ex .ex-lbl { font-size: 0.68rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; margin-bottom: .3rem; }
+  .ex p { font-size: 0.87rem; color: var(--ink); }
+  .ex-accent .ex-lbl { color: var(--accent); }
+  .ex-orange .ex-lbl { color: var(--orange); }
+  .ex-green  .ex-lbl { color: var(--green); }
+  .ex-violet .ex-lbl { color: var(--violet); }
+
+  .callout { border-radius: var(--radius); padding: 1.6rem 2rem; margin: 1.5rem 0; display: flex; gap: 1rem; align-items: flex-start; }
+  .callout-icon { font-size: 1.4rem; flex-shrink: 0; margin-top: .1rem; }
+  .callout p, .callout li { font-size: 0.92rem; }
+  .callout ul { padding-left: 1.2rem; }
+  .callout li { margin-bottom: .25rem; }
+  .cl-accent { background: rgba(220,38,38,0.07); border: 1px solid rgba(220,38,38,0.2); }
+  .cl-orange { background: rgba(234,88,12,0.07); border: 1px solid rgba(234,88,12,0.22); }
+  .cl-green  { background: rgba(22,163,74,0.07); border: 1px solid rgba(22,163,74,0.2); }
+  .cl-amber  { background: rgba(251,188,4,0.1);  border: 1px solid rgba(251,188,4,0.3); }
+  .cl-violet { background: rgba(124,58,237,0.07);border: 1px solid rgba(124,58,237,0.2); }
+  .cl-teal   { background: rgba(8,145,178,0.07); border: 1px solid rgba(8,145,178,0.2); }
+
+  .ptable { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+  .ptable th, .ptable td { padding: .85rem 1rem; text-align: left; border-bottom: 1px solid var(--border); }
+  .ptable th { background: var(--navy); color: white; font-family: 'Syne', sans-serif; font-weight: 700; }
+  .ptable th:first-child { border-radius: 8px 0 0 0; } .ptable th:last-child { border-radius: 0 8px 0 0; }
+  .ptable tr:hover td { background: var(--cream); }
+  .badge { display: inline-block; padding: .15rem .55rem; border-radius: 100px; font-size: 0.72rem; font-weight: 700; font-family: 'Syne', sans-serif; }
+  .b-accent { background: rgba(220,38,38,0.12); color: var(--accent-d); }
+  .b-orange { background: rgba(234,88,12,0.12); color: #9a3412; }
+  .b-green  { background: rgba(22,163,74,0.12); color: #14532d; }
+  .b-amber  { background: rgba(251,188,4,0.18); color: #8a6500; }
+  .b-violet { background: rgba(124,58,237,0.12);color: #5b21b6; }
+  .b-teal   { background: rgba(8,145,178,0.12); color: #0e7490; }
+
+  .s-dark { background: var(--navy); color: white; }
+  .s-dark h2, .s-dark h3, .s-dark h4 { color: white; }
+  .s-dark .lead { color: rgba(255,255,255,0.58); }
+  .s-dark .card { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1); }
+  .s-dark .card h3 { color: white; } .s-dark .card p { color: rgba(255,255,255,0.6); }
+  .s-dark .ptable th { background: rgba(255,255,255,0.1); }
+  .s-dark .ptable td { border-color: rgba(255,255,255,0.1); color: rgba(255,255,255,0.8); }
+  .s-dark .ptable tr:hover td { background: rgba(255,255,255,0.05); }
+  .s-cream { background: var(--cream); }
+  .s-red   { background: #fff5f5; }
+  .s-orange{ background: #fff7ed; }
+
+  .ra-banner { border-radius: var(--radius); padding: 1.5rem 2rem; display: flex; align-items: center; gap: 1.25rem; margin-bottom: 3rem; color: white; }
+  .ra-num { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 2.4rem; opacity: .25; flex-shrink: 0; line-height: 1; }
+  .ra-banner h2 { color: white; font-size: 1.35rem; margin-bottom: .2rem; }
+  .ra-banner p  { color: rgba(255,255,255,0.7); font-size: 0.88rem; }
+  .ra-teoria   { background: linear-gradient(135deg, #b91c1c, #dc2626); }
+  .ra-practica { background: linear-gradient(135deg, #5b21b6, #7c3aed); }
+  .ra-pregs    { background: linear-gradient(135deg, #92400e, #d97706); }
+  .ra-resum    { background: linear-gradient(135deg, #064e3b, #16a34a); }
+
+  .practice-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+  .practice-header { padding: 1.5rem 2rem; display: flex; align-items: center; gap: 1rem; color: white; }
+  .practice-num { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.8rem; opacity: .35; line-height: 1; flex-shrink:0; }
+  .practice-header h3 { color: white; font-size: 1.15rem; margin: 0; }
+  .practice-header p  { color: rgba(255,255,255,0.7); font-size: 0.82rem; margin: .2rem 0 0; }
+  .practice-body { padding: 2rem; }
+  .p-main { background: linear-gradient(135deg, #b91c1c, #7c3aed); }
+
+  .steps { counter-reset: st; list-style: none; display: flex; flex-direction: column; gap: .85rem; }
+  .steps li { counter-increment: st; display: flex; gap: .9rem; align-items: flex-start; padding: .9rem 1.1rem; background: var(--cream); border-radius: var(--radius-sm); font-size: 0.9rem; }
+  .steps li::before { content: counter(st); flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%; background: var(--cobalt); color: white; display: grid; place-items: center; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.8rem; }
+  .steps li p { color: var(--ink); margin: 0; } .steps li strong { color: var(--navy); }
+
+  .q-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem 2rem; display: flex; gap: 1.25rem; align-items: flex-start; transition: transform .2s, box-shadow .2s; }
+  .q-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+  .q-num { flex-shrink: 0; width: 36px; height: 36px; border-radius: 50%; background: var(--cream); border: 2px solid var(--border); display: grid; place-items: center; font-family: 'Syne', sans-serif; font-weight: 800; font-size: 0.88rem; color: var(--cobalt); }
+  .q-body h4 { margin-bottom: .35rem; color: var(--navy); font-size: 0.95rem; }
+  .q-body p  { color: var(--muted); font-size: 0.85rem; font-style: italic; }
+  .q-tag { display: inline-block; padding: .15rem .6rem; border-radius: 100px; font-size: 0.7rem; font-weight: 700; margin-top: .5rem; margin-right: .3rem; }
+  .qt-r { background: rgba(220,38,38,0.1); color: var(--accent-d); }
+  .qt-o { background: rgba(234,88,12,0.1); color: #9a3412; }
+  .qt-v { background: rgba(124,58,237,0.1); color: #5b21b6; }
+  .qt-g { background: rgba(22,163,74,0.1); color: #14532d; }
+  .qt-a { background: rgba(217,119,6,0.1); color: #92400e; }
+  .qt-t { background: rgba(8,145,178,0.1); color: #0e7490; }
+
+  .pills { display: flex; flex-wrap: wrap; gap: .4rem; margin: .65rem 0; }
+  .pill { padding: .22rem .75rem; border-radius: 100px; font-size: 0.78rem; border: 1px solid var(--border); background: var(--cream); color: var(--ink); }
+  .pill-r { background: rgba(220,38,38,0.1); border-color: rgba(220,38,38,0.3); color: var(--accent-d); }
+  .pill-o { background: rgba(234,88,12,0.1); border-color: rgba(234,88,12,0.3); color: #9a3412; }
+  .pill-v { background: rgba(124,58,237,0.1); border-color: rgba(124,58,237,0.3); color: #5b21b6; }
+  .pill-g { background: rgba(22,163,74,0.1); border-color: rgba(22,163,74,0.3); color: #14532d; }
+  .pill-t { background: rgba(8,145,178,0.1); border-color: rgba(8,145,178,0.3); color: #0e7490; }
+
+  .shortcuts { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: .6rem; margin: 1rem 0; }
+  .sc-item { display: flex; align-items: center; gap: .75rem; padding: .65rem 1rem; background: var(--cream); border-radius: var(--radius-sm); font-size: 0.85rem; }
+  .sc-key { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.75rem; background: white; border: 1px solid var(--border); border-radius: 5px; padding: .15rem .45rem; white-space: nowrap; color: var(--navy); box-shadow: 0 2px 0 var(--border); flex-shrink:0; }
+  .sc-desc { color: var(--muted); }
+
+  .timeline { display: flex; flex-direction: column; gap: 0; position: relative; }
+  .timeline::before { content: ''; position: absolute; left: 18px; top: 0; bottom: 0; width: 2px; background: var(--border); }
+  .tl-item { display: flex; gap: 1.25rem; padding: 1rem 0; position: relative; }
+  .tl-dot { width: 36px; height: 36px; border-radius: 50%; background: var(--accent); border: 3px solid var(--paper); display: grid; place-items: center; font-size: .85rem; flex-shrink: 0; z-index: 1; }
+  .tl-content { flex: 1; }
+  .tl-content h4 { color: var(--navy); margin-bottom: .25rem; }
+  .tl-content p { font-size: .88rem; color: var(--muted); }
+
+  hr { border: none; border-top: 1px solid var(--border); margin: 3rem 0; }
+  footer { background: var(--ink); color: rgba(255,255,255,0.4); padding: 3rem 2rem; text-align: center; font-size: 0.85rem; }
+  footer strong { color: white; }
+  .fi { opacity: 0; transform: translateY(18px); transition: opacity .55s ease, transform .55s ease; }
+  .fi.in { opacity: 1; transform: none; }
+
+  @media (max-width: 640px) { .nav-pills { display: none; } }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">SMX · <span>RA6</span> Ofimàtica</div>
+  <ul class="nav-pills">
+    <li><a href="#intro">Introducció</a></li>
+    <li><a href="#conceptes" class="teoria">Conceptes</a></li>
+    <li><a href="#formats" class="teoria">Formats</a></li>
+    <li><a href="#eines" class="teoria">Eines</a></li>
+    <li><a href="#edicio" class="teoria">Edició</a></li>
+    <li><a href="#practica" class="prac">Pràctica</a></li>
+    <li><a href="#preguntes" class="pregs">Preguntes</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="top">
+  <div class="hero-bg"></div>
+  <div class="hero-dots"></div>
+  <div class="hero-content">
+    <div class="hero-badge">🎬 Sistemes Microinformàtics i Xarxes · RA6 · Ofimàtica</div>
+    <h1>Vídeo<br><em>Digital</em></h1>
+    <p>Manipulació de seqüències de vídeo. Analitza eines gratuïtes i aplica tècniques de captura i edició per crear vídeos professionals amb programari de codi obert.</p>
+    <div class="hero-apps">
+      <a href="#conceptes" class="hero-app"><span class="dot" style="background:var(--accent)"></span>Conceptes</a>
+      <a href="#formats" class="hero-app"><span class="dot" style="background:var(--orange)"></span>Formats i còdecs</a>
+      <a href="#eines" class="hero-app"><span class="dot" style="background:var(--violet)"></span>Eines lliures</a>
+      <a href="#edicio" class="hero-app"><span class="dot" style="background:var(--teal)"></span>Edició</a>
+      <a href="#practica" class="hero-app"><span class="dot" style="background:var(--amber)"></span>Pràctica</a>
+    </div>
+  </div>
+  <div class="scroll-hint">DESPLAÇA</div>
+</section>
+
+<!-- INTRO -->
+<section id="intro" class="s-cream">
+  <div class="container fi">
+    <div class="section-tag tag-cobalt">Resultat d'Aprenentatge 6</div>
+    <h2>Manipulació de seqüències de vídeo</h2>
+    <p class="lead">Analitza les possibilitats de diferents programes i aplica tècniques de captura i edició bàsiques per manipular seqüències de vídeo. Treballarem exclusivament amb <strong>eines gratuïtes i de codi obert</strong>.</p>
+    <div class="grid g3 fi">
+      <div class="card bl-accent">
+        <div class="card-icon" style="background:#fff5f5">🎞️</div>
+        <h3>El vídeo digital</h3>
+        <p>Fotogrames per segon, resolució, proporció d'aspecte, còdecs i contenidors. La base tècnica per entendre qualsevol arxiu de vídeo.</p>
+        <div class="pills" style="margin-top:.75rem">
+          <span class="pill pill-r">FPS</span>
+          <span class="pill pill-r">Resolució</span>
+          <span class="pill pill-r">Còdecs</span>
+        </div>
+      </div>
+      <div class="card bl-orange">
+        <div class="card-icon" style="background:#fff7ed">🛠️</div>
+        <h3>Eines gratuïtes</h3>
+        <p>Kdenlive, Shotcut, OpenShot, Handbrake i FFmpeg per a Ubuntu i Arch Linux. Cada eina té el seu punt fort i el seu cas d'ús òptim.</p>
+        <div class="pills" style="margin-top:.75rem">
+          <span class="pill pill-o">Kdenlive</span>
+          <span class="pill pill-o">Shotcut</span>
+          <span class="pill pill-o">FFmpeg</span>
+        </div>
+      </div>
+      <div class="card bl-violet">
+        <div class="card-icon" style="background:#f5f3ff">✂️</div>
+        <h3>Tècniques d'edició</h3>
+        <p>Talls, transicions, color grading, títols animats, so, efectes i exportació multipropòsit per a web, TV i xarxes socials.</p>
+        <div class="pills" style="margin-top:.75rem">
+          <span class="pill pill-v">Transicions</span>
+          <span class="pill pill-v">Color</span>
+          <span class="pill pill-v">So</span>
+        </div>
+      </div>
+    </div>
+    <div class="callout cl-accent fi" style="margin-top:2rem">
+      <span class="callout-icon">🎓</span>
+      <div>
+        <strong>Criteri d'avaluació principal:</strong>
+        <p style="margin-top:.3rem">L'alumnat ha de ser capaç de capturar vídeo, editar-lo (talls, transicions, títols, so), aplicar correccions de color i exportar per a diferents destins usant eines lliures (Kdenlive, Shotcut, FFmpeg).</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BLOC 1: CONCEPTES -->
+<section id="conceptes" class="s-red">
+  <div class="container">
+    <div class="ra-banner ra-teoria fi">
+      <div class="ra-num">1</div>
+      <div>
+        <h2>Fonaments del vídeo digital</h2>
+        <p>FPS, resolució, proporció, còdecs i contenidors. La base imprescindible.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-accent fi">Fotogrames i resolució</div>
+    <h2 class="fi">Resolució, FPS i proporció d'aspecte</h2>
+    <p class="lead fi">El vídeo digital és una successió de fotogrames (frames) que, reproduïts a prou velocitat, creen la il·lusió de moviment. Cada paràmetre afecta la qualitat i el pes de l'arxiu final.</p>
+
+    <div class="grid g2 fi">
+      <div class="card bl-accent">
+        <div class="card-icon" style="background:#fff5f5">📐</div>
+        <h3>Resolució de vídeo</h3>
+        <p style="margin-bottom:.75rem">Igual que les imatges, el vídeo es mesura en píxels (amplada × alçada):</p>
+        <div style="overflow-x:auto">
+          <table class="ptable" style="font-size:.82rem">
+            <thead><tr><th>Nom</th><th>Resolució</th><th>Ús típic</th></tr></thead>
+            <tbody>
+              <tr><td><span class="badge b-teal">SD</span></td><td>720×576 (PAL) / 720×480 (NTSC)</td><td>Televisió analògica, DVD</td></tr>
+              <tr><td><span class="badge b-orange">HD</span></td><td>1280×720 (720p)</td><td>YouTube, streaming bàsic</td></tr>
+              <tr><td><span class="badge b-accent">Full HD</span></td><td>1920×1080 (1080p)</td><td>Televisió HD, vídeos professionals</td></tr>
+              <tr><td><span class="badge b-violet">2K / QHD</span></td><td>2560×1440</td><td>Monitors gaming, producció</td></tr>
+              <tr><td><span class="badge b-green">4K / UHD</span></td><td>3840×2160</td><td>Cinema, plataformes premium</td></tr>
+              <tr><td><span class="badge b-amber">8K</span></td><td>7680×4320</td><td>Producció cinematogràfica</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card bl-orange">
+        <div class="card-icon" style="background:#fff7ed">🎞️</div>
+        <h3>FPS — Fotogrames Per Segon</h3>
+        <p style="margin-bottom:.75rem">Determinen la fluïdesa del moviment:</p>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">🎥 <strong style="color:var(--ink)">24 fps:</strong> estàndard cinematogràfic (cinema, Netflix, películes).</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">📺 <strong style="color:var(--ink)">25 fps:</strong> televisió PAL (Europa, Àsia). 30 fps: NTSC (Nord-Amèrica, Japó).</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">🌐 <strong style="color:var(--ink)">30/60 fps:</strong> YouTube, videojocs, esports en directe.</li>
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted)">🐌 <strong style="color:var(--ink)">120+ fps:</strong> càmera lenta (slow-motion) quan es reprodueix a 24/30 fps.</li>
+        </ul>
+        <div class="ex ex-orange" style="margin-top:.75rem">
+          <div class="ex-lbl">📌 Regla pràctica</div>
+          <p>Grava sempre a la taxa de fotogrames del destí final o un múltiple d'ella. Barrejar 24 i 30 fps al mateix projecte causa problemes de sincronisme.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid g2 fi" style="margin-top:1.5rem">
+      <div class="card bl-accent">
+        <div class="card-icon" style="background:#fff5f5">📏</div>
+        <h3>Proporció d'aspecte (Aspect Ratio)</h3>
+        <ul style="list-style:none;padding:0;margin-top:.5rem">
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">📺 <strong style="color:var(--ink)">16:9</strong> — Estàndard modern: televisors, YouTube, monitors.</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">📱 <strong style="color:var(--ink)">9:16</strong> — Vertical (Stories, TikTok, Reels). Format 1080×1920.</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">⬛ <strong style="color:var(--ink)">1:1</strong> — Quadrat (Instagram, publicitat).</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">🎬 <strong style="color:var(--ink)">2.39:1</strong> — CinemaScope (cinema d'autor).</li>
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted)">📺 <strong style="color:var(--ink)">4:3</strong> — Televisió analògica antiga.</li>
+        </ul>
+      </div>
+      <div class="card bl-teal">
+        <div class="card-icon" style="background:#ecfeff">🔢</div>
+        <h3>Bitrate i qualitat</h3>
+        <p style="margin-bottom:.75rem">El <em>bitrate</em> (taxa de bits) determina quanta informació conté cada segon de vídeo:</p>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">📊 <strong style="color:var(--ink)">Més bitrate = Més qualitat + Arxiu més gran.</strong></li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">🌐 <strong style="color:var(--ink)">Web 1080p:</strong> 8–15 Mbps recomanats per YouTube.</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">🎬 <strong style="color:var(--ink)">Producció:</strong> 50–100+ Mbps (ProRes, DNxHD).</li>
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted)">📦 <strong style="color:var(--ink)">Bitrate CBR vs VBR:</strong> constant vs variable (millor qualitat amb menys pes).</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BLOC 2: FORMATS I CÒDECS -->
+<section id="formats">
+  <div class="container">
+    <div class="ra-banner ra-teoria fi">
+      <div class="ra-num">2</div>
+      <div>
+        <h2>Formats, contenidors i còdecs</h2>
+        <p>La diferència entre el contenidor i el còdec, i quina combinació usar en cada situació.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-orange fi">Còdecs vs Contenidors</div>
+    <h2 class="fi">Còdec ≠ Contenidor: una distinció clau</h2>
+    <p class="lead fi">El <strong>contenidor</strong> és l'arxiu que emmagatzema el vídeo, l'àudio i els subtítols (com una caixa). El <strong>còdec</strong> és l'algoritme que comprimeix el vídeo (com comprimir els objectes dins la caixa).</p>
+
+    <div class="grid g2 fi">
+      <div class="card bl-orange">
+        <div class="card-icon" style="background:#fff7ed">📦</div>
+        <h3>Contenidors principals</h3>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.4rem 0;border-bottom:1px solid var(--border);font-size:.88rem"><strong>.MP4 (MPEG-4 Part 14)</strong> — Universal, compatible amb tot. Suporta H.264, H.265, AAC.</li>
+          <li style="padding:.4rem 0;border-bottom:1px solid var(--border);font-size:.88rem"><strong>.MKV (Matroska)</strong> — Obert, sense patents. Suporta qualsevol còdec + subtítols + múltiples àudios.</li>
+          <li style="padding:.4rem 0;border-bottom:1px solid var(--border);font-size:.88rem"><strong>.WebM</strong> — Optimitzat per a web. Usa VP9 o AV1. Sense patents.</li>
+          <li style="padding:.4rem 0;border-bottom:1px solid var(--border);font-size:.88rem"><strong>.MOV</strong> — Apple QuickTime. Molt usat en producció amb càmeres Apple.</li>
+          <li style="padding:.4rem 0;font-size:.88rem"><strong>.AVI</strong> — Microsoft, antic. Alta compatibilitat Windows però poc eficient.</li>
+        </ul>
+      </div>
+      <div class="card bl-accent">
+        <div class="card-icon" style="background:#fff5f5">🗜️</div>
+        <h3>Còdecs de vídeo</h3>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.4rem 0;border-bottom:1px solid var(--border);font-size:.88rem"><strong style="color:var(--accent)">H.264 (AVC)</strong> — Estàndard actual. Excel·lent compatibilitat. Bon equilibri qualitat/pes. Ideal web.</li>
+          <li style="padding:.4rem 0;border-bottom:1px solid var(--border);font-size:.88rem"><strong style="color:var(--orange)">H.265 (HEVC)</strong> — Successor de H.264. 50% menys pes a la mateixa qualitat. Requereix maquinari potent.</li>
+          <li style="padding:.4rem 0;border-bottom:1px solid var(--border);font-size:.88rem"><strong style="color:var(--teal)">VP9</strong> — Google, sense patents. Usat per YouTube en 4K.</li>
+          <li style="padding:.4rem 0;border-bottom:1px solid var(--border);font-size:.88rem"><strong style="color:var(--green)">AV1</strong> — Futur estàndard obert. Millor qualitat que H.265. Còdec obert i sense patents.</li>
+          <li style="padding:.4rem 0;font-size:.88rem"><strong style="color:var(--violet)">ProRes / DNxHD</strong> — Edició professional. Alta qualitat, arxiu gran. Per a flux de treball d'edició.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section-tag tag-orange fi" style="margin-top:4rem">Còdecs d'àudio</div>
+    <h2 class="fi">Formats d'àudio en vídeo</h2>
+    <div class="grid g3 fi">
+      <div class="card bl-teal">
+        <div class="card-icon" style="background:#ecfeff">🎵</div>
+        <h3>AAC</h3>
+        <p>Advanced Audio Coding. Successor de MP3. Estàndard a MP4. Excel·lent qualitat a 128–320 kbps. Compatible amb tots els dispositius.</p>
+      </div>
+      <div class="card bl-green">
+        <div class="card-icon" style="background:#f0fdf4">🎶</div>
+        <h3>Opus</h3>
+        <p>Modern, obert i sense patents. Molt eficient a baixes taxes de bits. Usat per WebM i YouTube internament. Superior a MP3 i AAC.</p>
+      </div>
+      <div class="card bl-violet">
+        <div class="card-icon" style="background:#f5f3ff">🔊</div>
+        <h3>PCM / FLAC</h3>
+        <p>Sense compressió (PCM) o sense pèrdues (FLAC). Per a màster d'àudio i producció. FLAC és el format lossless preferit a Linux.</p>
+      </div>
+    </div>
+
+    <div class="callout cl-orange fi" style="margin-top:2rem">
+      <span class="callout-icon">📌</span>
+      <div>
+        <strong>Combinació recomanada per a cada ús:</strong>
+        <ul style="margin-top:.5rem">
+          <li><strong>Web / YouTube / Xarxes socials:</strong> MP4 + H.264 + AAC (màxima compatibilitat)</li>
+          <li><strong>Arxiu i edició:</strong> MKV + H.264/H.265 + AAC (alta qualitat sense pèrdues de conversió)</li>
+          <li><strong>Streaming HTML5:</strong> WebM + VP9 + Opus (sense patents, lleuger)</li>
+          <li><strong>Flux de treball d'edició:</strong> MOV/MKV + ProRes/DNxHD (qualitat màxima per editar)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BLOC 3: EINES -->
+<section id="eines" class="s-orange">
+  <div class="container">
+    <div class="ra-banner ra-practica fi">
+      <div class="ra-num">3</div>
+      <div>
+        <h2>Eines gratuïtes per a edició de vídeo</h2>
+        <p>El millor programari lliure per a Ubuntu i Arch Linux — des d'edició professional fins a conversió per terminal.</p>
+      </div>
+    </div>
+
+    <div class="grid g2 fi">
+      <div class="tool-card">
+        <div class="tool-header">
+          <div class="tool-icon" style="background:#fff5f5;font-size:1.4rem">🎬</div>
+          <div>
+            <div class="tool-name">Kdenlive</div>
+            <div class="tool-type" style="color:var(--accent)">Editor de vídeo professional · KDE · Gratuït</div>
+          </div>
+        </div>
+        <p style="font-size:.9rem;color:var(--muted);margin-bottom:.75rem">El referent de l'edició de vídeo en Linux. Basat en MLT Framework. Suporta múltiples pistes, efectes, transicions, keyframes i exportació per lots.</p>
+        <div class="shortcuts">
+          <div class="sc-item"><span class="sc-key">Ubuntu</span><span class="sc-desc">sudo apt install kdenlive</span></div>
+          <div class="sc-item"><span class="sc-key">Arch</span><span class="sc-desc">sudo pacman -S kdenlive</span></div>
+          <div class="sc-item"><span class="sc-key">Flatpak</span><span class="sc-desc">flatpak install kdenlive</span></div>
+        </div>
+        <div class="pills" style="margin-top:.75rem">
+          <span class="pill pill-r">Multi-pista</span>
+          <span class="pill pill-r">Keyframes</span>
+          <span class="pill pill-r">Efectes</span>
+          <span class="pill pill-r">Color grading</span>
+          <span class="pill pill-r">Proxy clips</span>
+        </div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-header">
+          <div class="tool-icon" style="background:#fff7ed;font-size:1.4rem">✂️</div>
+          <div>
+            <div class="tool-name">Shotcut</div>
+            <div class="tool-type" style="color:var(--orange)">Editor de vídeo multiplatforma · Gratuït</div>
+          </div>
+        </div>
+        <p style="font-size:.9rem;color:var(--muted);margin-bottom:.75rem">Editor no lineal senzill i potent, basat en FFmpeg. Ideal per a principiants que volen resultats ràpids. Suporta molts formats sense conversió prèvia.</p>
+        <div class="shortcuts">
+          <div class="sc-item"><span class="sc-key">Ubuntu</span><span class="sc-desc">flatpak install shotcut</span></div>
+          <div class="sc-item"><span class="sc-key">Arch</span><span class="sc-desc">sudo pacman -S shotcut</span></div>
+        </div>
+        <div class="pills" style="margin-top:.75rem">
+          <span class="pill pill-o">Sense conversió</span>
+          <span class="pill pill-o">Filtres</span>
+          <span class="pill pill-o">Títols</span>
+          <span class="pill pill-o">Àudio</span>
+        </div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-header">
+          <div class="tool-icon" style="background:#f5f3ff;font-size:1.4rem">🎥</div>
+          <div>
+            <div class="tool-name">OpenShot</div>
+            <div class="tool-type" style="color:var(--violet)">Editor de vídeo senzill · Python · Gratuït</div>
+          </div>
+        </div>
+        <p style="font-size:.9rem;color:var(--muted);margin-bottom:.75rem">L'editor més accessible per a principiants. Interfície intuïtiva, arrossegar i deixar anar, animació 3D de títols via Blender. Ideal per a primers projectes.</p>
+        <div class="shortcuts">
+          <div class="sc-item"><span class="sc-key">Ubuntu</span><span class="sc-desc">sudo apt install openshot</span></div>
+          <div class="sc-item"><span class="sc-key">Arch</span><span class="sc-desc">yay -S openshot</span></div>
+        </div>
+        <div class="pills" style="margin-top:.75rem">
+          <span class="pill pill-v">Intuïtiu</span>
+          <span class="pill pill-v">Títols 3D</span>
+          <span class="pill pill-v">Transicions</span>
+        </div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-header">
+          <div class="tool-icon" style="background:#fff7ed;font-size:1.4rem">⚡</div>
+          <div>
+            <div class="tool-name">FFmpeg</div>
+            <div class="tool-type" style="color:var(--orange)">Terminal · El motor del vídeo lliure</div>
+          </div>
+        </div>
+        <p style="font-size:.9rem;color:var(--muted);margin-bottom:.75rem">La biblioteca de referència per a tot el que és àudio i vídeo digital. Tots els editors lliures l'usen internament. Imprescindible per a conversions, processament per lots i automatització.</p>
+        <div class="shortcuts">
+          <div class="sc-item"><span class="sc-key">Ubuntu</span><span class="sc-desc">sudo apt install ffmpeg</span></div>
+          <div class="sc-item"><span class="sc-key">Arch</span><span class="sc-desc">sudo pacman -S ffmpeg</span></div>
+        </div>
+        <div class="ex ex-orange" style="margin-top:.75rem">
+          <div class="ex-lbl">🔧 Comandes essencials</div>
+          <p><code>ffmpeg -i entrada.mkv -c:v libx264 -crf 23 sortida.mp4</code><br>
+          <code>ffmpeg -i entrada.mp4 -vf scale=1280:720 hd.mp4</code><br>
+          <code>ffmpeg -i video.mp4 -ss 00:01:00 -t 30 fragment.mp4</code></p>
+        </div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-header">
+          <div class="tool-icon" style="background:#fff5f5;font-size:1.4rem">📦</div>
+          <div>
+            <div class="tool-name">HandBrake</div>
+            <div class="tool-type" style="color:var(--accent)">Transcodificador de vídeo · Gratuït</div>
+          </div>
+        </div>
+        <p style="font-size:.9rem;color:var(--muted);margin-bottom:.75rem">Eina especialitzada en conversió i compressió de vídeo. Perfils predefinits per a YouTube, Vimeo, dispositius mòbils i web. Molt fàcil d'usar.</p>
+        <div class="shortcuts">
+          <div class="sc-item"><span class="sc-key">Ubuntu</span><span class="sc-desc">sudo apt install handbrake</span></div>
+          <div class="sc-item"><span class="sc-key">Arch</span><span class="sc-desc">sudo pacman -S handbrake</span></div>
+        </div>
+        <div class="pills" style="margin-top:.75rem">
+          <span class="pill pill-r">Conversió</span>
+          <span class="pill pill-r">Subtítols</span>
+          <span class="pill pill-r">Perfils</span>
+          <span class="pill pill-r">Processament per lots</span>
+        </div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-header">
+          <div class="tool-icon" style="background:#f5f3ff;font-size:1.4rem">📹</div>
+          <div>
+            <div class="tool-name">OBS Studio</div>
+            <div class="tool-type" style="color:var(--violet)">Captura i streaming · Gratuït</div>
+          </div>
+        </div>
+        <p style="font-size:.9rem;color:var(--muted);margin-bottom:.75rem">El referent per a captura de pantalla i streaming. Permet gravar la pantalla, webcam, àudio del sistema i micrófon simultàniament. Molt usat per a tutorials i gameplays.</p>
+        <div class="shortcuts">
+          <div class="sc-item"><span class="sc-key">Ubuntu</span><span class="sc-desc">sudo apt install obs-studio</span></div>
+          <div class="sc-item"><span class="sc-key">Arch</span><span class="sc-desc">sudo pacman -S obs-studio</span></div>
+        </div>
+        <div class="pills" style="margin-top:.75rem">
+          <span class="pill pill-v">Captura pantalla</span>
+          <span class="pill pill-v">Streaming</span>
+          <span class="pill pill-v">Escenes</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:2rem" class="fi">
+      <div class="card bl-teal">
+        <div class="card-icon" style="background:#ecfeff">🌐</div>
+        <h3>Eines web gratuïtes per a vídeo</h3>
+        <div class="grid g2" style="margin-top:.75rem">
+          <ul style="list-style:none;padding:0">
+            <li style="padding:.25rem 0;font-size:.88rem;color:var(--muted)">🔗 <strong style="color:var(--ink)">Clipchamp</strong> — Editor web de Microsoft (gratuït bàsic)</li>
+            <li style="padding:.25rem 0;font-size:.88rem;color:var(--muted)">🔗 <strong style="color:var(--ink)">CapCut web</strong> — Edició web amb IA (plantilles, subtítols automàtics)</li>
+            <li style="padding:.25rem 0;font-size:.88rem;color:var(--muted)">🔗 <strong style="color:var(--ink)">FFmpeg.wasm</strong> — FFmpeg directament al navegador</li>
+          </ul>
+          <ul style="list-style:none;padding:0">
+            <li style="padding:.25rem 0;font-size:.88rem;color:var(--muted)">🔗 <strong style="color:var(--ink)">Clideo</strong> — Tall, compressió, conversió online</li>
+            <li style="padding:.25rem 0;font-size:.88rem;color:var(--muted)">🔗 <strong style="color:var(--ink)">VEED.io</strong> — Subtítols automàtics + edició bàsica</li>
+            <li style="padding:.25rem 0;font-size:.88rem;color:var(--muted)">🔗 <strong style="color:var(--ink)">Descript</strong> — Editar vídeo editant el text (transcripció)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BLOC 4: EDICIÓ -->
+<section id="edicio">
+  <div class="container">
+    <div class="ra-banner ra-teoria fi">
+      <div class="ra-num">4</div>
+      <div>
+        <h2>Tècniques de captura i edició de vídeo</h2>
+        <p>Flux de treball d'edició, talls, transicions, color grading, àudio i exportació.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-accent fi">Captura de vídeo</div>
+    <h2 class="fi">Fonts i captura de vídeo digital</h2>
+    <div class="grid g3 fi">
+      <div class="card bl-accent">
+        <div class="card-icon" style="background:#fff5f5">📱</div>
+        <h3>Captura de pantalla (Screencast)</h3>
+        <p style="margin-bottom:.75rem">A Linux, les eines principals són:</p>
+        <ul style="list-style:none;padding:0">
+          <li style="font-size:.88rem;padding:.2rem 0;color:var(--muted)">🎥 <strong style="color:var(--ink)">OBS Studio:</strong> professioal, configurable, streaming</li>
+          <li style="font-size:.88rem;padding:.2rem 0;color:var(--muted)">📹 <strong style="color:var(--ink)">Kazam:</strong> senzill, gravar finestra o pantalla</li>
+          <li style="font-size:.88rem;padding:.2rem 0;color:var(--muted)">🖥️ <strong style="color:var(--ink)">SimpleScreenRecorder:</strong> lleuger i eficient</li>
+          <li style="font-size:.88rem;padding:.2rem 0;color:var(--muted)">⌨️ <strong style="color:var(--ink)">ffmpeg:</strong> <code>ffmpeg -f x11grab -i :0.0 out.mkv</code></li>
+        </ul>
+      </div>
+      <div class="card bl-orange">
+        <div class="card-icon" style="background:#fff7ed">🎥</div>
+        <h3>Càmera i telèfon</h3>
+        <p style="margin-bottom:.5rem">Connectar càmera USB o telèfon a Linux:</p>
+        <ul style="list-style:none;padding:0">
+          <li style="font-size:.88rem;padding:.2rem 0;color:var(--muted)">📷 <strong style="color:var(--ink)">gPhoto2:</strong> descarregar des de càmeres reflex</li>
+          <li style="font-size:.88rem;padding:.2rem 0;color:var(--muted)">📱 <strong style="color:var(--ink)">MTP (gvfs-mtp):</strong> telèfons Android via USB</li>
+          <li style="font-size:.88rem;padding:.2rem 0;color:var(--muted)">🔌 <strong style="color:var(--ink)">v4l2:</strong> webcam integrada al sistema (Video4Linux)</li>
+        </ul>
+      </div>
+      <div class="card bl-violet">
+        <div class="card-icon" style="background:#f5f3ff">🆓</div>
+        <h3>Bancs de vídeo lliures</h3>
+        <ul style="list-style:none;padding:0">
+          <li style="font-size:.88rem;padding:.2rem 0;color:var(--muted)">🔗 <strong style="color:var(--ink)">Pexels Videos</strong> — CC0, alta qualitat</li>
+          <li style="font-size:.88rem;padding:.2rem 0;color:var(--muted)">🔗 <strong style="color:var(--ink)">Pixabay Video</strong> — CC0, molts temes</li>
+          <li style="font-size:.88rem;padding:.2rem 0;color:var(--muted)">🔗 <strong style="color:var(--ink)">Videvo</strong> — Vídeos i moviments de càmera</li>
+          <li style="font-size:.88rem;padding:.2rem 0;color:var(--muted)">🔗 <strong style="color:var(--ink)">Archive.org</strong> — Arxiu de vídeos públics</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section-tag tag-accent fi" style="margin-top:4rem">Edició amb Kdenlive</div>
+    <h2 class="fi">Flux de treball d'edició a Kdenlive</h2>
+    <p class="lead fi">L'edició no lineal permet treballar amb múltiples pistes, reordenar clips, afegir efectes i exportar sense afectar els arxius originals.</p>
+
+    <div class="grid g2 fi">
+      <div class="card bl-accent">
+        <div class="card-icon" style="background:#fff5f5">🗂️</div>
+        <h3>Organització del projecte</h3>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">📁 <strong style="color:var(--ink)">Carpetes del projecte:</strong> originals/, àudio/, imatges/, exportacions/.</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">⚙️ <strong style="color:var(--ink)">Configuració del projecte:</strong> definir resolució, FPS i perfil de color abans d'importar.</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">🔄 <strong style="color:var(--ink)">Proxy clips:</strong> versions de baixa resolució per editar fluïdament. S'activen a les propietats del clip.</li>
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted)">💾 <strong style="color:var(--ink)">Desa freqüentment:</strong> Kdenlive guarda el projecte en format .kdenlive (XML).</li>
+        </ul>
+      </div>
+      <div class="card bl-orange">
+        <div class="card-icon" style="background:#fff7ed">✂️</div>
+        <h3>Talls i muntatge</h3>
+        <div class="shortcuts">
+          <div class="sc-item"><span class="sc-key">S</span><span class="sc-desc">Eina de tall (Razor)</span></div>
+          <div class="sc-item"><span class="sc-key">R</span><span class="sc-desc">Eina de selecció (Selection)</span></div>
+          <div class="sc-item"><span class="sc-key">Supr</span><span class="sc-desc">Eliminar i tancar espai</span></div>
+          <div class="sc-item"><span class="sc-key">Ctrl+Z</span><span class="sc-desc">Desfer acció</span></div>
+          <div class="sc-item"><span class="sc-key">M</span><span class="sc-desc">Afegir marcador</span></div>
+          <div class="sc-item"><span class="sc-key">Espai</span><span class="sc-desc">Reproduir/Pausa</span></div>
+        </div>
+      </div>
+      <div class="card bl-violet">
+        <div class="card-icon" style="background:#f5f3ff">🌊</div>
+        <h3>Transicions</h3>
+        <p style="margin-bottom:.75rem">S'apliquen arrossegant entre clips o des del panell d'efectes:</p>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.25rem 0;font-size:.88rem;color:var(--muted)">🔀 <strong style="color:var(--ink)">Dissolució (Cross Dissolve):</strong> la més neutra i professional.</li>
+          <li style="padding:.25rem 0;font-size:.88rem;color:var(--muted)">⬛ <strong style="color:var(--ink)">Fade to Black:</strong> pas a negre entre escenes.</li>
+          <li style="padding:.25rem 0;font-size:.88rem;color:var(--muted)">▶️ <strong style="color:var(--ink)">Wipe:</strong> un clip empeny l'altre. Usat en esports i notícies.</li>
+          <li style="padding:.25rem 0;font-size:.88rem;color:var(--muted)">🔢 <strong style="color:var(--ink)">Durada:</strong> 15–24 fotogrames és la durada estàndard.</li>
+        </ul>
+        <div class="ex ex-violet">
+          <div class="ex-lbl">⚠️ Consell professional</div>
+          <p>Menys transicions = més professional. El tall directe (hard cut) és la transició preferida en la majoria de produccions professionals.</p>
+        </div>
+      </div>
+      <div class="card bl-teal">
+        <div class="card-icon" style="background:#ecfeff">🎨</div>
+        <h3>Color grading</h3>
+        <p style="margin-bottom:.75rem">Kdenlive ofereix eines de color per a tots els nivells:</p>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">📊 <strong style="color:var(--ink)">Efecte → Corba de color:</strong> control precís per canal RGB.</li>
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">🎨 <strong style="color:var(--ink)">Efecte → Roues de color:</strong> ajust d'ombres, mig tons i llums.</li>
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">📈 <strong style="color:var(--ink)">Histoscopi (Vectorscope):</strong> anàlisi professional del color.</li>
+          <li style="padding:.25rem 0;font-size:.88rem;color:var(--muted)">🎬 <strong style="color:var(--ink)">LUT (Look Up Tables):</strong> perfils de color predefinits en format .cube.</li>
+        </ul>
+      </div>
+      <div class="card bl-green">
+        <div class="card-icon" style="background:#f0fdf4">🔊</div>
+        <h3>Edició d'àudio</h3>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">🎚️ <strong style="color:var(--ink)">Pista d'àudio separada:</strong> desvincula vídeo i àudio per editar-los independentment.</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">📉 <strong style="color:var(--ink)">Fade in/out d'àudio:</strong> arrossegar el triangle a l'inici/final del clip d'àudio.</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">🎵 <strong style="color:var(--ink)">Música de fons:</strong> afegir a una pista independent, ajustar volum (keyframes).</li>
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted)">🎙️ <strong style="color:var(--ink)">Audacity:</strong> eina complementària per a edició d'àudio avançada (eliminar soroll, equalitzar).</li>
+        </ul>
+      </div>
+      <div class="card bl-amber">
+        <div class="card-icon" style="background:#fffbeb">✍️</div>
+        <h3>Títols i subtítols</h3>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">📝 <strong style="color:var(--ink)">Clip de títol:</strong> Afegir → Clip de títol. Editor visual complet amb fonts, colors i fons.</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">🎞️ <strong style="color:var(--ink)">Animació de títol:</strong> keyframes per animar posició, opacitat i escala.</li>
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted)">📄 <strong style="color:var(--ink)">Subtítols .SRT:</strong> importar o crear subtítols sincronitzats al vídeo final.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout cl-green fi" style="margin-top:2rem">
+      <span class="callout-icon">🎬</span>
+      <div>
+        <strong>Consells de muntatge professionals:</strong>
+        <ul style="margin-top:.5rem">
+          <li><strong>Regla dels 180°:</strong> en una conversa, la càmera no ha de creuar la línia imaginaria entre els personatges.</li>
+          <li><strong>Talls en l'acció:</strong> tallar durant el moviment fa les edicions menys perceptibles.</li>
+          <li><strong>Regla dels 3 punts:</strong> marcar l'entrada i sortida al clip font, i la posició a la línia de temps.</li>
+          <li><strong>J-Cut / L-Cut:</strong> l'àudio comença o acaba en un moment diferent del vídeo, creant transicions suaus.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRÀCTICA -->
+<section id="practica" class="s-dark">
+  <div class="container">
+    <div class="section-tag tag-violet fi">Pràctica avançada</div>
+    <h2 class="fi">Pràctica Única: Microreportatge "SMX en Acció"</h2>
+    <p class="lead fi">Una pràctica integral que cobreix tots els criteris d'avaluació del RA6: captura, edició multi-pista, color grading, àudio, títols animats i exportació multipropòsit.</p>
+
+    <div class="practice-card fi">
+      <div class="practice-header p-main">
+        <div class="practice-num">P1</div>
+        <div>
+          <h3>Microreportatge de 2 minuts: "Un dia al cicle SMX"</h3>
+          <p>Kdenlive + OBS + Audacity + FFmpeg · Durada estimada: 5–6 hores · Nivell avançat</p>
+        </div>
+      </div>
+      <div class="practice-body">
+        <div class="callout cl-accent" style="margin-bottom:1.5rem">
+          <span class="callout-icon">🎯</span>
+          <div>
+            <strong>Objectiu:</strong>
+            <p>Crear un microreportatge de 2 minuts en format Full HD (1920×1080, 25fps) que mostri aspectes de la vida al cicle SMX. Ha d'incloure: gravació de pantalla (screencast), imatges fixes animades, locució, música de fons, títols animats, correccions de color i exportació en 3 formats diferents.</p>
+          </div>
+        </div>
+
+        <h3 style="margin-bottom:1rem;color:var(--navy)">📋 Fase 1 — Preproducció i planificació</h3>
+        <ul class="steps">
+          <li><p><strong>Escriu el guió tècnic</strong> del vídeo. Ha de tenir: títol d'obertura (15"), entrevista/explicació (60"), demostració pràctica (30") i crèdits finals (15"). Descriu visualment cada seqüència.</p></li>
+          <li><p><strong>Crea l'estructura de carpetes:</strong> <code>smx_reportatge/originals/</code>, <code>smx_reportatge/audio/</code>, <code>smx_reportatge/imatges/</code>, <code>smx_reportatge/musica/</code>, <code>smx_reportatge/exportacions/</code>.</p></li>
+          <li><p><strong>Descarrega música lliure de drets</strong> (CC0 o CC BY) per al fons musical: Free Music Archive (freemusicarchive.org), ccMixter o Incompetech (incompetech.com). Tria una peça d'ambient tecnològic de 3+ minuts per tenir marge.</p></li>
+          <li><p><strong>Configura OBS Studio:</strong> crea una escena amb captura de pantalla + càmera web (si en tens) + àudio del micròfon. Configura la sortida: MKV, H.264, 1920×1080, 25fps, CRF 20 (alta qualitat).</p></li>
+        </ul>
+
+        <h3 style="margin-bottom:1rem;color:var(--navy);margin-top:2rem">🎥 Fase 2 — Captura de material</h3>
+        <ul class="steps">
+          <li><p><strong>Grava el screencast de demostració tècnica</strong> amb OBS: mostra una tasca real d'SMX (configurar una xarxa, instal·lar Linux, editar codi, etc.). Dura entre 45–60 segons. Explica en veu alta el que fas (locució simultània o posterior).</p></li>
+          <li><p><strong>Captura 5–8 imatges fixes</strong> relatives al tema: captures de pantalla de programes, logos lliures, fotografies de l'entorn. Guarda-les a alta resolució (mínim 1920px d'amplada) a la carpeta imatges/.</p></li>
+          <li><p><strong>Grava la locució</strong> amb Audacity (si no l'has gravada en directe): connecta el micròfon, configura la freqüència de mostreig a 48000 Hz (estàndard de vídeo). Grava el guió. Aplica: <em>Efecte → Reducció de soroll</em> (mostra de silenci primer) i <em>Efecte → Compressor</em> per normalitzar els volums. Exporta com a WAV (sense compressió).</p></li>
+          <li><p><strong>Prepara la música de fons:</strong> obre-la a Audacity, retalla els primers 10 segons (si hi ha intro), aplica un fade-in de 3 segons i un fade-out de 5 segons al final. Exporta com a WAV.</p></li>
+        </ul>
+
+        <h3 style="margin-bottom:1rem;color:var(--navy);margin-top:2rem">✂️ Fase 3 — Muntatge a Kdenlive</h3>
+        <ul class="steps">
+          <li><p><strong>Crea el projecte a Kdenlive:</strong> Nou projecte → 1920×1080 → 25 fps → Perfil de color: sRGB. Activa els proxy clips per a millor rendiment (Configuració → Proxy clips → Activar). Importa tot el material al gestor de clips.</p></li>
+          <li><p><strong>Estructura la línia de temps amb 5 pistes:</strong> V3: títols i gràfics, V2: imatges fixes, V1: vídeo principal (screencast), A1: locució, A2: música de fons. Ajusta l'altura de cada pista per tenir bona visibilitat.</p></li>
+          <li><p><strong>Munta la seqüència principal:</strong> situa el vídeo de demostració a V1. Afegeix les imatges fixes com a clips estàtics (durada 3–5 segons cadascuna). Utilitza l'efecte de moviment (Ken Burns) a les imatges: Efecte → Transformació → Zoom/Panoràmica amb keyframes d'entrada i sortida.</p></li>
+          <li><p><strong>Sincronitza la locució:</strong> situa el WAV de locució a A1. Ajusta els punts d'entrada per sincronitzar-la amb el vídeo. Aplica un keyframe de volum per baixar la veu durant els moments de demostració on el clic del ratolí és audible.</p></li>
+          <li><p><strong>Afegeix la música de fons a A2:</strong> volum al 20–30% (ha de ser de fons, no tapar la locució). Aplica un fade-in de 1 segon a l'inici i un fade-out de 3 segons al final. Usa l'efecte "Ducking" (sidechain) si Kdenlive el suporta, o baixa manualment el volum quan parla la locució (keyframes d'àudio).</p></li>
+          <li><p><strong>Afegeix transicions:</strong> dissolució de 12 fotogrames entre clips de vídeo. Fade to Black al final (darrera transició). Evita usar més de 2 tipus de transicions al projecte sencer.</p></li>
+        </ul>
+
+        <h3 style="margin-bottom:1rem;color:var(--navy);margin-top:2rem">🎨 Fase 4 — Títols animats i color grading</h3>
+        <ul class="steps">
+          <li><p><strong>Crea el títol d'obertura</strong> (clip de títol a V3): durada 5 segments. Fons negre. Text principal: "SMX EN ACCIÓ" en majúscules, font sans-serif blanca, 120px. Subtítol: "Sistemes Microinformàtics i Xarxes" en 60px gris clar. Anima el text: keyframe d'opacitat de 0 a 100% en 1 segon (fade in). Afegeix un rectangle de color corporatiu darrere del text.</p></li>
+          <li><p><strong>Crea les sobreposicions de text</strong> (lower thirds): durant el screencast, afegeix un clip de títol petit a la part inferior esquerra amb el nom del programari que s'està mostrant. Fons semitransparent (70% opacitat), text blanc 40px. Anima l'entrada amb un desplaçament horitzontal (posició X de -200 a 0, en 20 fotogrames).</p></li>
+          <li><p><strong>Aplica color grading</strong> al vídeo principal: Selecciona el clip de screencast → afegeix efecte → <em>Color</em> → <em>Corba de color</em>. Crea una corba en S lleugera (augmenta les llums, enfosqueix les ombres) per donar més contrast. Ajusta el balanç de blanc si el vídeo té un to massa groc/blau: <em>Efecte → Corrector de blancs</em>.</p></li>
+          <li><p><strong>Aplica LUT cinematogràfic (opcional avançat):</strong> descarrega un LUT gratuït en format .cube (cerca "free cinematic LUT download"). A Kdenlive: Efecte → Color → LUT → importa el fitxer .cube. Ajusta la intensitat al 40–60% per un efecte subtil.</p></li>
+          <li><p><strong>Crea els crèdits finals:</strong> clip de títol de 15", fons negre, llista de crèdits amb scroll (Efecte → Transformació → anima la posició Y de +500 a -1200 en la durada del clip). Afegeix el nom, el curs i la data.</p></li>
+        </ul>
+
+        <h3 style="margin-bottom:1rem;color:var(--navy);margin-top:2rem">💾 Fase 5 — Exportació multipropòsit</h3>
+        <ul class="steps">
+          <li><p><strong>Exporta per a YouTube/Web:</strong> Renderitza → Perfil: MP4-H264 → Configura: resolució 1920×1080, 25fps, bitrate VBR 8000–12000 kbps, àudio AAC 192kbps. Nom: <code>smx_reportatge_web.mp4</code></p></li>
+          <li><p><strong>Exporta per a Instagram Stories (9:16 vertical):</strong> Crea un nou perfil de renderització: 1080×1920. Haurà d'afegir les barres laterals (letterbox) o recadrar. Usa l'efecte <em>Transformació</em> per recadrar la secció rellevant del vídeo horitzontal al format vertical. Exporta: <code>smx_reportatge_stories.mp4</code></p></li>
+          <li><p><strong>Exporta versió d'arxiu alta qualitat:</strong> Renderitza → Perfil: MKV-H265 → CRF 18 (alta qualitat). Àudio: FLAC. Nom: <code>smx_reportatge_arxiu.mkv</code>. Compara la mida amb el MP4 web.</p></li>
+          <li><p><strong>Processa per lots amb FFmpeg:</strong> converteix el MP4 web a WebM per al navegador: <code>ffmpeg -i smx_reportatge_web.mp4 -c:v libvpx-vp9 -crf 30 -b:v 0 -c:a libopus smx_reportatge.webm</code>. Compara la mida dels arxius.</p></li>
+          <li><p><strong>Genera un GIF animat</strong> de la millor seqüència de 5 segons: <code>ffmpeg -i smx_reportatge_web.mp4 -ss 00:00:30 -t 5 -vf "fps=15,scale=480:-1" -loop 0 smx_preview.gif</code></p></li>
+          <li><p><strong>Documenta tota la producció</strong> en un document LibreOffice Writer: guió tècnic, captures del procés d'edició a Kdenlive, decisió de cada transició i efecte, taula comparativa de tots els formats exportats (mida, qualitat, destí).</p></li>
+        </ul>
+
+        <div class="callout cl-green" style="margin-top:2rem">
+          <span class="callout-icon">📦</span>
+          <div>
+            <strong>Lliurament:</strong>
+            <ul style="margin-top:.5rem">
+              <li>Arxiu de projecte <code>.kdenlive</code></li>
+              <li><code>smx_reportatge_web.mp4</code> — 1080p per a YouTube/web</li>
+              <li><code>smx_reportatge_stories.mp4</code> — 1080×1920 per a xarxes</li>
+              <li><code>smx_reportatge_arxiu.mkv</code> — Alta qualitat H.265</li>
+              <li><code>smx_reportatge.webm</code> — Web sense patents</li>
+              <li><code>smx_preview.gif</code> — Previsualització animada</li>
+              <li>Document de memòria (guió + procés + taula de formats)</li>
+            </ul>
+          </div>
+        </div>
+
+        <div style="overflow-x:auto;margin-top:2rem">
+          <table class="ptable">
+            <thead><tr><th>Criteri</th><th>Insuficient</th><th>Suficient</th><th>Notable</th><th>Excel·lent</th></tr></thead>
+            <tbody>
+              <tr><td>Captura i qualitat del material</td><td>Vídeo borrós/tallat</td><td>Screencast llegible</td><td>Screencast + imatges fixes</td><td>Screeeencast + locució + imatges animades</td></tr>
+              <tr><td>Muntatge i estructura</td><td>Clips sense ordenar</td><td>Seqüència coherent</td><td>Transicions + narració</td><td>J-cuts + timing precís</td></tr>
+              <tr><td>Títols i gràfics</td><td>Sense títols</td><td>Títol d'obertura bàsic</td><td>Títols + lower thirds</td><td>Títols animats + crèdits scroll</td></tr>
+              <tr><td>So i música</td><td>Sense àudio editat</td><td>Locució + música bàsica</td><td>Balanceig de volums</td><td>Ducking + Audacity + fade professional</td></tr>
+              <tr><td>Color grading</td><td>Sense correcció</td><td>Brillo/contrast bàsic</td><td>Corba de color en S</td><td>LUT + vectorscopi + equilibri de blancs</td></tr>
+              <tr><td>Exportació</td><td>Només 1 format</td><td>MP4 + Stories</td><td>3 formats correctes</td><td>5 formats + GIF + documentació</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PREGUNTES -->
+<section id="preguntes" class="s-cream">
+  <div class="container">
+    <div class="ra-banner ra-pregs fi">
+      <div class="ra-num">?</div>
+      <div>
+        <h2>Preguntes teòriques</h2>
+        <p>10 preguntes per avaluar la comprensió dels conceptes del RA6. Sense resposta — per reflexionar i preparar l'examen.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-accent fi">Fonaments i formats</div>
+    <h2 class="fi">Preguntes de conceptes tècnics</h2>
+    <div class="grid fi" style="gap:.9rem;margin-bottom:3rem">
+
+      <div class="q-card">
+        <div class="q-num">1</div>
+        <div class="q-body">
+          <h4>Explica la diferència entre un contenidor de vídeo i un còdec. Dona dos exemples de cada un. Per quin motiu és incorrecte dir "un vídeo en format H.264"? Explica correctament com s'hauria d'especificar el format (contenidor + còdec de vídeo + còdec d'àudio).</h4>
+          <p>Si tens un arxiu .MKV, quins còdecs podria estar usant a l'interior? Limita't a còdecs gratuïts i de codi obert.</p>
+          <span class="q-tag qt-r">Còdecs</span><span class="q-tag qt-o">Contenidors</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">2</div>
+        <div class="q-body">
+          <h4>Un vídeo de 10 minuts es grava a 1080p, 30fps, H.264, bitrate de 10 Mbps. Calcula aproximadament el pes de l'arxiu en GB. Si el mateix vídeo s'hagués gravat amb H.265 al mateix bitrate, quin seria el guany de qualitat o la reducció de mida esperada? Justifica la resposta.</h4>
+          <p>Per quin motiu el bitrate VBR (variable) produeix un arxiu de millor qualitat que CBR (constant) a la mateixa mida d'arxiu?</p>
+          <span class="q-tag qt-r">Bitrate</span><span class="q-tag qt-o">H.265</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">3</div>
+        <div class="q-body">
+          <h4>Compara els còdecs AV1, VP9 i H.265 des del punt de vista de: eficiència de compressió, llicències i patents, compatibilitat de maquinari i casos d'ús recomanats. Quin usaries per publicar un vídeo a una pàgina web estàtica i per quin motiu?</h4>
+          <p>Per quin motiu YouTube usa VP9 internament tot i que el fitxer que pugen els creadors és normalment H.264?</p>
+          <span class="q-tag qt-r">AV1</span><span class="q-tag qt-t">VP9</span><span class="q-tag qt-o">Patents</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">4</div>
+        <div class="q-body">
+          <h4>Explica el concepte de "taxa de fotogrames" (FPS) i descriu per quin motiu el cinema usa 24fps i no 60fps. Quines limitacions tècniques i artístiques imposa cada taxa de fotogrames? Com gestionaria Kdenlive un projecte 25fps on s'importa un clip gravat a 60fps?</h4>
+          <p>Descriu com es crea un efecte de càmera lenta (slow motion) a Kdenlive amb un clip gravat a 60fps en un projecte de 25fps.</p>
+          <span class="q-tag qt-r">FPS</span><span class="q-tag qt-o">Slow-motion</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-tag tag-violet fi">Edició i eines</div>
+    <h2 class="fi">Preguntes sobre Kdenlive i tècniques</h2>
+    <div class="grid fi" style="gap:.9rem;margin-bottom:3rem">
+
+      <div class="q-card">
+        <div class="q-num">5</div>
+        <div class="q-body">
+          <h4>Explica el concepte de "proxy clips" a Kdenlive. Per quin motiu s'usen? Quin és el seu cicle de vida en un projecte: quan es creen, quan s'usen i quan s'activa el vídeo original? En quines situacions és especialment recomanable activar-los?</h4>
+          <p>Quin és el risc de no usar proxy clips quan s'edita vídeo 4K en un ordinador de prestacions modestes? Descriu els problemes concrets que podrien aparèixer.</p>
+          <span class="q-tag qt-o">Proxy</span><span class="q-tag qt-r">Rendiment</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">6</div>
+        <div class="q-body">
+          <h4>Descriu les tècniques de muntatge "J-Cut" i "L-Cut". Amb quins efectes artístics s'associen cada una? Posa un exemple concret d'on usaries un J-Cut en un reportatge i on usaries un L-Cut. Descriu el procés tècnic per crear-los a Kdenlive.</h4>
+          <p>Per quin motiu el "tall directe" (hard cut) és la transició preferida a les produccions professionals de cinema i notícies, per sobre de les dissolucions o wipes?</p>
+          <span class="q-tag qt-v">Muntatge</span><span class="q-tag qt-r">J-Cut</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">7</div>
+        <div class="q-body">
+          <h4>Explica per quin es diferencia la "correcció de color" (color correction) del "color grading". Quines eines de Kdenlive permeten fer cada una? Descriu el procés per crear un aspecte cinematogràfic "teal and orange" aplicant roues de color: quin color afegiràs a les ombres i quin als tons de pell?</h4>
+          <p>Quin és l'ús del "vectorscopi" (vectorscope) durant l'edició de color professional? Quina informació mostra que l'histograma de lluminositat no mostra?</p>
+          <span class="q-tag qt-r">Color grading</span><span class="q-tag qt-v">LUT</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">8</div>
+        <div class="q-body">
+          <h4>Descriu 5 comandes d'FFmpeg que tot tècnic SMX hauria de conèixer. Per a cada comanda: escriu la sintaxi correcta, explica cada paràmetre i descriu un cas d'ús real on la usaries. Una de les comandes ha de permetre processar un lot de 50 vídeos automàticament.</h4>
+          <p>Per quin motiu FFmpeg és la base de programari que usa internament la majoria d'editors de vídeo lliures (Kdenlive, Shotcut, OpenShot)? Quines implicacions té això per a la compatibilitat de formats?</p>
+          <span class="q-tag qt-t">FFmpeg</span><span class="q-tag qt-g">Automatització</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-tag tag-amber fi">Producció i professional</div>
+    <h2 class="fi">Preguntes de producció i aplicació</h2>
+    <div class="grid fi" style="gap:.9rem">
+
+      <div class="q-card">
+        <div class="q-num">9</div>
+        <div class="q-body">
+          <h4>Un client et demana produir el mateix vídeo corporatiu per a: (a) YouTube, (b) pantalla LED gran format en un esdeveniment (loop sense fi), (c) Instagram Reels, i (d) presentació de PowerPoint. Per a cada destí, especifica: resolució, FPS, còdec, contenidor, bitrate aproximat i les consideracions específiques del destí. Justifica cada decisió.</h4>
+          <p>Per quin destí hauries de lliurar el màster de màxima qualitat sense compressió, i per quin es prioritzaria la mida mínima d'arxiu?</p>
+          <span class="q-tag qt-a">Professional</span><span class="q-tag qt-r">Exportació</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">10</div>
+        <div class="q-body">
+          <h4>Compara OBS Studio, Kdenlive i HandBrake: quins són el rol específic de cada eina dins d'un flux de treball de producció de vídeo? Podria fer tot el procés usant només una d'elles? Descriu un flux de treball complet (captura → edició → distribució) per crear un tutorial de 10 minuts per a YouTube usant exclusivament programari lliure a Ubuntu.</h4>
+          <p>Quines consideracions de llicències hauries de tenir en compte en seleccionar la música i les imatges que vols incloure al vídeo? Quines fonts lliures de drets recomanaries?</p>
+          <span class="q-tag qt-r">OBS</span><span class="q-tag qt-o">Flux de treball</span><span class="q-tag qt-g">Llicències</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESUM -->
+<section class="s-cream">
+  <div class="container fi">
+    <div class="section-tag tag-cobalt">Resum del RA6</div>
+    <h2>El que heu après</h2>
+    <p class="lead">Un repàs ràpid dels conceptes clau del RA6 i la seva aplicació com a tècnics SMX.</p>
+    <div class="grid g3 fi">
+      <div class="card bl-accent">
+        <div class="card-icon" style="background:#fff5f5">🎞️</div>
+        <h3>Fonaments de vídeo</h3>
+        <p><strong>Resolució:</strong> SD/HD/FHD/4K. <strong>FPS:</strong> 24 (cinema), 25 (PAL), 30/60 (web). <strong>Aspect:</strong> 16:9, 9:16, 1:1. <strong>Bitrate:</strong> CBR vs VBR. <strong>Còdec ≠ Contenidor.</strong> Càlcul de mida d'arxiu.</p>
+      </div>
+      <div class="card bl-orange">
+        <div class="card-icon" style="background:#fff7ed">📦</div>
+        <h3>Formats i còdecs</h3>
+        <p><strong>Contenidors:</strong> MP4, MKV, WebM, MOV. <strong>Vídeo:</strong> H.264 (web), H.265 (arxiu), AV1 (futur), VP9 (YouTube). <strong>Àudio:</strong> AAC (web), Opus (obert), FLAC (lossless). Combinació per cada destí.</p>
+      </div>
+      <div class="card bl-violet">
+        <div class="card-icon" style="background:#f5f3ff">🛠️</div>
+        <h3>Eines i edició</h3>
+        <p><strong>Kdenlive:</strong> edició multi-pista, keyframes, color grading, LUT. <strong>OBS:</strong> captura + streaming. <strong>Audacity:</strong> àudio. <strong>HandBrake:</strong> conversió. <strong>FFmpeg:</strong> automatització. Muntatge: J-cut, L-cut, dissolució.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p><strong>RA6 — Manipulació de Seqüències de Vídeo · SMX · Ofimàtica</strong></p>
+  <p style="margin-top:.4rem">FPS · Resolució · Còdecs · Kdenlive · OBS · FFmpeg · HandBrake · Color Grading</p>
+  <p style="margin-top:.4rem">Departament d'Informàtica · Sistemes Microinformàtics i Xarxes</p>
+</footer>
+
+<script>
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+  }, { threshold: 0.07, rootMargin: '0px 0px -30px 0px' });
+  document.querySelectorAll('.fi').forEach(el => io.observe(el));
+
+  // Tool card styles
+  document.querySelectorAll('.tool-card').forEach(card => {
+    card.style.background = 'white';
+    card.style.border = '2px solid var(--border)';
+    card.style.borderRadius = 'var(--radius)';
+    card.style.padding = '1.5rem';
+    card.style.transition = 'all .2s';
+  });
+  document.querySelectorAll('.tool-name').forEach(el => {
+    el.style.fontFamily = "'Syne', sans-serif";
+    el.style.fontWeight = '700';
+    el.style.color = 'var(--navy)';
+  });
+  document.querySelectorAll('.tool-type').forEach(el => {
+    el.style.fontSize = '0.72rem';
+    el.style.fontWeight = '600';
+    el.style.letterSpacing = '.08em';
+    el.style.textTransform = 'uppercase';
+  });
+  document.querySelectorAll('.tool-header').forEach(el => {
+    el.style.display = 'flex';
+    el.style.alignItems = 'center';
+    el.style.gap = '.75rem';
+    el.style.marginBottom = '.75rem';
+  });
+  document.querySelectorAll('.tool-icon').forEach(el => {
+    el.style.width = '40px';
+    el.style.height = '40px';
+    el.style.borderRadius = '10px';
+    el.style.display = 'grid';
+    el.style.placeItems = 'center';
+    el.style.fontSize = '1.2rem';
+    el.style.flexShrink = '0';
+  });
+</script>
+</body>
+</html>

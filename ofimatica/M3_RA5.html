@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RA5 — Manipulació d'Imatges Digitals · SMX</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink:     #0d0f1a;
+    --paper:   #f4f2ed;
+    --cream:   #eceae3;
+    --navy:    #1a1f4e;
+    --cobalt:  #2d3bb5;
+    --sky:     #4a6cf7;
+    --accent:  #0891b2;
+    --accent-d:#0e7490;
+    --teal:    #14b8a6;
+    --violet:  #8b5cf6;
+    --rose:    #f43f5e;
+    --amber:   #d97706;
+    --green:   #16a34a;
+    --muted:   #6b6f85;
+    --border:  #d6d2c9;
+    --card:    #ffffff;
+    --radius:  16px;
+    --radius-sm: 8px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--paper); color: var(--ink); font-size: 16px; line-height: 1.7; overflow-x: hidden; }
+
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(244,242,237,0.94); backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border); padding: 0 2rem;
+    display: flex; align-items: center; justify-content: space-between; height: 62px;
+  }
+  .nav-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1rem; color: var(--navy); letter-spacing: -0.02em; }
+  .nav-logo span { color: var(--accent); }
+  .nav-pills { display: flex; gap: .4rem; list-style: none; }
+  .nav-pills a { text-decoration: none; font-size: 0.78rem; font-weight: 600; padding: .3rem .85rem; border-radius: 100px; color: var(--muted); transition: all .2s; border: 1px solid transparent; }
+  .nav-pills a:hover { color: var(--accent); border-color: var(--accent); background: rgba(8,145,178,0.07); }
+  .nav-pills a.teoria { color: var(--accent); }
+  .nav-pills a.prac   { color: var(--violet); }
+  .nav-pills a.pregs  { color: var(--amber); }
+
+  .hero {
+    min-height: 100vh; display: grid; place-items: center;
+    background: var(--navy); color: white;
+    position: relative; overflow: hidden; padding: 8rem 2rem 4rem;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 75% 25%, rgba(8,145,178,0.35) 0%, transparent 65%),
+      radial-gradient(ellipse 50% 40% at 20% 70%, rgba(139,92,246,0.2) 0%, transparent 65%),
+      radial-gradient(ellipse 40% 35% at 55% 90%, rgba(244,63,94,0.12) 0%, transparent 60%);
+  }
+  .hero-dots {
+    position: absolute; inset: 0; opacity: 0.07;
+    background-image: radial-gradient(rgba(255,255,255,.6) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+  .hero-content { position: relative; z-index: 1; text-align: center; max-width: 840px; }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: .5rem;
+    background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.85); font-size: 0.78rem; font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    padding: .35rem 1rem; border-radius: 100px; margin-bottom: 1.5rem;
+  }
+  .hero h1 { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(2.6rem, 6.5vw, 5rem); line-height: 1.06; letter-spacing: -0.03em; margin-bottom: 1.5rem; }
+  .hero h1 em { font-style: normal; color: var(--accent); }
+  .hero p { font-size: 1.1rem; color: rgba(255,255,255,0.6); max-width: 560px; margin: 0 auto 2.5rem; }
+  .hero-apps { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+  .hero-app {
+    display: flex; align-items: center; gap: .6rem;
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+    padding: .6rem 1.2rem; border-radius: 12px; font-size: 0.88rem; font-weight: 500;
+    color: white; text-decoration: none; transition: all .25s;
+  }
+  .hero-app:hover { background: rgba(255,255,255,0.15); transform: translateY(-2px); }
+  .hero-app .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .scroll-hint {
+    position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: .4rem;
+    color: rgba(255,255,255,0.3); font-size: 0.72rem; letter-spacing: 0.1em;
+  }
+  .scroll-hint::after { content: ''; display: block; width: 1px; height: 36px; background: linear-gradient(to bottom, rgba(255,255,255,.35), transparent); animation: pulse 2s ease-in-out infinite; }
+  @keyframes pulse { 0%,100%{opacity:.3} 50%{opacity:1} }
+
+  section { padding: 6rem 2rem; }
+  .container { max-width: 1080px; margin: 0 auto; }
+  .section-tag { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; display: flex; align-items: center; gap: .5rem; margin-bottom: .9rem; }
+  .section-tag::before { content: ''; display: block; width: 20px; height: 2px; }
+  .tag-cobalt { color: var(--cobalt); } .tag-cobalt::before { background: var(--cobalt); }
+  .tag-accent { color: var(--accent); } .tag-accent::before { background: var(--accent); }
+  .tag-violet { color: var(--violet); } .tag-violet::before { background: var(--violet); }
+  .tag-amber  { color: var(--amber);  } .tag-amber::before  { background: var(--amber); }
+  .tag-green  { color: var(--green);  } .tag-green::before  { background: var(--green); }
+  .tag-rose   { color: var(--rose);   } .tag-rose::before   { background: var(--rose); }
+  .tag-teal   { color: var(--teal);   } .tag-teal::before   { background: var(--teal); }
+
+  h2 { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(1.7rem, 3.5vw, 2.6rem); line-height: 1.1; letter-spacing: -0.025em; color: var(--navy); margin-bottom: .9rem; }
+  h3 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.15rem; color: var(--navy); margin-bottom: .65rem; }
+  h4 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.95rem; color: var(--navy); margin-bottom: .4rem; }
+  .lead { font-size: 1.05rem; color: var(--muted); max-width: 700px; margin-bottom: 3rem; line-height: 1.7; }
+
+  .grid { display: grid; gap: 1.25rem; }
+  .g2 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+  .g3 { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+  .g4 { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.75rem; transition: transform .2s, box-shadow .2s; }
+  .card:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(26,31,78,0.1); }
+  .card p { color: var(--muted); font-size: 0.92rem; }
+  .card-icon { width: 44px; height: 44px; border-radius: 10px; display: grid; place-items: center; font-size: 1.3rem; margin-bottom: .9rem; }
+  .bl-accent { border-left: 3px solid var(--accent); }
+  .bl-violet { border-left: 3px solid var(--violet); }
+  .bl-green  { border-left: 3px solid var(--green); }
+  .bl-amber  { border-left: 3px solid var(--amber); }
+  .bl-rose   { border-left: 3px solid var(--rose); }
+  .bl-teal   { border-left: 3px solid var(--teal); }
+  .bl-cobalt { border-left: 3px solid var(--cobalt); }
+
+  .ex { background: var(--cream); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1rem 1.25rem; margin: .65rem 0; }
+  .ex .ex-lbl { font-size: 0.68rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; margin-bottom: .3rem; }
+  .ex p { font-size: 0.87rem; color: var(--ink); }
+  .ex-accent .ex-lbl { color: var(--accent); }
+  .ex-green  .ex-lbl { color: var(--green); }
+  .ex-amber  .ex-lbl { color: var(--amber); }
+  .ex-violet .ex-lbl { color: var(--violet); }
+
+  .callout { border-radius: var(--radius); padding: 1.6rem 2rem; margin: 1.5rem 0; display: flex; gap: 1rem; align-items: flex-start; }
+  .callout-icon { font-size: 1.4rem; flex-shrink: 0; margin-top: .1rem; }
+  .callout p, .callout li { font-size: 0.92rem; }
+  .callout ul { padding-left: 1.2rem; }
+  .callout li { margin-bottom: .25rem; }
+  .cl-accent { background: rgba(8,145,178,0.08);  border: 1px solid rgba(8,145,178,0.22); }
+  .cl-green  { background: rgba(22,163,74,0.07);   border: 1px solid rgba(22,163,74,0.2); }
+  .cl-amber  { background: rgba(251,188,4,0.1);    border: 1px solid rgba(251,188,4,0.3); }
+  .cl-violet { background: rgba(139,92,246,0.07);  border: 1px solid rgba(139,92,246,0.2); }
+  .cl-rose   { background: rgba(244,63,94,0.07);   border: 1px solid rgba(244,63,94,0.2); }
+
+  .ptable { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+  .ptable th, .ptable td { padding: .85rem 1rem; text-align: left; border-bottom: 1px solid var(--border); }
+  .ptable th { background: var(--navy); color: white; font-family: 'Syne', sans-serif; font-weight: 700; }
+  .ptable th:first-child { border-radius: 8px 0 0 0; } .ptable th:last-child { border-radius: 0 8px 0 0; }
+  .ptable tr:hover td { background: var(--cream); }
+  .badge { display: inline-block; padding: .15rem .55rem; border-radius: 100px; font-size: 0.72rem; font-weight: 700; font-family: 'Syne', sans-serif; }
+  .b-accent { background: rgba(8,145,178,0.12);  color: var(--accent-d); }
+  .b-green  { background: rgba(22,163,74,0.12);   color: #14532d; }
+  .b-amber  { background: rgba(251,188,4,0.18);   color: #8a6500; }
+  .b-violet { background: rgba(139,92,246,0.12);  color: #5b21b6; }
+  .b-rose   { background: rgba(244,63,94,0.12);   color: #be123c; }
+
+  .s-dark  { background: var(--navy); color: white; }
+  .s-dark h2, .s-dark h3, .s-dark h4 { color: white; }
+  .s-dark .lead { color: rgba(255,255,255,0.58); }
+  .s-dark .card { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1); }
+  .s-dark .card h3 { color: white; } .s-dark .card p { color: rgba(255,255,255,0.6); }
+  .s-dark .ptable th { background: rgba(255,255,255,0.1); }
+  .s-dark .ptable td { border-color: rgba(255,255,255,0.1); color: rgba(255,255,255,0.8); }
+  .s-dark .ptable tr:hover td { background: rgba(255,255,255,0.05); }
+  .s-cream { background: var(--cream); }
+  .s-accent { background: #ecfeff; }
+  .s-violet { background: #f5f3ff; }
+
+  .ra-banner { border-radius: var(--radius); padding: 1.5rem 2rem; display: flex; align-items: center; gap: 1.25rem; margin-bottom: 3rem; color: white; }
+  .ra-num { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 2.4rem; opacity: .25; flex-shrink: 0; line-height: 1; }
+  .ra-banner h2 { color: white; font-size: 1.35rem; margin-bottom: .2rem; }
+  .ra-banner p  { color: rgba(255,255,255,0.7); font-size: 0.88rem; }
+  .ra-teoria   { background: linear-gradient(135deg, #0e7490, #0891b2); }
+  .ra-practica { background: linear-gradient(135deg, #5b21b6, #8b5cf6); }
+  .ra-pregs    { background: linear-gradient(135deg, #92400e, #d97706); }
+  .ra-resum    { background: linear-gradient(135deg, #064e3b, #16a34a); }
+
+  .practice-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+  .practice-header { padding: 1.5rem 2rem; display: flex; align-items: center; gap: 1rem; color: white; }
+  .practice-num { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.8rem; opacity: .35; line-height: 1; flex-shrink:0; }
+  .practice-header h3 { color: white; font-size: 1.15rem; margin: 0; }
+  .practice-header p  { color: rgba(255,255,255,0.7); font-size: 0.82rem; margin: .2rem 0 0; }
+  .practice-body { padding: 2rem; }
+  .p-main { background: linear-gradient(135deg, #0e7490, #8b5cf6); }
+
+  .steps { counter-reset: st; list-style: none; display: flex; flex-direction: column; gap: .85rem; }
+  .steps li { counter-increment: st; display: flex; gap: .9rem; align-items: flex-start; padding: .9rem 1.1rem; background: var(--cream); border-radius: var(--radius-sm); font-size: 0.9rem; }
+  .steps li::before { content: counter(st); flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%; background: var(--cobalt); color: white; display: grid; place-items: center; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.8rem; }
+  .steps li p { color: var(--ink); margin: 0; } .steps li strong { color: var(--navy); }
+
+  .q-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem 2rem; display: flex; gap: 1.25rem; align-items: flex-start; transition: transform .2s, box-shadow .2s; }
+  .q-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+  .q-num { flex-shrink: 0; width: 36px; height: 36px; border-radius: 50%; background: var(--cream); border: 2px solid var(--border); display: grid; place-items: center; font-family: 'Syne', sans-serif; font-weight: 800; font-size: 0.88rem; color: var(--cobalt); }
+  .q-body h4 { margin-bottom: .35rem; color: var(--navy); font-size: 0.95rem; }
+  .q-body p  { color: var(--muted); font-size: 0.85rem; font-style: italic; }
+  .q-tag { display: inline-block; padding: .15rem .6rem; border-radius: 100px; font-size: 0.7rem; font-weight: 700; margin-top: .5rem; margin-right: .3rem; }
+  .qt-a { background: rgba(8,145,178,0.1); color: var(--accent-d); }
+  .qt-v { background: rgba(139,92,246,0.1); color: #5b21b6; }
+  .qt-g { background: rgba(22,163,74,0.1); color: #14532d; }
+  .qt-o { background: rgba(217,119,6,0.1); color: #92400e; }
+  .qt-r { background: rgba(244,63,94,0.1); color: #be123c; }
+
+  .pills { display: flex; flex-wrap: wrap; gap: .4rem; margin: .65rem 0; }
+  .pill { padding: .22rem .75rem; border-radius: 100px; font-size: 0.78rem; border: 1px solid var(--border); background: var(--cream); color: var(--ink); }
+  .pill-a { background: rgba(8,145,178,0.1); border-color: rgba(8,145,178,0.3); color: var(--accent-d); }
+  .pill-v { background: rgba(139,92,246,0.1); border-color: rgba(139,92,246,0.3); color: #5b21b6; }
+  .pill-g { background: rgba(22,163,74,0.1); border-color: rgba(22,163,74,0.3); color: #14532d; }
+  .pill-r { background: rgba(244,63,94,0.1); border-color: rgba(244,63,94,0.3); color: #be123c; }
+  .pill-t { background: rgba(20,184,166,0.1); border-color: rgba(20,184,166,0.3); color: #0d9488; }
+
+  .shortcuts { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: .6rem; margin: 1rem 0; }
+  .sc-item { display: flex; align-items: center; gap: .75rem; padding: .65rem 1rem; background: var(--cream); border-radius: var(--radius-sm); font-size: 0.85rem; }
+  .sc-key { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.75rem; background: white; border: 1px solid var(--border); border-radius: 5px; padding: .15rem .45rem; white-space: nowrap; color: var(--navy); box-shadow: 0 2px 0 var(--border); flex-shrink:0; }
+  .sc-desc { color: var(--muted); }
+
+  hr { border: none; border-top: 1px solid var(--border); margin: 3rem 0; }
+  footer { background: var(--ink); color: rgba(255,255,255,0.4); padding: 3rem 2rem; text-align: center; font-size: 0.85rem; }
+  footer strong { color: white; }
+  .fi { opacity: 0; transform: translateY(18px); transition: opacity .55s ease, transform .55s ease; }
+  .fi.in { opacity: 1; transform: none; }
+
+  .format-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+  .format-box { background: white; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1.2rem; text-align: center; }
+  .format-box .fmt-name { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.1rem; margin-bottom: .3rem; }
+  .format-box .fmt-desc { font-size: 0.78rem; color: var(--muted); }
+
+  .tool-card { background: white; border: 2px solid var(--border); border-radius: var(--radius); padding: 1.5rem; transition: all .2s; }
+  .tool-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(8,145,178,0.12); }
+  .tool-header { display: flex; align-items: center; gap: .75rem; margin-bottom: .75rem; }
+  .tool-icon { width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center; font-size: 1.2rem; flex-shrink: 0; }
+  .tool-name { font-family: 'Syne', sans-serif; font-weight: 700; color: var(--navy); }
+  .tool-type { font-size: 0.72rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; }
+
+  @media (max-width: 640px) { .nav-pills { display: none; } }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">SMX · <span>RA5</span> Ofimàtica</div>
+  <ul class="nav-pills">
+    <li><a href="#intro">Introducció</a></li>
+    <li><a href="#conceptes" class="teoria">Conceptes</a></li>
+    <li><a href="#formats" class="teoria">Formats</a></li>
+    <li><a href="#eines" class="teoria">Eines</a></li>
+    <li><a href="#edicio" class="teoria">Edició</a></li>
+    <li><a href="#practica" class="prac">Pràctica</a></li>
+    <li><a href="#preguntes" class="pregs">Preguntes</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="top">
+  <div class="hero-bg"></div>
+  <div class="hero-dots"></div>
+  <div class="hero-content">
+    <div class="hero-badge">🖼️ Sistemes Microinformàtics i Xarxes · RA5 · Ofimàtica</div>
+    <h1>Imatges<br><em>Digitals</em></h1>
+    <p>Manipulació d'imatges digitals. Analitza les possibilitats de programes lliures i aplica tècniques de captura i edició per crear composicions professionals.</p>
+    <div class="hero-apps">
+      <a href="#conceptes" class="hero-app"><span class="dot" style="background:var(--accent)"></span>Conceptes bàsics</a>
+      <a href="#formats" class="hero-app"><span class="dot" style="background:var(--teal)"></span>Formats</a>
+      <a href="#eines" class="hero-app"><span class="dot" style="background:var(--violet)"></span>Eines lliures</a>
+      <a href="#edicio" class="hero-app"><span class="dot" style="background:var(--rose)"></span>Tècniques</a>
+      <a href="#practica" class="hero-app"><span class="dot" style="background:var(--amber)"></span>Pràctica</a>
+    </div>
+  </div>
+  <div class="scroll-hint">DESPLAÇA</div>
+</section>
+
+<!-- INTRO -->
+<section id="intro" class="s-cream">
+  <div class="container fi">
+    <div class="section-tag tag-cobalt">Resultat d'Aprenentatge 5</div>
+    <h2>Manipulació d'imatges digitals</h2>
+    <p class="lead">Analitza les possibilitats de diferents programes i aplica tècniques de captura i edició bàsiques per treballar amb imatges digitals de manera professional. Treballarem exclusivament amb <strong>eines gratuïtes i de codi obert</strong>.</p>
+    <div class="grid g3 fi">
+      <div class="card bl-accent">
+        <div class="card-icon" style="background:#ecfeff">🔬</div>
+        <h3>Fonaments de la imatge</h3>
+        <p>Comprendre el píxel, la resolució, la profunditat de color i els modes de color és imprescindible per editar imatges amb criteri i evitar errors irrecuperables.</p>
+        <div class="pills" style="margin-top:.75rem">
+          <span class="pill pill-a">Píxels</span>
+          <span class="pill pill-a">Resolució</span>
+          <span class="pill pill-a">Color</span>
+        </div>
+      </div>
+      <div class="card bl-teal">
+        <div class="card-icon" style="background:#f0fdfa">📁</div>
+        <h3>Formats i compressió</h3>
+        <p>Cada format d'imatge té propietats específiques. Saber triar entre JPG, PNG, WebP, SVG o TIFF marca la diferència entre un arxiu professional i un d'inadequat.</p>
+        <div class="pills" style="margin-top:.75rem">
+          <span class="pill pill-t">JPG</span>
+          <span class="pill pill-t">PNG</span>
+          <span class="pill pill-t">SVG</span>
+        </div>
+      </div>
+      <div class="card bl-violet">
+        <div class="card-icon" style="background:#f5f3ff">🛠️</div>
+        <h3>Eines i tècniques</h3>
+        <p>GIMP, Inkscape, Krita i eines web gratuïtes ens permeten fer des d'ajustos bàsics fins a composicions complexes amb capes, màscares i filtres avançats.</p>
+        <div class="pills" style="margin-top:.75rem">
+          <span class="pill pill-v">GIMP</span>
+          <span class="pill pill-v">Inkscape</span>
+          <span class="pill pill-v">Krita</span>
+        </div>
+      </div>
+    </div>
+    <div class="callout cl-accent fi" style="margin-top:2rem">
+      <span class="callout-icon">🎓</span>
+      <div>
+        <strong>Criteri d'avaluació principal:</strong>
+        <p style="margin-top:.3rem">L'alumnat ha de ser capaç de capturar i editar imatges digitals usant programes lliures (GIMP, Inkscape, Krita), aplicar ajustos de color, nivells, capes i màscares, i exportar correctament per a web i impressió.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BLOC 1: CONCEPTES BÀSICS -->
+<section id="conceptes" class="s-accent">
+  <div class="container">
+    <div class="ra-banner ra-teoria fi">
+      <div class="ra-num">1</div>
+      <div>
+        <h2>Fonaments de la imatge digital</h2>
+        <p>Píxels, resolució, profunditat de color i modes. La base teòrica imprescindible.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-accent fi">El píxel i la resolució</div>
+    <h2 class="fi">Imatge rasteritzada: el món dels píxels</h2>
+    <p class="lead fi">Tota imatge fotogràfica digital està formada per una graella de píxels (<em>picture elements</em>). Entendre aquesta estructura és fonamental per treballar correctament amb imatges.</p>
+
+    <div class="grid g2 fi">
+      <div class="card bl-accent">
+        <div class="card-icon" style="background:#ecfeff">🔲</div>
+        <h3>El píxel: unitat mínima</h3>
+        <p style="margin-bottom:.75rem">Un píxel és el punt de color més petit d'una imatge digital. Cada píxel té un valor numèric que defineix el seu color.</p>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.9rem;color:var(--muted)">🎨 En mode RGB: 3 valors (vermell, verd, blau) de 0 a 255.</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.9rem;color:var(--muted)">🖤 En mode escala de grisos: 1 valor de 0 (negre) a 255 (blanc).</li>
+          <li style="padding:.3rem 0;font-size:.9rem;color:var(--muted)">📐 Dimensions: amplada × alçada en píxels (ex: 1920×1080).</li>
+        </ul>
+        <div class="ex ex-accent" style="margin-top:.75rem">
+          <div class="ex-lbl">💡 Exemple pràctic</div>
+          <p>Una imatge de 1920×1080 píxels té <strong>2.073.600 píxels</strong> (≈2 megapíxels). En mode RGB de 8 bits per canal, ocupa uns <strong>5,9 MB</strong> sense compressió.</p>
+        </div>
+      </div>
+      <div class="card bl-accent">
+        <div class="card-icon" style="background:#ecfeff">📏</div>
+        <h3>Resolució: PPI i DPI</h3>
+        <p style="margin-bottom:.75rem">La resolució indica la <strong>densitat de píxels</strong> en una àrea determinada:</p>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.9rem;color:var(--muted)">🖥️ <strong style="color:var(--ink)">PPI (Pixels Per Inch):</strong> per a pantalles. Pantalles HD: 72–96 PPI. Retina: 220+ PPI.</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.9rem;color:var(--muted)">🖨️ <strong style="color:var(--ink)">DPI (Dots Per Inch):</strong> per a impressió. Qualitat mínima: 150 DPI. Qualitat pro: 300 DPI.</li>
+          <li style="padding:.3rem 0;font-size:.9rem;color:var(--muted)">⚠️ <strong style="color:var(--ink)">Ampliar no millora:</strong> escalar una imatge petita a mida gran crea pixelació irrecuperable.</li>
+        </ul>
+        <div class="callout cl-amber" style="margin-top:.75rem;padding:.85rem 1rem">
+          <span class="callout-icon">⚠️</span>
+          <p><strong>Regla d'or:</strong> sempre treballar amb la imatge a la mida i resolució final des del principi. Reduir ✅ — Ampliar ❌</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-tag tag-accent fi" style="margin-top:4rem">Modes de color</div>
+    <h2 class="fi">Modes de color i profunditat de bits</h2>
+    <p class="lead fi">El mode de color determina quins colors pot contenir una imatge i com s'emmagatzemen. L'elecció correcta depèn del destí final de la imatge.</p>
+    <div class="grid g3 fi">
+      <div class="card bl-accent">
+        <div class="card-icon" style="background:#ecfeff">🌈</div>
+        <h3>RGB — Pantalles</h3>
+        <p>Red-Green-Blue. Síntesi additiva: barrejar llum. Cada canal: 0–255. Total: 16,7 milions de colors. <strong>Ús:</strong> web, xarxes socials, vídeo, projectors.</p>
+      </div>
+      <div class="card bl-teal">
+        <div class="card-icon" style="background:#f0fdfa">🖨️</div>
+        <h3>CMYK — Impressió</h3>
+        <p>Cyan-Magenta-Yellow-Key (negre). Síntesi subtractiva: barrejar tints. <strong>Ús:</strong> impressió professional (revistes, cartells, llibres). No tots els programes lliures el suporten bé.</p>
+      </div>
+      <div class="card bl-violet">
+        <div class="card-icon" style="background:#f5f3ff">⬜</div>
+        <h3>Escala de grisos</h3>
+        <p>1 canal, 256 tons. Ideal per a fotografies en B/N, documents escanejats. Ocupa ⅓ de la mida d'RGB. GIMP permet convertir RGB → grisos amb opcions avançades (luminositat, desaturació).</p>
+      </div>
+      <div class="card bl-rose">
+        <div class="card-icon" style="background:#fff1f2">🔵</div>
+        <h3>HSV / HSL — Edició intuitiva</h3>
+        <p>Hue (to) – Saturation (saturació) – Value/Lightness (lluminositat). Model intuïtiu per ajustar colors. Molt usat als selectors de color de GIMP i Krita.</p>
+      </div>
+      <div class="card bl-amber">
+        <div class="card-icon" style="background:#fffbeb">🔢</div>
+        <h3>Profunditat de bits</h3>
+        <p><strong>8 bits/canal:</strong> 256 tons per canal (estàndard web). <strong>16 bits/canal:</strong> 65.536 tons (edició professional, evita banding). GIMP suporta 16 i 32 bits per canal.</p>
+      </div>
+      <div class="card bl-green">
+        <div class="card-icon" style="background:#f0fdf4">🌐</div>
+        <h3>Lab (L*a*b*)</h3>
+        <p>Model basat en la percepció humana. L: lluminositat, a: eix verd-vermell, b: eix blau-groc. Usat en correcció de color professional i processament avançat a GIMP.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BLOC 2: FORMATS -->
+<section id="formats">
+  <div class="container">
+    <div class="ra-banner ra-teoria fi">
+      <div class="ra-num">2</div>
+      <div>
+        <h2>Formats d'imatge digital</h2>
+        <p>Rasteritzats vs vectorials, compressió amb/sense pèrdues, transparència i metadades.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-teal fi">Imatges rasteritzades</div>
+    <h2 class="fi">Formats rasteritzats: taula comparativa</h2>
+    <p class="lead fi">Cada format té característiques pròpies que el fan idoni per a un ús concret. Triar malament el format pot arruïnar la qualitat o generar arxius innecessàriament grans.</p>
+
+    <div class="fi" style="overflow-x:auto">
+      <table class="ptable">
+        <thead>
+          <tr>
+            <th>Format</th>
+            <th>Compressió</th>
+            <th>Transparència</th>
+            <th>Colors màxims</th>
+            <th>Ús recomanat</th>
+            <th>Eines compatibles</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="badge b-rose">JPG / JPEG</span></td>
+            <td>Amb pèrdues (lossy)</td>
+            <td>❌ No</td>
+            <td>16,7 milions (24 bits)</td>
+            <td>Fotografies, web, xarxes socials</td>
+            <td>GIMP, gThumb, EOG</td>
+          </tr>
+          <tr>
+            <td><span class="badge b-accent">PNG</span></td>
+            <td>Sense pèrdues (lossless)</td>
+            <td>✅ Sí (canal alfa)</td>
+            <td>16,7 milions (24 bits) o 256 (8 bits)</td>
+            <td>Logos, icones, captures, web</td>
+            <td>GIMP, Inkscape, EOG</td>
+          </tr>
+          <tr>
+            <td><span class="badge b-green">WebP</span></td>
+            <td>Amb o sense pèrdues</td>
+            <td>✅ Sí</td>
+            <td>16,7 milions</td>
+            <td>Web moderna (30–50% menys pes que JPG)</td>
+            <td>GIMP 2.10+, cwebp (CLI)</td>
+          </tr>
+          <tr>
+            <td><span class="badge b-violet">TIFF</span></td>
+            <td>Opcional (LZW sense pèrdues)</td>
+            <td>✅ Sí</td>
+            <td>Fins a 48 bits/canal</td>
+            <td>Impressió professional, arxiu</td>
+            <td>GIMP, darktable, RawTherapee</td>
+          </tr>
+          <tr>
+            <td><span class="badge b-amber">GIF</span></td>
+            <td>Sense pèrdues (LZW)</td>
+            <td>✅ 1 color transparent</td>
+            <td>256 colors (indexat)</td>
+            <td>Animacions simples, icones de pocs colors</td>
+            <td>GIMP (exportació animada)</td>
+          </tr>
+          <tr>
+            <td><span class="badge b-rose">BMP</span></td>
+            <td>Cap (o RLE)</td>
+            <td>❌ No (normalment)</td>
+            <td>16,7 milions</td>
+            <td>Arxiu sense compressió, compatible Windows</td>
+            <td>GIMP, gThumb</td>
+          </tr>
+          <tr>
+            <td><span class="badge b-accent">AVIF</span></td>
+            <td>Amb o sense pèrdues (AV1)</td>
+            <td>✅ Sí</td>
+            <td>10–12 bits/canal</td>
+            <td>Web futura (millor que WebP)</td>
+            <td>GIMP 2.10.32+, ImageMagick</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section-tag tag-teal fi" style="margin-top:4rem">Imatges vectorials</div>
+    <h2 class="fi">Formats vectorials: escalabilitat infinita</h2>
+    <p class="lead fi">Les imatges vectorials es defineixen amb equacions matemàtiques (corbes, línies, formes). Es poden escalar a qualsevol mida sense pèrdua de qualitat.</p>
+    <div class="grid g2 fi">
+      <div class="card bl-teal">
+        <div class="card-icon" style="background:#f0fdfa">🔷</div>
+        <h3>SVG — Scalable Vector Graphics</h3>
+        <p style="margin-bottom:.75rem">Format vectorial estàndard per a la web. Basat en XML, editable amb editor de text. Suporta animacions CSS i JavaScript.</p>
+        <div class="ex ex-green">
+          <div class="ex-lbl">✅ Ideal per a</div>
+          <p>Logos, icones, il·lustracions, mapes interactius, infografies web. L'eina per excel·lència: <strong>Inkscape</strong>.</p>
+        </div>
+      </div>
+      <div class="card bl-teal">
+        <div class="card-icon" style="background:#f0fdfa">📐</div>
+        <h3>Altres formats vectorials</h3>
+        <p style="margin-bottom:.75rem">Formats que Inkscape pot obrir i exportar:</p>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.9rem;color:var(--muted)">📄 <strong style="color:var(--ink)">PDF vectorial:</strong> preserva vectors quan es genera correctament.</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.9rem;color:var(--muted)">🎨 <strong style="color:var(--ink)">DXF:</strong> per a programari CAD (freecad, LibreCAD).</li>
+          <li style="padding:.3rem 0;font-size:.9rem;color:var(--muted)">🖼️ <strong style="color:var(--ink)">EMF/WMF:</strong> formats Windows, llegibles a LibreOffice Draw.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="format-grid fi" style="margin-top:3rem">
+      <div class="format-box">
+        <div class="fmt-name" style="color:var(--rose)">JPG</div>
+        <div class="fmt-desc">Fotografia web · Lossy · Sense alfa</div>
+      </div>
+      <div class="format-box">
+        <div class="fmt-name" style="color:var(--accent)">PNG</div>
+        <div class="fmt-desc">Logos web · Lossless · Amb alfa</div>
+      </div>
+      <div class="format-box">
+        <div class="fmt-name" style="color:var(--green)">WebP</div>
+        <div class="fmt-desc">Web moderna · Compacte · Alfa</div>
+      </div>
+      <div class="format-box">
+        <div class="fmt-name" style="color:var(--violet)">TIFF</div>
+        <div class="fmt-desc">Impressió pro · Sense pèrdues</div>
+      </div>
+      <div class="format-box">
+        <div class="fmt-name" style="color:var(--teal)">SVG</div>
+        <div class="fmt-desc">Vector · Escala infinita · Web</div>
+      </div>
+      <div class="format-box">
+        <div class="fmt-name" style="color:var(--amber)">AVIF</div>
+        <div class="fmt-desc">Web futura · Millor compressió</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BLOC 3: EINES LLIURES -->
+<section id="eines" class="s-violet">
+  <div class="container">
+    <div class="ra-banner ra-practica fi">
+      <div class="ra-num">3</div>
+      <div>
+        <h2>Eines gratuïtes per a edició d'imatges</h2>
+        <p>Programes lliures i eines web per a Ubuntu, Arch Linux i qualsevol plataforma.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-violet fi">Programes d'escriptori</div>
+    <h2 class="fi">Eines d'escriptori: instal·lació i ús</h2>
+    <p class="lead fi">Les millors eines gratuïtes de codi obert per a la manipulació d'imatges digitals, disponibles per a Ubuntu i Arch Linux.</p>
+
+    <div class="grid g2 fi">
+      <div class="tool-card">
+        <div class="tool-header">
+          <div class="tool-icon" style="background:#ecfeff;font-size:1.4rem">🖌️</div>
+          <div>
+            <div class="tool-name">GIMP — GNU Image Manipulation Program</div>
+            <div class="tool-type" style="color:var(--accent)">Edició rasteritzada · Gratuït · Codi obert</div>
+          </div>
+        </div>
+        <p style="font-size:.9rem;color:var(--muted);margin-bottom:.75rem">El referent del programari lliure per a retoc fotogràfic. Equivalent a Photoshop. Suporta capes, canals, màscares, scripts en Script-Fu i Python.</p>
+        <div class="shortcuts">
+          <div class="sc-item"><span class="sc-key">Ubuntu</span><span class="sc-desc">sudo apt install gimp</span></div>
+          <div class="sc-item"><span class="sc-key">Arch</span><span class="sc-desc">sudo pacman -S gimp</span></div>
+          <div class="sc-item"><span class="sc-key">Web</span><span class="sc-desc">flatpak install gimp (Flathub)</span></div>
+        </div>
+        <div class="pills" style="margin-top:.75rem">
+          <span class="pill pill-a">Capes</span>
+          <span class="pill pill-a">Màscares</span>
+          <span class="pill pill-a">Filtres</span>
+          <span class="pill pill-a">Pinzells</span>
+          <span class="pill pill-a">Script-Fu</span>
+          <span class="pill pill-a">Plugins</span>
+        </div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-header">
+          <div class="tool-icon" style="background:#f5f3ff;font-size:1.4rem">✏️</div>
+          <div>
+            <div class="tool-name">Inkscape</div>
+            <div class="tool-type" style="color:var(--violet)">Edició vectorial · Gratuït · Codi obert</div>
+          </div>
+        </div>
+        <p style="font-size:.9rem;color:var(--muted);margin-bottom:.75rem">Editor de gràfics vectorials SVG professional. Ideal per a logos, il·lustracions, diagrames i tot el que necessita escala infinita.</p>
+        <div class="shortcuts">
+          <div class="sc-item"><span class="sc-key">Ubuntu</span><span class="sc-desc">sudo apt install inkscape</span></div>
+          <div class="sc-item"><span class="sc-key">Arch</span><span class="sc-desc">sudo pacman -S inkscape</span></div>
+        </div>
+        <div class="pills" style="margin-top:.75rem">
+          <span class="pill pill-v">SVG</span>
+          <span class="pill pill-v">Corbes Bézier</span>
+          <span class="pill pill-v">Traçat de mapes de bits</span>
+          <span class="pill pill-v">Text vectorial</span>
+        </div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-header">
+          <div class="tool-icon" style="background:#f0fdf4;font-size:1.4rem">🎨</div>
+          <div>
+            <div class="tool-name">Krita</div>
+            <div class="tool-type" style="color:var(--green)">Pintura digital · Gratuït · Codi obert</div>
+          </div>
+        </div>
+        <p style="font-size:.9rem;color:var(--muted);margin-bottom:.75rem">Especialitzat en pintura digital i il·lustració. Excel·lent gestió de pinzells, suporta tabletes gràfiques, HDR i fins a 32 bits per canal.</p>
+        <div class="shortcuts">
+          <div class="sc-item"><span class="sc-key">Ubuntu</span><span class="sc-desc">sudo apt install krita</span></div>
+          <div class="sc-item"><span class="sc-key">Arch</span><span class="sc-desc">sudo pacman -S krita</span></div>
+        </div>
+        <div class="pills" style="margin-top:.75rem">
+          <span class="pill pill-g">Pinzells avançats</span>
+          <span class="pill pill-g">Capes</span>
+          <span class="pill pill-g">Animació 2D</span>
+          <span class="pill pill-g">HDR</span>
+        </div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-header">
+          <div class="tool-icon" style="background:#fffbeb;font-size:1.4rem">📸</div>
+          <div>
+            <div class="tool-name">darktable</div>
+            <div class="tool-type" style="color:var(--amber)">Revelat RAW · Gratuït · Codi obert</div>
+          </div>
+        </div>
+        <p style="font-size:.9rem;color:var(--muted);margin-bottom:.75rem">Gestor de fotografies i revelador d'arxius RAW (equivalent a Lightroom). Ideal per a flux de treball fotogràfic professional amb eines de correcció no destructiva.</p>
+        <div class="shortcuts">
+          <div class="sc-item"><span class="sc-key">Ubuntu</span><span class="sc-desc">sudo apt install darktable</span></div>
+          <div class="sc-item"><span class="sc-key">Arch</span><span class="sc-desc">sudo pacman -S darktable</span></div>
+        </div>
+        <div class="pills" style="margin-top:.75rem">
+          <span class="pill pill-r">RAW</span>
+          <span class="pill pill-r">No destructiu</span>
+          <span class="pill pill-r">Catàleg</span>
+          <span class="pill pill-r">Exportació massiva</span>
+        </div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-header">
+          <div class="tool-icon" style="background:#f0fdfa;font-size:1.4rem">⚡</div>
+          <div>
+            <div class="tool-name">ImageMagick</div>
+            <div class="tool-type" style="color:var(--teal)">Línia de comandes · Gratuït · Potent</div>
+          </div>
+        </div>
+        <p style="font-size:.9rem;color:var(--muted);margin-bottom:.75rem">Eina de terminal per convertir, redimensionar, aplicar filtres i processar imatges per lots (batch). Imprescindible per automatitzar tasques.</p>
+        <div class="shortcuts">
+          <div class="sc-item"><span class="sc-key">Ubuntu</span><span class="sc-desc">sudo apt install imagemagick</span></div>
+          <div class="sc-item"><span class="sc-key">Arch</span><span class="sc-desc">sudo pacman -S imagemagick</span></div>
+        </div>
+        <div class="ex ex-accent" style="margin-top:.75rem">
+          <div class="ex-lbl">🔧 Exemples de comandes</div>
+          <p><code>convert foto.jpg -resize 800x600 foto_petita.jpg</code><br><code>mogrify -format webp *.jpg</code> (converteix tots els JPG a WebP)</p>
+        </div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-header">
+          <div class="tool-icon" style="background:#fff1f2;font-size:1.4rem">🌐</div>
+          <div>
+            <div class="tool-name">Eines web gratuïtes</div>
+            <div class="tool-type" style="color:var(--rose)">Online · Sense instal·lació</div>
+          </div>
+        </div>
+        <p style="font-size:.9rem;color:var(--muted);margin-bottom:.75rem">Per a tasques ràpides sense instal·lar res:</p>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.25rem 0;font-size:.88rem;color:var(--muted)">🔗 <strong style="color:var(--ink)">Photopea</strong> — GIMP online al navegador (photopea.com)</li>
+          <li style="padding:.25rem 0;font-size:.88rem;color:var(--muted)">🔗 <strong style="color:var(--ink)">remove.bg</strong> — Eliminar fons automàticament</li>
+          <li style="padding:.25rem 0;font-size:.88rem;color:var(--muted)">🔗 <strong style="color:var(--ink)">Squoosh</strong> — Optimitzar imatges per web (squoosh.app)</li>
+          <li style="padding:.25rem 0;font-size:.88rem;color:var(--muted)">🔗 <strong style="color:var(--ink)">SVG OMG</strong> — Optimitzar SVG (svgomg.net)</li>
+          <li style="padding:.25rem 0;font-size:.88rem;color:var(--muted)">🔗 <strong style="color:var(--ink)">Upscayl</strong> — Ampliar imatges amb IA (upscayl.org)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BLOC 4: TÈCNIQUES D'EDICIÓ -->
+<section id="edicio">
+  <div class="container">
+    <div class="ra-banner ra-teoria fi">
+      <div class="ra-num">4</div>
+      <div>
+        <h2>Tècniques de captura i edició</h2>
+        <p>Seleccions, capes, ajustos de color, retoc i tècniques avançades amb GIMP.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-accent fi">Captura d'imatges</div>
+    <h2 class="fi">Fonts i captura d'imatges digitals</h2>
+    <div class="grid g3 fi">
+      <div class="card bl-accent">
+        <div class="card-icon" style="background:#ecfeff">📸</div>
+        <h3>Captura de pantalla</h3>
+        <p style="margin-bottom:.75rem">A Linux (Ubuntu / Arch):</p>
+        <div class="shortcuts">
+          <div class="sc-item"><span class="sc-key">Print</span><span class="sc-desc">Captura pantalla completa</span></div>
+          <div class="sc-item"><span class="sc-key">Alt+Print</span><span class="sc-desc">Captura finestra activa</span></div>
+          <div class="sc-item"><span class="sc-key">Maj+Print</span><span class="sc-desc">Captura àrea seleccionada</span></div>
+        </div>
+        <p style="margin-top:.5rem;font-size:.88rem">Eines: <strong>Flameshot</strong> (avançat), <strong>GNOME Screenshot</strong>, <strong>scrot</strong> (terminal).</p>
+      </div>
+      <div class="card bl-teal">
+        <div class="card-icon" style="background:#f0fdfa">📷</div>
+        <h3>Escàner i càmera</h3>
+        <p style="margin-bottom:.75rem">A Ubuntu/Arch, l'eina <strong>Simple Scan</strong> o <strong>XSANE</strong> permet escanejar documents i fotografies directament a GIMP via <em>Fitxer → Importar → Escanejar</em>.</p>
+        <div class="ex ex-green">
+          <div class="ex-lbl">📌 Recomanació</div>
+          <p>Escanejar a 300 DPI per a impressió, 150 DPI per a web. Format TIFF per preservar qualitat màxima.</p>
+        </div>
+      </div>
+      <div class="card bl-violet">
+        <div class="card-icon" style="background:#f5f3ff">🆓</div>
+        <h3>Bancs d'imatges lliures</h3>
+        <p style="margin-bottom:.75rem">Fonts legals d'imatges gratuïtes:</p>
+        <ul style="list-style:none;padding:0">
+          <li style="font-size:.88rem;padding:.2rem 0;color:var(--muted)">🔗 <strong style="color:var(--ink)">Unsplash</strong> — Fotografies d'alta qualitat (CC0)</li>
+          <li style="font-size:.88rem;padding:.2rem 0;color:var(--muted)">🔗 <strong style="color:var(--ink)">Pixabay</strong> — Fotos, vectors, vídeos (CC0)</li>
+          <li style="font-size:.88rem;padding:.2rem 0;color:var(--muted)">🔗 <strong style="color:var(--ink)">Pexels</strong> — Fotografies professionals (CC0)</li>
+          <li style="font-size:.88rem;padding:.2rem 0;color:var(--muted)">🔗 <strong style="color:var(--ink)">Open Clipart</strong> — Vectors i clipart SVG</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section-tag tag-accent fi" style="margin-top:4rem">Tècniques a GIMP</div>
+    <h2 class="fi">Edició avançada amb GIMP</h2>
+    <p class="lead fi">GIMP ofereix un conjunt complet d'eines professionals. Aquí les tècniques fonamentals que cal dominar.</p>
+
+    <div class="grid g2 fi">
+      <div class="card bl-accent">
+        <div class="card-icon" style="background:#ecfeff">🔲</div>
+        <h3>Seleccions</h3>
+        <p style="margin-bottom:.75rem">Les seleccions defineixen quina àrea de la imatge és editable:</p>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">⬜ <strong style="color:var(--ink)">Selecció rectangular / el·líptica:</strong> formes geomètriques bàsiques.</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">✏️ <strong style="color:var(--ink)">Llàpis màgic (Fuzzy Select):</strong> selecciona per color contigu.</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">🎨 <strong style="color:var(--ink)">Seleccionar per color:</strong> tot el color a la imatge.</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">✂️ <strong style="color:var(--ink)">Tisores intel·ligents:</strong> contorns amb magnetisme.</li>
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted)">🖊️ <strong style="color:var(--ink)">Camins (Paths):</strong> seleccions vectorials de precisió.</li>
+        </ul>
+      </div>
+      <div class="card bl-accent">
+        <div class="card-icon" style="background:#ecfeff">📚</div>
+        <h3>Capes i modes de fusió</h3>
+        <p style="margin-bottom:.75rem">Les capes permeten editar elements de forma independent i no destructiva:</p>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">📌 <strong style="color:var(--ink)">Modes bàsics:</strong> Normal, Multiplicar, Pantalla, Superposició, Dodge/Burn.</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">🎭 <strong style="color:var(--ink)">Opacitat de capa:</strong> transparència entre 0–100%.</li>
+          <li style="padding:.3rem 0;font-size:.88em;color:var(--muted)">📎 <strong style="color:var(--ink)">Agrupar capes:</strong> organitzar capes en carpetes per a composicions complexes.</li>
+        </ul>
+      </div>
+      <div class="card bl-violet">
+        <div class="card-icon" style="background:#f5f3ff">🎨</div>
+        <h3>Ajustos de color i to</h3>
+        <div class="shortcuts" style="margin-top:.5rem">
+          <div class="sc-item"><span class="sc-key">Colors → Nivells</span><span class="sc-desc">Ajusta negres, grisos i blancs</span></div>
+          <div class="sc-item"><span class="sc-key">Colors → Corbes</span><span class="sc-desc">Control precís per canal</span></div>
+          <div class="sc-item"><span class="sc-key">Colors → Matís-Saturació</span><span class="sc-desc">Canviar to i vivesa</span></div>
+          <div class="sc-item"><span class="sc-key">Colors → Brillo-Contrast</span><span class="sc-desc">Ajust global ràpid</span></div>
+          <div class="sc-item"><span class="sc-key">Colors → Equilibri color</span><span class="sc-desc">Ombres, mig tons, llums</span></div>
+        </div>
+      </div>
+      <div class="card bl-violet">
+        <div class="card-icon" style="background:#f5f3ff">🎭</div>
+        <h3>Màscares de capa</h3>
+        <p style="margin-bottom:.75rem">Les màscares permeten amagar/mostrar parts de la capa de forma no destructiva, usant blanc (visible), negre (ocult) i grisos (semitransparent).</p>
+        <div class="ex ex-violet">
+          <div class="ex-lbl">🔑 Tècnica clau</div>
+          <p>Clic dret sobre la capa → <strong>Afegir màscara de capa</strong>. Pintar de negre per amagar, de blanc per mostrar. Mai es perd informació original.</p>
+        </div>
+      </div>
+      <div class="card bl-teal">
+        <div class="card-icon" style="background:#f0fdfa">🔍</div>
+        <h3>Eines de retoc</h3>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">🖼️ <strong style="color:var(--ink)">Clon (S):</strong> copiar textura d'una zona a una altra.</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">✨ <strong style="color:var(--ink)">Curar (Heal):</strong> eliminar imperfeccions preservant textura.</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">💧 <strong style="color:var(--ink)">Difuminar / Enfoca:</strong> suavitzar o reforçar zones.</li>
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted)">☀️ <strong style="color:var(--ink)">Aclarir / Enfosquir (Dodge/Burn):</strong> ajust local de lluminositat.</li>
+        </ul>
+      </div>
+      <div class="card bl-green">
+        <div class="card-icon" style="background:#f0fdf4">🔧</div>
+        <h3>Filtres i efectes</h3>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">💨 <strong style="color:var(--ink)">Filtres → Difuminar:</strong> Gaussià, Moviment, Radial, Desenfocament selectiu.</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">✨ <strong style="color:var(--ink)">Filtres → Enfoca:</strong> Màscara de desenfocament (Unsharp Mask).</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">🎭 <strong style="color:var(--ink)">Script-Fu / Python-Fu:</strong> automatitzar tasques repetitives.</li>
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted)">🌟 <strong style="color:var(--ink)">G'MIC Plugin:</strong> +500 filtres addicionals de qualitat professional.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout cl-violet fi" style="margin-top:2rem">
+      <span class="callout-icon">💡</span>
+      <div>
+        <strong>Flux de treball professional recomanat a GIMP:</strong>
+        <ul style="margin-top:.5rem">
+          <li>1. Obrir imatge original → Duplicar capa base (sempre treballar sobre còpies)</li>
+          <li>2. Aplicar correccions de color (Nivells → Corbes → Matís/Saturació)</li>
+          <li>3. Fer retoc amb clon/curar sobre capa nova</li>
+          <li>4. Composar elements addicionals amb capes i màscares</li>
+          <li>5. Aplanar imatge i exportar al format adequat</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRÀCTICA AVANÇADA -->
+<section id="practica" class="s-dark">
+  <div class="container">
+    <div class="section-tag tag-violet fi">Pràctica avançada</div>
+    <h2 class="fi">Pràctica Única: Composició Fotogràfica Professional</h2>
+    <p class="lead fi">Una pràctica integral que cobreix tots els criteris d'avaluació del RA5: captura, edició, composició, modes de color, màscares i exportació multipropòsit.</p>
+
+    <div class="practice-card fi">
+      <div class="practice-header p-main">
+        <div class="practice-num">P1</div>
+        <div>
+          <h3>Cartell publicitari compost: "Institut de Tecnologia SMX"</h3>
+          <p>GIMP + Inkscape · Durada estimada: 4–5 hores · Nivell avançat</p>
+        </div>
+      </div>
+      <div class="practice-body">
+        <div class="callout cl-accent" style="margin-bottom:1.5rem">
+          <span class="callout-icon">🎯</span>
+          <div>
+            <strong>Objectiu:</strong>
+            <p>Crear un cartell publicitari professional de 2480×3508 px (A4 a 300 DPI) per a l'Institut SMX, combinant fotografies retocades, elements vectorials d'Inkscape, tipografia professional i exportació per a web i impressió, amb flux de treball no destructiu.</p>
+          </div>
+        </div>
+
+        <h3 style="margin-bottom:1rem;color:var(--navy)">📋 Fase 1 — Preparació i planificació</h3>
+        <ul class="steps">
+          <li><p><strong>Crea la carpeta de treball:</strong> <code>practica_ra5/originals/</code>, <code>practica_ra5/recursos/</code>, <code>practica_ra5/exportacions/</code>. Tots els originals s'han de conservar intactes.</p></li>
+          <li><p><strong>Descarrega 3 fotografies en alta resolució</strong> de Unsplash o Pexels amb llicència CC0 relacionades amb tecnologia (ordinadors, persones treballant, servidors). Comprova que siguin >2000 px d'amplada.</p></li>
+          <li><p><strong>Crea el document nou a GIMP:</strong> Fitxer → Nou → Amplada: 2480 px, Alçada: 3508 px, Resolució: 300 PPI, Mode: RGB, fons blanc. Aquest és el format A4 a 300 DPI per impressió.</p></li>
+          <li><p><strong>Configura les guies:</strong> Vista → Mostra guies. Crea guies a 240 px des de cada marge (zona de seguretat d'impressió).</p></li>
+        </ul>
+
+        <h3 style="margin-bottom:1rem;color:var(--navy);margin-top:2rem">🎨 Fase 2 — Composició de fons i fotografies</h3>
+        <ul class="steps">
+          <li><p><strong>Importa la fotografia principal</strong> com a nova capa (<em>Fitxer → Obre com a capes</em>). Redimensiona-la per cobrir tot el fons (mantén proporcions amb <kbd>Maj</kbd> + escala). Anomena la capa "foto_fons".</p></li>
+          <li><p><strong>Aplica ajust de color no destructiu:</strong> selecciona "foto_fons" → <em>Colors → Corbes</em>. Crea una lleugera degradació cap a blau fosc (augmenta el canal blau a les ombres, redueix el vermell). Desa el preset per reutilitzar-lo.</p></li>
+          <li><p><strong>Afegeix una màscara de gradient al fons:</strong> clic dret capa → Afegir màscara de capa (inicialitza en blanc). Selecciona l'eina de gradient. Dibuixa un gradient de blanc a negre de dalt a baix per crear una transició suau. Comprova que la meitat inferior quedi enfosquida.</p></li>
+          <li><p><strong>Crea el fons de color corporatiu:</strong> Nova capa → anomena-la "fons_color". Situa-la per sota de "foto_fons". Omple-la amb un gradient lineal de #0e7490 (teal) a #1a1f4e (navy) de dalt a baix.</p></li>
+          <li><p><strong>Ajusta l'opacitat</strong> de "foto_fons" al 60% per deixar transparentar el color corporatiu de sota.</p></li>
+        </ul>
+
+        <h3 style="margin-bottom:1rem;color:var(--navy);margin-top:2rem">✂️ Fase 3 — Selecció i retoc de retrat</h3>
+        <ul class="steps">
+          <li><p><strong>Importa la fotografia d'una persona</strong> com a nova capa a dalt de la pila. Utilitza <em>Filtre → Foreground Select</em> (o les Tisores intel·ligents) per seleccionar la silueta de la persona amb precisió. Refina la selecció amb <em>Selecció → Creix/Encongeix</em> i <em>Difuminar les vores</em> (Feather) de 2–3 px.</p></li>
+          <li><p><strong>Crea màscara de capa des de la selecció</strong> (clic dret → Afegir màscara des de selecció). El fons original desapareix. Retoca les vores amb un pinzell negre/blanc de baixa opacitat (20%) per suavitzar cabells i contorns.</p></li>
+          <li><p><strong>Aplica llum als bordes</strong> (efecte rim light): nova capa en mode "Pantalla" (Screen), amb un pinzell de baixa opacitat color cian clar, pinta les vores de la persona on hi hauria la llum. Ajusta opacitat al 30–40%.</p></li>
+          <li><p><strong>Retoca la pell</strong> usant l'eina Curar (Healing): duplica la capa del retrat, aplica <em>Filtres → Difuminar → Gaussià de 4px</em>, afegeix màscara negra (tota la capa oculta), pinta amb blanc suau sobre les zones de pell per aplicar el desenfocament selectivament (efecte skin softening).</p></li>
+        </ul>
+
+        <h3 style="margin-bottom:1rem;color:var(--navy);margin-top:2rem">🔷 Fase 4 — Elements vectorials amb Inkscape</h3>
+        <ul class="steps">
+          <li><p><strong>Obre Inkscape</strong> i crea un document de la mateixa mida (2480×3508 px, 300 DPI). Crea el logotip "SMX Tech" usant text vectorial (Font: Liberation Sans Bold, o similar). Afegeix un rectangle arrodonit de color #0891b2 com a fons del logo. Agrupa els elements.</p></li>
+          <li><p><strong>Crea elements gràfics geomètrics:</strong> hexàgons o cercles disposats en patró (fes servir l'eina de còpia en patró d'Inkscape o duplica manualment). Color: blanc al 15% d'opacitat. Aquests crearan textura al cartell.</p></li>
+          <li><p><strong>Exporta cada element com a PNG transparent:</strong> selecciona el grup → <em>Fitxer → Exportar PNG → Exportar selecció</em>. Resolució: 300 DPI.</p></li>
+          <li><p><strong>Importa els PNG d'Inkscape a GIMP</strong> com a noves capes a la composició. Posiciona el logo a la cantonada superior esquerra i els elements geomètrics repartits pel cartell.</p></li>
+        </ul>
+
+        <h3 style="margin-bottom:1rem;color:var(--navy);margin-top:2rem">✍️ Fase 5 — Tipografia i disseny final</h3>
+        <ul class="steps">
+          <li><p><strong>Afegeix el títol principal</strong> amb l'eina de text de GIMP: "PROGRAMA SMX" en majúscules, font Liberation Sans Bold, 200px, color blanc. Situa-ho al terç inferior del cartell (regla dels terços). Rasteritza la capa de text quan estiguis satisfet.</p></li>
+          <li><p><strong>Afegeix el subtítol</strong> i el cos de text: horaris, adreça, contacte. Font: 60px, interlineat ×1.2. Assegura't que el text és llegible (contrast suficient: text blanc sobre fons fosc).</p></li>
+          <li><p><strong>Crea un efecte de resplendor (glow) al títol:</strong> duplica la capa de text → aplica <em>Filtres → Difuminar → Gaussià de 20px</em> → situa-la per sota de la capa de text original → ajusta el mode de fusió a "Pantalla" i l'opacitat al 70%.</p></li>
+          <li><p><strong>Afegeix una barra de color</strong> a la part inferior: nova capa, rectangle de 2480×400px de color #0891b2 sòlid. Situa el logotip i les xarxes socials sobre aquesta barra.</p></li>
+          <li><p><strong>Revisió final:</strong> activa la vista sense guies (<kbd>Maj+Q</kbd>). Comprova que tots els elements importants estan dins de la zona de seguretat. Revisa el contrast: utilitza <em>Colors → Corbes</em> sobre la capa de fusió (o aplana la imatge en còpia temporal) per fer un ajust global final.</p></li>
+        </ul>
+
+        <h3 style="margin-bottom:1rem;color:var(--navy);margin-top:2rem">💾 Fase 6 — Exportació multipropòsit</h3>
+        <ul class="steps">
+          <li><p><strong>Desa el projecte natiu:</strong> <em>Fitxer → Desa com</em> → format <strong>.xcf</strong> (format natiu de GIMP, conserva totes les capes). Nom: <code>cartell_smx_v1.xcf</code></p></li>
+          <li><p><strong>Exportació per a impressió:</strong> aplana (Imatge → Aplana la imatge) a una còpia → <em>Fitxer → Exportar com</em> → <strong>TIFF</strong>, compressió LZW, sense aplatar capes d'ICC. Nom: <code>cartell_smx_impressio_300dpi.tif</code></p></li>
+          <li><p><strong>Exportació per a web:</strong> Imatge → Escala la imatge → 794×1123 px (A4 a 96 DPI). Exporta com a <strong>JPG</strong> (qualitat 85) i com a <strong>WebP</strong> (qualitat 80). Compara mides d'arxiu.</p></li>
+          <li><p><strong>Exportació per a xarxes socials (Stories):</strong> Imatge → Llenç → Ajusta la mida → 1080×1920 px. Reposiciona elements si cal. Exporta com a JPG qualitat 90.</p></li>
+          <li><p><strong>Documenta els resultats</strong> en una taula comparativa: format, dimensions, mida d'arxiu (KB), qualitat visual percebuda, ús recomanat. Inclou captures de pantalla del procés.</p></li>
+        </ul>
+
+        <div class="callout cl-green" style="margin-top:2rem">
+          <span class="callout-icon">📦</span>
+          <div>
+            <strong>Lliurament:</strong>
+            <ul style="margin-top:.5rem">
+              <li>Arxiu <code>.xcf</code> amb totes les capes organitzades i nombrades</li>
+              <li>Exportació TIFF 300 DPI (impressió)</li>
+              <li>Exportació JPG i WebP per a web</li>
+              <li>Exportació JPG per a xarxes (1080×1920)</li>
+              <li>Arxiu SVG d'Inkscape amb logo i elements vectorials</li>
+              <li>Document de text (LibreOffice Writer) explicant les decisions preses i la taula comparativa de formats</li>
+            </ul>
+          </div>
+        </div>
+
+        <div style="overflow-x:auto;margin-top:2rem">
+          <table class="ptable">
+            <thead><tr><th>Criteri</th><th>Insuficient</th><th>Suficient</th><th>Notable</th><th>Excel·lent</th></tr></thead>
+            <tbody>
+              <tr><td>Ús de capes i màscares</td><td>1 capa sense màscara</td><td>3+ capes, màscara bàsica</td><td>Màscares de gradient</td><td>Flux no destructiu complet</td></tr>
+              <tr><td>Selecció de retrat</td><td>Selecció rectangular</td><td>Fuzzy Select acceptablee</td><td>Vores netes, feathering</td><td>Rim light + skin softening</td></tr>
+              <tr><td>Ajustos de color</td><td>Brillo/contrast bàsic</td><td>Nivells aplicats</td><td>Corbes per canal</td><td>Preset desar + equilibri color</td></tr>
+              <tr><td>Integració Inkscape</td><td>Sense elements vectors</td><td>Logo importat</td><td>Logo + elements gràfics</td><td>Elements originals + patrons</td></tr>
+              <tr><td>Exportació</td><td>Només JPG</td><td>JPG + PNG</td><td>TIFF + WebP + JPG</td><td>4 formats + taula comparativa</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PREGUNTES -->
+<section id="preguntes" class="s-cream">
+  <div class="container">
+    <div class="ra-banner ra-pregs fi">
+      <div class="ra-num">?</div>
+      <div>
+        <h2>Preguntes teòriques</h2>
+        <p>10 preguntes per avaluar la comprensió dels conceptes del RA5. Sense resposta — per reflexionar i preparar l'examen.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-accent fi">Fonaments i formats</div>
+    <h2 class="fi">Preguntes de conceptes i formats</h2>
+    <div class="grid fi" style="gap:.9rem;margin-bottom:3rem">
+
+      <div class="q-card">
+        <div class="q-num">1</div>
+        <div class="q-body">
+          <h4>Una fotografia de 4000×3000 píxels es vol imprimir en format A4 (21×29,7 cm) a 300 DPI. Calcula si la resolució és suficient i explica el procés de càlcul. Si la mateixa imatge s'ha de mostrar en un monitor Full HD (1920×1080), com hauries de redimensionar-la i per a quin format exportaries?</h4>
+          <p>Argumenta per quin motiu augmentar la mida d'una imatge de baixa resolució (upscaling) produeix pèrdua de qualitat irrecuperable en les imatges rasteritzades.</p>
+          <span class="q-tag qt-a">Resolució</span><span class="q-tag qt-a">DPI</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">2</div>
+        <div class="q-body">
+          <h4>Explica les diferències entre compressió amb pèrdues (lossy) i sense pèrdues (lossless). Posa un exemple de format de cada tipus i descriu un escenari professional on triar el format incorrecte podria causar un problema seriós (ex: una imatge per a una revista impresa a gran format).</h4>
+          <p>Per quin motiu no és recomanable editar i desar diverses vegades una imatge en format JPG? Quin efecte acumulatiu produeix?</p>
+          <span class="q-tag qt-a">Formats</span><span class="q-tag qt-o">Compressió</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">3</div>
+        <div class="q-body">
+          <h4>Compara el format PNG-8 i el PNG-24 (o PNG-32). Quines diferències hi ha en el nombre de colors suportats, la transparència i la mida d'arxiu? En quins casos usaries cadascun? Quan seria preferible usar WebP en lloc de PNG?</h4>
+          <p>Explica també per quin motiu el format GIF continua tenint ús avui dia tot i la seva limitació de 256 colors.</p>
+          <span class="q-tag qt-a">PNG</span><span class="q-tag qt-g">WebP</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">4</div>
+        <div class="q-body">
+          <h4>Quines diferències fonamentals existeixen entre les imatges rasteritzades (bitmap) i les imatges vectorials (SVG)? Per a cada tipus, descriu: com s'emmagatzema la informació, el comportament en escalar, el pes d'arxiu típic i els programes lliures que s'usen per crear-los i editar-los.</h4>
+          <p>Dona tres exemples concrets de situacions professionals on la tria del tipus incorrecte (raster vs vector) causaria problemes visibles en el resultat final.</p>
+          <span class="q-tag qt-a">Raster vs Vector</span><span class="q-tag qt-v">SVG</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-tag tag-violet fi">Edició i eines</div>
+    <h2 class="fi">Preguntes sobre GIMP i tècniques d'edició</h2>
+    <div class="grid fi" style="gap:.9rem;margin-bottom:3rem">
+
+      <div class="q-card">
+        <div class="q-num">5</div>
+        <div class="q-body">
+          <h4>Explica el concepte de "capa" a GIMP i descriu els modes de fusió "Multiplicar" i "Pantalla". Per a quins efectes s'usa cadascun? Descriu un exemple pràctic d'ús de màscara de capa per fer una composició fotogràfica on aparegui una persona davant d'un fons diferent.</h4>
+          <p>Quina diferència hi ha entre aplanar (flatten) la imatge i unir (merge) les capes visibles? En quines situacions usaries cadascuna?</p>
+          <span class="q-tag qt-v">GIMP</span><span class="q-tag qt-a">Capes</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">6</div>
+        <div class="q-body">
+          <h4>Descriu la diferència entre ajustar el contrast d'una imatge amb l'eina "Brillo-Contrast" i fer-ho amb les "Corbes". Per quin motiu es considera que les Corbes ofereixen un control més professional? Descriu com usaries les corbes per a: correcció d'una imatge sobreexposada, crear un efecte cinematogràfic "teal and orange" i per potenciar un cel de posta de sol.</h4>
+          <p>Quina informació ens dona l'histograma d'una imatge i com s'interpreta una imatge subexposada vs sobreexposada?</p>
+          <span class="q-tag qt-v">Corbes</span><span class="q-tag qt-a">Color</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">7</div>
+        <div class="q-body">
+          <h4>Compara les eines de selecció "Llapis màgic (Fuzzy Select)", "Seleccionar per color" i les "Tisores intel·ligents" de GIMP. En quin tipus d'imatge és més eficient cada eina? Descriu el procés per seleccionar el cel d'una fotografia de paisatge per canviar-lo per un altre cel de forma convincent, especificant quina eina de selecció usaries i per quin motiu.</h4>
+          <p>Quin paper juga el valor de "Feathering" (difuminat de vores) en les seleccions i quan és imprescindible usar-lo?</p>
+          <span class="q-tag qt-v">Seleccions</span><span class="q-tag qt-g">Tècniques</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">8</div>
+        <div class="q-body">
+          <h4>Explica per quin motiu és important treballar de forma "no destructiva" quan s'edita una imatge. Quines tècniques concretes de GIMP permeten treballar de forma no destructiva? Descriu la diferència entre usar l'eina clon directament sobre la capa original i fer-ho sobre una capa nova buida (amb l'opció "mostra de totes les capes" activada).</h4>
+          <p>Quin avantatge té desar el projecte en format .XCF respecte a exportar-lo directament a JPG o PNG?</p>
+          <span class="q-tag qt-v">No destructiu</span><span class="q-tag qt-o">Flux de treball</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-tag tag-amber fi">Avançat i professional</div>
+    <h2 class="fi">Preguntes avançades i aplicació professional</h2>
+    <div class="grid fi" style="gap:.9rem">
+
+      <div class="q-card">
+        <div class="q-num">9</div>
+        <div class="q-body">
+          <h4>Descriu el flux de treball per processar fotografies RAW amb darktable. Per quin motiu és preferible treballar amb RAW en lloc de JPG directament de la càmera? Quines correccions es fan normalment en la fase de revelat? Explica la diferència entre el revelat no destructiu de darktable i l'edició directa de píxels a GIMP.</h4>
+          <p>Quin format d'exportació usaries des de darktable si el destí final és GIMP per fer retoc addicional, i per quin motiu?</p>
+          <span class="q-tag qt-o">RAW</span><span class="q-tag qt-g">darktable</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">10</div>
+        <div class="q-body">
+          <h4>Un client et demana preparar el mateix logotip per a tres usos: (a) web del seu comerç, (b) impressió en una lona de 5×3 metres i (c) animació per a les seves xarxes socials. Descriu per a cada cas: el programari lliure que usaries (GIMP, Inkscape o Krita), el format d'exportació final, la resolució necessària i les consideracions específiques que tindries en compte. Justifica les teves decisions tècnicament.</h4>
+          <p>Per quin motiu Inkscape és imprescindible per al cas (b), independentment de la resolució a la qual s'hagi creat el logotip original?</p>
+          <span class="q-tag qt-o">Professional</span><span class="q-tag qt-v">Inkscape</span><span class="q-tag qt-a">GIMP</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESUM -->
+<section class="s-cream">
+  <div class="container fi">
+    <div class="section-tag tag-cobalt">Resum del RA5</div>
+    <h2>El que heu après</h2>
+    <p class="lead">Un repàs ràpid dels conceptes clau del RA5 i la seva aplicació com a tècnics SMX.</p>
+    <div class="grid g3 fi">
+      <div class="card bl-accent">
+        <div class="card-icon" style="background:#ecfeff">🔬</div>
+        <h3>Fonaments</h3>
+        <p><strong>Píxel:</strong> unitat mínima. <strong>Resolució:</strong> 72–96 PPI web / 300 DPI impressió. <strong>Modes:</strong> RGB (pantalles), CMYK (impressió), HSV (edició). <strong>Bits:</strong> 8 bits estàndard, 16 bits professional. Reducir ✅ — Ampliar ❌</p>
+      </div>
+      <div class="card bl-teal">
+        <div class="card-icon" style="background:#f0fdfa">📁</div>
+        <h3>Formats</h3>
+        <p><strong>JPG:</strong> fotos web (lossy, sense alfa). <strong>PNG:</strong> logos/icones (lossless, alfa). <strong>WebP:</strong> web moderna. <strong>TIFF:</strong> impressió pro. <strong>SVG:</strong> vectors escalables. <strong>AVIF:</strong> futur de la web. Desa .XCF per conservar capes.</p>
+      </div>
+      <div class="card bl-violet">
+        <div class="card-icon" style="background:#f5f3ff">🛠️</div>
+        <h3>Eines i tècniques</h3>
+        <p><strong>GIMP:</strong> capes + màscares + seleccions + corbes. <strong>Inkscape:</strong> SVG vectorial. <strong>Krita:</strong> pintura digital. <strong>darktable:</strong> RAW no destructiu. <strong>ImageMagick:</strong> automatització CLI. <strong>Photopea:</strong> web.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p><strong>RA5 — Manipulació d'Imatges Digitals · SMX · Ofimàtica</strong></p>
+  <p style="margin-top:.4rem">Píxels · Formats · GIMP · Inkscape · Krita · darktable · Capes · Màscares · Color</p>
+  <p style="margin-top:.4rem">Departament d'Informàtica · Sistemes Microinformàtics i Xarxes</p>
+</footer>
+
+<script>
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+  }, { threshold: 0.07, rootMargin: '0px 0px -30px 0px' });
+  document.querySelectorAll('.fi').forEach(el => io.observe(el));
+</script>
+</body>
+</html>
