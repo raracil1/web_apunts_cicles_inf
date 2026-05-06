@@ -1,0 +1,1551 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RA2 — Documents i Plantilles amb Google Docs · SMX</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink:     #0d0f1a;
+    --paper:   #f4f2ed;
+    --cream:   #eceae3;
+    --navy:    #1a1f4e;
+    --cobalt:  #2d3bb5;
+    --sky:     #4a6cf7;
+    --gdocs:   #4285f4;
+    --gdocs-d: #1a56d6;
+    --ggreen:  #34a853;
+    --gyellow: #fbbc04;
+    --gred:    #ea4335;
+    --purple:  #7c3aed;
+    --amber:   #d97706;
+    --muted:   #6b6f85;
+    --border:  #d6d2c9;
+    --card:    #ffffff;
+    --radius:  16px;
+    --radius-sm: 8px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    font-size: 16px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(244,242,237,0.94);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 62px;
+  }
+  .nav-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1rem; color: var(--navy); letter-spacing: -0.02em; }
+  .nav-logo span { color: var(--gdocs); }
+  .nav-pills { display: flex; gap: .4rem; list-style: none; }
+  .nav-pills a {
+    text-decoration: none; font-size: 0.78rem; font-weight: 600;
+    padding: .3rem .85rem; border-radius: 100px;
+    color: var(--muted); transition: all .2s;
+    border: 1px solid transparent;
+  }
+  .nav-pills a:hover { color: var(--gdocs); border-color: var(--gdocs); background: rgba(66,133,244,0.07); }
+  .nav-pills a.docs  { color: var(--gdocs); }
+  .nav-pills a.prac  { color: var(--purple); }
+  .nav-pills a.pregs { color: var(--amber); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh; display: grid; place-items: center;
+    background: var(--navy); color: white;
+    position: relative; overflow: hidden; padding: 8rem 2rem 4rem;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 75% 25%, rgba(66,133,244,0.3) 0%, transparent 65%),
+      radial-gradient(ellipse 50% 40% at 20% 70%, rgba(52,168,83,0.18) 0%, transparent 65%),
+      radial-gradient(ellipse 40% 35% at 55% 90%, rgba(251,188,4,0.12) 0%, transparent 60%);
+  }
+  .hero-dots {
+    position: absolute; inset: 0; opacity: 0.07;
+    background-image: radial-gradient(rgba(255,255,255,.6) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+  .hero-content { position: relative; z-index: 1; text-align: center; max-width: 840px; }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: .5rem;
+    background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.85); font-size: 0.78rem; font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    padding: .35rem 1rem; border-radius: 100px; margin-bottom: 1.5rem;
+  }
+  .hero h1 {
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: clamp(2.6rem, 6.5vw, 5rem); line-height: 1.06;
+    letter-spacing: -0.03em; margin-bottom: 1.5rem;
+  }
+  .hero h1 .g  { color: #4285f4; }
+  .hero h1 .r  { color: #ea4335; }
+  .hero h1 .y  { color: #fbbc04; }
+  .hero h1 .gn { color: #34a853; }
+  .hero p { font-size: 1.1rem; color: rgba(255,255,255,0.6); max-width: 560px; margin: 0 auto 2.5rem; }
+  .hero-apps { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+  .hero-app {
+    display: flex; align-items: center; gap: .6rem;
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+    padding: .6rem 1.2rem; border-radius: 12px; font-size: 0.88rem; font-weight: 500;
+    color: white; text-decoration: none; transition: all .25s;
+  }
+  .hero-app:hover { background: rgba(255,255,255,0.15); transform: translateY(-2px); }
+  .hero-app .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .scroll-hint {
+    position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: .4rem;
+    color: rgba(255,255,255,0.3); font-size: 0.72rem; letter-spacing: 0.1em;
+  }
+  .scroll-hint::after {
+    content: ''; display: block; width: 1px; height: 36px;
+    background: linear-gradient(to bottom, rgba(255,255,255,.35), transparent);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:.3} 50%{opacity:1} }
+
+  /* ── LAYOUT ── */
+  section { padding: 6rem 2rem; }
+  .container { max-width: 1080px; margin: 0 auto; }
+  .section-tag {
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em;
+    text-transform: uppercase; display: flex; align-items: center; gap: .5rem;
+    margin-bottom: .9rem;
+  }
+  .section-tag::before { content: ''; display: block; width: 20px; height: 2px; }
+  .tag-cobalt   { color: var(--cobalt); } .tag-cobalt::before   { background: var(--cobalt); }
+  .tag-docs     { color: var(--gdocs);  } .tag-docs::before     { background: var(--gdocs); }
+  .tag-practica { color: var(--purple); } .tag-practica::before { background: var(--purple); }
+  .tag-pregs    { color: var(--amber);  } .tag-pregs::before    { background: var(--amber); }
+  .tag-green    { color: var(--ggreen); } .tag-green::before    { background: var(--ggreen); }
+
+  h2 {
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: clamp(1.7rem, 3.5vw, 2.6rem); line-height: 1.1;
+    letter-spacing: -0.025em; color: var(--navy); margin-bottom: .9rem;
+  }
+  h3 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.15rem; color: var(--navy); margin-bottom: .65rem; }
+  h4 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.95rem; color: var(--navy); margin-bottom: .4rem; }
+  .lead { font-size: 1.05rem; color: var(--muted); max-width: 700px; margin-bottom: 3rem; line-height: 1.7; }
+
+  /* ── CARDS ── */
+  .grid { display: grid; gap: 1.25rem; }
+  .g2 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+  .g3 { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+  .g4 { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+  .card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 1.75rem;
+    transition: transform .2s, box-shadow .2s;
+  }
+  .card:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(26,31,78,0.1); }
+  .card p { color: var(--muted); font-size: 0.92rem; }
+  .card-icon {
+    width: 44px; height: 44px; border-radius: 10px;
+    display: grid; place-items: center; font-size: 1.3rem; margin-bottom: .9rem;
+  }
+  .bl       { border-left: 3px solid var(--cobalt); }
+  .bl-docs  { border-left: 3px solid var(--gdocs); }
+  .bl-green { border-left: 3px solid var(--ggreen); }
+  .bl-amber { border-left: 3px solid var(--amber); }
+  .bl-purp  { border-left: 3px solid var(--purple); }
+
+  /* ── EXAMPLE BOX ── */
+  .ex { background: var(--cream); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1rem 1.25rem; margin: .65rem 0; }
+  .ex .ex-lbl { font-size: 0.68rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; margin-bottom: .3rem; }
+  .ex p { font-size: 0.87rem; color: var(--ink); }
+  .ex-docs  .ex-lbl { color: var(--gdocs); }
+  .ex-green .ex-lbl { color: var(--ggreen); }
+  .ex-amber .ex-lbl { color: var(--amber); }
+
+  /* ── CALLOUT ── */
+  .callout {
+    border-radius: var(--radius); padding: 1.6rem 2rem; margin: 1.5rem 0;
+    display: flex; gap: 1rem; align-items: flex-start;
+  }
+  .callout-icon { font-size: 1.4rem; flex-shrink: 0; margin-top: .1rem; }
+  .callout p, .callout li { font-size: 0.92rem; }
+  .callout ul { padding-left: 1.2rem; }
+  .callout li { margin-bottom: .25rem; }
+  .cl-blue  { background: rgba(66,133,244,0.08);  border: 1px solid rgba(66,133,244,0.2); }
+  .cl-green { background: rgba(52,168,83,0.07);   border: 1px solid rgba(52,168,83,0.2); }
+  .cl-amber { background: rgba(251,188,4,0.1);    border: 1px solid rgba(251,188,4,0.3); }
+  .cl-purp  { background: rgba(124,58,237,0.07);  border: 1px solid rgba(124,58,237,0.2); }
+  .cl-red   { background: rgba(234,67,53,0.07);   border: 1px solid rgba(234,67,53,0.2); }
+
+  /* ── TABLE ── */
+  .ptable { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+  .ptable th, .ptable td { padding: .85rem 1rem; text-align: left; border-bottom: 1px solid var(--border); }
+  .ptable th { background: var(--navy); color: white; font-family: 'Syne', sans-serif; font-weight: 700; }
+  .ptable th:first-child { border-radius: 8px 0 0 0; } .ptable th:last-child { border-radius: 0 8px 0 0; }
+  .ptable tr:hover td { background: var(--cream); }
+  .badge { display: inline-block; padding: .15rem .55rem; border-radius: 100px; font-size: 0.72rem; font-weight: 700; font-family: 'Syne', sans-serif; }
+  .b-docs  { background: rgba(66,133,244,0.12);  color: var(--gdocs); }
+  .b-green { background: rgba(52,168,83,0.12);   color: #1e7e44; }
+  .b-amber { background: rgba(251,188,4,0.18);   color: #8a6500; }
+  .b-purp  { background: rgba(124,58,237,0.12);  color: #5b21b6; }
+  .b-red   { background: rgba(234,67,53,0.12);   color: #b31412; }
+
+  /* ── SECTION THEMES ── */
+  .s-dark { background: var(--navy); color: white; }
+  .s-dark h2, .s-dark h3, .s-dark h4 { color: white; }
+  .s-dark .lead { color: rgba(255,255,255,0.58); }
+  .s-dark .card { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1); }
+  .s-dark .card h3 { color: white; } .s-dark .card p { color: rgba(255,255,255,0.6); }
+  .s-dark .ptable th { background: rgba(255,255,255,0.1); }
+  .s-dark .ptable td { border-color: rgba(255,255,255,0.1); color: rgba(255,255,255,0.8); }
+  .s-dark .ptable tr:hover td { background: rgba(255,255,255,0.05); }
+  .s-cream { background: var(--cream); }
+  .s-docs  { background: #f0f4ff; }
+  .s-green { background: #f0fdf4; }
+
+  /* ── RA BANNER ── */
+  .ra-banner {
+    border-radius: var(--radius); padding: 1.5rem 2rem;
+    display: flex; align-items: center; gap: 1.25rem; margin-bottom: 3rem; color: white;
+  }
+  .ra-num { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 2.4rem; opacity: .25; flex-shrink: 0; line-height: 1; }
+  .ra-banner h2 { color: white; font-size: 1.35rem; margin-bottom: .2rem; }
+  .ra-banner p  { color: rgba(255,255,255,0.7); font-size: 0.88rem; }
+  .ra-docs     { background: linear-gradient(135deg, #1a56d6, #4285f4); }
+  .ra-practica { background: linear-gradient(135deg, #5b21b6, #7c3aed); }
+  .ra-preguntes{ background: linear-gradient(135deg, #92400e, #d97706); }
+  .ra-resum    { background: linear-gradient(135deg, #064e3b, #34a853); }
+
+  /* ── PRACTICE CARDS ── */
+  .practice-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius); overflow: hidden;
+    transition: transform .2s, box-shadow .2s;
+  }
+  .practice-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,0.1); }
+  .practice-header {
+    padding: 1.5rem 2rem; display: flex; align-items: center; gap: 1rem; color: white;
+  }
+  .practice-num { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.8rem; opacity: .35; line-height: 1; flex-shrink:0; }
+  .practice-header h3 { color: white; font-size: 1.15rem; margin: 0; }
+  .practice-header p  { color: rgba(255,255,255,0.7); font-size: 0.82rem; margin: .2rem 0 0; }
+  .practice-body { padding: 2rem; }
+  .p1-bg { background: linear-gradient(135deg, #1a56d6, #4285f4); }
+  .p2-bg { background: linear-gradient(135deg, #1251a3, #2563eb); }
+  .p3-bg { background: linear-gradient(135deg, #0a6b3c, #34a853); }
+  .p4-bg { background: linear-gradient(135deg, #7c2d12, #ea580c); }
+  .p5-bg { background: linear-gradient(135deg, #5b21b6, #7c3aed); }
+  .p6-bg { background: linear-gradient(135deg, #0d1a3a, #1a1f4e); }
+
+  /* ── STEPS ── */
+  .steps { counter-reset: st; list-style: none; display: flex; flex-direction: column; gap: .85rem; }
+  .steps li {
+    counter-increment: st; display: flex; gap: .9rem; align-items: flex-start;
+    padding: .9rem 1.1rem; background: var(--cream); border-radius: var(--radius-sm); font-size: 0.9rem;
+  }
+  .steps li::before {
+    content: counter(st); flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%;
+    background: var(--cobalt); color: white; display: grid; place-items: center;
+    font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.8rem;
+  }
+  .steps li p { color: var(--ink); margin: 0; } .steps li strong { color: var(--navy); }
+
+  /* ── QUESTION CARDS ── */
+  .q-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 1.5rem 2rem;
+    display: flex; gap: 1.25rem; align-items: flex-start;
+    transition: transform .2s, box-shadow .2s;
+  }
+  .q-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+  .q-num {
+    flex-shrink: 0; width: 36px; height: 36px; border-radius: 50%;
+    background: var(--cream); border: 2px solid var(--border);
+    display: grid; place-items: center;
+    font-family: 'Syne', sans-serif; font-weight: 800; font-size: 0.88rem; color: var(--cobalt);
+  }
+  .q-body h4 { margin-bottom: .35rem; color: var(--navy); font-size: 0.95rem; }
+  .q-body p  { color: var(--muted); font-size: 0.85rem; font-style: italic; }
+  .q-tag { display: inline-block; padding: .15rem .6rem; border-radius: 100px; font-size: 0.7rem; font-weight: 700; margin-top: .5rem; margin-right: .3rem; }
+  .qt-docs  { background: rgba(66,133,244,0.1); color: var(--gdocs); }
+  .qt-form  { background: rgba(52,168,83,0.1);  color: #1e7e44; }
+  .qt-collab{ background: rgba(124,58,237,0.1); color: #5b21b6; }
+  .qt-diseny{ background: rgba(234,67,53,0.1);  color: #b31412; }
+  .qt-avan  { background: rgba(217,119,6,0.1);  color: #92400e; }
+
+  /* ── PILLS ── */
+  .pills { display: flex; flex-wrap: wrap; gap: .4rem; margin: .65rem 0; }
+  .pill { padding: .22rem .75rem; border-radius: 100px; font-size: 0.78rem; border: 1px solid var(--border); background: var(--cream); color: var(--ink); }
+  .pill-b { background: rgba(66,133,244,0.1); border-color: rgba(66,133,244,0.3); color: #1a56d6; }
+  .pill-g { background: rgba(52,168,83,0.1);  border-color: rgba(52,168,83,0.3);  color: #0a6b3c; }
+  .pill-a { background: rgba(251,188,4,0.15); border-color: rgba(251,188,4,0.4);  color: #7a5800; }
+  .pill-v { background: rgba(124,58,237,0.1); border-color: rgba(124,58,237,0.3); color: #5b21b6; }
+  .pill-r { background: rgba(234,67,53,0.1);  border-color: rgba(234,67,53,0.3);  color: #b31412; }
+
+  /* ── SHORTCUT BOX ── */
+  .shortcuts { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: .6rem; margin: 1rem 0; }
+  .sc-item { display: flex; align-items: center; gap: .75rem; padding: .65rem 1rem; background: var(--cream); border-radius: var(--radius-sm); font-size: 0.85rem; }
+  .sc-key { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.75rem; background: white; border: 1px solid var(--border); border-radius: 5px; padding: .15rem .45rem; white-space: nowrap; color: var(--navy); box-shadow: 0 2px 0 var(--border); flex-shrink:0; }
+  .sc-desc { color: var(--muted); }
+
+  /* ── DEMOBOX (fake doc preview) ── */
+  .doc-preview {
+    background: white; border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 2.5rem 3rem; box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    margin: 1.5rem 0; font-family: 'DM Sans', sans-serif; max-width: 600px;
+  }
+  .doc-preview .doc-h1 { font-size: 1.6rem; font-weight: 700; color: #1a1a1a; margin-bottom: .25rem; border-bottom: 2px solid var(--gdocs); padding-bottom: .35rem; }
+  .doc-preview .doc-h2 { font-size: 1.15rem; font-weight: 700; color: #333; margin: 1.2rem 0 .4rem; }
+  .doc-preview .doc-h3 { font-size: 0.95rem; font-weight: 600; color: #444; margin: 1rem 0 .3rem; }
+  .doc-preview .doc-p  { font-size: 0.88rem; color: #555; line-height: 1.65; margin-bottom: .6rem; }
+  .doc-preview .doc-ul { padding-left: 1.4rem; font-size: 0.88rem; color: #555; margin-bottom: .6rem; }
+  .doc-preview .doc-ul li { margin-bottom: .2rem; }
+  .doc-preview .doc-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; margin: .75rem 0; }
+  .doc-preview .doc-table th { background: var(--navy); color: white; padding: .5rem .75rem; text-align:left; }
+  .doc-preview .doc-table td { padding: .45rem .75rem; border: 1px solid #ddd; }
+  .doc-preview .doc-table tr:nth-child(even) td { background: #f7f7f7; }
+
+  /* ── DIVIDER ── */
+  hr { border: none; border-top: 1px solid var(--border); margin: 3rem 0; }
+
+  /* ── FOOTER ── */
+  footer { background: var(--ink); color: rgba(255,255,255,0.4); padding: 3rem 2rem; text-align: center; font-size: 0.85rem; }
+  footer strong { color: white; }
+
+  /* ── ANIMATIONS ── */
+  .fi { opacity: 0; transform: translateY(18px); transition: opacity .55s ease, transform .55s ease; }
+  .fi.in { opacity: 1; transform: none; }
+
+  @media (max-width: 640px) {
+    .nav-pills { display: none; }
+    .doc-preview { padding: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════ NAV ══════════════════ -->
+<nav>
+  <div class="nav-logo">SMX · <span>RA2</span> Ofimàtica</div>
+  <ul class="nav-pills">
+    <li><a href="#intro">Introducció</a></li>
+    <li><a href="#format" class="docs">Format</a></li>
+    <li><a href="#estructura" class="docs">Estructura</a></li>
+    <li><a href="#elements" class="docs">Elements</a></li>
+    <li><a href="#avançat" class="docs">Avançat</a></li>
+    <li><a href="#practiques" class="prac">Pràctiques</a></li>
+    <li><a href="#preguntes" class="pregs">Preguntes</a></li>
+  </ul>
+</nav>
+
+<!-- ══════════════════ HERO ══════════════════ -->
+<section class="hero" id="top">
+  <div class="hero-bg"></div>
+  <div class="hero-dots"></div>
+  <div class="hero-content">
+    <div class="hero-badge">📄 Sistemes Microinformàtics i Xarxes · RA2 · Ofimàtica</div>
+    <h1>
+      <span class="g">G</span><span class="r">o</span><span class="y">o</span><span class="gn">g</span><span class="g">l</span><span class="r">e</span><br>Docs
+    </h1>
+    <p>Documents i plantilles professionals. Domina el processador de textos col·laboratiu de Google per crear documents estructurats, ben maquetats i reutilitzables.</p>
+    <div class="hero-apps">
+      <a href="#format" class="hero-app"><span class="dot" style="background:var(--gdocs)"></span>Formatació</a>
+      <a href="#estructura" class="hero-app"><span class="dot" style="background:var(--ggreen)"></span>Estructura</a>
+      <a href="#elements" class="hero-app"><span class="dot" style="background:var(--gyellow)"></span>Elements</a>
+      <a href="#avançat" class="hero-app"><span class="dot" style="background:var(--gred)"></span>Avançat</a>
+      <a href="#practiques" class="hero-app"><span class="dot" style="background:var(--purple)"></span>6 Pràctiques</a>
+    </div>
+  </div>
+  <div class="scroll-hint">DESPLAÇA</div>
+</section>
+
+<!-- ══════════════════ INTRO RA2 ══════════════════ -->
+<section id="intro" class="s-cream">
+  <div class="container fi">
+    <div class="section-tag tag-cobalt">Resultat d'Aprenentatge 2</div>
+    <h2>Documents i plantilles amb Google Docs</h2>
+    <p class="lead">Elabora documents i plantilles, descrivint i aplicant les opcions avançades dels processadors de textos. Treballarem amb <strong>Google Docs</strong> com a eina principal.</p>
+
+    <div class="grid g3 fi">
+      <div class="card bl-docs">
+        <div class="card-icon" style="background:#eff6ff">✏️</div>
+        <h3>Formatació i Estils</h3>
+        <p>Aprendre a formatar text de manera eficient: negretes, cursives, estils de paràgraf, taules de continguts automàtiques i coherència visual en tot el document.</p>
+        <div class="pills" style="margin-top:.75rem">
+          <span class="pill pill-b">Estils</span>
+          <span class="pill pill-b">Fonts</span>
+          <span class="pill pill-b">Colors</span>
+        </div>
+      </div>
+      <div class="card bl-green">
+        <div class="card-icon" style="background:#f0fdf4">📐</div>
+        <h3>Disseny i Maquetació</h3>
+        <p>Dominar la configuració de pàgina, capçaleres, peus de pàgina, columnes, marges i orientació per crear documents professionals i ben estructurats.</p>
+        <div class="pills" style="margin-top:.75rem">
+          <span class="pill pill-g">Columnes</span>
+          <span class="pill pill-g">Marges</span>
+          <span class="pill pill-g">Pàgina</span>
+        </div>
+      </div>
+      <div class="card bl-purp">
+        <div class="card-icon" style="background:#f5f3ff">🤝</div>
+        <h3>Col·laboració i Plantilles</h3>
+        <p>Treballar en temps real amb companys, gestionar el control de canvis, afegir comentaris i crear plantilles reutilitzables per a documents recurrents.</p>
+        <div class="pills" style="margin-top:.75rem">
+          <span class="pill pill-v">Comentaris</span>
+          <span class="pill pill-v">Plantilles</span>
+          <span class="pill pill-v">Canvis</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout cl-blue fi" style="margin-top:2rem">
+      <span class="callout-icon">🎓</span>
+      <div>
+        <strong>Criteri d'avaluació principal:</strong>
+        <p style="margin-top:.3rem">L'alumnat ha de ser capaç de crear documents professionals ben estructurats, aplicar estils de manera coherent, usar elements avançats (taules, imatges, taula de continguts) i crear plantilles reutilitzables, tot amb Google Docs.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ BLOC 1 — FORMAT BÀSIC ══════════════════ -->
+<section id="format" class="s-docs">
+  <div class="container">
+    <div class="ra-banner ra-docs fi">
+      <div class="ra-num">1</div>
+      <div>
+        <h2>Formatació de text</h2>
+        <p>Negretes, cursives, mides, colors, alineació i tot el que cal saber per donar estil al teu text.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-docs fi">Format de caràcter</div>
+    <h2 class="fi">Formatar el text: les eines bàsiques</h2>
+    <p class="lead fi">La formatació de caràcter afecta el text seleccionat. És el nivell més bàsic, però dominar-la marca la diferència entre un document amateur i un professional.</p>
+
+    <div class="grid g2 fi">
+      <div class="card bl-docs">
+        <div class="card-icon" style="background:#eff6ff">🅱️</div>
+        <h3>Estils de caràcter bàsics</h3>
+        <p style="margin-bottom:.75rem">S'apliquen al text seleccionat des de la barra d'eines o amb dreceres de teclat:</p>
+        <div class="shortcuts">
+          <div class="sc-item"><span class="sc-key">Ctrl + B</span><span class="sc-desc"><strong>Negreta</strong> (Bold)</span></div>
+          <div class="sc-item"><span class="sc-key">Ctrl + I</span><span class="sc-desc"><em>Cursiva</em> (Italic)</span></div>
+          <div class="sc-item"><span class="sc-key">Ctrl + U</span><span class="sc-desc"><u>Subratllat</u> (Underline)</span></div>
+          <div class="sc-item"><span class="sc-key">Alt + Maj + 5</span><span class="sc-desc"><s>Ratllat</s> (Strikethrough)</span></div>
+        </div>
+        <div class="ex ex-docs" style="margin-top:.75rem">
+          <div class="ex-lbl">💡 Quan usar cada un?</div>
+          <p><strong>Negreta:</strong> paraules clau, títols de secció dins del cos.<br><em>Cursiva:</em> termes tècnics, anglicismes, títols de llibres.<br><u>Subratllat:</u> evita-ho al cos del text (confon amb un enllaç).<br><s>Ratllat:</s> text que s'ha eliminat o corregit.</p>
+        </div>
+      </div>
+
+      <div class="card bl-docs">
+        <div class="card-icon" style="background:#eff6ff">🎨</div>
+        <h3>Color, mida i font</h3>
+        <p style="margin-bottom:.75rem">Disponibles a la barra d'eines de Google Docs:</p>
+        <ul style="list-style:none; padding:0;">
+          <li style="padding:.35rem 0; border-bottom:1px solid var(--border); font-size:.9rem; color:var(--muted)">📌 <strong style="color:var(--ink)">Tipus de lletra</strong> — Menú desplegable a la barra. Recomanats per a docs professionals: <em>Arial, Times New Roman, Calibri, Roboto</em>.</li>
+          <li style="padding:.35rem 0; border-bottom:1px solid var(--border); font-size:.9rem; color:var(--muted)">📏 <strong style="color:var(--ink)">Mida</strong> — Per defecte 11pt. Cos normal: 11-12pt. Títol principal: 18-24pt.</li>
+          <li style="padding:.35rem 0; border-bottom:1px solid var(--border); font-size:.9rem; color:var(--muted)">🎨 <strong style="color:var(--ink)">Color de text</strong> — Botó "A" amb línia de color a la barra.</li>
+          <li style="padding:.35rem 0; font-size:.9rem; color:var(--muted)">🖍️ <strong style="color:var(--ink)">Color de fons (ressaltat)</strong> — Botó de llapis ressaltador a la barra.</li>
+        </ul>
+        <div class="callout cl-amber" style="margin-top:.75rem; padding: .85rem 1rem">
+          <span class="callout-icon">⚠️</span>
+          <p><strong>Consell professional:</strong> mai facis servir més de 2-3 colors ni 2 fonts diferents en el mateix document. El contrast excessiu resta professionalitat.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-tag tag-docs fi" style="margin-top:4rem">Alineació i espaiat</div>
+    <h2 class="fi">Paràgrafs: alineació, interlineat i espaiat</h2>
+    <p class="lead fi">La formatació de paràgraf afecta tot el paràgraf (no cal seleccionar tot el text, n'hi ha prou de tenir el cursor dins). És clau per a la llegibilitat del document.</p>
+
+    <div class="grid g2 fi">
+      <div class="card bl-docs">
+        <div class="card-icon" style="background:#eff6ff">↔️</div>
+        <h3>Tipus d'alineació</h3>
+        <div class="shortcuts" style="margin-top:.5rem">
+          <div class="sc-item"><span class="sc-key">Ctrl + L</span><span class="sc-desc">Alineat a l'esquerra ←</span></div>
+          <div class="sc-item"><span class="sc-key">Ctrl + E</span><span class="sc-desc">Centrat ↔</span></div>
+          <div class="sc-item"><span class="sc-key">Ctrl + R</span><span class="sc-desc">Alineat a la dreta →</span></div>
+          <div class="sc-item"><span class="sc-key">Ctrl + J</span><span class="sc-desc">Justificat ⟺</span></div>
+        </div>
+        <div class="ex ex-docs" style="margin-top:.75rem">
+          <div class="ex-lbl">📌 Quan usar cada alineació</div>
+          <p><strong>Esquerra:</strong> cos del text en documents informals i webs.<br><strong>Justificat:</strong> informes formals, revistes, llibres — millora l'aspecte visual.<br><strong>Centrat:</strong> títols, portades, capçaleres.<br><strong>Dreta:</strong> dates, números de pàgina a la dreta.</p>
+        </div>
+      </div>
+
+      <div class="card bl-docs">
+        <div class="card-icon" style="background:#eff6ff">↕️</div>
+        <h3>Interlineat i espaiat entre paràgrafs</h3>
+        <p style="margin-bottom:.75rem">A <strong>Format → Interlineat i espaiat</strong> (o al menú de la barra d'eines):</p>
+        <ul style="list-style:none; padding:0;">
+          <li style="padding:.3rem 0; font-size:.9rem; color:var(--muted)">📏 <strong style="color:var(--ink)">Interlineat senzill (1.0):</strong> massa compacte, difícil de llegir.</li>
+          <li style="padding:.3rem 0; font-size:.9rem; color:var(--muted)">✅ <strong style="color:var(--ink)">Interlineat 1.15 o 1.5:</strong> recomanat per a documents de treball.</li>
+          <li style="padding:.3rem 0; font-size:.9rem; color:var(--muted)">📄 <strong style="color:var(--ink)">Interlineat doble (2.0):</strong> usat en treballs acadèmics universitaris.</li>
+          <li style="padding:.3rem 0; font-size:.9rem; color:var(--muted)">🔲 <strong style="color:var(--ink)">Espaiat anterior/posterior:</strong> espai entre paràgrafs sense salts de línia manuals.</li>
+        </ul>
+        <div class="callout cl-blue" style="margin-top:.75rem; padding:.85rem 1rem">
+          <span class="callout-icon">💡</span>
+          <p>Mai usis la tecla Intro dues vegades per separar paràgrafs. Configura l'espaiat posterior del paràgraf a 8-12pt.</p>
+        </div>
+      </div>
+    </div>
+
+    <hr>
+
+    <!-- DRECERES TECLAT COMPLETES -->
+    <div class="section-tag tag-docs fi">Productivitat</div>
+    <h2 class="fi">Dreceres de teclat essencials</h2>
+    <p class="lead fi">Memoritzar les dreceres de teclat multiplica la velocitat de treball. Les més importants per a Google Docs:</p>
+    <div class="grid g2 fi">
+      <div class="card">
+        <h3>Edició i navegació</h3>
+        <div class="shortcuts">
+          <div class="sc-item"><span class="sc-key">Ctrl + Z</span><span class="sc-desc">Desfer acció</span></div>
+          <div class="sc-item"><span class="sc-key">Ctrl + Y</span><span class="sc-desc">Refer acció</span></div>
+          <div class="sc-item"><span class="sc-key">Ctrl + A</span><span class="sc-desc">Seleccionar tot</span></div>
+          <div class="sc-item"><span class="sc-key">Ctrl + F</span><span class="sc-desc">Cercar al document</span></div>
+          <div class="sc-item"><span class="sc-key">Ctrl + H</span><span class="sc-desc">Cercar i reemplaçar</span></div>
+          <div class="sc-item"><span class="sc-key">Ctrl + K</span><span class="sc-desc">Inserir enllaç</span></div>
+          <div class="sc-item"><span class="sc-key">Ctrl + P</span><span class="sc-desc">Imprimir / Exportar PDF</span></div>
+          <div class="sc-item"><span class="sc-key">Ctrl + Maj + C</span><span class="sc-desc">Copiar format</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Format i estructura</h3>
+        <div class="shortcuts">
+          <div class="sc-item"><span class="sc-key">Ctrl + Alt + 1</span><span class="sc-desc">Títol 1</span></div>
+          <div class="sc-item"><span class="sc-key">Ctrl + Alt + 2</span><span class="sc-desc">Títol 2</span></div>
+          <div class="sc-item"><span class="sc-key">Ctrl + Alt + 3</span><span class="sc-desc">Títol 3</span></div>
+          <div class="sc-item"><span class="sc-key">Ctrl + Alt + 0</span><span class="sc-desc">Text normal</span></div>
+          <div class="sc-item"><span class="sc-key">Tab</span><span class="sc-desc">Augmentar sagnia / subnivell de llista</span></div>
+          <div class="sc-item"><span class="sc-key">Maj + Tab</span><span class="sc-desc">Disminuir sagnia</span></div>
+          <div class="sc-item"><span class="sc-key">Ctrl + Maj + L</span><span class="sc-desc">Llista de punts</span></div>
+          <div class="sc-item"><span class="sc-key">Ctrl + Maj + 7</span><span class="sc-desc">Llista numerada</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ BLOC 2 — ESTILS I ESTRUCTURA ══════════════════ -->
+<section id="estructura" class="s-cream">
+  <div class="container">
+    <div class="ra-banner ra-docs fi">
+      <div class="ra-num">2</div>
+      <div>
+        <h2>Estils, llistes i taules</h2>
+        <p>La columna vertebral de qualsevol document professional: jerarquia visual i contingut tabular.</p>
+      </div>
+    </div>
+
+    <!-- ESTILS DE PARÀGRAF -->
+    <div class="section-tag tag-docs fi">Estils de paràgraf</div>
+    <h2 class="fi">Els estils: la clau d'un document professional</h2>
+    <p class="lead fi">Un estil és un conjunt de propietats de format guardat amb un nom. Usar estils (en comptes de format manual) garanteix coherència i permet generar la taula de continguts automàticament.</p>
+
+    <div class="grid g3 fi">
+      <div class="card bl-docs">
+        <div class="card-icon" style="background:#eff6ff">📋</div>
+        <h3>Text normal</h3>
+        <p>El cos del document. Totes les frases regulars. Mida 11-12pt, Arial o similar. És l'estil base que s'hereta per defecte.</p>
+        <div class="pills" style="margin-top:.75rem">
+          <span class="pill">Ctrl + Alt + 0</span>
+        </div>
+      </div>
+      <div class="card bl-docs">
+        <div class="card-icon" style="background:#eff6ff">📌</div>
+        <h3>Títol 1 — Capítol</h3>
+        <p>El títol principal de cada gran secció del document. Mida ~18-20pt, negreta. Apareix a la <strong>taula de continguts</strong> com a nivell 1.</p>
+        <div class="pills" style="margin-top:.75rem">
+          <span class="pill">Ctrl + Alt + 1</span>
+        </div>
+      </div>
+      <div class="card bl-docs">
+        <div class="card-icon" style="background:#eff6ff">🔸</div>
+        <h3>Títol 2 — Subsecció</h3>
+        <p>Subsecció dins d'un capítol. Mida ~16pt, negreta. Apareix a la taula de continguts com a nivell 2. S'usa per organitzar els subapartats.</p>
+        <div class="pills" style="margin-top:.75rem">
+          <span class="pill">Ctrl + Alt + 2</span>
+        </div>
+      </div>
+      <div class="card bl-docs">
+        <div class="card-icon" style="background:#eff6ff">▸</div>
+        <h3>Títol 3 — Sub-subsecció</h3>
+        <p>Nivell de detall addicional. Mida ~14pt. Per a documents complexos amb molts nivells jeràrquics. Apareix al TOC com a nivell 3.</p>
+        <div class="pills" style="margin-top:.75rem">
+          <span class="pill">Ctrl + Alt + 3</span>
+        </div>
+      </div>
+      <div class="card bl-amber">
+        <div class="card-icon" style="background:#fffbeb">🎨</div>
+        <h3>Personalitzar estils</h3>
+        <p>Pots modificar com es veu cada estil: canviar la font, el color, la mida. A <strong>Format → Estils de paràgraf → Opcions → Desar com a estils predeterminats</strong> per aplicar-ho a tot el document.</p>
+      </div>
+      <div class="card bl-green">
+        <div class="card-icon" style="background:#f0fdf4">🔄</div>
+        <h3>Copiar format</h3>
+        <p>Selecciona text amb el format que vols copiar → clica el botó del <strong>corró de pintura</strong> (🎨) a la barra → clica al text on vols aplicar-lo. Drecera: <strong>Ctrl + Maj + C</strong> i <strong>Ctrl + Maj + V</strong>.</p>
+      </div>
+    </div>
+
+    <div class="callout cl-blue fi" style="margin-top:2rem">
+      <span class="callout-icon">🔑</span>
+      <div>
+        <strong>Per què és tan important usar Estils?</strong>
+        <ul style="margin-top:.5rem">
+          <li>La <strong>Taula de continguts</strong> (índex) es genera automàticament a partir dels Títols 1, 2 i 3.</li>
+          <li>La barra lateral de navegació (Vista → Mostra el contorn) funciona amb els Títols.</li>
+          <li>Canviar el format de tots els títols es fa en un sol clic (editant l'estil).</li>
+          <li>Si s'exporta a Word (.docx), els estils es converteixen correctament.</li>
+        </ul>
+      </div>
+    </div>
+
+    <hr>
+
+    <!-- LLISTES -->
+    <div class="section-tag tag-docs fi">Llistes</div>
+    <h2 class="fi">Llistes: ordenades, desordenades i niuades</h2>
+    <p class="lead fi">Les llistes organitzen informació de manera visual i escanejable. Google Docs permet crear llistes amb molts nivells de profunditat.</p>
+
+    <div class="grid g2 fi">
+      <div class="card bl-docs">
+        <div class="card-icon" style="background:#eff6ff">•</div>
+        <h3>Llista desordenada (de punts)</h3>
+        <p style="margin-bottom:.75rem">Per a elements sense ordre concret. El botó és a la barra d'eines (≡ amb punts). Drecera: <strong>Ctrl + Maj + L</strong></p>
+        <div class="ex ex-docs">
+          <div class="ex-lbl">Exemple</div>
+          <p>Materials necessaris per a la pràctica:<br>
+          • Un ordinador amb compte de Google<br>
+          • Connexió a Internet<br>
+          • Un document de text de mostra<br>
+          &nbsp;&nbsp;◦ Pot ser un article de diari<br>
+          &nbsp;&nbsp;◦ O qualsevol text de pràctica</p>
+        </div>
+        <div class="callout cl-blue" style="margin-top:.75rem; padding:.85rem 1rem">
+          <span class="callout-icon">💡</span>
+          <p><strong>Subnivells:</strong> prem <strong>Tab</strong> per entrar a un subnivell i <strong>Maj + Tab</strong> per pujar. Pots tenir fins a 9 nivells.</p>
+        </div>
+      </div>
+
+      <div class="card bl-docs">
+        <div class="card-icon" style="background:#eff6ff">1.</div>
+        <h3>Llista ordenada (numerada)</h3>
+        <p style="margin-bottom:.75rem">Per a passos, procediments o elements amb ordre important. Botó a la barra. Drecera: <strong>Ctrl + Maj + 7</strong></p>
+        <div class="ex ex-docs">
+          <div class="ex-lbl">Exemple de procediment</div>
+          <p>Com crear un document nou a Docs:<br>
+          1. Obre Google Drive (drive.google.com)<br>
+          2. Fes clic a "+ Nou"<br>
+          3. Selecciona "Google Docs"<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;a. Alternativa: escriu "docs.new" al navegador<br>
+          4. El document s'obre automàticament<br>
+          5. Anomena'l fent clic a "Document sense títol"</p>
+        </div>
+        <div class="callout cl-green" style="margin-top:.75rem; padding:.85rem 1rem">
+          <span class="callout-icon">✅</span>
+          <p>Els subnivells de llistes ordenades poden usar lletres (a, b, c) o números romans (i, ii, iii) segons el nivell.</p>
+        </div>
+      </div>
+    </div>
+
+    <hr>
+
+    <!-- TAULES -->
+    <div class="section-tag tag-docs fi">Taules</div>
+    <h2 class="fi">Taules: creació i format avançat</h2>
+    <p class="lead fi">Les taules permeten organitzar informació en files i columnes. Google Docs té eines potents per crear i personalitzar taules professionals.</p>
+
+    <div class="grid g2 fi">
+      <div class="card bl-docs">
+        <div class="card-icon" style="background:#eff6ff">📊</div>
+        <h3>Crear i editar taules</h3>
+        <ul style="list-style:none; padding:0;">
+          <li style="padding:.3rem 0; border-bottom:1px solid var(--border); font-size:.9rem; color:var(--muted)">➕ <strong style="color:var(--ink)">Inserir:</strong> Inserir → Taula → tria la mida (files × columnes).</li>
+          <li style="padding:.3rem 0; border-bottom:1px solid var(--border); font-size:.9rem; color:var(--muted)">🖱️ <strong style="color:var(--ink)">Redimensionar:</strong> arrossega la vora de la columna o fila per canviar-ne la mida.</li>
+          <li style="padding:.3rem 0; border-bottom:1px solid var(--border); font-size:.9rem; color:var(--muted)">➕ <strong style="color:var(--ink)">Afegir files/columnes:</strong> clic dret dins la taula → "Inserir fila a sobre/sota" o "Inserir columna a l'esquerra/dreta".</li>
+          <li style="padding:.3rem 0; border-bottom:1px solid var(--border); font-size:.9rem; color:var(--muted)">🔗 <strong style="color:var(--ink)">Combinar cel·les:</strong> selecciona diverses cel·les → clic dret → "Combina les cel·les". Útil per a capçaleres que abasten diverses columnes.</li>
+          <li style="padding:.3rem 0; font-size:.9rem; color:var(--muted)">⌨️ <strong style="color:var(--ink)">Navegar:</strong> usa la tecla <strong>Tab</strong> per moure's entre cel·les. A l'última cel·la, Tab crea una fila nova.</li>
+        </ul>
+      </div>
+
+      <div class="card bl-docs">
+        <div class="card-icon" style="background:#eff6ff">🎨</div>
+        <h3>Format de taula professional</h3>
+        <p style="margin-bottom:.75rem">Fes clic dret a la taula → <strong>Propietats de la taula</strong>:</p>
+        <ul style="list-style:none; padding:0;">
+          <li style="padding:.3rem 0; border-bottom:1px solid var(--border); font-size:.9rem; color:var(--muted)">🎨 <strong style="color:var(--ink)">Color de fons de cel·la:</strong> ideal per destacar la fila de capçalera.</li>
+          <li style="padding:.3rem 0; border-bottom:1px solid var(--border); font-size:.9rem; color:var(--muted)">📐 <strong style="color:var(--ink)">Vores:</strong> canvia el color, el gruix i l'estil de les vores.</li>
+          <li style="padding:.3rem 0; border-bottom:1px solid var(--border); font-size:.9rem; color:var(--muted)">📏 <strong style="color:var(--ink)">Marge de la cel·la:</strong> l'espai interior entre el text i la vora de la cel·la.</li>
+          <li style="padding:.3rem 0; font-size:.9rem; color:var(--muted)">↕️ <strong style="color:var(--ink)">Alineació vertical:</strong> text alineat a dalt, al centre o a baix dins la cel·la.</li>
+        </ul>
+        <div class="ex ex-docs" style="margin-top:.75rem">
+          <div class="ex-lbl">Exemple de taula professional</div>
+          <table class="doc-preview" style="padding:0; box-shadow:none; max-width:100%">
+            <table class="doc-preview" style="padding:0; max-width:100%; box-shadow:none; border:none">
+            <table style="width:100%; border-collapse:collapse; font-size:0.82rem;">
+              <thead><tr>
+                <th style="background:#1a1f4e; color:white; padding:.5rem .75rem; text-align:left; border-radius:4px 0 0 0">Producte</th>
+                <th style="background:#1a1f4e; color:white; padding:.5rem .75rem; text-align:left">Preu</th>
+                <th style="background:#1a1f4e; color:white; padding:.5rem .75rem; text-align:left; border-radius:0 4px 0 0">Estoc</th>
+              </tr></thead>
+              <tbody>
+                <tr><td style="padding:.4rem .75rem; border:1px solid #ddd">Router Cisco</td><td style="padding:.4rem .75rem; border:1px solid #ddd">245 €</td><td style="padding:.4rem .75rem; border:1px solid #ddd">12 u.</td></tr>
+                <tr style="background:#f7f7f7"><td style="padding:.4rem .75rem; border:1px solid #ddd">Switch 24p</td><td style="padding:.4rem .75rem; border:1px solid #ddd">189 €</td><td style="padding:.4rem .75rem; border:1px solid #ddd">8 u.</td></tr>
+                <tr><td style="padding:.4rem .75rem; border:1px solid #ddd">Cable Cat 6</td><td style="padding:.4rem .75rem; border:1px solid #ddd">0,45 €/m</td><td style="padding:.4rem .75rem; border:1px solid #ddd">500 m</td></tr>
+              </tbody>
+            </table>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ BLOC 3 — ELEMENTS ══════════════════ -->
+<section id="elements" class="s-docs">
+  <div class="container">
+    <div class="ra-banner ra-docs fi">
+      <div class="ra-num">3</div>
+      <div>
+        <h2>Elements del document</h2>
+        <p>Imatges, capçaleres, peus de pàgina, taula de continguts, notes al peu i configuració de pàgina.</p>
+      </div>
+    </div>
+
+    <!-- IMATGES -->
+    <div class="section-tag tag-docs fi">Imatges i objectes</div>
+    <h2 class="fi">Inserir i gestionar imatges</h2>
+    <p class="lead fi">Google Docs permet inserir imatges de múltiples fonts i controlar com es relacionen amb el text que les envolta.</p>
+
+    <div class="grid g2 fi">
+      <div class="card bl-docs">
+        <div class="card-icon" style="background:#eff6ff">🖼️</div>
+        <h3>Formes d'inserir imatges</h3>
+        <p style="margin-bottom:.75rem">Menú <strong>Inserir → Imatge</strong>:</p>
+        <ul style="list-style:none; padding:0;">
+          <li style="padding:.3rem 0; border-bottom:1px solid var(--border); font-size:.9rem; color:var(--muted)">💻 <strong style="color:var(--ink)">Des de l'ordinador:</strong> puja una imatge del teu disc dur. Formats acceptats: JPG, PNG, GIF, BMP, SVG.</li>
+          <li style="padding:.3rem 0; border-bottom:1px solid var(--border); font-size:.9rem; color:var(--muted)">🔗 <strong style="color:var(--ink)">Per URL:</strong> enganxa l'adreça web d'una imatge. La imatge s'incrusta al document, no és un enllaç.</li>
+          <li style="padding:.3rem 0; border-bottom:1px solid var(--border); font-size:.9rem; color:var(--muted)">📸 <strong style="color:var(--ink)">Google Fotos:</strong> imatges del teu compte de Google Fotos.</li>
+          <li style="padding:.3rem 0; border-bottom:1px solid var(--border); font-size:.9rem; color:var(--muted)">💾 <strong style="color:var(--ink)">Google Drive:</strong> imatges guardades al teu Drive.</li>
+          <li style="padding:.3rem 0; font-size:.9rem; color:var(--muted)">🔍 <strong style="color:var(--ink)">Cerca al web:</strong> cerca imatges de Google directament des de Docs (usa imatges amb llicència lliure).</li>
+        </ul>
+      </div>
+
+      <div class="card bl-docs">
+        <div class="card-icon" style="background:#eff6ff">📐</div>
+        <h3>Ajust de text al voltant de la imatge</h3>
+        <p style="margin-bottom:.75rem">Fes clic a la imatge → apareixen les opcions d'ajust a sota:</p>
+        <ul style="list-style:none; padding:0;">
+          <li style="padding:.3rem 0; border-bottom:1px solid var(--border); font-size:.9rem; color:var(--muted)">📍 <strong style="color:var(--ink)">En línia:</strong> la imatge es tracta com un caràcter de text. No es pot posar text al costat. Opció per defecte. Recomanada per a imatges centrades.</li>
+          <li style="padding:.3rem 0; border-bottom:1px solid var(--border); font-size:.9rem; color:var(--muted)">↔️ <strong style="color:var(--ink)">Ajust del text:</strong> el text flueix al voltant de la imatge. Pots posicionar la imatge lliurement a la pàgina.</li>
+          <li style="padding:.3rem 0; font-size:.9rem; color:var(--muted)">🔙 <strong style="color:var(--ink)">Trencar el text:</strong> la imatge ocupa tota l'amplada del paràgraf, el text queda a sobre i a sota.</li>
+        </ul>
+        <div class="ex ex-docs" style="margin-top:.75rem">
+          <div class="ex-lbl">💡 Bones pràctiques amb imatges</div>
+          <p>
+            • Afegeix sempre un peu de figura (text descriptiu sota la imatge).<br>
+            • Redimensiona la imatge arrossegant les cantonades (no els costats, per evitar deformació).<br>
+            • Usa <strong>Opcions d'imatge</strong> per retallar o ajustar la lluminositat/contrast.<br>
+            • En documents que s'exportaran a PDF, usa PNG per a gràfics i JPG per a fotos.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <hr>
+
+    <!-- CAPÇALERES I PEUS -->
+    <div class="section-tag tag-docs fi">Estructura de la pàgina</div>
+    <h2 class="fi">Capçalera, peu de pàgina i numeració</h2>
+    <p class="lead fi">La capçalera i el peu de pàgina apareixen de manera repetida a totes les pàgines del document (o en les parelles/imparelles). Perfectes per a títol del document, logotip, número de pàgina, etc.</p>
+
+    <div class="grid g3 fi">
+      <div class="card bl-docs">
+        <div class="card-icon" style="background:#eff6ff">⬆️</div>
+        <h3>Capçalera (Header)</h3>
+        <p>Zona superior de cada pàgina. Accés: <strong>Inserir → Capçalera i peu de pàgina → Capçalera</strong> o doble clic a la zona superior de la pàgina.</p>
+        <div class="ex ex-docs" style="margin-top:.75rem">
+          <div class="ex-lbl">Usos típics</div>
+          <p>• Nom de l'empresa / logotip<br>• Títol del document<br>• Nom de l'autor<br>• Data de creació</p>
+        </div>
+      </div>
+      <div class="card bl-docs">
+        <div class="card-icon" style="background:#eff6ff">⬇️</div>
+        <h3>Peu de pàgina (Footer)</h3>
+        <p>Zona inferior de cada pàgina. Accés: <strong>Inserir → Capçalera i peu de pàgina → Peu de pàgina</strong> o doble clic a la zona inferior.</p>
+        <div class="ex ex-docs" style="margin-top:.75rem">
+          <div class="ex-lbl">Usos típics</div>
+          <p>• Número de pàgina ("Pàgina X de Y")<br>• Confidencialitat del document<br>• Peu legal de l'empresa<br>• Data d'última modificació</p>
+        </div>
+      </div>
+      <div class="card bl-docs">
+        <div class="card-icon" style="background:#eff6ff">🔢</div>
+        <h3>Números de pàgina</h3>
+        <p>Inserir → Números de pàgina. Opcions:</p>
+        <ul style="list-style:none; padding:0; margin-top:.5rem">
+          <li style="font-size:.87rem; color:var(--muted); padding:.2rem 0">📌 Posició: capçalera o peu de pàgina</li>
+          <li style="font-size:.87rem; color:var(--muted); padding:.2rem 0">↕️ Alineació: esquerra, centre o dreta</li>
+          <li style="font-size:.87rem; color:var(--muted); padding:.2rem 0">1️⃣ Número inicial (per si el doc comença a la pàgina 3)</li>
+          <li style="font-size:.87rem; color:var(--muted); padding:.2rem 0">🚫 Ometre la primera pàgina (per a portades)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout cl-amber fi">
+      <span class="callout-icon">💡</span>
+      <div>
+        <strong>Capçalera diferent a la primera pàgina:</strong>
+        <p style="margin-top:.3rem">Molt útil per a documents amb portada. A les Opcions de capçalera → activa "Primera pàgina diferent". Així la portada no tindrà capçalera, però la resta de pàgines sí.</p>
+      </div>
+    </div>
+
+    <hr>
+
+    <!-- TAULA DE CONTINGUTS -->
+    <div class="section-tag tag-docs fi">Taula de continguts</div>
+    <h2 class="fi">Taula de continguts (índex) automàtica</h2>
+    <p class="lead fi">Una de les funcions més potents de Google Docs. Genera automàticament un índex cliclable basat en els Títols 1, 2 i 3 del document.</p>
+
+    <div class="grid g2 fi">
+      <div class="card bl-docs">
+        <div class="card-icon" style="background:#eff6ff">📑</div>
+        <h3>Com inserir-la</h3>
+        <ol class="steps" style="margin-top:.5rem">
+          <li><p><strong>Assegura't</strong> que el document usa Estils de paràgraf (Títol 1, Títol 2…) i no format manual.</p></li>
+          <li><p>Posiciona el cursor on vols inserir la taula (normalment a l'inici del document).</p></li>
+          <li><p>Menú <strong>Inserir → Taula de continguts</strong>.</p></li>
+          <li><p>Tria el format: <em>amb números de pàgina</em> o <em>amb enllaços blaus</em> (cliclables).</p></li>
+          <li><p>Per <strong>actualitzar-la</strong> quan afegeixes nous títols: fes clic a la taula → botó de refresca que apareix a dalt a l'esquerra (⟳).</p></li>
+        </ol>
+      </div>
+      <div class="card bl-green">
+        <div class="card-icon" style="background:#f0fdf4">🗂️</div>
+        <h3>Esquema del document (barra lateral)</h3>
+        <p style="margin-bottom:.75rem">Sense inserir res al document, pots veure l'estructura als dos costats:</p>
+        <ul style="list-style:none; padding:0;">
+          <li style="padding:.3rem 0; border-bottom:1px solid var(--border); font-size:.9rem; color:var(--muted)">📌 <strong style="color:var(--ink)">Vista → Mostra l'esquema del document</strong> — Barra lateral a l'esquerra amb tots els Títols.</li>
+          <li style="padding:.3rem 0; font-size:.9rem; color:var(--muted)">🔗 Fes clic en qualsevol títol de l'esquema per navegar directament a aquella secció del document.</li>
+        </ul>
+        <div class="callout cl-green" style="margin-top:.75rem; padding:.85rem 1rem">
+          <span class="callout-icon">✅</span>
+          <p>Molt útil per a documents llargs. La barra lateral no apareix quan s'exporta a PDF.</p>
+        </div>
+      </div>
+    </div>
+
+    <hr>
+
+    <!-- NOTES AL PEU I MARCADORS -->
+    <div class="section-tag tag-docs fi">Referències</div>
+    <h2 class="fi">Notes al peu, marcadors i enllaços</h2>
+    <div class="grid g3 fi">
+      <div class="card bl-docs">
+        <div class="card-icon" style="background:#eff6ff">¹</div>
+        <h3>Notes al peu</h3>
+        <p>Un superíndex numèric al cos del text que remet a una nota explicativa al peu de la mateixa pàgina. <strong>Inserir → Nota al peu</strong>. Google Docs les numera automàticament. Perfectes per a referències bibliogràfiques o aclariments.</p>
+      </div>
+      <div class="card bl-docs">
+        <div class="card-icon" style="background:#eff6ff">🔖</div>
+        <h3>Marcadors</h3>
+        <p>Etiquetes invisibles que marquen una posició al document. <strong>Inserir → Marcador</strong>. Útils per crear hipervincles interns (un enllaç que porta a un altre lloc del mateix document). Essencials per a documents llargs.</p>
+      </div>
+      <div class="card bl-docs">
+        <div class="card-icon" style="background:#eff6ff">🔗</div>
+        <h3>Enllaços</h3>
+        <p>Selecciona text → <strong>Ctrl + K</strong> → enganxa una URL o un marcador intern. El text es converteix en un hipervincle de color blau. Pots editar o eliminar l'enllaç fent-hi clic i seleccionant "Edita l'enllaç".</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ BLOC 4 — AVANÇAT ══════════════════ -->
+<section id="avançat" class="s-cream">
+  <div class="container">
+    <div class="ra-banner ra-docs fi">
+      <div class="ra-num">4</div>
+      <div>
+        <h2>Opcions avançades</h2>
+        <p>Configuració de pàgina, columnes, col·laboració, control de canvis i plantilles professionals.</p>
+      </div>
+    </div>
+
+    <!-- CONFIGURACIÓ DE PÀGINA -->
+    <div class="section-tag tag-docs fi">Configuració de pàgina</div>
+    <h2 class="fi">Configuració de pàgina: marges, mida i orientació</h2>
+    <p class="lead fi">A <strong>Fitxer → Configuració de la pàgina</strong> trobareu totes les opcions de disseny de la pàgina. Afecten tot el document (o les seccions seleccionades).</p>
+
+    <div class="grid g2 fi">
+      <div class="card bl-docs">
+        <h3>📏 Marges</h3>
+        <p style="margin-bottom:.75rem">L'espai entre el text i la vora de la pàgina. Valors estàndard:</p>
+        <div style="overflow-x:auto">
+          <table class="ptable">
+            <thead><tr><th>Tipus</th><th>Valor</th><th>Ús típic</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Estàndard</strong></td><td>2,54 cm (1")</td><td>Documents de treball generals</td></tr>
+              <tr><td><strong>Estret</strong></td><td>1,27 cm</td><td>Taules, moltes columnes</td></tr>
+              <tr><td><strong>Ample</strong></td><td>3,81 cm</td><td>Informes formals, tesis</td></tr>
+              <tr><td><strong>Llibre</strong></td><td>Marges mirall</td><td>Documents per imprimir per les dues cares</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card bl-docs">
+        <h3>📄 Mida i orientació</h3>
+        <ul style="list-style:none; padding:0;">
+          <li style="padding:.4rem 0; border-bottom:1px solid var(--border); font-size:.9rem; color:var(--muted)">📄 <strong style="color:var(--ink)">A4 (21 × 29,7 cm):</strong> estàndard a Europa. El format habitual per a qualsevol document.</li>
+          <li style="padding:.4rem 0; border-bottom:1px solid var(--border); font-size:.9rem; color:var(--muted)">📄 <strong style="color:var(--ink)">Letter (21,6 × 27,9 cm):</strong> estàndard als EUA. Lleugerament diferent de l'A4.</li>
+          <li style="padding:.4rem 0; border-bottom:1px solid var(--border); font-size:.9rem; color:var(--muted)">🔄 <strong style="color:var(--ink)">Vertical (Portrait):</strong> l'orientació per defecte, ideal per a documents de text.</li>
+          <li style="padding:.4rem 0; font-size:.9rem; color:var(--muted)">↔️ <strong style="color:var(--ink)">Horitzontal (Landscape):</strong> ideal per a taules molt amples, diagrames o presentacions.</li>
+        </ul>
+        <div class="callout cl-amber" style="margin-top:.75rem; padding:.85rem 1rem">
+          <span class="callout-icon">💡</span>
+          <p>Pots barrejar orientació vertical i horitzontal en un document inserint <strong>salts de secció</strong> (Inserir → Salt → Salt de secció) i canviant la configuració de cada secció.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- COLUMNES -->
+    <div class="section-tag tag-docs fi" style="margin-top:3rem">Columnes i disseny avançat</div>
+    <h2 class="fi">Columnes</h2>
+    <div class="grid g2 fi">
+      <div class="card bl-docs">
+        <div class="card-icon" style="background:#eff6ff">𝄞</div>
+        <h3>Crear columnes</h3>
+        <p style="margin-bottom:.75rem"><strong>Format → Columnes</strong>. Opcions: 1, 2 o 3 columnes, o configuració personalitzada (nombre de columnes, espai entre elles, línia divisòria).</p>
+        <div class="ex ex-docs">
+          <div class="ex-lbl">Quan usar columnes?</div>
+          <p>
+            • Butlletins informatius (newsletters)<br>
+            • Tríptics i fullets<br>
+            • Revistes o publicacions<br>
+            • Documents de doble columna estil acadèmic (IEEE)
+          </p>
+        </div>
+        <div class="callout cl-blue" style="margin-top:.75rem; padding:.85rem 1rem">
+          <span class="callout-icon">💡</span>
+          <p>Per aplicar columnes a una secció concreta (no tot el document), selecciona primer el text que vols en columnes, i aleshores aplica Format → Columnes.</p>
+        </div>
+      </div>
+      <div class="card bl-docs">
+        <div class="card-icon" style="background:#eff6ff">📊</div>
+        <h3>Altres elements de disseny</h3>
+        <ul style="list-style:none; padding:0;">
+          <li style="padding:.35rem 0; border-bottom:1px solid var(--border); font-size:.9rem; color:var(--muted)">➖ <strong style="color:var(--ink)">Línia horitzontal:</strong> Inserir → Línia horitzontal. Crea un separador visual entre seccions.</li>
+          <li style="padding:.35rem 0; border-bottom:1px solid var(--border); font-size:.9rem; color:var(--muted)">⬛ <strong style="color:var(--ink)">Caixa de text:</strong> Inserir → Dibuix → Caixa de text. Permet posicionar text lliurement a la pàgina.</li>
+          <li style="padding:.35rem 0; border-bottom:1px solid var(--border); font-size:.9rem; color:var(--muted)">📊 <strong style="color:var(--ink)">Gràfics des de Sheets:</strong> Inserir → Gràfic → Des de Sheets. S'actualitzen automàticament amb les dades.</li>
+          <li style="padding:.35rem 0; font-size:.9rem; color:var(--muted)">🔢 <strong style="color:var(--ink)">Equacions:</strong> Inserir → Equació. Editor d'equacions matemàtiques per a fórmules científiques.</li>
+        </ul>
+      </div>
+    </div>
+
+    <hr>
+
+    <!-- COL·LABORACIÓ -->
+    <div class="section-tag tag-docs fi">Col·laboració</div>
+    <h2 class="fi">Treball col·laboratiu i control de canvis</h2>
+    <p class="lead fi">Google Docs va néixer per treballar en equip. Les funcions de col·laboració permeten que diverses persones editin el mateix document simultàniament de manera controlada.</p>
+
+    <div class="grid g2 fi">
+      <div class="card bl-purp">
+        <div class="card-icon" style="background:#f5f3ff">💬</div>
+        <h3>Comentaris</h3>
+        <p style="margin-bottom:.75rem">Selecciona text → <strong>Inserir → Comentari</strong> (o <strong>Ctrl + Alt + M</strong>). Apareix una nota al marge sense modificar el text original.</p>
+        <ul style="list-style:none; padding:0;">
+          <li style="padding:.3rem 0; border-bottom:1px solid var(--border); font-size:.88rem; color:var(--muted)">📌 <strong style="color:var(--ink)">Mencions:</strong> escriu @nom_company dins del comentari per notificar-lo per correu.</li>
+          <li style="padding:.3rem 0; border-bottom:1px solid var(--border); font-size:.88rem; color:var(--muted)">✅ <strong style="color:var(--ink)">Resoldre:</strong> quan el comentari s'ha atès, marca'l com a resolt (icona de ✓). S'amaga però no s'esborra.</li>
+          <li style="padding:.3rem 0; font-size:.88rem; color:var(--muted)">💬 <strong style="color:var(--ink)">Respondre:</strong> qualsevol editor pot respondre a un comentari, creant un fil de discussió.</li>
+        </ul>
+      </div>
+      <div class="card bl-purp">
+        <div class="card-icon" style="background:#f5f3ff">📝</div>
+        <h3>Control de canvis (Mode Suggeriment)</h3>
+        <p style="margin-bottom:.75rem">Quan treballes en un document d'altri, activa el mode <strong>Suggeriment</strong> (el llapis verd a dalt a la dreta → "Suggeriment"). Els teus canvis queden en color especial i l'autor original els pot acceptar o rebutjar.</p>
+        <div class="ex ex-docs" style="margin-top:.5rem">
+          <div class="ex-lbl">Tres modes de Google Docs</div>
+          <p>
+            ✏️ <strong>Edita:</strong> els canvis s'apliquen directament.<br>
+            🟢 <strong>Suggereix:</strong> els canvis es mostren com a suggeriments (color verd) que l'autor ha d'acceptar o rebutjar.<br>
+            👁️ <strong>Visualitza:</strong> mode de lectura, no es poden fer canvis.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid g2 fi" style="margin-top:1.25rem">
+      <div class="card bl-purp">
+        <div class="card-icon" style="background:#f5f3ff">🕐</div>
+        <h3>Historial de versions</h3>
+        <p>Fitxer → <strong>Historial de versions → Veure l'historial de versions</strong>. Mostra totes les versions anteriors del document. Pots restaurar qualsevol versió antiga. Google guarda una versió cada hora automàticament (i cada vegada que hi ha un canvi significatiu). Pots donar nom a les versions importants per localitzar-les fàcilment.</p>
+      </div>
+      <div class="card bl-purp">
+        <div class="card-icon" style="background:#f5f3ff">🔐</div>
+        <h3>Compartir i permisos</h3>
+        <p>Botó <strong>"Comparteix"</strong> (blau, a dalt a la dreta). Tres nivells de permís:</p>
+        <div class="pills" style="margin-top:.5rem">
+          <span class="pill pill-b">Visualitzador — només llegir</span>
+          <span class="pill pill-a">Comentarista — llegir + comentar</span>
+          <span class="pill pill-g">Editor — canvis complets</span>
+        </div>
+        <p style="font-size:.87rem; color:var(--muted); margin-top:.5rem">També pots generar un <strong>enllaç compartit</strong> (qualsevol persona amb l'enllaç) o restringir-lo a persones concretes.</p>
+      </div>
+    </div>
+
+    <hr>
+
+    <!-- PLANTILLES -->
+    <div class="section-tag tag-docs fi">Plantilles</div>
+    <h2 class="fi">Crear i usar plantilles</h2>
+    <p class="lead fi">Una plantilla és un document preformatat que serveix de base per a documents futurs del mateix tipus. Estalvia temps i garanteix coherència visual en tota l'organització.</p>
+
+    <div class="grid g2 fi">
+      <div class="card bl-green">
+        <div class="card-icon" style="background:#f0fdf4">📋</div>
+        <h3>Galeria de plantilles de Google</h3>
+        <p style="margin-bottom:.75rem">Accés: <strong>docs.google.com</strong> → "Galeria de plantilles" (a dalt del tot). Inclou:</p>
+        <ul style="list-style:none; padding:0;">
+          <li style="font-size:.88rem; color:var(--muted); padding:.2rem 0">📄 Currículum vítae (diversos formats)</li>
+          <li style="font-size:.88rem; color:var(--muted); padding:.2rem 0">📧 Cartes de presentació</li>
+          <li style="font-size:.88rem; color:var(--muted); padding:.2rem 0">📊 Informes de projectes</li>
+          <li style="font-size:.88rem; color:var(--muted); padding:.2rem 0">📑 Proposta de negoci</li>
+          <li style="font-size:.88rem; color:var(--muted); padding:.2rem 0">📰 Butlletins de notícies</li>
+        </ul>
+      </div>
+      <div class="card bl-green">
+        <div class="card-icon" style="background:#f0fdf4">🔧</div>
+        <h3>Crear la teva pròpia plantilla</h3>
+        <ol class="steps" style="margin-top:.5rem">
+          <li><p>Dissenya el document base amb tots els elements fixes (logotip, estils, capçalera, etc.).</p></li>
+          <li><p>Desa'l a Google Drive amb un nom tipus <em>"PLANTILLA — Informe Tècnic"</em>.</p></li>
+          <li><p>Cada cop que el necessitis, fes clic dret → <strong>"Fes una còpia"</strong>. Treballa sobre la còpia, mai sobre la plantilla original.</p></li>
+          <li><p>(Opcional) A Google Workspace for Education/Business: <strong>Envia a la galeria de plantilles</strong> per compartir-la amb tota l'organització.</p></li>
+        </ol>
+      </div>
+    </div>
+
+    <hr>
+
+    <!-- EXPORTACIÓ -->
+    <div class="section-tag tag-docs fi">Exportació</div>
+    <h2 class="fi">Exportar i descarregar documents</h2>
+    <div class="grid g4 fi">
+      <div class="card">
+        <div class="card-icon" style="background:#fef2f2">📕</div>
+        <h3>PDF</h3>
+        <p>Format universal per compartir. Preserva el disseny exactament. <strong>Fitxer → Descarrega → PDF</strong>. Recomanat per a documents finals, factures, informes per enviar.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#eff6ff">📘</div>
+        <h3>Word (.docx)</h3>
+        <p>Compatible amb Microsoft Word. <strong>Fitxer → Descarrega → Microsoft Word</strong>. Útil per enviar a persones que usen Word. Pot haver-hi petites diferències de format.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#f0fdf4">📗</div>
+        <h3>ODT</h3>
+        <p>Format obert compatible amb LibreOffice i OpenOffice. <strong>Fitxer → Descarrega → OpenDocument</strong>. Recomanat per a intercanvi amb programari lliure.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#fffbeb">📄</div>
+        <h3>Text pla (.txt)</h3>
+        <p>Perd tot el format però exporta el text pur. Útil per a scripts, codi o quan el format no importa. <strong>Fitxer → Descarrega → Text sense format</strong>.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ PRÀCTIQUES ══════════════════ -->
+<section id="practiques" class="s-dark">
+  <div class="container">
+    <div class="section-tag" style="color:rgba(255,255,255,.5)" class="fi">
+      <span style="display:inline-block;width:20px;height:2px;background:var(--purple);margin-right:.5rem"></span>6 Pràctiques
+    </div>
+    <h2 class="fi" style="color:white">Pràctiques de Google Docs</h2>
+    <p class="lead fi">Des del nivell bàsic fins a un document professional complet. Cada pràctica construeix sobre l'anterior.</p>
+
+    <div style="display:flex; flex-direction:column; gap:2rem;">
+
+      <!-- P1 -->
+      <div class="practice-card fi">
+        <div class="practice-header p1-bg">
+          <div class="practice-num">P1</div>
+          <div>
+            <h3>El meu primer document professional</h3>
+            <p>Nivell bàsic · Format de text i paràgraf · ~45 min</p>
+          </div>
+        </div>
+        <div class="practice-body">
+          <div class="grid g2">
+            <div>
+              <h4>📋 Descripció</h4>
+              <p style="color:var(--muted); font-size:.92rem; margin-bottom:1rem">Crea un document de presentació personal (com si fos un full d'informació per a una empresa de pràctiques). Ha d'incloure informació sobre tu, els teus estudis, les teves habilitats i els teus objectius professionals.</p>
+              <h4>🎯 Objectius d'aprenentatge</h4>
+              <ul class="steps" style="font-size:.88rem">
+                <li><p>Crear un nou document a Google Docs i nomenar-lo correctament.</p></li>
+                <li><p>Aplicar negretes, cursives i subratllat en els llocs adequats.</p></li>
+                <li><p>Canviar la font, la mida i el color de text en seccions concretes.</p></li>
+                <li><p>Usar alineació (centrat per al títol, justificat per al cos).</p></li>
+                <li><p>Configurar l'interlineat a 1.15 i l'espaiat entre paràgrafs.</p></li>
+                <li><p>Compartir el document amb el professor en mode Comentarista.</p></li>
+              </ul>
+            </div>
+            <div>
+              <h4>✅ Requisits mínims del document</h4>
+              <div class="ex ex-docs">
+                <div class="ex-lbl">Contingut obligatori</div>
+                <p>
+                  • <strong>Títol centrat</strong> amb nom complet (font gran, negreta, color blau)<br>
+                  • <strong>Subtítol</strong> centrat amb la titulació (cursiva)<br>
+                  • <strong>Secció "Sobre mi":</strong> 3-4 línies en text justificat<br>
+                  • <strong>Secció "Estudis":</strong> formació amb any d'inici<br>
+                  • <strong>Secció "Habilitats":</strong> mínim 5 habilitats en negreta<br>
+                  • <strong>Secció "Contacte":</strong> correu i localitat
+                </p>
+              </div>
+              <div class="callout cl-purp" style="margin-top:1rem; padding:.85rem 1rem">
+                <span class="callout-icon">⭐</span>
+                <div>
+                  <strong>Punt d'avaluació extra:</strong>
+                  <p>Afegeix un peu de pàgina amb la data actual i el teu nom. Exporta el document a PDF i lliura-ho al professor.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- P2 -->
+      <div class="practice-card fi">
+        <div class="practice-header p2-bg">
+          <div class="practice-num">P2</div>
+          <div>
+            <h3>Guia de llistes i taules de components</h3>
+            <p>Nivell bàsic-mitjà · Llistes i taules · ~60 min</p>
+          </div>
+        </div>
+        <div class="practice-body">
+          <div class="grid g2">
+            <div>
+              <h4>📋 Descripció</h4>
+              <p style="color:var(--muted); font-size:.92rem; margin-bottom:1rem">Crea un document tècnic titulat <em>"Components d'un PC i perifèrics"</em> que expliqui els components principals d'un ordinador de sobretaula, usant llistes i taules com a eines principals d'organització de la informació.</p>
+              <h4>🎯 Objectius d'aprenentatge</h4>
+              <ul class="steps" style="font-size:.88rem">
+                <li><p>Crear llistes desordenades niuades amb subnivells (com a mínim 2 nivells).</p></li>
+                <li><p>Crear una llista ordenada per a un procediment pas a pas.</p></li>
+                <li><p>Inserir una taula amb capçalera (fila de títols en fons fosc i text blanc).</p></li>
+                <li><p>Afegir i eliminar files a la taula, combinar cel·les de la capçalera.</p></li>
+                <li><p>Aplicar format de vores i fons a la taula per fer-la llegible.</p></li>
+              </ul>
+            </div>
+            <div>
+              <h4>✅ Estructura del document</h4>
+              <div class="ex ex-docs">
+                <div class="ex-lbl">Contingut obligatori</div>
+                <p>
+                  <strong>1. Components interns</strong> (llista desordenada niuada):<br>
+                  • Placa base<br>
+                  &nbsp;&nbsp;◦ Socket<br>
+                  &nbsp;&nbsp;◦ Chipset<br>
+                  • CPU, RAM, GPU…<br><br>
+                  <strong>2. Com instal·lar la RAM</strong> (llista ordenada):<br>
+                  Passos 1, 2, 3… amb el procediment correcte.<br><br>
+                  <strong>3. Taula de comparativa de processadors</strong>:<br>
+                  Columnes: Model | Nuclis | Freqüència | Preu | Ús recomanat.<br>
+                  Mínim 5 models (podeu inventar-los).
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- P3 -->
+      <div class="practice-card fi">
+        <div class="practice-header p3-bg">
+          <div class="practice-num">P3</div>
+          <div>
+            <h3>Díptic informatiu amb imatges i columnes</h3>
+            <p>Nivell mitjà · Imatges, columnes i disseny · ~75 min</p>
+          </div>
+        </div>
+        <div class="practice-body">
+          <div class="grid g2">
+            <div>
+              <h4>📋 Descripció</h4>
+              <p style="color:var(--muted); font-size:.92rem; margin-bottom:1rem">Dissenya un díptic informatiu (document de 2 columnes, orientació horitzontal) sobre un tema tecnològic lliure (ciberseguretat, cloud computing, la teva empresa fictícia, etc.). Ha de semblar un fullet informatiu professional.</p>
+              <h4>🎯 Objectius d'aprenentatge</h4>
+              <ul class="steps" style="font-size:.88rem">
+                <li><p>Canviar l'orientació de la pàgina a horitzontal i configurar marges estrets.</p></li>
+                <li><p>Crear un layout de 2 columnes amb línia divisòria central.</p></li>
+                <li><p>Inserir mínim 2 imatges i configurar l'ajust del text al voltant.</p></li>
+                <li><p>Usar color de fons del paràgraf per crear caixes de destacat visuals.</p></li>
+                <li><p>Aplicar una línia horitzontal com a separador de seccions.</p></li>
+              </ul>
+            </div>
+            <div>
+              <h4>✅ Elements obligatoris</h4>
+              <div class="ex ex-docs">
+                <div class="ex-lbl">Contingut del díptic</div>
+                <p>
+                  <strong>Columna esquerra:</strong><br>
+                  • Títol gran i cridaner (centrat, color fosc o imatge de fons)<br>
+                  • Subtítol descriptiu<br>
+                  • Text introductori (2-3 paràgrafs)<br>
+                  • Imatge relacionada amb el tema<br><br>
+                  <strong>Columna dreta:</strong><br>
+                  • "Sabies que...?" (caixa destacada amb fons de color)<br>
+                  • Llista de 5 punts clau<br>
+                  • Una altra imatge<br>
+                  • Dades de contacte o web fictícia
+                </p>
+              </div>
+              <div class="callout cl-amber" style="margin-top:1rem; padding:.85rem 1rem">
+                <span class="callout-icon">⭐</span>
+                <div><strong>Extra:</strong> Afegeix una capçalera amb el logotip fictici de la teva organització i un peu de pàgina amb el web i el telèfon.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- P4 -->
+      <div class="practice-card fi">
+        <div class="practice-header p4-bg">
+          <div class="practice-num">P4</div>
+          <div>
+            <h3>Informe tècnic amb índex automàtic</h3>
+            <p>Nivell mitjà-alt · Estils, taula de continguts, capçaleres · ~90 min</p>
+          </div>
+        </div>
+        <div class="practice-body">
+          <div class="grid g2">
+            <div>
+              <h4>📋 Descripció</h4>
+              <p style="color:var(--muted); font-size:.92rem; margin-bottom:1rem">Redacta un informe tècnic de 4-5 pàgines sobre la <em>"Instal·lació i configuració d'una xarxa domèstica"</em> (o qualsevol altre tema tècnic del cicle). L'informe ha de tenir estructura professional, índex automàtic, capçalera i peu de pàgina, i notes al peu.</p>
+              <h4>🎯 Objectius d'aprenentatge</h4>
+              <ul class="steps" style="font-size:.88rem">
+                <li><p>Usar correctament els Estils Títol 1, Títol 2 i Títol 3 per estructurar el document.</p></li>
+                <li><p>Inserir una Taula de Continguts automàtica a l'inici.</p></li>
+                <li><p>Crear capçalera diferent per a la primera pàgina (portada sense capçalera).</p></li>
+                <li><p>Afegir numeració de pàgines al peu ("Pàgina X de Y"), omitint la portada.</p></li>
+                <li><p>Inserir mínim 2 notes al peu per a referències tècniques o aclariments.</p></li>
+                <li><p>Actualitzar la taula de continguts al final per reflectir tots els títols.</p></li>
+              </ul>
+            </div>
+            <div>
+              <h4>✅ Estructura de l'informe</h4>
+              <div class="ex ex-docs">
+                <div class="ex-lbl">Seccions obligatòries (Títol 1)</div>
+                <p>
+                  <strong>Pàgina 1 — Portada:</strong> títol, autor, data, empresa fictícia<br>
+                  <strong>Pàgina 2 — Taula de continguts</strong> (automàtica)<br><br>
+                  <strong>1. Introducció</strong> (Títol 1)<br>
+                  &nbsp;&nbsp;1.1 Objectius del projecte (Títol 2)<br>
+                  &nbsp;&nbsp;1.2 Abast (Títol 2)<br>
+                  <strong>2. Materials necessaris</strong> (Títol 1)<br>
+                  &nbsp;&nbsp;Taula de materials amb preu<br>
+                  <strong>3. Procediment d'instal·lació</strong> (Títol 1)<br>
+                  &nbsp;&nbsp;3.1 Topologia (Títol 2)<br>
+                  &nbsp;&nbsp;3.2 Cablejat (Títol 2)<br>
+                  &nbsp;&nbsp;3.3 Configuració del router (Títol 2)<br>
+                  <strong>4. Conclusions</strong> (Títol 1)
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- P5 -->
+      <div class="practice-card fi">
+        <div class="practice-header p5-bg">
+          <div class="practice-num">P5</div>
+          <div>
+            <h3>Creació d'una plantilla corporativa</h3>
+            <p>Nivell alt · Plantilles, estils personalitzats, col·laboració · ~90 min</p>
+          </div>
+        </div>
+        <div class="practice-body">
+          <div class="grid g2">
+            <div>
+              <h4>📋 Descripció</h4>
+              <p style="color:var(--muted); font-size:.92rem; margin-bottom:1rem">Crea la <strong>plantilla corporativa</strong> per a una empresa fictícia del sector TIC (inventa el nom, el logotip en forma de text o emoji, els colors corporatius, etc.). La plantilla servirà com a base per a tots els documents que generi l'empresa.</p>
+              <h4>🎯 Objectius d'aprenentatge</h4>
+              <ul class="steps" style="font-size:.88rem">
+                <li><p>Definir i personalitzar els estils de paràgraf (Títol 1, 2, 3 i Text normal) amb els colors i fonts corporatius de l'empresa.</p></li>
+                <li><p>Crear una capçalera professional amb logotip (text o forma) i dades de l'empresa.</p></li>
+                <li><p>Dissenyar un peu de pàgina amb dades legals i número de pàgina.</p></li>
+                <li><p>Crear una portada atractiva amb elements de disseny (caixes de color, logotip, etc.).</p></li>
+                <li><p>Desar la plantilla correctament i demostrar el seu ús creant una còpia i omplint-la.</p></li>
+              </ul>
+            </div>
+            <div>
+              <h4>✅ Elements de la plantilla</h4>
+              <div class="ex ex-docs">
+                <div class="ex-lbl">Requisits de la plantilla</div>
+                <p>
+                  🎨 <strong>Identitat visual:</strong><br>
+                  • Nom de l'empresa fictícia + "logotip" en text<br>
+                  • 2 colors corporatius definits<br>
+                  • Font corporativa (una per a títols, una per al cos)<br><br>
+                  📐 <strong>Estructura:</strong><br>
+                  • Portada (pàgina 1) amb disseny atractiu<br>
+                  • Capçalera a partir de la pàgina 2<br>
+                  • Peu de pàgina sempre<br>
+                  • Espais per a: títol del document, cos, taula, imatge<br><br>
+                  📋 <strong>Demostració:</strong><br>
+                  • Fes una còpia de la plantilla<br>
+                  • Omple-la amb contingut real (l'informe de la P4)
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- P6 -->
+      <div class="practice-card fi">
+        <div class="practice-header p6-bg">
+          <div class="practice-num">P6</div>
+          <div>
+            <h3>Document final: Memòria de projecte col·laboratiu</h3>
+            <p>Nivell avançat · Document complet + col·laboració + tots els elements · ~3-4 hores (treball en grup)</p>
+          </div>
+        </div>
+        <div class="practice-body">
+          <div class="grid g2">
+            <div>
+              <h4>📋 Descripció</h4>
+              <p style="color:var(--muted); font-size:.92rem; margin-bottom:1rem">En grups de 3-4 persones, redacteu la <strong>memòria completa d'un projecte d'instal·lació de xarxa</strong> per a un client fictici. Cada membre del grup escriu una secció diferent en el mateix document simultàniament, usant comentaris i suggeriments per revisar-se mútuament.</p>
+              <h4>🎯 Objectius d'aprenentatge (tots els elements)</h4>
+              <ul class="steps" style="font-size:.88rem">
+                <li><p><strong>Col·laboració en temps real:</strong> tots els membres editen simultàniament des de comptes Google diferents.</p></li>
+                <li><p><strong>Control de canvis:</strong> cada membre revisa la secció d'un company en mode Suggeriment i el company accepta o rebutja els canvis.</p></li>
+                <li><p><strong>Comentaris:</strong> mínim 3 comentaris per membre, incloses mencions a companys (@).</p></li>
+                <li><p><strong>Estructura completa:</strong> portada, TOC, tots els nivells de Títols, taules, imatges, columnes, notes al peu, capçalera, peu, número de pàgina.</p></li>
+                <li><p><strong>Exportació final:</strong> PDF per al client i .docx per a l'arxiu intern.</p></li>
+                <li><p><strong>Historial de versions:</strong> donar nom a les tres versions clau del document.</p></li>
+              </ul>
+            </div>
+            <div>
+              <h4>✅ Estructura de la memòria (mín. 8 pàgines)</h4>
+              <div class="ex ex-docs">
+                <div class="ex-lbl">Seccions (cada membre n'escriu 2)</div>
+                <p>
+                  📄 <strong>Portada</strong> — Plantilla corporativa de la P5<br>
+                  📑 <strong>Taula de continguts</strong> — Automàtica<br>
+                  1. <strong>Resum executiu</strong> — 1 pàgina, text justificat, foto del local<br>
+                  2. <strong>Anàlisi de l'entorn</strong> — Plànol (imatge), taula de necessitats<br>
+                  3. <strong>Disseny de la xarxa</strong> — Diagrama (captura), taula d'equips<br>
+                  4. <strong>Pressupost detallat</strong> — Taula gran amb preus, totals, IVA<br>
+                  5. <strong>Planificació</strong> — Llista de tasques, responsable, termini<br>
+                  6. <strong>Riscos i solucions</strong> — Taula de riscos (2 columnes)<br>
+                  7. <strong>Conclusions</strong> — Text lliure, 1 columna<br>
+                  8. <strong>Annexos</strong> — Notes al peu, marcadors, referències
+                </p>
+              </div>
+              <div class="callout cl-blue" style="margin-top:1rem; padding:.85rem 1rem">
+                <span class="callout-icon">🏆</span>
+                <div>
+                  <strong>Lliurament final:</strong>
+                  <p>Compartiu el document amb el professor (Editor). El professor avaluarà: qualitat del contingut, ús correcte de tots els elements de Docs, evidències de col·laboració (comentaris, suggeriments, historial de versions).</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- fi pràctiques -->
+  </div>
+</section>
+
+<!-- ══════════════════ PREGUNTES TEÒRIQUES ══════════════════ -->
+<section id="preguntes" style="background:#fffbf0; padding:6rem 2rem;">
+  <div class="container">
+    <div class="ra-banner ra-preguntes fi">
+      <div class="ra-num">?</div>
+      <div>
+        <h2>10 Preguntes teòriques</h2>
+        <p>Preguntes de comprensió sobre Google Docs i les opcions avançades dels processadors de textos.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-docs fi">Format i estils</div>
+    <h2 class="fi">Preguntes sobre format i estructura</h2>
+    <div class="grid fi" style="gap:.9rem; margin-bottom:3rem">
+
+      <div class="q-card">
+        <div class="q-num">1</div>
+        <div class="q-body">
+          <h4>Quina és la diferència entre aplicar format manual (negreta, mida, color) directament a un títol i usar l'Estil "Títol 1" de Google Docs?</h4>
+          <p>Explica com afecta cadascun dels dos mètodes a la generació de la Taula de continguts automàtica i a la facilitat per canviar el format de tots els títols alhora en un document de 30 pàgines.</p>
+          <span class="q-tag qt-docs">Estils</span>
+          <span class="q-tag qt-form">Format</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">2</div>
+        <div class="q-body">
+          <h4>Descriu la diferència entre l'interlineat i l'espaiat anterior/posterior de paràgraf. Per quin motiu no és recomanable usar la tecla Intro dues vegades per separar paràgrafs?</h4>
+          <p>Quins problemes concrets pot causar l'ús d'Intros múltiples quan s'exporta el document a Microsoft Word o es canvia la mida de la font del document sencer?</p>
+          <span class="q-tag qt-form">Format</span>
+          <span class="q-tag qt-docs">Paràgraf</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">3</div>
+        <div class="q-body">
+          <h4>Explica com funciona la funció "Copiar format" (corró de pintura) a Google Docs. En quins casos és especialment útil? Posa un exemple concret d'ús en un document tècnic.</h4>
+          <p>Hi ha alguna diferència entre usar Ctrl+Maj+C / Ctrl+Maj+V per copiar format respecte al corró de pintura? En quina situació usaries cadascun?</p>
+          <span class="q-tag qt-form">Format</span>
+          <span class="q-tag qt-docs">Productivitat</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">4</div>
+        <div class="q-body">
+          <h4>Un document té una Taula de continguts inserida. Després d'afegir tres noves seccions amb Títol 2, la taula no les mostra. Explica per quin motiu i com s'ha d'actualitzar.</h4>
+          <p>Quin és el comportament de la Taula de continguts quan s'exporta el document a PDF? Els enllaços interns continuen funcionant al PDF?</p>
+          <span class="q-tag qt-docs">TOC</span>
+          <span class="q-tag qt-form">Estructura</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-tag tag-green fi">Disseny i elements</div>
+    <h2 class="fi">Preguntes sobre disseny i elements del document</h2>
+    <div class="grid fi" style="gap:.9rem; margin-bottom:3rem">
+
+      <div class="q-card">
+        <div class="q-num">5</div>
+        <div class="q-body">
+          <h4>Quines són les diferències entre inserir una imatge "en línia", amb "ajust del text" i "trencant el text"? Posa un exemple de document on cadascun dels tres mètodes seria el més adequat.</h4>
+          <p>Si inserim una imatge en un document i posteriorment el compartim com a PDF, la imatge s'incrusta dins del PDF o continua sent un enllaç extern? Quin impacte té això en la portabilitat del document?</p>
+          <span class="q-tag qt-diseny">Imatges</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">6</div>
+        <div class="q-body">
+          <h4>Explica la diferència entre una nota al peu i un marcador a Google Docs. En quines situacions és preferible usar una nota al peu en lloc d'un apartat d'annexos al final del document?</h4>
+          <p>Com crearies un hipervincle intern (que portés de la Taula de continguts a una secció específica del document) sense usar la Taula de continguts automàtica? Detalla els passos amb Marcadors.</p>
+          <span class="q-tag qt-docs">Referencias</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">7</div>
+        <div class="q-body">
+          <h4>En quins casos és recomanable usar columnes en un document? Descriu el procés per aplicar un format de 2 columnes únicament a una secció del document (no a tot el document).</h4>
+          <p>Quina diferència hi ha entre les columnes de Google Docs i una taula d'una sola fila amb dues columnes sense vores? Quins avantatges i inconvenients té cadascun per a la maquetació d'un document?</p>
+          <span class="q-tag qt-diseny">Disseny</span>
+          <span class="q-tag qt-form">Columnes</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-tag tag-purp fi" style="color:var(--purple); --before-bg:var(--purple)">Col·laboració i plantilles</div>
+    <h2 class="fi">Preguntes sobre col·laboració i opcions avançades</h2>
+    <div class="grid fi" style="gap:.9rem">
+
+      <div class="q-card">
+        <div class="q-num">8</div>
+        <div class="q-body">
+          <h4>Descriu els tres modes d'edició de Google Docs (Edita, Suggereix, Visualitza) i explica en quina situació professional usaries cadascun. Quin procés segueix un suggeriment des que es fa fins que s'aplica?</h4>
+          <p>En un entorn d'empresa, el director envia un informe a revisar a 3 tècnics. Quin mode d'edició s'hauria de demanar a cada tècnic i per quin motiu? Com veuria el director tots els canvis proposats?</p>
+          <span class="q-tag qt-collab">Col·laboració</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">9</div>
+        <div class="q-body">
+          <h4>Explica el sistema de permisos de Google Docs (Visualitzador, Comentarista, Editor) i raona quin permís donaries a cada persona en aquest escenari: el director de l'empresa, un client extern, un company de feina i un proveïdor.</h4>
+          <p>Si un Editor elimina accidentalment tota una secció important d'un document compartit, com es pot recuperar? Descriu exactament els passos a seguir usant les funcions de Google Docs.</p>
+          <span class="q-tag qt-collab">Permisos</span>
+          <span class="q-tag qt-docs">Historial</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">10</div>
+        <div class="q-body">
+          <h4>Quins avantatges té crear una plantilla corporativa a Google Docs respecte a crear un document nou cada vegada? Descriu el procés per usar correctament una plantilla (assegurant que la plantilla original mai es modifica accidentalment).</h4>
+          <p>Compara les opcions d'exportació de Google Docs (PDF, .docx, .odt, .txt). Per a cada format, indica un cas d'ús professional concret i explica per quin motiu és el format més adequat per a aquell cas.</p>
+          <span class="q-tag qt-avan">Plantilles</span>
+          <span class="q-tag qt-docs">Exportació</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ RESUM FINAL ══════════════════ -->
+<section class="s-cream">
+  <div class="container fi">
+    <div class="section-tag tag-cobalt">Resum del RA2</div>
+    <h2>El que heu après</h2>
+    <p class="lead">Un repàs ràpid dels conceptes clau de l'RA2 i la seva aplicació professional com a tècnics SMX.</p>
+    <div class="grid g3 fi">
+      <div class="card bl-docs">
+        <div class="card-icon" style="background:#eff6ff">✏️</div>
+        <h3>Format i Estils</h3>
+        <p><strong>Negretes / Cursives / Colors:</strong> format de caràcter. <strong>Estils Títol 1-2-3 + Normal:</strong> estructura del document. <strong>Interlineat i espaiat:</strong> llegibilitat. <strong>Copiar format:</strong> coherència ràpida. Dreceres: <em>Ctrl+B, Ctrl+I, Ctrl+Alt+1…</em></p>
+      </div>
+      <div class="card" style="border-left:3px solid var(--ggreen)">
+        <div class="card-icon" style="background:#f0fdf4">📐</div>
+        <h3>Disseny i Maquetació</h3>
+        <p><strong>Taules:</strong> crear, combinar cel·les, format de vores i fons. <strong>Imatges:</strong> 5 fonts, 3 modes d'ajust de text. <strong>Columnes:</strong> per a díptics i revistes. <strong>Capçalera/Peu:</strong> es repeteixen a totes les pàgines. <strong>Configuració de pàgina:</strong> mides, marges, orientació.</p>
+      </div>
+      <div class="card" style="border-left:3px solid var(--purple)">
+        <div class="card-icon" style="background:#f5f3ff">🤝</div>
+        <h3>Estructura i Col·laboració</h3>
+        <p><strong>TOC automàtica:</strong> basada en Títols, s'actualitza amb un clic. <strong>Notes al peu + marcadors:</strong> per a referències. <strong>Comentaris:</strong> amb mencions. <strong>Control de canvis:</strong> mode Suggeriment. <strong>Historial de versions:</strong> protecció contra errors. <strong>Plantilles:</strong> "Fes una còpia".</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p><strong>RA2 — Documents i Plantilles amb Google Docs · SMX · Ofimàtica</strong></p>
+  <p style="margin-top:.4rem">Format · Estils · Taules · Imatges · Capçaleres · TOC · Col·laboració · Plantilles</p>
+  <p style="margin-top:.4rem">Departament d'Informàtica · Sistemes Microinformàtics i Xarxes</p>
+</footer>
+
+<script>
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+  }, { threshold: 0.07, rootMargin: '0px 0px -30px 0px' });
+  document.querySelectorAll('.fi').forEach(el => io.observe(el));
+
+  // Fix section-tag tag-purp before color
+  document.querySelectorAll('.tag-purp').forEach(el => {
+    el.style.color = 'var(--purple)';
+    const before = document.createElement('style');
+    before.textContent = '.tag-purp::before { background: var(--purple) !important; }';
+    document.head.appendChild(before);
+  });
+</script>
+</body>
+</html>

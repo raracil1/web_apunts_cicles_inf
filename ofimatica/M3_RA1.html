@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RA1 — Instal·lació i Actualització d'Aplicacions Ofimàtiques · SMX</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink:    #0d0f1a;
+    --paper:  #f4f2ed;
+    --cream:  #eceae3;
+    --navy:   #1a1f4e;
+    --cobalt: #2d3bb5;
+    --sky:    #4a6cf7;
+    --accent: #0ea472;
+    --accentd:#077a52;
+    --orange: #e07b20;
+    --purple: #7c3aed;
+    --muted:  #6b6f85;
+    --border: #d6d2c9;
+    --card:   #ffffff;
+    --radius: 16px;
+    --radius-sm: 8px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    font-size: 16px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(244,242,237,0.94);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 62px;
+  }
+  .nav-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1rem; color: var(--navy); letter-spacing: -0.02em; }
+  .nav-logo span { color: var(--accent); }
+  .nav-pills { display: flex; gap: .5rem; list-style: none; flex-wrap: wrap; }
+  .nav-pills a {
+    text-decoration: none; font-size: 0.78rem; font-weight: 600;
+    padding: .3rem .85rem; border-radius: 100px;
+    color: var(--muted); transition: all .2s;
+    border: 1px solid transparent;
+  }
+  .nav-pills a:hover { color: var(--cobalt); border-color: var(--cobalt); background: rgba(74,108,247,0.07); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: grid; place-items: center;
+    background: var(--navy);
+    color: white;
+    position: relative;
+    overflow: hidden;
+    padding: 8rem 2rem 4rem;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 80% 30%, rgba(14,164,114,0.28) 0%, transparent 65%),
+      radial-gradient(ellipse 50% 40% at 20% 70%, rgba(124,58,237,0.2) 0%, transparent 65%),
+      radial-gradient(ellipse 40% 35% at 50% 90%, rgba(74,108,247,0.18) 0%, transparent 60%);
+  }
+  .hero-dots {
+    position: absolute; inset: 0; opacity: 0.07;
+    background-image: radial-gradient(rgba(255,255,255,.6) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+  .hero-content { position: relative; z-index: 1; text-align: center; max-width: 820px; }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: .5rem;
+    background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.8); font-size: 0.78rem; font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    padding: .35rem 1rem; border-radius: 100px; margin-bottom: 1.5rem;
+  }
+  .hero h1 {
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: clamp(2.4rem, 6vw, 4.6rem); line-height: 1.06;
+    letter-spacing: -0.03em; margin-bottom: 1.5rem;
+  }
+  .hero h1 .hi { color: #0ea472; }
+  .hero p { font-size: 1.1rem; color: rgba(255,255,255,0.6); max-width: 560px; margin: 0 auto 2.5rem; }
+  .hero-chips { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+  .hero-chip {
+    display: flex; align-items: center; gap: .6rem;
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+    padding: .55rem 1.1rem; border-radius: 12px; font-size: 0.88rem; font-weight: 500;
+    color: white; transition: all .25s;
+  }
+  .hero-chip:hover { background: rgba(255,255,255,0.15); transform: translateY(-2px); }
+  .scroll-hint {
+    position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: .4rem;
+    color: rgba(255,255,255,0.3); font-size: 0.72rem; letter-spacing: 0.1em;
+  }
+  .scroll-hint::after {
+    content: ''; display: block; width: 1px; height: 36px;
+    background: linear-gradient(to bottom, rgba(255,255,255,.35), transparent);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:.3} 50%{opacity:1} }
+
+  /* LAYOUT */
+  section { padding: 6rem 2rem; }
+  .container { max-width: 1080px; margin: 0 auto; }
+  .section-tag {
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em;
+    text-transform: uppercase; display: flex; align-items: center; gap: .5rem;
+    margin-bottom: .9rem;
+  }
+  .section-tag::before { content: ''; display: block; width: 20px; height: 2px; }
+  .tag-green  { color: var(--accent);  } .tag-green::before  { background: var(--accent); }
+  .tag-orange { color: var(--orange);  } .tag-orange::before { background: var(--orange); }
+  .tag-cobalt { color: var(--cobalt);  } .tag-cobalt::before { background: var(--cobalt); }
+  .tag-purple { color: var(--purple);  } .tag-purple::before { background: var(--purple); }
+  .tag-preguntes { color: #b45309; } .tag-preguntes::before { background: #b45309; }
+
+  h2 {
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: clamp(1.7rem, 3.5vw, 2.6rem); line-height: 1.1;
+    letter-spacing: -0.025em; color: var(--navy); margin-bottom: .9rem;
+  }
+  h3 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.15rem; color: var(--navy); margin-bottom: .65rem; }
+  h4 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.95rem; color: var(--navy); margin-bottom: .4rem; }
+  .lead { font-size: 1.05rem; color: var(--muted); max-width: 680px; margin-bottom: 3rem; line-height: 1.7; }
+
+  /* CARDS */
+  .grid { display: grid; gap: 1.25rem; }
+  .g2 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+  .g3 { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+  .g4 { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+  .card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 1.75rem;
+    transition: transform .2s, box-shadow .2s;
+  }
+  .card:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(26,31,78,0.1); }
+  .card p { color: var(--muted); font-size: 0.92rem; }
+  .card-icon {
+    width: 44px; height: 44px; border-radius: 10px;
+    display: grid; place-items: center; font-size: 1.3rem; margin-bottom: .9rem;
+  }
+  .bl         { border-left: 3px solid var(--cobalt); }
+  .bl-green   { border-left: 3px solid var(--accent); }
+  .bl-orange  { border-left: 3px solid var(--orange); }
+  .bl-purple  { border-left: 3px solid var(--purple); }
+
+  /* CALLOUT */
+  .callout {
+    border-radius: var(--radius); padding: 2rem 2.25rem; margin: 1.5rem 0;
+    display: flex; gap: 1rem; align-items: flex-start;
+  }
+  .callout-icon { font-size: 1.4rem; flex-shrink: 0; margin-top: .1rem; }
+  .callout p, .callout li { font-size: 0.92rem; }
+  .callout ul { padding-left: 1.2rem; }
+  .callout li { margin-bottom: .25rem; }
+  .cl-blue   { background: rgba(74,108,247,0.08); border: 1px solid rgba(74,108,247,0.2); }
+  .cl-green  { background: rgba(14,164,114,0.07); border: 1px solid rgba(14,164,114,0.2); }
+  .cl-amber  { background: rgba(251,188,4,0.1);   border: 1px solid rgba(251,188,4,0.3); }
+  .cl-red    { background: rgba(234,67,53,0.07);  border: 1px solid rgba(234,67,53,0.2); }
+  .cl-purple { background: rgba(124,58,237,0.07); border: 1px solid rgba(124,58,237,0.2); }
+
+  /* EXAMPLE BOX */
+  .ex { background: var(--cream); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1rem 1.25rem; margin: .65rem 0; }
+  .ex .ex-lbl { font-size: 0.68rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; margin-bottom: .3rem; color: var(--accent); }
+  .ex p { font-size: 0.87rem; color: var(--ink); }
+  .ex-orange .ex-lbl { color: var(--orange); }
+  .ex-purple .ex-lbl { color: var(--purple); }
+
+  /* CODE */
+  .code {
+    background: #13172e; border-radius: var(--radius-sm);
+    padding: 1.1rem 1.4rem; font-family: 'Courier New', monospace;
+    font-size: 0.8rem; color: #a8c4ff; overflow-x: auto; line-height: 1.65;
+    margin: .65rem 0;
+  }
+  .code .cm { color: #4a6070; }
+  .code .kw { color: #fbbc04; }
+  .code .st { color: #57e3b0; }
+  .code .er { color: #ff7b7b; }
+  .code .gr { color: #7ec96b; }
+
+  /* SECTIONS */
+  .s-dark { background: var(--navy); color: white; }
+  .s-dark h2, .s-dark h3, .s-dark h4 { color: white; }
+  .s-dark .lead { color: rgba(255,255,255,0.58); }
+  .s-dark .card { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1); }
+  .s-dark .card h3, .s-dark .card h4 { color: white; }
+  .s-dark .card p { color: rgba(255,255,255,0.6); }
+  .s-cream { background: var(--cream); }
+  .s-green { background: #f0fdf8; }
+  .s-orange { background: #fff8f2; }
+
+  /* PILLS */
+  .pills { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: .6rem; }
+  .pill {
+    background: var(--cream); border: 1px solid var(--border);
+    border-radius: 100px; padding: .2rem .7rem;
+    font-size: 0.75rem; font-weight: 600; color: var(--muted);
+  }
+
+  /* BADGE */
+  .badge {
+    display: inline-block; padding: .15rem .55rem; border-radius: 100px;
+    font-size: 0.72rem; font-weight: 700; font-family: 'Syne', sans-serif;
+  }
+  .b-green  { background: rgba(14,164,114,0.12); color: var(--accentd); }
+  .b-orange { background: rgba(224,123,32,0.12); color: #9a4e00; }
+  .b-blue   { background: rgba(74,108,247,0.12); color: var(--cobalt); }
+  .b-purple { background: rgba(124,58,237,0.12); color: var(--purple); }
+
+  /* TABLE */
+  .ptable { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+  .ptable th, .ptable td { padding: .85rem 1rem; text-align: left; border-bottom: 1px solid var(--border); }
+  .ptable th { background: var(--navy); color: white; font-family: 'Syne', sans-serif; font-weight: 700; }
+  .ptable th:first-child { border-radius: 8px 0 0 0; }
+  .ptable th:last-child  { border-radius: 0 8px 0 0; }
+  .ptable tr:hover td { background: var(--cream); }
+
+  /* RA BANNER */
+  .ra-banner {
+    border-radius: var(--radius); padding: 1.5rem 2rem;
+    display: flex; align-items: center; gap: 1.25rem; margin-bottom: 3rem;
+    color: white;
+  }
+  .ra-num { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 2.4rem; opacity: .25; flex-shrink: 0; line-height: 1; }
+  .ra-banner h2 { color: white; font-size: 1.35rem; margin-bottom: .2rem; }
+  .ra-banner p  { color: rgba(255,255,255,0.7); font-size: 0.88rem; }
+  .ra-green   { background: linear-gradient(135deg, #077a52, var(--accent)); }
+  .ra-orange  { background: linear-gradient(135deg, #9a4e00, var(--orange)); }
+  .ra-practica { background: linear-gradient(135deg, #5b21b6, #7c3aed); }
+  .ra-preguntes { background: linear-gradient(135deg, #92400e, #d97706); }
+
+  /* STEPS */
+  .steps { counter-reset: st; list-style: none; display: flex; flex-direction: column; gap: .85rem; }
+  .steps li {
+    counter-increment: st;
+    display: flex; gap: .9rem; align-items: flex-start;
+    padding: .9rem 1.1rem; background: var(--cream);
+    border-radius: var(--radius-sm); font-size: 0.9rem;
+  }
+  .steps li::before {
+    content: counter(st);
+    flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%;
+    background: var(--accent); color: white;
+    display: grid; place-items: center;
+    font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.8rem;
+  }
+  .steps li p { color: var(--ink); margin: 0; }
+
+  /* PRACTICE CARD */
+  .practice-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius); overflow: hidden;
+  }
+  .practice-header {
+    padding: 1.5rem 2rem;
+    display: flex; align-items: center; gap: 1rem;
+    color: white;
+  }
+  .practice-num {
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: 1.8rem; opacity: .35; line-height: 1;
+  }
+  .practice-header h3 { color: white; font-size: 1.2rem; margin: 0; }
+  .practice-header p  { color: rgba(255,255,255,0.7); font-size: 0.82rem; margin: .2rem 0 0; }
+  .practice-body { padding: 2rem; }
+  .ph-green  { background: linear-gradient(135deg, #077a52, #0ea472); }
+
+  /* QUESTIONS */
+  .q-card {
+    display: flex; gap: 1.1rem; background: var(--card);
+    border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 1.4rem 1.6rem; align-items: flex-start;
+  }
+  .q-num {
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: 1.6rem; color: var(--border); line-height: 1; flex-shrink: 0;
+    padding-top: .1rem;
+  }
+  .q-body h4 { color: var(--navy); margin-bottom: .35rem; line-height: 1.4; }
+  .q-body p  { color: var(--muted); font-size: 0.88rem; }
+  .q-tags { display: flex; gap: .35rem; flex-wrap: wrap; margin-top: .5rem; }
+  .q-tag {
+    font-size: 0.68rem; font-weight: 700; letter-spacing: .06em;
+    text-transform: uppercase; padding: .15rem .6rem; border-radius: 100px;
+  }
+  .qt-inst { background: rgba(14,164,114,0.12); color: var(--accentd); }
+  .qt-act  { background: rgba(74,108,247,0.12); color: var(--cobalt); }
+  .qt-lic  { background: rgba(224,123,32,0.12); color: #9a4e00; }
+  .qt-sec  { background: rgba(234,67,53,0.12); color: #c5221f; }
+  .qt-mix  { background: rgba(124,58,237,0.12); color: var(--purple); }
+
+  /* FLOW DIAGRAM */
+  .flow {
+    display: flex; align-items: stretch; gap: 0;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius); overflow: hidden; margin: 2rem 0; flex-wrap: wrap;
+  }
+  .flow-node {
+    flex: 1; padding: 1.4rem .9rem; text-align: center;
+    font-size: 0.82rem; min-width: 120px;
+  }
+  .flow-node .icon { font-size: 1.8rem; margin-bottom: .4rem; }
+  .flow-node .label { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.82rem; color: var(--navy); }
+  .flow-node .sub { color: var(--muted); font-size: 0.72rem; margin-top: .2rem; }
+  .flow-arrow { display: flex; align-items: center; padding: 0 .25rem; color: var(--muted); font-size: 1.2rem; flex-shrink: 0; }
+  .fn-a { background: rgba(14,164,114,0.06); }
+  .fn-b { background: rgba(74,108,247,0.06); }
+  .fn-c { background: rgba(124,58,237,0.06); }
+  .fn-d { background: rgba(224,123,32,0.06); }
+  .fn-e { background: rgba(234,67,53,0.06); }
+
+  /* CHECKLIST */
+  .checklist { list-style: none; display: flex; flex-direction: column; gap: .5rem; }
+  .checklist li {
+    display: flex; gap: .7rem; align-items: flex-start;
+    padding: .7rem 1rem; border-radius: var(--radius-sm);
+    background: var(--cream); font-size: 0.9rem;
+  }
+  .checklist li::before { content: '□'; font-size: 1rem; color: var(--muted); flex-shrink: 0; }
+  .cl-done::before { content: '✅' !important; }
+
+  /* FI ANIMATION */
+  .fi { opacity: 0; transform: translateY(22px); transition: opacity .55s ease, transform .55s ease; }
+  .fi.in { opacity: 1; transform: translateY(0); }
+
+  /* FOOTER */
+  footer {
+    background: var(--ink); color: rgba(255,255,255,0.5);
+    text-align: center; padding: 3rem 2rem; font-size: 0.85rem;
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">M3 · SMX <span>RA1</span></div>
+  <ul class="nav-pills">
+    <li><a href="#teoria">Teoria</a></li>
+    <li><a href="#tipus">Tipus de llicències</a></li>
+    <li><a href="#eines">Eines</a></li>
+    <li><a href="#practica">Pràctica</a></li>
+    <li><a href="#preguntes">Preguntes</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-dots"></div>
+  <div class="hero-content">
+    <div class="hero-badge">📦 Mòdul 3 · SMX · Ofimàtica</div>
+    <h1>
+      <span class="hi">Instal·lació</span> i<br>Actualització<br>d'Aplicacions
+    </h1>
+    <p>Aprèn a desplegar, configurar i mantenir aplicacions ofimàtiques de forma professional, seguint especificacions tècniques i procediments estandarditzats.</p>
+    <div class="hero-chips">
+      <div class="hero-chip">📋 Especificacions tècniques</div>
+      <div class="hero-chip">🔑 Tipus de llicències</div>
+      <div class="hero-chip">🔄 Actualitzacions i pedaços</div>
+      <div class="hero-chip">🛡️ Seguretat i compatibilitat</div>
+    </div>
+  </div>
+  <div class="scroll-hint">DESPLAÇA</div>
+</section>
+
+<!-- TEORIA: QUÈ ÉS L'OFIMÀTICA -->
+<section id="teoria">
+  <div class="container">
+    <div class="section-tag tag-green fi">Conceptes bàsics</div>
+    <h2 class="fi">Ofimàtica i aplicacions d'oficina</h2>
+    <p class="lead fi">L'ofimàtica agrupa totes les eines informàtiques que donen suport a les tasques administratives i de gestió d'una oficina o empresa. Instal·lar-les correctament és la base del treball d'un tècnic SMX.</p>
+
+    <div class="grid g3 fi">
+      <div class="card bl-green">
+        <div class="card-icon" style="background:#f0fdf8">📝</div>
+        <h3>Processadors de text</h3>
+        <p>Permeten crear, editar i formatar documents de text. Exemples: <strong>Microsoft Word</strong>, <strong>LibreOffice Writer</strong>, <strong>Google Docs</strong>. Formats principals: .docx, .odt, .pdf.</p>
+      </div>
+      <div class="card bl-green">
+        <div class="card-icon" style="background:#f0fdf8">📊</div>
+        <h3>Fulls de càlcul</h3>
+        <p>Eina per a organitzar dades numèriques, fer càlculs i generar gràfics. Exemples: <strong>Microsoft Excel</strong>, <strong>LibreOffice Calc</strong>, <strong>Google Sheets</strong>. Formats: .xlsx, .ods, .csv.</p>
+      </div>
+      <div class="card bl-green">
+        <div class="card-icon" style="background:#f0fdf8">📽️</div>
+        <h3>Presentacions</h3>
+        <p>Creació de diapositives per a exposicions i ponències. Exemples: <strong>Microsoft PowerPoint</strong>, <strong>LibreOffice Impress</strong>, <strong>Google Slides</strong>. Format: .pptx, .odp.</p>
+      </div>
+      <div class="card bl-green">
+        <div class="card-icon" style="background:#f0fdf8">📧</div>
+        <h3>Gestors de correu i agenda</h3>
+        <p>Clients de correu electrònic i organitzadors personals. Exemples: <strong>Microsoft Outlook</strong>, <strong>Mozilla Thunderbird</strong>, <strong>Evolution</strong>. Protocols: IMAP, SMTP, CalDAV.</p>
+      </div>
+      <div class="card bl-green">
+        <div class="card-icon" style="background:#f0fdf8">🗄️</div>
+        <h3>Bases de dades d'escriptori</h3>
+        <p>Per a gestionar informació estructurada. Exemples: <strong>Microsoft Access</strong>, <strong>LibreOffice Base</strong>. Usos: gestió d'inventaris, clients, proveïdors.</p>
+      </div>
+      <div class="card bl-green">
+        <div class="card-icon" style="background:#f0fdf8">☁️</div>
+        <h3>Suite online (SaaS)</h3>
+        <p>Aplicacions que funcionen des del navegador sense instal·lació local. Exemples: <strong>Google Workspace</strong>, <strong>Microsoft 365 Online</strong>, <strong>Zoho Office</strong>. Avantatge: accés des de qualsevol dispositiu.</p>
+      </div>
+    </div>
+
+    <!-- PROCÉS D'INSTAL·LACIÓ -->
+    <div class="section-tag tag-green fi" style="margin-top:4rem">Procés d'instal·lació</div>
+    <h2 class="fi">Fases d'una instal·lació professional</h2>
+    <p class="lead fi">Un tècnic SMX no instal·la programari a l'atzar. Segueix un procés estructurat que garanteix la compatibilitat, la seguretat i el compliment de les llicències.</p>
+
+    <div class="flow fi">
+      <div class="flow-node fn-a">
+        <div class="icon">🔍</div>
+        <div class="label">1. Anàlisi</div>
+        <div class="sub">Requisits del sistema</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node fn-b">
+        <div class="icon">📥</div>
+        <div class="label">2. Obtenció</div>
+        <div class="sub">Font oficial segura</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node fn-c">
+        <div class="icon">✅</div>
+        <div class="label">3. Verificació</div>
+        <div class="sub">Hash i signatura</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node fn-d">
+        <div class="icon">⚙️</div>
+        <div class="label">4. Instal·lació</div>
+        <div class="sub">Configuració inicial</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node fn-e">
+        <div class="icon">🧪</div>
+        <div class="label">5. Validació</div>
+        <div class="sub">Proves funcionals</div>
+      </div>
+    </div>
+
+    <div class="grid g2 fi">
+      <div class="card">
+        <h3>📋 Fase 1: Anàlisi de requisits</h3>
+        <p style="margin-bottom:.75rem">Abans d'instal·lar qualsevol aplicació, el tècnic ha de verificar:</p>
+        <ul style="color:var(--muted);font-size:.92rem;padding-left:1.2rem">
+          <li><strong>Requisits de maquinari:</strong> CPU, RAM, espai en disc, GPU</li>
+          <li><strong>Sistema operatiu compatible:</strong> versió de Windows, macOS o distribució Linux</li>
+          <li><strong>Dependències:</strong> .NET Framework, Visual C++ Redistributable, Java Runtime</li>
+          <li><strong>Compatibilitat amb el programari existent</strong> (conflictes de versions)</li>
+        </ul>
+        <div class="ex" style="margin-top:.75rem">
+          <div class="ex-lbl">Exemple: Microsoft 365 Apps</div>
+          <p>Requereix: Windows 10/11 (64 bits), 4 GB RAM (8 recomanats), 4 GB d'espai lliure, resolució 1280×768. Necessita connexió a Internet per a activar i sincronitzar.</p>
+        </div>
+      </div>
+      <div class="card">
+        <h3>🔐 Fase 3: Verificació d'integritat</h3>
+        <p style="margin-bottom:.75rem">Sempre cal verificar que el fitxer descarregat no ha estat manipulat:</p>
+        <div class="code">
+<span class="cm"># Verificar hash SHA-256 a Windows PowerShell</span><br>
+<span class="kw">Get-FileHash</span> C:\Downloads\LibreOffice_7.6.msi -Algorithm SHA256<br><br>
+<span class="cm"># Comparar amb el hash oficial de la pàgina web</span><br>
+<span class="cm"># Si coincideix → fitxer íntegre ✅</span><br>
+<span class="cm"># Si no coincideix → no instal·lar ❌</span>
+        </div>
+        <div class="callout cl-amber" style="margin-top:.75rem;padding:1rem">
+          <span class="callout-icon">⚠️</span>
+          <p>Descarregar programari de fonts no oficials és el principal vector d'entrada de programari maliciós (malware) a les empreses.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- TIPUS D'INSTAL·LACIÓ -->
+    <div class="section-tag tag-orange fi" style="margin-top:4rem">Mètodes d'instal·lació</div>
+    <h2 class="fi">Tipus d'instal·lació segons l'entorn</h2>
+    <p class="lead fi">En funció de l'entorn (ordinador personal, empresa petita o gran corporació), el mètode d'instal·lació varia significativament.</p>
+
+    <div class="grid g2 fi">
+      <div class="card bl-orange">
+        <div class="card-icon" style="background:#fff8f2">🖱️</div>
+        <h3>Instal·lació assistida (GUI)</h3>
+        <p>L'assistent gràfic guia l'usuari pas a pas. És el mètode més comú per a usuaris individuals. Permet triar la carpeta de destinació, els components a instal·lar i les opcions de configuració bàsiques.</p>
+        <div class="pills">
+          <span class="pill">Senzilla</span>
+          <span class="pill">Lenta per a molts equips</span>
+          <span class="pill">Windows .msi / .exe</span>
+        </div>
+      </div>
+      <div class="card bl-orange">
+        <div class="card-icon" style="background:#fff8f2">⌨️</div>
+        <h3>Instal·lació desatesa (Silent)</h3>
+        <p>S'executa sense intervenció de l'usuari, amb paràmetres predefinits. Ideal per a desplegar en múltiples equips simultàniament. Es fa amb scripts de PowerShell, Batch o gestors de paquets.</p>
+        <div class="code" style="margin-top:.75rem">
+<span class="cm"># Exemple: instal·lació silenciosa de LibreOffice</span><br>
+msiexec /i LibreOffice_7.6.msi <span class="kw">/quiet</span> <span class="kw">/norestart</span><br>
+<span class="cm"># /quiet = sense GUI   /norestart = no reinicia</span>
+        </div>
+      </div>
+      <div class="card bl-orange">
+        <div class="card-icon" style="background:#fff8f2">📦</div>
+        <h3>Gestors de paquets</h3>
+        <p>Eines que automatitzen la descàrrega, instal·lació, actualització i desinstal·lació d'aplicacions des de repositoris centralitzats.</p>
+        <div class="code" style="margin-top:.75rem">
+<span class="cm"># Windows: Winget</span><br>
+<span class="kw">winget install</span> <span class="st">LibreOffice.LibreOffice</span><br>
+<span class="kw">winget upgrade</span> <span class="st">--all</span><br><br>
+<span class="cm"># Linux (Ubuntu/Debian): APT</span><br>
+<span class="kw">sudo apt update</span> && <span class="kw">sudo apt install</span> <span class="st">libreoffice</span>
+        </div>
+      </div>
+      <div class="card bl-orange">
+        <div class="card-icon" style="background:#fff8f2">🌐</div>
+        <h3>Desplegament remot (MDM/GPO)</h3>
+        <p>En entorns empresarials, s'utilitzen eines de gestió centralitzada per desplegar aplicacions a tots els equips del domini sense anar físicament a cada ordinador.</p>
+        <div class="ex ex-orange" style="margin-top:.75rem">
+          <div class="ex-lbl">Eines corporatives</div>
+          <p><strong>Microsoft Intune</strong>, <strong>SCCM/MECM</strong>, <strong>Group Policy (GPO)</strong>, <strong>Ansible</strong> (Linux). Permeten controlar quines versions tenen tots els equips de l'empresa.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LLICÈNCIES -->
+<section id="tipus" class="s-dark">
+  <div class="container">
+    <div class="section-tag tag-green fi" style="color:rgba(14,164,114,.9)">Llicències de programari</div>
+    <h2 class="fi">Tipus de llicències i models de distribució</h2>
+    <p class="lead fi">Entendre les llicències és essencial per a un tècnic SMX. Instal·lar programari sense llicència vàlida és il·legal i pot comportar sancions greus per a l'empresa.</p>
+
+    <div class="grid g2 fi">
+      <div class="card">
+        <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem">
+          <span class="badge b-orange">Propietari</span>
+          <h3 style="margin:0">Programari privatiu / propietari</h3>
+        </div>
+        <p>El codi font no és accessible. L'empresa desenvolupa i ven el dret d'ús. La llicència defineix quantes instal·lacions, per quant de temps i en quines condicions es pot usar.</p>
+        <div class="ex" style="margin-top:.75rem;background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.1)">
+          <div class="ex-lbl" style="color:#fbbc04">Exemples</div>
+          <p style="color:rgba(255,255,255,0.75)"><strong>Microsoft Office</strong> (LTSC o 365), <strong>Adobe Acrobat Pro</strong>, <strong>AutoCAD</strong>, <strong>Antivirus comercials</strong>. Requereixen clau de producte o compte vinculat.</p>
+        </div>
+      </div>
+      <div class="card">
+        <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem">
+          <span class="badge b-green">Lliure</span>
+          <h3 style="margin:0">Programari lliure i de codi obert</h3>
+        </div>
+        <p>El codi font és accessible i modificable. Les llicències lliures (GPL, MIT, Apache, LGPL) permeten usar, estudiar, modificar i redistribuir el programari lliurement.</p>
+        <div class="ex" style="margin-top:.75rem;background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.1)">
+          <div class="ex-lbl" style="color:#0ea472">Exemples</div>
+          <p style="color:rgba(255,255,255,0.75)"><strong>LibreOffice</strong> (llicència MPL 2.0), <strong>Mozilla Thunderbird</strong> (MPL), <strong>VLC</strong> (GPL), <strong>GIMP</strong> (GPL). Gratuïts i sense restriccions de còpies.</p>
+        </div>
+      </div>
+      <div class="card">
+        <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem">
+          <span class="badge b-blue">Freeware</span>
+          <h3 style="margin:0">Freeware / Freemium</h3>
+        </div>
+        <p>Gratuït per a l'ús, però el codi font no és accessible. El Freeware no permet modificar ni redistribuir el programari. El Freemium ofereix una versió bàsica gratuïta i funcionalitats avançades de pagament.</p>
+        <div class="ex" style="margin-top:.75rem;background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.1)">
+          <div class="ex-lbl" style="color:#a8c4ff">Exemples</div>
+          <p style="color:rgba(255,255,255,0.75)"><strong>Adobe Reader</strong> (freeware), <strong>Zoom</strong> (freemium), <strong>Notion</strong> (freemium), <strong>Slack</strong> (freemium). Legals per a ús professional en la versió gratuïta.</p>
+        </div>
+      </div>
+      <div class="card">
+        <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem">
+          <span class="badge b-purple">SaaS</span>
+          <h3 style="margin:0">SaaS — Programari com a servei</h3>
+        </div>
+        <p>El programari no s'instal·la localment: s'accedeix per Internet. Es paga una subscripció mensual o anual per empresa o per usuari. El proveïdor s'encarrega de les actualitzacions i el manteniment.</p>
+        <div class="ex" style="margin-top:.75rem;background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.1)">
+          <div class="ex-lbl" style="color:#d8b4fe">Exemples</div>
+          <p style="color:rgba(255,255,255,0.75)"><strong>Google Workspace</strong> (6–18 €/mes per usuari), <strong>Microsoft 365 Business</strong> (6–22 €/mes per usuari), <strong>Salesforce</strong>. El rol del tècnic SMX és gestionar els comptes i permisos.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout cl-red fi" style="margin-top:2.5rem">
+      <span class="callout-icon">⚖️</span>
+      <div>
+        <h4 style="color:white;margin-bottom:.4rem">Marc legal: Llei de Propietat Intel·lectual</h4>
+        <p style="color:rgba(255,255,255,0.75)">A Espanya, instal·lar programari sense llicència vàlida (pirateria) viola el <strong>Text Refós de la Llei de Propietat Intel·lectual (TRLPI)</strong>. Les sancions van des de multes de fins a 600.000 € fins a penes de presó de fins a 4 anys en casos greus. Com a tècnic SMX, tens la responsabilitat de garantir que tota instal·lació és legalment conforme.</p>
+      </div>
+    </div>
+
+    <!-- TAULA DE LLICÈNCIES -->
+    <h3 class="fi" style="margin-top:3rem">Comparativa de models de llicència</h3>
+    <div style="overflow-x:auto" class="fi">
+      <table class="ptable">
+        <thead>
+          <tr>
+            <th>Model</th>
+            <th>Cost</th>
+            <th>Codi font</th>
+            <th>Còpies</th>
+            <th>Actualitzacions</th>
+            <th>Exemple</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="badge b-orange">Propietari LTSC</span></td><td>Un sol pagament</td><td>❌ Tancat</td><td>Limitades per llicència</td><td>Fixes (sense noves funcions)</td><td>Office 2021 LTSC</td></tr>
+          <tr><td><span class="badge b-orange">Subscripció</span></td><td>Mensual/Anual</td><td>❌ Tancat</td><td>Per usuari/equip</td><td>✅ Contínues</td><td>Microsoft 365</td></tr>
+          <tr><td><span class="badge b-green">GPL</span></td><td>Gratuït</td><td>✅ Obert</td><td>Il·limitades</td><td>✅ Comunitat</td><td>LibreOffice</td></tr>
+          <tr><td><span class="badge b-blue">Freeware</span></td><td>Gratuït</td><td>❌ Tancat</td><td>Normalment il·limitades</td><td>Discrecionals</td><td>Adobe Reader</td></tr>
+          <tr><td><span class="badge b-purple">SaaS</span></td><td>Subscripció</td><td>❌ Tancat</td><td>Per compte/usuari</td><td>✅ Automàtiques</td><td>Google Workspace</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ACTUALITZACIONS -->
+<section id="eines" class="s-green">
+  <div class="container">
+    <div class="section-tag tag-cobalt fi">Actualitzacions i manteniment</div>
+    <h2 class="fi">Actualització i manteniment del programari</h2>
+    <p class="lead fi">Mantenir el programari actualitzat és una tasca fonamental del tècnic SMX. Les actualitzacions no solament afegeixen funcions: corregeixen vulnerabilitats de seguretat crítiques.</p>
+
+    <div class="grid g3 fi">
+      <div class="card bl">
+        <div class="card-icon" style="background:rgba(74,108,247,0.1)">🛡️</div>
+        <h3>Pedaços de seguretat</h3>
+        <p>Corregeixen vulnerabilitats descobertes en el programari. Han d'aplicar-se amb prioritat màxima. Microsoft publica pedaços els dimarts de cada mes (<em>Patch Tuesday</em>). LibreOffice publica actualitzacions de seguretat de forma independent.</p>
+      </div>
+      <div class="card bl">
+        <div class="card-icon" style="background:rgba(74,108,247,0.1)">🔧</div>
+        <h3>Actualitzacions de funcions</h3>
+        <p>Afegeixen noves funcionalitats o milloren el rendiment. No sempre cal aplicar-les immediatament: és recomanable esperar que la comunitat detecti possibles problemes (errors de regressió).</p>
+      </div>
+      <div class="card bl">
+        <div class="card-icon" style="background:rgba(74,108,247,0.1)">🔬</div>
+        <h3>Versions LTS i estables</h3>
+        <p>Les versions <em>Long Term Support</em> (LTS) ofereixen manteniment garantit durant varis anys. Ideals per a entorns empresarials on l'estabilitat és prioritat. LibreOffice té versions "still" (LTS) i "fresh" (novetats).</p>
+      </div>
+    </div>
+
+    <!-- PROCÉS D'ACTUALITZACIÓ -->
+    <h3 class="fi" style="margin-top:3rem">Procediment d'actualització segura</h3>
+    <ul class="steps fi">
+      <li><p><strong>Còpia de seguretat prèvia:</strong> Abans d'actualitzar, fes un punt de restauració del sistema (Windows) o una còpia de seguretat de les dades importants. Si l'actualització falla, podràs revertir els canvis.</p></li>
+      <li><p><strong>Consulta les notes de la versió (Release Notes):</strong> Llegeix el changelog per saber quins errors es corregeixen i quines noves funcions s'incorporen. Verifica si hi ha incompatibilitats conegudes amb el teu sistema.</p></li>
+      <li><p><strong>Prova en un equip pilot:</strong> En entorns corporatius, aplica primer l'actualització en un equip de prova i verifica durant 24-48 hores que tot funciona correctament.</p></li>
+      <li><p><strong>Desplegament gradual:</strong> Actualitza primer els equips menys crítics. Si no hi ha problemes, desplega progressivament a la resta de l'organització.</p></li>
+      <li><p><strong>Verificació post-actualització:</strong> Comprova que l'aplicació s'inicia correctament, que els fitxers existents s'obren sense errors i que les macros i complements (add-ins) segueixen funcionant.</p></li>
+      <li><p><strong>Documentació:</strong> Registra la versió instal·lada, la data i l'equip en el full de control d'inventari de programari de l'empresa.</p></li>
+    </ul>
+
+    <!-- DESINSTAL·LACIÓ -->
+    <div class="section-tag tag-cobalt fi" style="margin-top:4rem">Desinstal·lació</div>
+    <h2 class="fi">Desinstal·lació neta de programari</h2>
+    <p class="lead fi">Desinstal·lar correctament és tan important com instal·lar. Una desinstal·lació incompleta pot deixar restes al registre del sistema i ralentir l'equip.</p>
+
+    <div class="grid g2 fi">
+      <div class="card">
+        <h3>🗑️ Mètodes de desinstal·lació</h3>
+        <ul style="color:var(--muted);font-size:.92rem;padding-left:1.2rem;margin-top:.5rem">
+          <li><strong>Panel de control / Configuració:</strong> Mètode estàndard de Windows. Adequat per a la majoria de casos.</li>
+          <li><strong>Desinstal·lador propi:</strong> Alguns programes inclouen el seu propi uninstaller (ex: <em>unins000.exe</em>).</li>
+          <li><strong>Winget:</strong> <code>winget uninstall LibreOffice.LibreOffice</code></li>
+          <li><strong>Revo Uninstaller / IObit:</strong> Eines de tercers que eliminen residus del registre.</li>
+          <li><strong>APT (Linux):</strong> <code>sudo apt remove --purge libreoffice*</code></li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>🧹 Neteja post-desinstal·lació</h3>
+        <p style="margin-bottom:.65rem">Després de desinstal·lar, cal verificar i netejar:</p>
+        <div class="code">
+<span class="cm"># Carpetes residuals típiques a Windows</span><br>
+C:\Program Files\<span class="st">[Aplicació]</span><br>
+C:\Users\<span class="st">[Usuari]</span>\AppData\Local\<span class="st">[App]</span><br>
+C:\Users\<span class="st">[Usuari]</span>\AppData\Roaming\<span class="st">[App]</span><br><br>
+<span class="cm"># Claus de registre (amb precaució)</span><br>
+<span class="kw">HKEY_LOCAL_MACHINE</span>\SOFTWARE\<span class="st">[Vendor]</span><br>
+<span class="kw">HKEY_CURRENT_USER</span>\SOFTWARE\<span class="st">[Vendor]</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- INVENTARI DE PROGRAMARI -->
+    <div class="section-tag tag-cobalt fi" style="margin-top:4rem">Inventari i gestió</div>
+    <h2 class="fi">Inventari de programari instal·lat</h2>
+    <p class="lead fi">En un entorn professional, el tècnic SMX ha de mantenir un registre actualitzat de tot el programari instal·lat a l'empresa per garantir el compliment de llicències i facilitar el suport.</p>
+
+    <div class="grid g2 fi">
+      <div class="card bl-green">
+        <h3>📋 Llistat de programari per línia de comandes</h3>
+        <div class="code">
+<span class="cm"># Windows PowerShell: llistat complet</span><br>
+<span class="kw">Get-ItemProperty</span> HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | <span class="kw">Select-Object</span> DisplayName, DisplayVersion, Publisher | <span class="kw">Export-Csv</span> inventari.csv<br><br>
+<span class="cm"># O amb Winget</span><br>
+<span class="kw">winget list</span> > inventari.txt<br><br>
+<span class="cm"># Linux: paquets instal·lats</span><br>
+<span class="kw">dpkg --get-selections</span> | <span class="kw">grep -v</span> deinstall > inventari.txt
+        </div>
+      </div>
+      <div class="card bl-green">
+        <h3>🗂️ Camps mínims d'un inventari de programari</h3>
+        <div style="overflow-x:auto;margin-top:.5rem">
+          <table class="ptable" style="font-size:.82rem">
+            <thead><tr><th>Camp</th><th>Exemple</th></tr></thead>
+            <tbody>
+              <tr><td>Nom de l'aplicació</td><td>LibreOffice</td></tr>
+              <tr><td>Versió instal·lada</td><td>7.6.4.1</td></tr>
+              <tr><td>Equip / Host</td><td>PC-ADMIN-01</td></tr>
+              <tr><td>Data d'instal·lació</td><td>2024-09-15</td></tr>
+              <tr><td>Tipus de llicència</td><td>MPL 2.0 (Lliure)</td></tr>
+              <tr><td>Responsable</td><td>Tècnic SMX</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRÀCTICA -->
+<section id="practica" class="s-cream">
+  <div class="container">
+    <div class="section-tag tag-purple fi">Pràctica</div>
+    <h2 class="fi">Pràctica</h2>
+    <p class="lead fi">Una pràctica completa que simula un escenari real de desplegament d'aplicacions ofimàtiques en un entorn empresarial.</p>
+
+    <div class="practice-card fi">
+      <div class="practice-header ph-green">
+        <div class="practice-num">P1</div>
+        <div>
+          <h3>Desplegament i gestió d'un parc de programari ofimàtic empresarial</h3>
+          <p>Durada estimada: 3–4 hores · Nivell: Avançat · Individual o en parella</p>
+        </div>
+      </div>
+      <div class="practice-body">
+
+        <div class="callout cl-blue" style="margin-bottom:2rem">
+          <span class="callout-icon">🏢</span>
+          <div>
+            <h4>Escenari</h4>
+            <p>Ets el nou tècnic SMX de l'empresa <strong>InnovaGest S.L.</strong>, una assessoria fiscal amb 15 empleats. L'empresa usa ordinadors amb Windows 11. El responsable d'IT t'encarrega migrar dels programes ofimàtics actuals (versions antigues sense llicència vàlida) a una solució legal, actualitzada i ben documentada. Disposes d'un pressupost limitat i has de plantejar una proposta amb programari lliure + SaaS.</p>
+          </div>
+        </div>
+
+        <h3 style="margin-bottom:1rem">📁 PART 1 — Anàlisi de l'entorn i proposta de solució</h3>
+        <ul class="steps">
+          <li><p><strong>Inventari inicial:</strong> Usa PowerShell (<code>winget list</code> o el cmdlet <code>Get-ItemProperty</code>) per obtenir el llistat complet del programari instal·lat en el teu equip (o en una màquina virtual). Exporta-ho a un fitxer CSV. Identifica quines aplicacions ofimàtiques estan presents i quina versió tenen.</p></li>
+          <li><p><strong>Anàlisi de llicències:</strong> Per a cada aplicació ofimàtica trobada, classifica-la com: llicència vàlida, llicència caducada, sense llicència (programari il·legal) o programari lliure. Elabora un informe en format taula (pots usar un full de càlcul LibreOffice Calc).</p></li>
+          <li><p><strong>Proposta de migració:</strong> Redacta un document de proposta (LibreOffice Writer) que inclogui: (a) comparativa LibreOffice vs Microsoft 365 (funcionalitats, cost, compatibilitat); (b) recomanació justificada; (c) pla de migració en 3 fases; (d) estimació del temps necessari.</p></li>
+        </ul>
+
+        <h3 style="margin-top:2rem;margin-bottom:1rem">📦 PART 2 — Instal·lació desatesa i verificació</h3>
+        <ul class="steps">
+          <li><p><strong>Descàrrega verificada:</strong> Descarrega l'última versió estable de LibreOffice des de <em>libreoffice.org</em>. Verifica la integritat del fitxer comparant el hash SHA-256 oficial amb el que obté PowerShell. Documenta el resultat amb una captura de pantalla.</p></li>
+          <li><p><strong>Instal·lació silenciosa:</strong> Executa la instal·lació de LibreOffice amb paràmetres silenciosos des de la línia de comandes. Documenta el comandament complet usat. Verifica que la instal·lació s'ha completat correctament comprovant la versió: <code>soffice --version</code>.</p></li>
+          <li><p><strong>Configuració post-instal·lació:</strong> Configura LibreOffice perquè: (a) guardi sempre els documents en format .docx i .xlsx per defecte (compatibilitat amb MS Office); (b) tingui activades les actualitzacions automàtiques; (c) inclogui la signatura corporativa a Writer.</p></li>
+          <li><p><strong>Instal·lació del paquet d'idioma català:</strong> Descarrega i instal·la el paquet d'idioma i corrector ortogràfic en català per a LibreOffice. Verifica que la correcció ortogràfica en català funciona correctament.</p></li>
+        </ul>
+
+        <h3 style="margin-top:2rem;margin-bottom:1rem">🔄 PART 3 — Gestió d'actualitzacions i scripting</h3>
+        <ul class="steps">
+          <li><p><strong>Script d'actualització automatitzada:</strong> Crea un script de PowerShell (<code>actualitza_ofimatica.ps1</code>) que: comprovi si hi ha una versió nova de LibreOffice disponible a Winget; si és el cas, la descarregui i instal·li de forma silenciosa; escrigui un log amb data, versió anterior, versió nova i resultat de la operació. El log s'ha de desar a <code>C:\Logs\ActualizacionesSoftware.txt</code>.</p></li>
+          <li><p><strong>Tasca programada:</strong> Configura el Programador de tasques de Windows perquè executi el script cada dilluns a les 06:00 AM (abans que arribin els empleats). Documenta la configuració amb captures de pantalla.</p></li>
+          <li><p><strong>Prova de regressió:</strong> Després d'una actualització simulada, obre un document .docx complex (amb taules, imatges i estils) i verifica que s'obre correctament. Documenta qualsevol diferència de format o comportament.</p></li>
+        </ul>
+
+        <h3 style="margin-top:2rem;margin-bottom:1rem">📊 PART 4 — Documentació final i presentació</h3>
+        <ul class="steps">
+          <li><p><strong>Memòria tècnica:</strong> Redacta una memòria de 3–5 pàgines en LibreOffice Writer amb: portada corporativa, índex de continguts automàtic, descripció del procés seguit, problemes trobats i solucions aplicades, conclusions. Usa estils de paràgraf (Títol 1, Títol 2, Normal) per generar l'índex automàticament.</p></li>
+          <li><p><strong>Full de control d'inventari final:</strong> Crea un full de càlcul LibreOffice Calc amb l'inventari actualitzat de tot el programari instal·lat. Afegeix format condicional perquè: les llicències lliures surtin en verd; les llicències de subscripció en blau; les versions desactualitzades en taronja; el programari no llicenciat en vermell.</p></li>
+          <li><p><strong>Presentació:</strong> Crea una presentació de 8–10 diapositives a LibreOffice Impress que resumeixi el treball fet per presentar al responsable d'IT. Ha d'incloure: resum executiu, comparativa de costos (gràfic de barres), pla de migració (línia temporal) i conclusions.</p></li>
+        </ul>
+
+        <div class="callout cl-purple fi" style="margin-top:2rem">
+          <span class="callout-icon">📋</span>
+          <div>
+            <h4>Lliurament i criteris d'avaluació</h4>
+            <p>Lliura un fitxer ZIP amb: (1) l'script PowerShell, (2) el log generat, (3) la memòria tècnica en .odt i .pdf, (4) el full de control d'inventari, (5) la presentació .odp. <br><br>Criteris: Funcionalitat de l'script (30%), qualitat de la documentació (30%), correcció del procés d'instal·lació (25%), presentació i claredat (15%).</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PREGUNTES -->
+<section id="preguntes">
+  <div class="container">
+    <div class="ra-banner ra-preguntes fi">
+      <div class="ra-num">?</div>
+      <div>
+        <h2>Preguntes teòriques — RA1</h2>
+        <p>10 preguntes per consolidar els coneixements. Respon-les de forma raonada i amb exemples pràctics del món SMX.</p>
+      </div>
+    </div>
+
+    <div class="grid fi" style="gap:.9rem">
+
+      <div class="q-card">
+        <div class="q-num">1</div>
+        <div class="q-body">
+          <h4>Quins passos ha de seguir un tècnic SMX abans d'instal·lar qualsevol aplicació ofimàtica en un equip d'empresa? Descriu cada fase justificant per quin és necessari realitzar-la.</h4>
+          <p>Reflexiona sobre la importància de verificar els requisits del sistema, la font de descàrrega, la integritat del fitxer i la compatibilitat amb el sistema operatiu i el programari existent.</p>
+          <div class="q-tags"><span class="q-tag qt-inst">Instal·lació</span></div>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">2</div>
+        <div class="q-body">
+          <h4>Explica la diferència entre una instal·lació assistida (GUI) i una instal·lació desatesa (silent install). En quins entorns és més adequat cadascun dels mètodes i per quina raó?</h4>
+          <p>Considera escenaris com una empresa amb 200 equips, un centre educatiu o un autònom. Quines eines (Winget, SCCM, GPO, Ansible) faríeu servir a cada cas?</p>
+          <div class="q-tags"><span class="q-tag qt-inst">Instal·lació</span><span class="q-tag qt-mix">Entorn corporatiu</span></div>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">3</div>
+        <div class="q-body">
+          <h4>Quin és el significat del hash SHA-256 d'un fitxer d'instal·lació? Per quin motiu és important verificar-lo i quines conseqüències pot tenir no fer-ho?</h4>
+          <p>Explica com es calcula i com es comprova un hash SHA-256 a Windows i Linux. Posa un exemple concret d'un atac que s'hauria evitat amb aquesta verificació.</p>
+          <div class="q-tags"><span class="q-tag qt-sec">Seguretat</span><span class="q-tag qt-inst">Instal·lació</span></div>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">4</div>
+        <div class="q-body">
+          <h4>Compara els models de llicència GPL, propietari LTSC i SaaS en termes de cost total de propietat (TCO), flexibilitat, actualitzacions i adequació per a una PIME de 10 empleats.</h4>
+          <p>Quina opció recomanaries i per quina raó? Considera aspectes com el cost inicial, el manteniment anual, la formació dels usuaris i la dependència del proveïdor (vendor lock-in).</p>
+          <div class="q-tags"><span class="q-tag qt-lic">Llicències</span><span class="q-tag qt-mix">PIME</span></div>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">5</div>
+        <div class="q-body">
+          <h4>Quina diferència hi ha entre una actualització de seguretat (pedaç / patch), una actualització de funcions i una versió LTS? En quina ordre de prioritat hauria d'aplicar-les un tècnic SMX i per quina raó?</h4>
+          <p>Per quin motiu Microsoft publica els pedaços de seguretat el segon dimarts de cada mes (<em>Patch Tuesday</em>)? Quins riscos comporta no aplicar un pedaç de seguretat crític durant més de 30 dies?</p>
+          <div class="q-tags"><span class="q-tag qt-act">Actualitzacions</span><span class="q-tag qt-sec">Seguretat</span></div>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">6</div>
+        <div class="q-body">
+          <h4>Explica quin és el procés correcte per desinstal·lar completament una aplicació ofimàtica a Windows. Quines restes pot deixar una desinstal·lació incompleta i com afecten al sistema?</h4>
+          <p>Descriu les ubicacions on el programari pot deixar residus (carpetes AppData, claus de registre, fitxers temporals). Quan és recomanable usar eines de tercers com Revo Uninstaller?</p>
+          <div class="q-tags"><span class="q-tag qt-inst">Desinstal·lació</span></div>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">7</div>
+        <div class="q-body">
+          <h4>Quin paper juga un gestor de paquets (com Winget a Windows o APT a Linux) en la gestió del programari empresarial? Quins avantatges ofereix respecte a la instal·lació manual fitxer per fitxer?</h4>
+          <p>Explica com automatitzaries la instal·lació de 5 aplicacions ofimàtiques en 50 equips Windows usant Winget i un script de PowerShell. Quins problemes podrien sorgir i com els resoldries?</p>
+          <div class="q-tags"><span class="q-tag qt-inst">Automatització</span><span class="q-tag qt-mix">PowerShell</span></div>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">8</div>
+        <div class="q-body">
+          <h4>Un usuari et diu que vol instal·lar una versió "crackeada" de Microsoft Office que ha trobat per Internet perquè "és molt cara". Com li explicaries els riscos tècnics, legals i ètics d'aquesta decisió?</h4>
+          <p>Quines alternatives legals i econòmiques li proposaries? Considera opcions com LibreOffice, Microsoft 365 Personal, la versió gratuïta d'Office en línia o Google Workspace.</p>
+          <div class="q-tags"><span class="q-tag qt-lic">Llicències</span><span class="q-tag qt-sec">Seguretat</span></div>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">9</div>
+        <div class="q-body">
+          <h4>Quin és el propòsit d'un inventari de programari en una empresa? Quina informació ha de contenir com a mínim i com pot generar-se de manera automatitzada?</h4>
+          <p>En una auditoria de llicències, l'empresa és sancionada perquè té 30 instal·lacions d'un programari del qual només ha pagat 20 llicències. Com hauria evitat el tècnic SMX aquesta situació?</p>
+          <div class="q-tags"><span class="q-tag qt-lic">Llicències</span><span class="q-tag qt-act">Gestió</span></div>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">10</div>
+        <div class="q-body">
+          <h4>Compara LibreOffice i Microsoft 365 en termes de compatibilitat de formats, funcionalitats avançades (macros, combinació de correspondència, formularis), rendiment i adequació a un entorn educatiu públic.</h4>
+          <p>Si un institut de secundària has de triar entre les dues opcions per als seus 400 alumnes i 40 professors, quina recomanaries? Justifica la decisió tenint en compte el cost, la privacitat de les dades i la normativa de protecció de dades (GDPR).</p>
+          <div class="q-tags"><span class="q-tag qt-mix">Comparativa</span><span class="q-tag qt-lic">Llicències</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- RESUM FINAL -->
+<section class="s-cream">
+  <div class="container fi">
+    <div class="section-tag tag-green">Resum del RA1</div>
+    <h2>El que heu après</h2>
+    <p class="lead">Un resum dels conceptes clau del RA1 i la seva aplicació professional com a tècnics SMX.</p>
+    <div class="grid g3 fi">
+      <div class="card bl-green">
+        <div class="card-icon" style="background:#f0fdf8">⚙️</div>
+        <h3>Procés d'instal·lació</h3>
+        <p>Anàlisi de requisits → Descàrrega segura → Verificació SHA-256 → Instal·lació (GUI o silent) → Configuració → Validació → Documentació. Cada pas és crític i no ha de saltar-se.</p>
+      </div>
+      <div class="card" style="border-left:3px solid var(--orange)">
+        <div class="card-icon" style="background:#fff8f2">🔑</div>
+        <h3>Llicències</h3>
+        <p>GPL (lliure, il·limitada), Propietari LTSC (pagament únic), Subscripció 365 (mensual/anual), Freeware (gratuït, codi tancat), SaaS (núvol). Conèixer-les evita problemes legals a l'empresa.</p>
+      </div>
+      <div class="card" style="border-left:3px solid var(--cobalt)">
+        <div class="card-icon" style="background:rgba(74,108,247,0.08)">🔄</div>
+        <h3>Actualitzacions</h3>
+        <p>Prioritat màxima als pedaços de seguretat. Prova pilot abans de desplegar a tota l'empresa. Scripts PowerShell + Tasques programades per automatitzar. Inventari actualitzat sempre.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p><strong>RA1 — Instal·lació i Actualització d'Aplicacions Ofimàtiques · SMX</strong></p>
+  <p style="margin-top:.4rem">LibreOffice · Microsoft 365 · Winget · PowerShell · Llicències GPL · LTSC · SaaS</p>
+  <p style="margin-top:.4rem">Departament d'Informàtica · Sistemes Microinformàtics i Xarxes</p>
+</footer>
+
+<script>
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+  }, { threshold: 0.07, rootMargin: '0px 0px -30px 0px' });
+  document.querySelectorAll('.fi').forEach(el => io.observe(el));
+</script>
+</body>
+</html>
