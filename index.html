@@ -1,65 +1,628 @@
-<p> </p>
-<p>Recursos Cicles Formatius</p>
-<!-- ── HERO ───────────────────────────────────────────── --><header>
-<div class="hero-left">
-<div class="tag">Cicles Formatius</div>
-<h1>Recursos <em>educatius</em> en línia</h1>
-<p class="hero-sub">Materials de teoria, pràctiques i recursos per als alumnes dels cicles formatius.</p>
-</div>
-<div class="hero-right">
-<div class="hero-prof"><span class="label">Institut</span> <span class="name">Esteve Terradas i Illa</span></div>
-<div class="year-badge">2026 – 2027</div>
-<button class="scroll-btn"> Veure contingut <span class="arrow">↓</span> </button></div>
-</header><!-- ── CONTENT ────────────────────────────────────────── -->
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recursos Cicles Formatius</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --ink:      #1a2332;
+      --paper:    #f0f5fb;
+      --card-bg:  #ffffff;
+      --cream:    #e4edf8;
+      --blue:     #2563eb;
+      --blue-lt:  #3b82f6;
+      --blue-pale:#dbeafe;
+      --sky:      #e0f2fe;
+      --accent:   #0ea5e9;
+      --mist:     #64748b;
+      --white:    #ffffff;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--paper);
+      color: var(--ink);
+      overflow-x: hidden;
+    }
+
+    /* ── SCROLLBAR ───────────────────────────────────── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--paper); }
+    ::-webkit-scrollbar-thumb { background: var(--blue-pale); border-radius: 3px; }
+
+    /* ── NOISE TEXTURE OVERLAY ───────────────────────── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 999;
+      opacity: 0.4;
+    }
+
+    /* ── HERO ────────────────────────────────────────── */
+    header {
+      background: linear-gradient(135deg, #1d4ed8 0%, #0ea5e9 60%, #38bdf8 100%);
+      padding: 48px 80px 52px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 40px;
+    }
+
+    /* decorative circles */
+    header::before,
+    header::after {
+      content: '';
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    header::before {
+      width: 420px; height: 420px;
+      background: rgba(255,255,255,0.06);
+      top: -160px; right: -80px;
+    }
+    header::after {
+      width: 200px; height: 200px;
+      background: rgba(255,255,255,0.05);
+      bottom: -60px; left: 30%;
+    }
+
+    .hero-left {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 1;
+    }
+
+    .tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.65);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 4px;
+    }
+    .tag::before {
+      content: '';
+      display: inline-block;
+      width: 22px; height: 1px;
+      background: rgba(255,255,255,0.5);
+    }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.9rem, 3.5vw, 2.8rem);
+      line-height: 1.1;
+      color: var(--white);
+      font-weight: 900;
+    }
+
+    h1 em {
+      font-style: italic;
+      color: rgba(255,255,255,0.75);
+    }
+
+    .hero-sub {
+      font-size: 0.92rem;
+      color: rgba(255,255,255,0.7);
+      font-weight: 300;
+      line-height: 1.5;
+      max-width: 360px;
+    }
+
+    .hero-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 14px;
+      z-index: 1;
+      text-align: right;
+    }
+
+    .hero-prof {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .hero-prof .label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.45);
+    }
+
+    .hero-prof .name {
+      font-size: 0.92rem;
+      font-weight: 500;
+      color: rgba(255,255,255,0.9);
+    }
+
+    .scroll-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      border: 1px solid rgba(255,255,255,0.35);
+      background: rgba(255,255,255,0.12);
+      color: white;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      border-radius: 40px;
+      padding: 9px 18px;
+      transition: background 0.25s, border-color 0.25s;
+      backdrop-filter: blur(4px);
+      margin-top: 6px;
+    }
+
+    .scroll-btn:hover {
+      background: rgba(255,255,255,0.22);
+      border-color: rgba(255,255,255,0.6);
+    }
+
+    .scroll-btn .arrow {
+      font-size: 0.85rem;
+    }
+
+    .year-badge {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.18em;
+      color: rgba(255,255,255,0.35);
+      text-transform: uppercase;
+    }
+
+    /* ── SECTION INTRO ───────────────────────────────── */
+    .section-intro {
+      padding: 60px 80px 30px;
+      display: flex;
+      align-items: baseline;
+      gap: 20px;
+    }
+
+    .section-intro h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 3vw, 2.6rem);
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .section-intro .module-tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--blue);
+      padding: 4px 12px;
+      border: 1px solid var(--blue-pale);
+      border-radius: 2px;
+      background: var(--blue-pale);
+    }
+
+    /* ── CARDS GRID ──────────────────────────────────── */
+    .cards-grid {
+      padding: 40px 80px 100px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 24px;
+    }
+
+    .card {
+      background: var(--white);
+      border-radius: 4px;
+      overflow: hidden;
+      cursor: pointer;
+      position: relative;
+      transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+                  box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.12);
+    }
+
+    .card-accent {
+      height: 4px;
+      background: var(--blue);
+      transition: height 0.35s ease;
+    }
+
+    .card:nth-child(2) .card-accent { background: var(--accent); }
+    .card:nth-child(3) .card-accent { background: #6366f1; }
+
+    .card:hover .card-accent { height: 6px; }
+
+    .card-body {
+      padding: 30px 30px 24px;
+    }
+
+    .card-number {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      color: var(--mist);
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    .card-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 8px;
+      line-height: 1.2;
+    }
+
+    .card-meta {
+      font-size: 0.78rem;
+      color: var(--mist);
+      font-weight: 400;
+      letter-spacing: 0.02em;
+    }
+
+    .card-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 30px;
+      border-top: 1px solid var(--cream);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--mist);
+      transition: color 0.2s;
+    }
+
+    .card:hover .card-toggle { color: var(--ink); }
+
+    .toggle-icon {
+      width: 22px; height: 22px;
+      border: 1px solid currentColor;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.9rem;
+      transition: transform 0.3s, background 0.2s;
+    }
+
+    .card.open .toggle-icon {
+      transform: rotate(45deg);
+      background: var(--blue);
+      color: white;
+      border-color: var(--blue);
+    }
+
+    /* ── DROPDOWN ────────────────────────────────────── */
+    .dropdown {
+      max-height: 0px;
+      overflow: hidden;
+      transition: max-height 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+      background: var(--sky);
+    }
+
+    .dropdown-inner {
+      padding: 24px 30px;
+    }
+
+    .ra-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(37,99,235,0.1);
+      font-size: 0.85rem;
+      color: var(--ink);
+      line-height: 1.5;
+    }
+
+    .ra-item:last-child { border-bottom: none; }
+
+    .ra-num {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--mist);
+      padding-top: 3px;
+      min-width: 28px;
+    }
+
+    .dropdown-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 0;
+      text-decoration: none;
+      color: var(--ink);
+      font-size: 0.88rem;
+      font-weight: 500;
+      border-bottom: 1px solid rgba(37,99,235,0.1);
+      transition: color 0.2s, padding-left 0.2s;
+    }
+
+    .dropdown-link:last-child { border-bottom: none; }
+
+    .dropdown-link:hover {
+      color: var(--blue);
+      padding-left: 6px;
+    }
+
+    .dropdown-link::before {
+      content: '→';
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      opacity: 0.35;
+      transition: opacity 0.2s;
+    }
+
+    .dropdown-link:hover::before { opacity: 1; }
+
+    /* ── FOOTER ──────────────────────────────────────── */
+    footer {
+      background: #1e3a5f;
+      color: rgba(255,255,255,0.4);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 80px;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    footer .dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      display: inline-block;
+    }
+
+    /* ── DIVIDER ─────────────────────────────────────── */
+    .divider {
+      width: calc(100% - 160px);
+      margin: 0 80px;
+      height: 1px;
+      background: linear-gradient(to right, var(--blue-pale), transparent);
+    }
+
+    /* ── ANIMATIONS ──────────────────────────────────── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-left .tag    { animation: fadeUp 0.6s 0.1s both; }
+    .hero-left h1      { animation: fadeUp 0.6s 0.2s both; }
+    .hero-left .hero-sub  { animation: fadeUp 0.6s 0.3s both; }
+    .hero-right        { animation: fadeUp 0.6s 0.25s both; }
+
+    /* ── RESPONSIVE ──────────────────────────────────── */
+    @media (max-width: 768px) {
+      header { flex-direction: column; padding: 36px 24px 40px; align-items: flex-start; }
+      .hero-right { align-items: flex-start; text-align: left; }
+      .section-intro { padding: 40px 24px 20px; flex-direction: column; gap: 10px; }
+      .cards-grid { padding: 20px 24px 60px; }
+      footer { padding: 20px 24px; flex-direction: column; gap: 10px; text-align: center; }
+      .divider { width: calc(100% - 48px); margin: 0 24px; }
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- ── HERO ───────────────────────────────────────────── -->
+<header>
+  <div class="hero-left">
+    <div class="tag">Cicles Formatius</div>
+    <h1>Recursos <em>educatius</em> en línia</h1>
+    <p class="hero-sub">Materials de teoria, pràctiques i recursos per als alumnes dels cicles formatius.</p>
+  </div>
+
+  <div class="hero-right">
+    <div class="hero-prof">
+      <span class="label">Institut</span>
+      <span class="name">Esteve Terradas i Illa</span>
+    </div>
+    <div class="year-badge">2026 – 2027</div>
+    <button class="scroll-btn" onclick="document.getElementById('cicles').scrollIntoView({behavior:'smooth'})">
+      Veure contingut <span class="arrow">↓</span>
+    </button>
+  </div>
+</header>
+
+<!-- ── CONTENT ────────────────────────────────────────── -->
 <section id="cicles">
-<div class="section-intro">
-<h2>ASIX</h2>
-<span class="module-tag">Administració de Sistemes Informàtics en Xarxa</span></div>
-<div class="divider"> </div>
-<div class="cards-grid"><!-- IMPLANTACIÓ DE SISTEMES OPERATIUS -->
-<div class="card">
-<div class="card-accent"> </div>
-<div class="card-body">
-<div class="card-number">Mòdul 0369</div>
-<div class="card-title">Implantació de sistemes operatius</div>
-<div class="card-meta">Ordre RA: 1, 2, 3, 4, 5, 6, 7, 8</div>
+
+  <div class="section-intro">
+    <h2>ASIX</h2>
+<span class="module-tag">Administració de Sistemes Informàtics en Xarxa</span>
 </div>
-<div class="card-toggle">Veure contingut <span class="toggle-icon">+</span></div>
-<div id="iso" class="dropdown">
-<div class="dropdown-inner"><a class="ra-item" href="iso/M1_RA1.html"> <span class="ra-num">RA 1</span> Instal·la sistemes operatius, analitzant-ne les característiques i interpretant-ne la documentació tècnica. </a> <a class="ra-item" href="iso/M1_RA2.html"> <span class="ra-num">RA 2</span> Configura el programari de base, atenent les necessitats d’explotació del sistema informàtic. </a> <a class="ra-item" href="iso/M1_RA3.html"> <span class="ra-num">RA 3</span> Assegura la informació del sistema, descrivint els procediments i utilitzant còpies de seguretat i sistemes tolerants a errors. </a> <a class="ra-item" href="iso/M1_RA4.html"> <span class="ra-num">RA 4</span> Centralitza la informació en servidors administrant estructures de dominis i analitzant-ne els avantatges. </a> <a class="ra-item" href="iso/M1_RA5.html"> <span class="ra-num">RA 5</span> Administra l’accés a dominis analitzant i respectant requeriments de seguretat. </a> <a class="ra-item" href="iso/M1_RA6.html"> <span class="ra-num">RA 6</span> Detecta problemes de rendiment monitorant el sistema amb les eines adequades i documentant el procediment. </a> <a class="ra-item" href="iso/M1_RA7.html"> <span class="ra-num">RA 7</span> Audita la utilització i l’accés a recursos, identificant i respectant les necessitats de seguretat del sistema. </a> <a class="ra-item" href="iso/M1_RA8.html"> <span class="ra-num">RA 8</span> Implanta programari específic amb estructura client/servidor donant resposta als requisits funcionals. </a></div>
-</div>
-</div>
-</div>
-<div class="section-intro">
-<h2>SMX</h2>
-<span class="module-tag">Sistemes Microinformàtics i Xarxes</span></div>
-<div class="divider"> </div>
-<div class="cards-grid"><!-- APLICACIONS OFIMÀTIQUES -->
-<div class="card">
-<div class="card-accent"> </div>
-<div class="card-body">
-<div class="card-number">Mòdul 0223</div>
-<div class="card-title">Aplicacions ofimàtiques</div>
-<div class="card-meta">Ordre RA: 8, 2, 1, 9, 3, 4, 5, 6, 7</div>
-</div>
-<div class="card-toggle">Veure contingut <span class="toggle-icon">+</span></div>
-<div id="ofimatica" class="dropdown">
-<div class="dropdown-inner"><a class="ra-item" href="ofimatica/M3_RA1.html"><span class="ra-num">RA 1</span> Instal·la i actualitza aplicacions ofimàtiques...</a> <a class="ra-item" href="ofimatica/M3_RA2.html"><span class="ra-num">RA 2</span> Elabora documents i plantilles...</a> <a class="ra-item" href="ofimatica/M3_RA3.html"><span class="ra-num">RA 3</span> Fulls de càlcul avançats...</a> <a class="ra-item" href="smx/portfolio-bbdd-catala.html"><span class="ra-num">RA 4</span> Bases de dades ofimàtiques...</a> <a class="ra-item" href="ofimatica/M3_RA5.html"><span class="ra-num">RA 5</span> Imatges digitals...</a> <a class="ra-item" href="ofimatica/M3_RA6.html"><span class="ra-num">RA 6</span> Vídeo digital...</a> <a class="ra-item" href="ofimatica/M3_RA7.html"><span class="ra-num">RA 7</span> Presentacions multimèdia...</a> <a class="ra-item" href="ofimatica/M3_RA8.html"><span class="ra-num">RA 8</span> Correu i agenda electrònica...</a> <a class="ra-item" href="ofimatica/M3_RA9.html"><span class="ra-num">RA 9</span> Suport i resolució d'incidències...</a></div>
-</div>
-</div>
-<!-- DIGITALITZACIÓ -->
-<div class="card">
-<div class="card-accent"> </div>
-<div class="card-body">
-<div class="card-number">Mòdul 1708</div>
-<div class="card-title">Digitalització</div>
-<div class="card-meta">Teoria · Pràctiques · Recursos</div>
-</div>
-<div class="card-toggle">Veure contingut <span class="toggle-icon">+</span></div>
-<div id="digitalitzacio" class="dropdown">
-<div class="dropdown-inner"><a class="dropdown-link" href="smx/digitalitzacio_smx.html">Teoria</a> <a class="dropdown-link" href="smx/preguntes_teoriques_digitalitzacio.html">Preguntes teòriques</a> <a class="dropdown-link" href="smx/digitalitzacio_google_sites.html">Pràctica Google Sites</a></div>
-</div>
-</div>
-</div>
+
+<div class="divider"></div>
+
+<div class="cards-grid">
+
+  <!-- IMPLANTACIÓ DE SISTEMES OPERATIUS -->
+  <div class="card" onclick="toggleCard(this, 'iso')">
+    <div class="card-accent"></div>
+    <div class="card-body">
+      <div class="card-number">Mòdul 0369</div>
+      <div class="card-title">Implantació de sistemes operatius</div>
+      <div class="card-meta">Ordre RA: 1, 2, 3, 4, 5, 6, 7, 8</div>
+    </div>
+
+    <div class="card-toggle">
+      Veure contingut
+      <span class="toggle-icon">+</span>
+    </div>
+
+    <div id="iso" class="dropdown">
+      <div class="dropdown-inner">
+
+        <a class="ra-item" href="iso/M1_RA1.html">
+          <span class="ra-num">RA 1</span>
+          Instal·la sistemes operatius, analitzant-ne les característiques i interpretant-ne la documentació tècnica.
+        </a>
+
+        <a class="ra-item" href="iso/M1_RA2.html">
+          <span class="ra-num">RA 2</span>
+          Configura el programari de base, atenent les necessitats d’explotació del sistema informàtic.
+        </a>
+
+        <a class="ra-item" href="iso/M1_RA3.html">
+          <span class="ra-num">RA 3</span>
+          Assegura la informació del sistema, descrivint els procediments i utilitzant còpies de seguretat i sistemes tolerants a errors.
+        </a>
+
+        <a class="ra-item" href="iso/M1_RA4.html">
+          <span class="ra-num">RA 4</span>
+          Centralitza la informació en servidors administrant estructures de dominis i analitzant-ne els avantatges.
+        </a>
+
+        <a class="ra-item" href="iso/M1_RA5.html">
+          <span class="ra-num">RA 5</span>
+          Administra l’accés a dominis analitzant i respectant requeriments de seguretat.
+        </a>
+
+        <a class="ra-item" href="iso/M1_RA6.html">
+          <span class="ra-num">RA 6</span>
+          Detecta problemes de rendiment monitorant el sistema amb les eines adequades i documentant el procediment.
+        </a>
+
+        <a class="ra-item" href="iso/M1_RA7.html">
+          <span class="ra-num">RA 7</span>
+          Audita la utilització i l’accés a recursos, identificant i respectant les necessitats de seguretat del sistema.
+        </a>
+
+        <a class="ra-item" href="iso/M1_RA8.html">
+          <span class="ra-num">RA 8</span>
+          Implanta programari específic amb estructura client/servidor donant resposta als requisits funcionals.
+        </a>
+
+      </div>
+    </div>
+  </div>
+  
+  </div>
+
+    <div class="section-intro">
+
+    <h2>SMX</h2>
+    <span class="module-tag">Sistemes Microinformàtics i Xarxes</span>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="cards-grid">
+
+    <!-- APLICACIONS OFIMÀTIQUES -->
+    <div class="card" onclick="toggleCard(this, 'ofimatica')">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-number">Mòdul 0223</div>
+        <div class="card-title">Aplicacions ofimàtiques</div>
+        <div class="card-meta">Ordre RA: 8, 2, 1, 9, 3, 4, 5, 6, 7</div>
+      </div>
+      <div class="card-toggle">
+        Veure contingut
+        <span class="toggle-icon">+</span>
+      </div>
+      <div id="ofimatica" class="dropdown">
+        <div class="dropdown-inner">
+            <a class="ra-item" href="ofimatica/M3_RA1.html"><span class="ra-num">RA 1</span> Instal·la i actualitza aplicacions ofimàtiques...</a>
+
+          <a class="ra-item" href="ofimatica/M3_RA2.html"><span class="ra-num">RA 2</span> Elabora documents i plantilles...</a>
+                      <a class="ra-item" href="ofimatica/M3_RA3.html"><span class="ra-num">RA 3</span> Fulls de càlcul avançats...</a>
+
+          <a class="ra-item" href="smx/portfolio-bbdd-catala.html"><span class="ra-num">RA 4</span> Bases de dades ofimàtiques...</a>
+                              <a class="ra-item" href="ofimatica/M3_RA5.html"><span class="ra-num">RA 5</span> Imatges digitals...</a>
+
+                              <a class="ra-item" href="ofimatica/M3_RA6.html"><span class="ra-num">RA 6</span> Vídeo digital...</a>
+
+                              <a class="ra-item" href="ofimatica/M3_RA7.html"><span class="ra-num">RA 7</span> Presentacions multimèdia...</a>
+
+                    <a class="ra-item" href="ofimatica/M3_RA8.html"><span class="ra-num">RA 8</span> Correu i agenda electrònica...</a>
+                    <a class="ra-item" href="ofimatica/M3_RA9.html"><span class="ra-num">RA 9</span> Suport i resolució d'incidències...</a>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- DIGITALITZACIÓ -->
+    <div class="card" onclick="toggleCard(this, 'digitalitzacio')">
+      <div class="card-accent"></div>
+      <div class="card-body">
+        <div class="card-number">Mòdul 1708</div>
+        <div class="card-title">Digitalització</div>
+        <div class="card-meta">Teoria · Pràctiques · Recursos</div>
+      </div>
+      <div class="card-toggle">
+        Veure contingut
+        <span class="toggle-icon">+</span>
+      </div>
+      <div id="digitalitzacio" class="dropdown">
+        <div class="dropdown-inner">
+          <a class="dropdown-link" href="smx/digitalitzacio_smx.html">Teoria</a>
+          <a class="dropdown-link" href="smx/preguntes_teoriques_digitalitzacio.html">Preguntes teòriques</a>
+          <a class="dropdown-link" href="smx/digitalitzacio_google_sites.html">Pràctica Google Sites</a>
+        </div>
+      </div>
+    </div>
+
 </section>
-<!-- ── FOOTER ─────────────────────────────────────────── --><footer>© 2026 Recursos Educatius</footer>
+
+<!-- ── FOOTER ─────────────────────────────────────────── -->
+<footer>
+  <span>© 2026 Recursos Educatius</span>
+  <span class="dot"></span>
+</footer>
+
+<script>
+  function toggleCard(card, id) {
+    const dropdown = document.getElementById(id);
+    const isOpen = card.classList.contains('open');
+
+    // Close ALL dropdowns first (set explicit 0px, not null)
+    document.querySelectorAll('.card').forEach(c => c.classList.remove('open'));
+    document.querySelectorAll('.dropdown').forEach(d => {
+      d.style.maxHeight = '0px';
+    });
+
+    // If it was closed, open it
+    if (!isOpen) {
+      card.classList.add('open');
+      // Temporarily make it visible to measure real height
+      dropdown.style.maxHeight = 'none';
+      const h = dropdown.scrollHeight;
+      dropdown.style.maxHeight = '0px';
+      // Force reflow then animate
+      dropdown.getBoundingClientRect();
+      dropdown.style.maxHeight = h + 'px';
+    }
+  }
+</script>
+
+</body>
+</html>
