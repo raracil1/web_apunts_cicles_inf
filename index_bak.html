@@ -649,16 +649,7 @@
       </a>
     </div>
 
-    <div class="hero-meta">
-      <div class="hero-stat">
-        <div class="stat-num">2</div>
-        <div class="stat-label">Cicles</div>
-      </div>
-      <div class="hero-stat">
-        <div class="stat-num">5+</div>
-        <div class="stat-label">Mòduls</div>
-      </div>
-    </div>
+    
   </div>
 
   <div class="scroll-indicator">Desplaça</div>
@@ -695,35 +686,35 @@
           </div>
           <div id="iso" class="dropdown">
             <div class="dropdown-inner">
-              <a class="ra-item" href="ASIX/MP0369/ASIX_MP0369_RA1.html">
+              <a class="ra-item" href="ASIX\MP0369\ASIX_MP0369_RA1.html">
                 <span class="ra-num">RA 1</span>
                 Instal·la sistemes operatius, analitzant-ne les característiques i interpretant-ne la documentació tècnica.
               </a>
-              <a class="ra-item" href="ASIX/MP0369/ASIX_MP0369_RA2.html">
+              <a class="ra-item" href="ASIX\MP0369\ASIX_MP0369_RA2.html">
                 <span class="ra-num">RA 2</span>
                 Configura el programari de base, atenent les necessitats d'explotació del sistema informàtic.
               </a>
-              <a class="ra-item" href="ASIX/MP0369/ASIX_MP0369_RA3.html">
+              <a class="ra-item" href="ASIX\MP0369\ASIX_MP0369_RA3.html">
                 <span class="ra-num">RA 3</span>
                 Assegura la informació del sistema, descrivint els procediments i utilitzant còpies de seguretat i sistemes tolerants a errors.
               </a>
-              <a class="ra-item" href="ASIX/MP0369/ASIX_MP0369_RA4.html">
+              <a class="ra-item" href="ASIX\MP0369\ASIX_MP0369_RA4.html">
                 <span class="ra-num">RA 4</span>
                 Centralitza la informació en servidors administrant estructures de dominis i analitzant-ne els avantatges.
               </a>
-              <a class="ra-item" href="ASIX/MP0369/ASIX_MP0369_RA5.html">
+              <a class="ra-item" href="ASIX\MP0369\ASIX_MP0369_RA5.html">
                 <span class="ra-num">RA 5</span>
                 Administra l'accés a dominis analitzant i respectant requeriments de seguretat.
               </a>
-              <a class="ra-item" href="ASIX/MP0369/ASIX_MP0369_RA6.html">
+              <a class="ra-item" href="ASIX\MP0369\ASIX_MP0369_RA6.html">
                 <span class="ra-num">RA 6</span>
                 Detecta problemes de rendiment monitorant el sistema amb les eines adequades i documentant el procediment.
               </a>
-              <a class="ra-item" href="ASIX/MP0369/ASIX_MP0369_RA7.html">
+              <a class="ra-item" href="ASIX\MP0369\ASIX_MP0369_RA7.html">
                 <span class="ra-num">RA 7</span>
                 Audita la utilització i l'accés a recursos, identificant i respectant les necessitats de seguretat del sistema.
               </a>
-              <a class="ra-item" href="ASIX/MP0369/ASIX_MP0369_RA8.html">
+              <a class="ra-item" href="ASIX\MP0369\ASIX_MP0369_RA8.html">
                 <span class="ra-num">RA 8</span>
                 Implanta programari específic amb estructura client/servidor donant resposta als requisits funcionals.
               </a>
@@ -744,7 +735,7 @@
           </div>
           <div id="0374" class="dropdown">
             <div class="dropdown-inner">
-              <a class="ra-item" href="ASIX/MP0374/PT1_Ventoy.html">
+              <a class="ra-item" href="ASIX\MP0374\PT1_Ventoy.html">
                 <span class="ra-num">PT 1</span>
                 Ventoy, USB Boot i sistemes persistents (Arch Linux)
               </a>
@@ -764,7 +755,7 @@
                 <span class="ra-num">PT 5</span>
                 Protocol SFTP sobre Zentyal
               </a>
-              <a class="ra-item" href="ASIX/MP0374/bash-scripting-guide.html">
+              <a class="ra-item" href="ASIX\MP0374\bash-scripting-guide.html">
                 <span class="ra-num">RA 7</span>
                 BASH Scripting
               </a>
@@ -903,107 +894,5 @@
   });
 </script>
 
-
-<!--
-╔══════════════════════════════════════════════════════════════════════════════╗
-║           GUIA: MIGRAR A CLOUDFLARE PAGES + CONFIGURAR ACCÉS               ║
-╚══════════════════════════════════════════════════════════════════════════════╝
-
-ESTRUCTURA DE PROTECCIÓ RECOMANADA
-─────────────────────────────────────
-  /index.html          → PÚBLICA  (tothom pot veure el menú)
-  /ASIX/*              → PROTEGIDA per al grup ASIX
-  /smx/*               → PROTEGIDA per al grup SMX
-
-════════════════════════════════════════════════════════════════════════════════
-PAS 1 — CREAR COMPTE A CLOUDFLARE
-════════════════════════════════════════════════════════════════════════════════
-  1. Ves a https://dash.cloudflare.com/sign-up
-  2. Crea un compte gratuït amb el teu email
-  3. Un cop dins, ves al menú esquerre → "Workers & Pages"
-
-════════════════════════════════════════════════════════════════════════════════
-PAS 2 — CONNECTAR EL REPO DE GITHUB
-════════════════════════════════════════════════════════════════════════════════
-  1. Clica "Create application" → "Pages" → "Connect to Git"
-  2. Autoritza Cloudflare a accedir al teu GitHub
-  3. Selecciona el repo: WEB_APUNTS_CICLES_INF
-  4. Configuració del build:
-       - Framework preset: None
-       - Build command: (deixar buit)
-       - Build output directory: /  (o deixar buit)
-  5. Clica "Save and Deploy"
-  6. En 1-2 minuts la web estarà a una URL tipus:
-       https://web-apunts-cicles-inf.pages.dev
-
-  ✅ A partir d'ara, cada vegada que facis "git push" al repo,
-     Cloudflare desplegarà els canvis automàticament.
-
-════════════════════════════════════════════════════════════════════════════════
-PAS 3 — ACTIVAR CLOUDFLARE ACCESS (login per als alumnes)
-════════════════════════════════════════════════════════════════════════════════
-  1. Al panell de Cloudflare, ves a "Zero Trust" (menú esquerre)
-     → Si és la primera vegada, et demanarà crear un "team name",
-       per exemple: ietios
-       La URL de login dels alumnes serà: https://ietios.cloudflareaccess.com
-
-  2. Ves a "Access" → "Applications" → "Add an application"
-  3. Selecciona "Self-hosted"
-
-  ── APLICACIÓ PER A ASIX ──────────────────────────────────────────────────
-  4. Omple el formulari:
-       - Application name: ASIX
-       - Session duration: 24 hours  (o la que vulguis)
-       - Application domain:
-           Subdomain: web-apunts-cicles-inf  (el teu subdomini de pages.dev)
-           Domain: pages.dev
-           Path: ASIX   ← IMPORTANT: protegeix només la carpeta /ASIX/
-  5. Clica "Next"
-  6. A "Policies":
-       - Policy name: Alumnes ASIX
-       - Action: Allow
-       - A "Configure rules" → "Selector: Emails" →
-         afegeix els emails dels alumnes d'ASIX un per un
-  7. Clica "Add policy" → "Next" → "Add application"
-
-  ── APLICACIÓ PER A SMX ───────────────────────────────────────────────────
-  8. Repeteix els passos 2-7 però amb:
-       - Application name: SMX
-       - Path: smx
-       - Emails: els alumnes de SMX
-
-════════════════════════════════════════════════════════════════════════════════
-PAS 4 — COM ES LOGUEN ELS ALUMNES
-════════════════════════════════════════════════════════════════════════════════
-  1. L'alumne intenta accedir a una URL protegida, per exemple:
-       https://web-apunts-cicles-inf.pages.dev/ASIX/MP0374/PT1_Ventoy.html
-  2. Cloudflare els redirigeix a la pàgina de login
-  3. L'alumne introdueix el seu email
-  4. Rep un codi de 6 dígits al correu (màgic link, sense contrasenya)
-  5. Introdueix el codi → accés concedit per 24h (o el temps configurat)
-
-  ✅ L'index.html és públic, els alumnes poden veure el menú
-     però en clicar un link protegit se'ls demanarà el login.
-
-════════════════════════════════════════════════════════════════════════════════
-PAS 5 — GESTIONAR ACCESSOS (afegir/eliminar alumnes)
-════════════════════════════════════════════════════════════════════════════════
-  → Zero Trust → Access → Applications → clica l'aplicació → Edit
-  → Policies → edita la política → afegeix o elimina emails
-
-  Per veure qui ha accedit i quan:
-  → Zero Trust → Logs → Access
-
-════════════════════════════════════════════════════════════════════════════════
-NOTES IMPORTANTS
-════════════════════════════════════════════════════════════════════════════════
-  • El pla gratuït de Cloudflare Zero Trust permet fins a 50 usuaris. 
-    Per a una classe d'FP és més que suficient.
-  • L'index.html NO està protegit, és accessible per tothom.
-    Si vols protegir-lo també, crea una aplicació amb path: /
-  • Si tens domini propi, pots configurar-lo a Cloudflare Pages
-    en lloc d'usar el subdomini .pages.dev
-
--->
 </body>
 </html>

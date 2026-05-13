@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RA7 — Presentacions Multimèdia · SMX</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink:     #0d0f1a;
+    --paper:   #f4f2ed;
+    --cream:   #eceae3;
+    --navy:    #1a1f4e;
+    --cobalt:  #2d3bb5;
+    --sky:     #4a6cf7;
+    --pres:    #7c3aed;
+    --pres-d:  #5b21b6;
+    --gblue:   #4285f4;
+    --gyellow: #fbbc04;
+    --gred:    #ea4335;
+    --teal:    #0d9488;
+    --amber:   #d97706;
+    --muted:   #6b6f85;
+    --border:  #d6d2c9;
+    --card:    #ffffff;
+    --radius:  16px;
+    --radius-sm: 8px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    font-size: 16px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(244,242,237,0.94);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 62px;
+  }
+  .nav-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1rem; color: var(--navy); letter-spacing: -0.02em; }
+  .nav-logo span { color: var(--pres); }
+  .nav-pills { display: flex; gap: .4rem; list-style: none; }
+  .nav-pills a {
+    text-decoration: none; font-size: 0.78rem; font-weight: 600;
+    padding: .3rem .85rem; border-radius: 100px;
+    color: var(--muted); transition: all .2s;
+    border: 1px solid transparent;
+  }
+  .nav-pills a:hover { color: var(--pres); border-color: var(--pres); background: rgba(124,58,237,0.07); }
+  .nav-pills a.pres  { color: var(--pres); }
+  .nav-pills a.prac  { color: var(--teal); }
+  .nav-pills a.pregs { color: var(--amber); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh; display: grid; place-items: center;
+    background: var(--navy); color: white;
+    position: relative; overflow: hidden; padding: 8rem 2rem 4rem;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 75% 25%, rgba(124,58,237,0.35) 0%, transparent 65%),
+      radial-gradient(ellipse 50% 40% at 20% 70%, rgba(13,148,136,0.2) 0%, transparent 65%),
+      radial-gradient(ellipse 40% 35% at 55% 90%, rgba(251,188,4,0.12) 0%, transparent 60%);
+  }
+  .hero-dots {
+    position: absolute; inset: 0; opacity: 0.07;
+    background-image: radial-gradient(rgba(255,255,255,.6) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+  .hero-content { position: relative; z-index: 1; text-align: center; max-width: 840px; }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: .5rem;
+    background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.85); font-size: 0.78rem; font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    padding: .35rem 1rem; border-radius: 100px; margin-bottom: 1.5rem;
+  }
+  .hero h1 {
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: clamp(2.6rem, 6.5vw, 5rem); line-height: 1.06;
+    letter-spacing: -0.03em; margin-bottom: 1.5rem;
+  }
+  .hero h1 .p { color: #a78bfa; }
+  .hero h1 .t { color: #2dd4bf; }
+  .hero h1 .y { color: #fbbc04; }
+  .hero p { font-size: 1.1rem; color: rgba(255,255,255,0.6); max-width: 580px; margin: 0 auto 2.5rem; }
+  .hero-apps { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+  .hero-app {
+    display: flex; align-items: center; gap: .6rem;
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+    padding: .6rem 1.2rem; border-radius: 12px; font-size: 0.88rem; font-weight: 500;
+    color: white; text-decoration: none; transition: all .25s;
+  }
+  .hero-app:hover { background: rgba(255,255,255,0.15); transform: translateY(-2px); }
+  .hero-app .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .scroll-hint {
+    position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: .4rem;
+    color: rgba(255,255,255,0.3); font-size: 0.72rem; letter-spacing: 0.1em;
+  }
+  .scroll-hint::after {
+    content: ''; display: block; width: 1px; height: 36px;
+    background: linear-gradient(to bottom, rgba(255,255,255,.35), transparent);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:.3} 50%{opacity:1} }
+
+  /* ── LAYOUT ── */
+  section { padding: 6rem 2rem; }
+  .container { max-width: 1080px; margin: 0 auto; }
+  .section-tag {
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em;
+    text-transform: uppercase; display: flex; align-items: center; gap: .5rem;
+    margin-bottom: .9rem;
+  }
+  .section-tag::before { content: ''; display: block; width: 20px; height: 2px; }
+  .tag-cobalt { color: var(--cobalt); } .tag-cobalt::before { background: var(--cobalt); }
+  .tag-pres   { color: var(--pres);   } .tag-pres::before   { background: var(--pres); }
+  .tag-teal   { color: var(--teal);   } .tag-teal::before   { background: var(--teal); }
+  .tag-pregs  { color: var(--amber);  } .tag-pregs::before  { background: var(--amber); }
+  .tag-blue   { color: var(--gblue);  } .tag-blue::before   { background: var(--gblue); }
+
+  h2 {
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: clamp(1.7rem, 3.5vw, 2.6rem); line-height: 1.1;
+    letter-spacing: -0.025em; color: var(--navy); margin-bottom: .9rem;
+  }
+  h3 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.15rem; color: var(--navy); margin-bottom: .65rem; }
+  h4 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.95rem; color: var(--navy); margin-bottom: .4rem; }
+  .lead { font-size: 1.05rem; color: var(--muted); max-width: 700px; margin-bottom: 3rem; line-height: 1.7; }
+
+  /* ── CARDS ── */
+  .grid { display: grid; gap: 1.25rem; }
+  .g2 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+  .g3 { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+  .g4 { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+  .card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 1.75rem;
+    transition: transform .2s, box-shadow .2s;
+  }
+  .card:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(26,31,78,0.1); }
+  .card p { color: var(--muted); font-size: 0.92rem; }
+  .card-icon {
+    width: 44px; height: 44px; border-radius: 10px;
+    display: grid; place-items: center; font-size: 1.3rem; margin-bottom: .9rem;
+  }
+  .bl       { border-left: 3px solid var(--cobalt); }
+  .bl-pres  { border-left: 3px solid var(--pres); }
+  .bl-teal  { border-left: 3px solid var(--teal); }
+  .bl-amber { border-left: 3px solid var(--amber); }
+  .bl-blue  { border-left: 3px solid var(--gblue); }
+  .bl-red   { border-left: 3px solid var(--gred); }
+
+  /* ── EXAMPLE BOX ── */
+  .ex { background: var(--cream); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1rem 1.25rem; margin: .65rem 0; }
+  .ex .ex-lbl { font-size: 0.68rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; margin-bottom: .3rem; }
+  .ex p { font-size: 0.87rem; color: var(--ink); }
+  .ex-pres .ex-lbl { color: var(--pres); }
+  .ex-teal .ex-lbl { color: var(--teal); }
+  .ex-amber .ex-lbl { color: var(--amber); }
+
+  /* ── CALLOUT ── */
+  .callout {
+    border-radius: var(--radius); padding: 1.6rem 2rem; margin: 1.5rem 0;
+    display: flex; gap: 1rem; align-items: flex-start;
+  }
+  .callout-icon { font-size: 1.4rem; flex-shrink: 0; margin-top: .1rem; }
+  .callout p, .callout li { font-size: 0.92rem; }
+  .callout ul { padding-left: 1.2rem; }
+  .callout li { margin-bottom: .25rem; }
+  .cl-pres  { background: rgba(124,58,237,0.08);  border: 1px solid rgba(124,58,237,0.2); }
+  .cl-teal  { background: rgba(13,148,136,0.08);  border: 1px solid rgba(13,148,136,0.2); }
+  .cl-blue  { background: rgba(66,133,244,0.08);  border: 1px solid rgba(66,133,244,0.2); }
+  .cl-amber { background: rgba(251,188,4,0.1);    border: 1px solid rgba(251,188,4,0.3); }
+  .cl-red   { background: rgba(234,67,53,0.07);   border: 1px solid rgba(234,67,53,0.2); }
+
+  /* ── TABLE ── */
+  .ptable { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+  .ptable th, .ptable td { padding: .85rem 1rem; text-align: left; border-bottom: 1px solid var(--border); }
+  .ptable th { background: var(--navy); color: white; font-family: 'Syne', sans-serif; font-weight: 700; }
+  .ptable th:first-child { border-radius: 8px 0 0 0; } .ptable th:last-child { border-radius: 0 8px 0 0; }
+  .ptable tr:hover td { background: var(--cream); }
+  .badge { display: inline-block; padding: .15rem .55rem; border-radius: 100px; font-size: 0.72rem; font-weight: 700; font-family: 'Syne', sans-serif; }
+  .b-pres   { background: rgba(124,58,237,0.12); color: #5b21b6; }
+  .b-teal   { background: rgba(13,148,136,0.12); color: #0f766e; }
+  .b-blue   { background: rgba(66,133,244,0.12); color: #1a56d6; }
+  .b-amber  { background: rgba(251,188,4,0.18);  color: #8a6500; }
+  .b-red    { background: rgba(234,67,53,0.12);  color: #b31412; }
+  .b-green  { background: rgba(15,157,88,0.12);  color: #0b7a44; }
+
+  /* ── SECTION THEMES ── */
+  .s-dark  { background: var(--navy); color: white; }
+  .s-dark h2, .s-dark h3, .s-dark h4 { color: white; }
+  .s-dark .lead { color: rgba(255,255,255,0.58); }
+  .s-dark .card { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1); }
+  .s-dark .card h3 { color: white; } .s-dark .card p { color: rgba(255,255,255,0.6); }
+  .s-cream { background: var(--cream); }
+  .s-pres  { background: #f5f3ff; }
+  .s-teal  { background: #f0fdfa; }
+
+  /* ── RA BANNER ── */
+  .ra-banner {
+    border-radius: var(--radius); padding: 1.5rem 2rem;
+    display: flex; align-items: center; gap: 1.25rem; margin-bottom: 3rem; color: white;
+  }
+  .ra-num { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 2.4rem; opacity: .25; flex-shrink: 0; line-height: 1; }
+  .ra-banner h2 { color: white; font-size: 1.35rem; margin-bottom: .2rem; }
+  .ra-banner p  { color: rgba(255,255,255,0.7); font-size: 0.88rem; }
+  .ra-pres      { background: linear-gradient(135deg, #5b21b6, #7c3aed); }
+  .ra-teal      { background: linear-gradient(135deg, #0f766e, #0d9488); }
+  .ra-preguntes { background: linear-gradient(135deg, #92400e, #d97706); }
+  .ra-blue      { background: linear-gradient(135deg, #1a56d6, #4285f4); }
+  .ra-resum     { background: linear-gradient(135deg, #312e81, #4338ca); }
+
+  /* ── PRACTICE CARDS ── */
+  .practice-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius); overflow: hidden;
+    transition: transform .2s, box-shadow .2s;
+  }
+  .practice-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,0.1); }
+  .practice-header {
+    padding: 1.5rem 2rem; display: flex; align-items: center; gap: 1rem; color: white;
+  }
+  .practice-num { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.8rem; opacity: .35; line-height: 1; flex-shrink:0; }
+  .practice-header h3 { color: white; font-size: 1.15rem; margin: 0; }
+  .practice-header p  { color: rgba(255,255,255,0.7); font-size: 0.82rem; margin: .2rem 0 0; }
+  .practice-body { padding: 2rem; }
+  .p1-bg { background: linear-gradient(135deg, #312e81, #4338ca); }
+
+  /* ── STEPS ── */
+  .steps { counter-reset: st; list-style: none; display: flex; flex-direction: column; gap: .85rem; }
+  .steps li {
+    counter-increment: st; display: flex; gap: .9rem; align-items: flex-start;
+    padding: .9rem 1.1rem; background: var(--cream); border-radius: var(--radius-sm); font-size: 0.9rem;
+  }
+  .steps li::before {
+    content: counter(st); flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%;
+    background: var(--pres); color: white; display: grid; place-items: center;
+    font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.8rem;
+  }
+  .steps li p { color: var(--ink); margin: 0; } .steps li strong { color: var(--navy); }
+
+  /* ── QUESTION CARDS ── */
+  .q-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 1.5rem 2rem;
+    display: flex; gap: 1.25rem; align-items: flex-start;
+    transition: transform .2s, box-shadow .2s;
+  }
+  .q-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+  .q-num {
+    flex-shrink: 0; width: 36px; height: 36px; border-radius: 50%;
+    background: var(--cream); border: 2px solid var(--border);
+    display: grid; place-items: center;
+    font-family: 'Syne', sans-serif; font-weight: 800; font-size: 0.88rem; color: var(--pres);
+  }
+  .q-body h4 { margin-bottom: .35rem; color: var(--navy); font-size: 0.95rem; }
+  .q-body p  { color: var(--muted); font-size: 0.85rem; font-style: italic; }
+  .q-tag { display: inline-block; padding: .15rem .6rem; border-radius: 100px; font-size: 0.7rem; font-weight: 700; margin-top: .5rem; margin-right: .3rem; }
+  .qt-pres  { background: rgba(124,58,237,0.1); color: #5b21b6; }
+  .qt-dis   { background: rgba(13,148,136,0.1); color: #0f766e; }
+  .qt-form  { background: rgba(66,133,244,0.1); color: #1a56d6; }
+  .qt-avan  { background: rgba(217,119,6,0.1);  color: #92400e; }
+  .qt-acc   { background: rgba(234,67,53,0.1);  color: #b31412; }
+
+  /* ── PILLS ── */
+  .pills { display: flex; flex-wrap: wrap; gap: .35rem; }
+  .pill { font-size: 0.72rem; font-weight: 700; padding: .2rem .65rem; border-radius: 100px; font-family: 'Syne', sans-serif; }
+  .pill-p { background: rgba(124,58,237,0.1); color: #5b21b6; }
+  .pill-t { background: rgba(13,148,136,0.1); color: #0f766e; }
+  .pill-b { background: rgba(66,133,244,0.1); color: #1a56d6; }
+  .pill-a { background: rgba(217,119,6,0.1);  color: #92400e; }
+
+  /* ── TOOL CHIP ── */
+  .tool-chip {
+    display: inline-flex; align-items: center; gap: .4rem;
+    background: var(--cream); border: 1px solid var(--border); border-radius: 100px;
+    padding: .25rem .75rem; font-size: 0.78rem; font-weight: 600; color: var(--navy);
+    margin: .2rem;
+  }
+  .tool-chip .tc-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink:0; }
+
+  /* ── FADE IN ── */
+  .fi { opacity: 0; transform: translateY(22px); transition: opacity .55s ease, transform .55s ease; }
+  .fi.in { opacity: 1; transform: none; }
+
+  footer {
+    background: var(--navy); color: rgba(255,255,255,0.5); text-align: center;
+    padding: 2.5rem 2rem; font-size: 0.85rem;
+  }
+  footer strong { color: white; }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════ NAV ══════════════════ -->
+<nav>
+  <div class="nav-logo">SMX · <span>RA7</span> · Ofimàtica</div>
+  <ul class="nav-pills">
+    <li><a href="#teoria" class="pres">Teoria</a></li>
+    <li><a href="#practiques" class="prac">Pràctica</a></li>
+    <li><a href="#preguntes" class="pregs">Preguntes</a></li>
+  </ul>
+</nav>
+
+<!-- ══════════════════ HERO ══════════════════ -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-dots"></div>
+  <div class="hero-content">
+    <div class="hero-badge">🎨 SMX · Ofimàtica · Resultat d'Aprenentatge 7</div>
+    <h1>
+      <span class="p">Presentacions</span><br>
+      <span class="t">Multi</span><span class="y">mèdia</span>
+    </h1>
+    <p>Elabora presentacions multimèdia descrivint i aplicant normes bàsiques de composició i disseny amb eines gratuïtes per a Linux.</p>
+    <div class="hero-apps">
+      <div class="hero-app"><span class="dot" style="background:#7c3aed"></span>LibreOffice Impress</div>
+      <div class="hero-app"><span class="dot" style="background:#2dd4bf"></span>Canva (Online)</div>
+      <div class="hero-app"><span class="dot" style="background:#fbbc04"></span>Google Slides</div>
+      <div class="hero-app"><span class="dot" style="background:#4285f4"></span>Reveal.js / Prezi</div>
+    </div>
+  </div>
+  <div class="scroll-hint">DESPLAÇA</div>
+</section>
+
+<!-- ══════════════════ INTRODUCCIÓ ══════════════════ -->
+<section id="intro">
+  <div class="container fi">
+    <div class="section-tag tag-cobalt">Resultat d'Aprenentatge 7</div>
+    <h2>Presentacions multimèdia</h2>
+    <p class="lead">Elabora presentacions multimèdia descrivint i aplicant normes bàsiques de composició i disseny. Treballarem amb eines gratuïtes disponibles per a Linux (Ubuntu i Arch) i eines online gratuïtes.</p>
+
+    <div class="grid g3 fi">
+      <div class="card bl-pres">
+        <div class="card-icon" style="background:#f5f3ff">🎨</div>
+        <h3>Disseny i Composició</h3>
+        <p>Principis visuals, tipografia, paleta de colors, regla dels terços, jerarquia visual i les lleis Gestalt aplicades al disseny de diapositives.</p>
+        <div class="pills" style="margin-top:.75rem">
+          <span class="pill pill-p">Tipografia</span>
+          <span class="pill pill-p">Color</span>
+          <span class="pill pill-p">Layout</span>
+        </div>
+      </div>
+      <div class="card bl-teal">
+        <div class="card-icon" style="background:#f0fdfa">🛠️</div>
+        <h3>Eines Gratuïtes</h3>
+        <p>LibreOffice Impress (Ubuntu/Arch), Google Slides, Canva, Reveal.js i altres eines de codi obert per crear presentacions professionals sense cost.</p>
+        <div class="pills" style="margin-top:.75rem">
+          <span class="pill pill-t">LibreOffice</span>
+          <span class="pill pill-t">Canva</span>
+          <span class="pill pill-t">FOSS</span>
+        </div>
+      </div>
+      <div class="card bl-blue">
+        <div class="card-icon" style="background:#eff6ff">🎬</div>
+        <h3>Multimèdia i Animació</h3>
+        <p>Incorporar imatges, àudio, vídeo, animacions i transicions per crear presentacions dinàmiques i professionals que capturin l'atenció del públic.</p>
+        <div class="pills" style="margin-top:.75rem">
+          <span class="pill pill-b">Animació</span>
+          <span class="pill pill-b">Vídeo</span>
+          <span class="pill pill-b">Àudio</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout cl-pres fi" style="margin-top:2rem">
+      <span class="callout-icon">🎓</span>
+      <div>
+        <strong>Criteri d'avaluació principal:</strong>
+        <p style="margin-top:.3rem">L'alumnat ha de ser capaç de crear presentacions multimèdia professionals aplicant correctament els principis de composició i disseny, usant eines gratuïtes disponibles en entorns Linux, incloent elements multimèdia variats i aplicant animacions i transicions adequades.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ EINES GRATUÏTES ══════════════════ -->
+<section id="teoria" class="s-pres">
+  <div class="container">
+    <div class="ra-banner ra-pres fi">
+      <div class="ra-num">1</div>
+      <div>
+        <h2>Eines gratuïtes per a presentacions</h2>
+        <p>Eines instal·lables a Linux (Ubuntu i Arch) i eines online gratuïtes per a la creació de presentacions professionals.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-pres fi">Eines instal·lables a Linux</div>
+    <h2 class="fi">Programari lliure i gratuït per a Linux</h2>
+    <p class="lead fi">Totes aquestes eines funcionen a Ubuntu i Arch Linux (i en general a qualsevol distribució). Algunes estan als repositoris oficials, d'altres requereixen AUR (Arch) o afegir un repositori extern (Ubuntu).</p>
+
+    <div class="grid g2 fi">
+      <div class="card bl-pres">
+        <div class="card-icon" style="background:#f5f3ff">📊</div>
+        <h3>LibreOffice Impress</h3>
+        <p style="margin-bottom:.75rem">L'alternativa gratuïta més completa a PowerPoint. Compatible amb formats .pptx i .odp. Ideal per a presentacions offline.</p>
+        <table class="ptable">
+          <tr><td><strong>Instal·lació Ubuntu</strong></td><td><code>sudo apt install libreoffice-impress</code></td></tr>
+          <tr><td><strong>Instal·lació Arch</strong></td><td><code>sudo pacman -S libreoffice-still</code></td></tr>
+          <tr><td><strong>Formats</strong></td><td>.odp, .pptx, .pdf, .swf</td></tr>
+          <tr><td><strong>Punts forts</strong></td><td>Compatible .pptx, exportació PDF, macros.</td></tr>
+        </table>
+        <div class="tool-chip" style="margin-top:.75rem"><span class="tc-dot" style="background:#7c3aed"></span>Offline · Codi obert · Compatible .pptx</div>
+      </div>
+
+      <div class="card bl-teal">
+        <div class="card-icon" style="background:#f0fdfa">🖥️</div>
+        <h3>Impressive</h3>
+        <p style="margin-bottom:.75rem">Eina lleugera per presentar fitxers PDF amb efectes visuals de zoom i il·luminació. Perfecte per a presentacions tècniques generades des de LaTeX o LibreOffice.</p>
+        <table class="ptable">
+          <tr><td><strong>Instal·lació Ubuntu</strong></td><td><code>sudo apt install impressive</code></td></tr>
+          <tr><td><strong>Instal·lació Arch</strong></td><td><code>yay -S impressive</code> (AUR)</td></tr>
+          <tr><td><strong>Formats</strong></td><td>.pdf (entrada), presentació a pantalla</td></tr>
+          <tr><td><strong>Punts forts</strong></td><td>Zoom, destacat, transicions, molt lleuger.</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="grid g2 fi" style="margin-top:1.25rem">
+      <div class="card bl-blue">
+        <div class="card-icon" style="background:#eff6ff">📝</div>
+        <h3>Beamer (LaTeX)</h3>
+        <p style="margin-bottom:.75rem">Classe de LaTeX per crear presentacions en PDF d'alta qualitat tipogràfica. Ideal per a presentacions acadèmiques i científiques amb fórmules matemàtiques.</p>
+        <table class="ptable">
+          <tr><td><strong>Instal·lació Ubuntu</strong></td><td><code>sudo apt install texlive-latex-extra</code></td></tr>
+          <tr><td><strong>Instal·lació Arch</strong></td><td><code>sudo pacman -S texlive-latexextra</code></td></tr>
+          <tr><td><strong>Edició gràfica</strong></td><td>Kile, Texstudio (disponibles als repos)</td></tr>
+        </table>
+        <div class="callout cl-blue" style="margin-top:.75rem;padding:.85rem 1rem">
+          <span class="callout-icon">💡</span>
+          <p>Beamer genera PDFs perfectes per imprimir. No és interactiu com Impress, però la qualitat tipogràfica és insuperable.</p>
+        </div>
+      </div>
+
+      <div class="card bl-amber">
+        <div class="card-icon" style="background:#fffbeb">🌐</div>
+        <h3>Reveal.js</h3>
+        <p style="margin-bottom:.75rem">Framework HTML/CSS/JS per crear presentacions al navegador. Instal·lable localment amb Node.js o usable sense instal·lació amb l'editor online de Slides.com.</p>
+        <table class="ptable">
+          <tr><td><strong>Requisit Ubuntu</strong></td><td><code>sudo apt install nodejs npm</code></td></tr>
+          <tr><td><strong>Requisit Arch</strong></td><td><code>sudo pacman -S nodejs npm</code></td></tr>
+          <tr><td><strong>Instal·lació</strong></td><td><code>npm install reveal.js</code></td></tr>
+          <tr><td><strong>Punts forts</strong></td><td>Navegador, Markdown, temes CSS, plugins.</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="section-tag tag-pres fi" style="margin-top:4rem">Eines online gratuïtes</div>
+    <h2 class="fi">Eines online (gratuïtes, usables des de Linux)</h2>
+
+    <div class="grid g3 fi">
+      <div class="card bl-pres">
+        <div class="card-icon" style="background:#f5f3ff">🎨</div>
+        <h3>Canva</h3>
+        <p style="margin-bottom:.6rem">Editor visual online amb centenars de plantilles de presentació. Pla gratuït molt complet. Exporta a PDF i .pptx.</p>
+        <div class="tool-chip"><span class="tc-dot" style="background:#7c3aed"></span>Online · Plantilles · Drag &amp; Drop</div>
+        <div class="callout cl-pres" style="margin-top:.75rem;padding:.75rem 1rem">
+          <span class="callout-icon">⚠️</span>
+          <p>El pla gratuït té limitacions d'imatges premium. Ideal per a dissenys visuals atractius.</p>
+        </div>
+      </div>
+      <div class="card bl-teal">
+        <div class="card-icon" style="background:#f0fdfa">📊</div>
+        <h3>Google Slides</h3>
+        <p style="margin-bottom:.6rem">Part de Google Workspace. 100% gratuït amb compte Google. Permet col·laboració en temps real i integra elements de Google Fonts i Imatges.</p>
+        <div class="tool-chip"><span class="tc-dot" style="background:#0d9488"></span>Online · Col·laboratiu · Gratuït</div>
+        <div class="callout cl-teal" style="margin-top:.75rem;padding:.75rem 1rem">
+          <span class="callout-icon">✅</span>
+          <p>Compatible amb .pptx. Ideal per a treball en grup. Exporta a PDF i .pptx.</p>
+        </div>
+      </div>
+      <div class="card bl-blue">
+        <div class="card-icon" style="background:#eff6ff">🌀</div>
+        <h3>Prezi (pla bàsic)</h3>
+        <p style="margin-bottom:.6rem">Presentacions no lineals amb zoom i moviment. El pla bàsic és gratuït (presentacions públiques). Ideal per a narratives visuals no convencionals.</p>
+        <div class="tool-chip"><span class="tc-dot" style="background:#4285f4"></span>Online · Zoom · No lineal</div>
+        <div class="callout cl-amber" style="margin-top:.75rem;padding:.75rem 1rem">
+          <span class="callout-icon">⚠️</span>
+          <p>El pla gratuït no permet presentacions privades. Pot marejar l'audiència si s'abusa del zoom.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout cl-teal fi" style="margin-top:2rem">
+      <span class="callout-icon">🐧</span>
+      <div>
+        <strong>Recomanació per a Ubuntu/Arch: LibreOffice Impress + Canva</strong>
+        <p style="margin-top:.3rem">La combinació més pràctica per a un SMX és dissenyar la plantilla a <strong>Canva</strong> (per l'accés a recursos visuals de qualitat), exportar com a PDF o imatge, i si cal editar o presentar offline usar <strong>LibreOffice Impress</strong>. Google Slides és perfecte per a treball col·laboratiu en grup.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ TEORIA BLOC 2 — DISSENY I COMPOSICIÓ ══════════════════ -->
+<section class="s-teal">
+  <div class="container">
+    <div class="ra-banner ra-teal fi">
+      <div class="ra-num">2</div>
+      <div>
+        <h2>Principis de disseny i composició visual</h2>
+        <p>Regles fonamentals per crear presentacions visualment efectives i professionals.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-teal fi">Principis fonamentals</div>
+    <h2 class="fi">Les regles d'or del disseny de diapositives</h2>
+    <p class="lead fi">Una bona diapositiva no és un document de text, és un suport visual per al discurs. La regla bàsica: menys és més. Cada element ha de tenir una raó per ser-hi.</p>
+
+    <div class="grid g2 fi">
+      <div class="card bl-pres">
+        <div class="card-icon" style="background:#f5f3ff">📐</div>
+        <h3>Regla dels Terços i Composició</h3>
+        <p style="margin-bottom:.75rem">Divideix la diapositiva en una graella de 3×3 i col·loca els elements visuals importants als punts d'intersecció o al llarg de les línies de la graella.</p>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.3rem 0;font-size:.9rem;color:var(--muted);border-bottom:1px solid var(--border)">⬛ <strong style="color:var(--ink)">Espai en blanc (white space):</strong> no omple tot l'espai disponible. El buit dona respir i dirigeix la mirada.</li>
+          <li style="padding:.3rem 0;font-size:.9rem;color:var(--muted);border-bottom:1px solid var(--border)">👁️ <strong style="color:var(--ink)">Jerarquia visual:</strong> l'ull ha de saber on anar primer. Usa mida, color i contrast per guiar la lectura.</li>
+          <li style="padding:.3rem 0;font-size:.9rem;color:var(--muted)">📏 <strong style="color:var(--ink)">Alineació:</strong> mai col·loquis elements "a ull". Usa les guies i la quadrícula de l'eina per alinear tot.</li>
+        </ul>
+      </div>
+      <div class="card bl-teal">
+        <div class="card-icon" style="background:#f0fdfa">🔤</div>
+        <h3>Tipografia per a presentacions</h3>
+        <table class="ptable" style="margin-top:.5rem">
+          <thead><tr><th>Element</th><th>Recomanació</th></tr></thead>
+          <tbody>
+            <tr><td>Families de font</td><td>Màxim 2 per presentació (títol + cos).</td></tr>
+            <tr><td>Mida títol</td><td>40–60pt (llegible des de 5 metres).</td></tr>
+            <tr><td>Mida cos</td><td>Mínim 24pt. Mai per sota de 18pt.</td></tr>
+            <tr><td>Interlineat</td><td>1.2–1.5. No massa compacte.</td></tr>
+            <tr><td>Fonts recomanades</td><td>Open Sans, Lato, Montserrat, Roboto (Google Fonts, totes gratuïtes).</td></tr>
+            <tr><td>MAJÚSCULES</td><td>Evita-les al cos. Acceptables als títols curts.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="section-tag tag-teal fi" style="margin-top:4rem">Color i contrast</div>
+    <h2 class="fi">Teoria del color aplicada a presentacions</h2>
+
+    <div class="grid g3 fi">
+      <div class="card bl-pres">
+        <div class="card-icon" style="background:#f5f3ff">🎨</div>
+        <h3>Paletes de color</h3>
+        <p style="margin-bottom:.6rem;font-size:.9rem">Tria una paleta de 3-5 colors i mantén-la a tota la presentació:</p>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted);border-bottom:1px solid var(--border)">🔵 <strong style="color:var(--ink)">Color dominant (60%):</strong> fons i àrees grans.</li>
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted);border-bottom:1px solid var(--border)">🟣 <strong style="color:var(--ink)">Color secundari (30%):</strong> elements de suport, capçaleres.</li>
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted)">🟡 <strong style="color:var(--ink)">Color accent (10%):</strong> crida a l'acció, elements clau, dades importants.</li>
+        </ul>
+        <div class="ex ex-pres" style="margin-top:.75rem">
+          <div class="ex-lbl">Eines per triar paletes</div>
+          <p>Coolors.co · Adobe Color · Paletton · Google Material Design Color Tool — totes gratuïtes i accessibles online.</p>
+        </div>
+      </div>
+      <div class="card bl-teal">
+        <div class="card-icon" style="background:#f0fdfa">⚡</div>
+        <h3>Contrast i accessibilitat</h3>
+        <p style="margin-bottom:.6rem;font-size:.9rem">El contrast entre fons i text és fonamental per a la llegibilitat:</p>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted);border-bottom:1px solid var(--border)">✅ <strong style="color:var(--ink)">Ràtio mínim WCAG AA:</strong> 4.5:1 per a text normal.</li>
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted);border-bottom:1px solid var(--border)">🔲 <strong style="color:var(--ink)">Fons fosc + text clar:</strong> bé per a presentacions en sala fosca.</li>
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted);border-bottom:1px solid var(--border)">🔳 <strong style="color:var(--ink)">Fons clar + text fosc:</strong> millor per a impressió i llum ambiental.</li>
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted)">🎨 <strong style="color:var(--ink)">Daltonisme:</strong> evita usar únicament vermell/verd per transmetre informació.</li>
+        </ul>
+      </div>
+      <div class="card bl-blue">
+        <div class="card-icon" style="background:#eff6ff">🧠</div>
+        <h3>Lleis Gestalt aplicades</h3>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted);border-bottom:1px solid var(--border)"><strong style="color:var(--ink)">Proximitat:</strong> els elements propers es perceben com un grup. Agrupa elements relacionats.</li>
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted);border-bottom:1px solid var(--border)"><strong style="color:var(--ink)">Similitud:</strong> elements iguals semblen relacionats. Usa el mateix color per a elements del mateix tipus.</li>
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted);border-bottom:1px solid var(--border)"><strong style="color:var(--ink)">Continuïtat:</strong> l'ull segueix línies i formes. Usa fletxes i línies per guiar la mirada.</li>
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted)"><strong style="color:var(--ink)">Tancament:</strong> el cervell "completa" formes incompletes. Pots usar contorns parcials com a recurs gràfic.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section-tag tag-teal fi" style="margin-top:4rem">Contingut i estructura</div>
+    <h2 class="fi">Estructura narrativa i contingut de les diapositives</h2>
+    <div class="grid g2 fi">
+      <div class="card bl-pres">
+        <div class="card-icon" style="background:#f5f3ff">📖</div>
+        <h3>Estructura narrativa</h3>
+        <p style="margin-bottom:.6rem;font-size:.9rem">Tota presentació ha de tenir una estructura clara:</p>
+        <ol class="steps">
+          <li><p><strong>Portada:</strong> títol, autor, data i logotip si escau.</p></li>
+          <li><p><strong>Índex o agenda:</strong> avança el contingut i gestiona les expectatives.</p></li>
+          <li><p><strong>Cos:</strong> seccions ben delimitades. Cada idea principal = una diapositiva.</p></li>
+          <li><p><strong>Conclusió:</strong> resum dels punts clau i missatge principal.</p></li>
+          <li><p><strong>Crida a l'acció / Preguntes:</strong> diapositiva final clara i memorable.</p></li>
+        </ol>
+      </div>
+      <div class="card bl-teal">
+        <div class="card-icon" style="background:#f0fdfa">✂️</div>
+        <h3>Regles de contingut</h3>
+        <div class="callout cl-pres" style="padding:.85rem 1rem;margin:0 0 .75rem">
+          <span class="callout-icon">📏</span>
+          <div><strong>Regla 6×6:</strong> màxim 6 punts per diapositiva, màxim 6 paraules per punt. Preferiblement menys.</div>
+        </div>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted);border-bottom:1px solid var(--border)">🚫 <strong style="color:var(--ink)">Death by PowerPoint:</strong> evita llistes de text denses. La diapositiva suporta el discurs, no el substitueix.</li>
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted);border-bottom:1px solid var(--border)">🖼️ <strong style="color:var(--ink)">Una idea per diapositiva:</strong> si tens molt que dir, afegeix més diapositives.</li>
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted)">📊 <strong style="color:var(--ink)">Dades en gràfics:</strong> una taula de 20 files no s'entén en una projecció. Simplifica o usa gràfics.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ TEORIA BLOC 3 — MULTIMÈDIA I ANIMACIÓ ══════════════════ -->
+<section class="s-pres">
+  <div class="container">
+    <div class="ra-banner ra-pres fi">
+      <div class="ra-num">3</div>
+      <div>
+        <h2>Elements multimèdia, animació i transicions</h2>
+        <p>Incorporar imatges, vídeo, àudio i animacions de forma adequada per reforçar el missatge sense distreure.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-pres fi">Imatges i recursos visuals</div>
+    <h2 class="fi">Imatges, icones i recursos gràfics gratuïts</h2>
+    <div class="grid g2 fi">
+      <div class="card bl-pres">
+        <div class="card-icon" style="background:#f5f3ff">🖼️</div>
+        <h3>Fonts d'imatges i icones gratuïtes</h3>
+        <table class="ptable" style="margin-top:.5rem">
+          <thead><tr><th>Recurs</th><th>Tipus</th><th>Llicència</th></tr></thead>
+          <tbody>
+            <tr><td>Unsplash.com</td><td>Fotografia</td><td><span class="badge b-green">Lliure</span></td></tr>
+            <tr><td>Pexels.com</td><td>Fotografia i vídeo</td><td><span class="badge b-green">Lliure</span></td></tr>
+            <tr><td>Flaticon.com</td><td>Icones vectorials</td><td><span class="badge b-amber">Free (atribució)</span></td></tr>
+            <tr><td>Iconify.design</td><td>Icones SVG</td><td><span class="badge b-green">Open Source</span></td></tr>
+            <tr><td>Freepik.com</td><td>Vectors i il·lustracions</td><td><span class="badge b-amber">Free (atribució)</span></td></tr>
+            <tr><td>SVGRepo.com</td><td>Icones SVG</td><td><span class="badge b-green">Lliure</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card bl-teal">
+        <div class="card-icon" style="background:#f0fdfa">⚙️</div>
+        <h3>Bones pràctiques amb imatges</h3>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.35rem 0;font-size:.9rem;color:var(--muted);border-bottom:1px solid var(--border)">📐 <strong style="color:var(--ink)">Proporció correcta:</strong> mai deformes una imatge. Mantén sempre la proporció aspect ratio en redimensionar.</li>
+          <li style="padding:.35rem 0;font-size:.9rem;color:var(--muted);border-bottom:1px solid var(--border)">🔍 <strong style="color:var(--ink)">Resolució:</strong> per a presentacions a pantalla: mínim 96 dpi. Per a impressió: 300 dpi.</li>
+          <li style="padding:.35rem 0;font-size:.9rem;color:var(--muted);border-bottom:1px solid var(--border)">🎨 <strong style="color:var(--ink)">Coherència visual:</strong> usa imatges amb un estil consistent (fotografia realista vs il·lustracions no es combinen bé).</li>
+          <li style="padding:.35rem 0;font-size:.9rem;color:var(--muted)">⚖️ <strong style="color:var(--ink)">Drets d'autor:</strong> comprova sempre la llicència. Usa recursos de llicència CC0 o Creative Commons.</li>
+        </ul>
+        <div class="callout cl-amber" style="margin-top:.75rem;padding:.85rem 1rem">
+          <span class="callout-icon">⚠️</span>
+          <p>Buscar imatges a Google no significa que siguin lliures d'ús. Filtra per "Drets d'ús → Llicència Creative Commons" a la cerca avançada.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-tag tag-pres fi" style="margin-top:4rem">Animació i transicions</div>
+    <h2 class="fi">Animacions i transicions: menys és més</h2>
+    <div class="grid g2 fi">
+      <div class="card bl-pres">
+        <div class="card-icon" style="background:#f5f3ff">✨</div>
+        <h3>Tipos d'animació</h3>
+        <table class="ptable" style="margin-top:.5rem">
+          <thead><tr><th>Tipus</th><th>Quan usar-la</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge b-pres">Entrada</span></td><td>Revelar elements progressivament per guiar l'atenció.</td></tr>
+            <tr><td><span class="badge b-teal">Èmfasi</span></td><td>Destacar dades clau o cridar l'atenció sobre un element.</td></tr>
+            <tr><td><span class="badge b-blue">Sortida</span></td><td>Fer desaparèixer elements quan ja no són rellevants.</td></tr>
+            <tr><td><span class="badge b-amber">Trajectòria</span></td><td>Mostrar moviment o flux de processos.</td></tr>
+          </tbody>
+        </table>
+        <div class="callout cl-red" style="margin-top:.75rem;padding:.85rem 1rem">
+          <span class="callout-icon">🚫</span>
+          <p><strong>Evita:</strong> animacions "rebotant", "girant" o "volant" que distreuen de missatge. Tria <em>Aparèixer</em> o <em>Esvaïment</em> (fade in) com a opcions per defecte.</p>
+        </div>
+      </div>
+      <div class="card bl-teal">
+        <div class="card-icon" style="background:#f0fdfa">🎬</div>
+        <h3>Transicions entre diapositives</h3>
+        <p style="margin-bottom:.6rem;font-size:.9rem">Una transició és l'efecte visual entre dues diapositives consecutives:</p>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted);border-bottom:1px solid var(--border)">✅ <strong style="color:var(--ink)">Recomanades:</strong> Dissolució, Esvaïment, Desplaçament suau.</li>
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted);border-bottom:1px solid var(--border)">🚫 <strong style="color:var(--ink)">Evitar:</strong> Quadres, Ruleta, Origami — massa cridaneres i poc professionals.</li>
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted);border-bottom:1px solid var(--border)">⏱️ <strong style="color:var(--ink)">Durada:</strong> 0.3–0.5 segons. Les transicions lentes alenteixen el ritme.</li>
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted)">🔄 <strong style="color:var(--ink)">Coherència:</strong> usa la mateixa transició a tota la presentació (o com a màxim dues).</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section-tag tag-pres fi" style="margin-top:4rem">Vídeo i àudio</div>
+    <h2 class="fi">Incorporació de vídeo i àudio</h2>
+    <div class="grid g2 fi">
+      <div class="card bl-pres">
+        <div class="card-icon" style="background:#f5f3ff">🎥</div>
+        <h3>Vídeo a les presentacions</h3>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.35rem 0;font-size:.9rem;color:var(--muted);border-bottom:1px solid var(--border)">📁 <strong style="color:var(--ink)">Formats compatibles:</strong> .mp4 (H.264) és el més compatible entre LibreOffice, Google Slides i Canva.</li>
+          <li style="padding:.35rem 0;font-size:.9rem;color:var(--muted);border-bottom:1px solid var(--border)">🔗 <strong style="color:var(--ink)">Vídeo incrustat vs. vincle:</strong> incrusta el vídeo al fitxer quan sigui possible per evitar problemes de reproducció offline.</li>
+          <li style="padding:.35rem 0;font-size:.9rem;color:var(--muted)">⏱️ <strong style="color:var(--ink)">Durada:</strong> els vídeos han de ser curts (30–90 s). Un vídeo llarg trenca el ritme de la presentació.</li>
+        </ul>
+        <div class="ex ex-pres" style="margin-top:.75rem">
+          <div class="ex-lbl">Eines de vídeo gratuïtes per a Linux</div>
+          <p><strong>OpenShot</strong> (apt/pacman), <strong>Kdenlive</strong> (apt/pacman), <strong>Shotcut</strong> — editors de vídeo de codi obert per preparar clips abans d'inserir-los.</p>
+        </div>
+      </div>
+      <div class="card bl-teal">
+        <div class="card-icon" style="background:#f0fdfa">🔊</div>
+        <h3>Àudio a les presentacions</h3>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.35rem 0;font-size:.9rem;color:var(--muted);border-bottom:1px solid var(--border)">🎵 <strong style="color:var(--ink)">Música de fons:</strong> usa-la amb moderació i sempre amb llicència lliure (Freemusicarchive.org, Incompetech.com).</li>
+          <li style="padding:.35rem 0;font-size:.9rem;color:var(--muted);border-bottom:1px solid var(--border)">🎙️ <strong style="color:var(--ink)">Narració (veu en off):</strong> molt útil per a presentacions autoreproduïdes. Usa <strong>Audacity</strong> (disponible a Ubuntu/Arch) per gravar i editar.</li>
+          <li style="padding:.35rem 0;font-size:.9rem;color:var(--muted)">⚠️ <strong style="color:var(--ink)">Compatibilitat:</strong> LibreOffice Impress admet .mp3, .ogg i .wav. Comprova que el fitxer de so s'exporta correctament al guardar com a .pptx.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ TEORIA BLOC 4 — PRESENTACIÓ ORAL ══════════════════ -->
+<section class="s-teal">
+  <div class="container">
+    <div class="ra-banner ra-teal fi">
+      <div class="ra-num">4</div>
+      <div>
+        <h2>La presentació oral i la defensa del treball</h2>
+        <p>Tècniques de comunicació, preparació i eines de suport per a la presentació davant del públic.</p>
+      </div>
+    </div>
+
+    <div class="grid g2 fi">
+      <div class="card bl-pres">
+        <div class="card-icon" style="background:#f5f3ff">🎤</div>
+        <h3>Consells per a la presentació oral</h3>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.35rem 0;font-size:.9rem;color:var(--muted);border-bottom:1px solid var(--border)">👀 <strong style="color:var(--ink)">Contacte visual:</strong> mira al públic, no a la pantalla. Usa les notes del presentador.</li>
+          <li style="padding:.35rem 0;font-size:.9rem;color:var(--muted);border-bottom:1px solid var(--border)">⏱️ <strong style="color:var(--ink)">Temps:</strong>1-2 minuts per diapositiva. Una presentació de 10 min = 8-12 diapositives.</li>
+          <li style="padding:.35rem 0;font-size:.9rem;color:var(--muted);border-bottom:1px solid var(--border)">🗣️ <strong style="color:var(--ink)">Veu:</strong> varia el ritme i el to. Les pauses deliberades emfatitzen els punts clau.</li>
+          <li style="padding:.35rem 0;font-size:.9rem;color:var(--muted)">🖱️ <strong style="color:var(--ink)">Mode presentador:</strong> usa la vista de presentador per veure les notes i el temporitzador en segon pla.</li>
+        </ul>
+      </div>
+      <div class="card bl-teal">
+        <div class="card-icon" style="background:#f0fdfa">🖨️</div>
+        <h3>Exportació i distribució</h3>
+        <table class="ptable" style="margin-top:.5rem">
+          <thead><tr><th>Format</th><th>Quan usar-lo</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge b-pres">.pptx</span></td><td>Per compartir i permetre edició posterior.</td></tr>
+            <tr><td><span class="badge b-teal">.pdf</span></td><td>Per distribuir sense risc de canvis de format.</td></tr>
+            <tr><td><span class="badge b-blue">.odp</span></td><td>Format natiu de LibreOffice, màxima compatibilitat FOSS.</td></tr>
+            <tr><td><span class="badge b-amber">Imatges .png</span></td><td>Per publicar diapositives a xarxes socials o web.</td></tr>
+            <tr><td><span class="badge b-red">Vídeo .mp4</span></td><td>Presentació autoreproduïda (kiosc, informació pública).</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ PRÀCTICA ══════════════════ -->
+<section id="practiques" class="s-dark">
+  <div class="container">
+    <div class="section-tag fi" style="color:rgba(255,255,255,0.5)">Activitat pràctica</div>
+    <h2 class="fi" style="color:white">Pràctica Única · Molt Completa i Avançada</h2>
+    <p class="lead fi">Una sola pràctica integradora que treballa tots els aspectes del RA7: disseny, composició, eines, multimèdia, animació i presentació oral.</p>
+
+    <div class="practice-card fi">
+      <div class="practice-header p1-bg">
+        <div class="practice-num">01</div>
+        <div>
+          <h3>Campanya de sensibilització tecnològica — Presentació multimèdia professional</h3>
+          <p>Molt avançat · Integra tots els principis de disseny, eines gratuïtes, multimèdia i presentació oral</p>
+        </div>
+      </div>
+      <div class="practice-body">
+        <div class="grid g2">
+          <div>
+            <h4>📋 Descripció general</h4>
+            <p style="font-size:.92rem;color:var(--muted);margin-bottom:1.25rem">Crearàs una <strong>presentació multimèdia professional de 15-20 diapositives</strong> sobre una campanya de sensibilització en un tema tecnològic a triar (ciberseguretat per a pimes, IA i el mercat laboral, sostenibilitat digital, privacitat a les xarxes socials, etc.).</p>
+            <p style="font-size:.92rem;color:var(--muted);margin-bottom:1.25rem">La presentació ha de ser apta per a una audiència no tècnica (pares, empresaris locals, veïns), per la qual cosa el disseny visual i la claredat del missatge seran tan importants com el contingut.</p>
+
+            <h4>🛠️ Eines obligatòries</h4>
+            <ul style="list-style:none;padding:0;margin-bottom:1.25rem">
+              <li style="padding:.3rem 0;font-size:.9rem;color:var(--muted);border-bottom:1px solid var(--border)">✅ <strong style="color:var(--ink)">Eina principal:</strong> LibreOffice Impress (Ubuntu/Arch) O Google Slides. La tria és lliure però s'ha de justificar.</li>
+              <li style="padding:.3rem 0;font-size:.9rem;color:var(--muted);border-bottom:1px solid var(--border)">✅ <strong style="color:var(--ink)">Disseny visual:</strong> Canva (per crear la plantilla, elements gràfics o infografies) O eines de disseny vectorial com Inkscape (disponible a Ubuntu/Arch: <code>sudo apt install inkscape</code>).</li>
+              <li style="padding:.3rem 0;font-size:.9rem;color:var(--muted)">✅ <strong style="color:var(--ink)">Edició d'imatge:</strong> GIMP (Ubuntu: <code>sudo apt install gimp</code> / Arch: <code>sudo pacman -S gimp</code>) per preparar i optimitzar les imatges.</li>
+            </ul>
+
+            <h4>🎯 Objectius d'aprenentatge</h4>
+            <ul class="steps" style="margin-top:.5rem">
+              <li><p>Aplicar els principis de <strong>jerarquia visual, regla dels terços i regla 6×6</strong> a totes les diapositives.</p></li>
+              <li><p>Crear i usar una <strong>paleta de colors consistent</strong> (3-5 colors) amb ràtio de contrast WCAG AA.</p></li>
+              <li><p>Seleccionar i combinar <strong>màxim dues famílies tipogràfiques</strong> de Google Fonts.</p></li>
+              <li><p>Incorporar <strong>imatges lliures de drets</strong> (Unsplash/Pexels) optimitzades amb GIMP.</p></li>
+              <li><p>Integrar almenys un <strong>vídeo curt</strong> (30–60 s) incrustrat o vinculat.</p></li>
+              <li><p>Aplicar <strong>animacions d'entrada</strong> coherents i <strong>transicions uniformes</strong> a tota la presentació.</p></li>
+              <li><p>Crear una <strong>infografia</strong> (amb Canva o Inkscape) i insertar-la com a imatge de resolució adequada.</p></li>
+              <li><p>Preparar les <strong>notes del presentador</strong> per a cada diapositiva.</p></li>
+              <li><p>Exportar la presentació en tres formats: <strong>.pptx, .pdf i .odp</strong>.</p></li>
+              <li><p><strong>Presentar oralment</strong> la campanya davant la classe (10 min + 5 min preguntes).</p></li>
+            </ul>
+          </div>
+          <div>
+            <h4>📐 Estructura obligatòria de la presentació (15–20 diapositives)</h4>
+            <table class="ptable" style="margin-top:.5rem;margin-bottom:1.25rem">
+              <thead><tr><th>#</th><th>Diapositiva</th><th>Contingut mínim</th></tr></thead>
+              <tbody>
+                <tr><td>1</td><td><span class="badge b-pres">Portada</span></td><td>Títol, subtítol, autor, data, logotip inventat de la campanya.</td></tr>
+                <tr><td>2</td><td><span class="badge b-teal">Índex</span></td><td>5-6 seccions de la presentació amb navegació per clic (hiperenllaç intern).</td></tr>
+                <tr><td>3–4</td><td><span class="badge b-blue">Context</span></td><td>Per quin motiu és important aquest tema. Dades i estadístiques en gràfic.</td></tr>
+                <tr><td>5–8</td><td><span class="badge b-pres">Problema</span></td><td>Exposició del problema amb casos reals o exemples. Una idea per diapositiva.</td></tr>
+                <tr><td>9</td><td><span class="badge b-amber">Vídeo</span></td><td>Clip de vídeo de 30–60 s que il·lustri el problema o una solució.</td></tr>
+                <tr><td>10–13</td><td><span class="badge b-teal">Solucions</span></td><td>3-4 accions concretes que pot prendre l'audiència. Icones i text mínim.</td></tr>
+                <tr><td>14</td><td><span class="badge b-blue">Infografia</span></td><td>Infografia creada amb Canva/Inkscape que resumeixi el missatge clau.</td></tr>
+                <tr><td>15</td><td><span class="badge b-pres">Conclusió</span></td><td>Missatge principal (màx. 2 frases), crida a l'acció clara.</td></tr>
+                <tr><td>16</td><td><span class="badge b-teal">Fonts</span></td><td>Llista de fonts i recursos usats (imatges, dades, eines). Accessibilitat.</td></tr>
+                <tr><td>17+</td><td><span class="badge b-amber">Preguntes</span></td><td>Diapositiva de "Gràcies / Preguntes" amb dades de contacte.</td></tr>
+              </tbody>
+            </table>
+
+            <h4>📊 Rúbrica d'avaluació</h4>
+            <table class="ptable" style="margin-top:.5rem">
+              <thead><tr><th>Criteri</th><th>Pes</th></tr></thead>
+              <tbody>
+                <tr><td>Aplicació principis de disseny (jerarquia, color, tipografia, composició)</td><td><span class="badge b-pres">25%</span></td></tr>
+                <tr><td>Qualitat i coherència visual global de la presentació</td><td><span class="badge b-pres">20%</span></td></tr>
+                <tr><td>Incorporació correcta d'elements multimèdia (vídeo, imatges, infografia)</td><td><span class="badge b-teal">20%</span></td></tr>
+                <tr><td>Animacions i transicions adequades i coherents</td><td><span class="badge b-blue">10%</span></td></tr>
+                <tr><td>Notes del presentador completes i útils</td><td><span class="badge b-blue">10%</span></td></tr>
+                <tr><td>Presentació oral (claredat, temps, contacte visual)</td><td><span class="badge b-amber">10%</span></td></tr>
+                <tr><td>Justificació de les eines usades i exportació en tres formats</td><td><span class="badge b-amber">5%</span></td></tr>
+              </tbody>
+            </table>
+
+            <div class="callout cl-pres" style="margin-top:1rem;padding:.85rem 1rem">
+              <span class="callout-icon">📦</span>
+              <p><strong>Entrega:</strong> carpeta comprimida (.zip) amb els tres formats exportats (.pptx, .pdf, .odp), les imatges originals usades (carpeta /img), i un document de text breu (màx. 1 pàgina) justificant les decisions de disseny i les eines escollides.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ PREGUNTES TEÒRIQUES ══════════════════ -->
+<section id="preguntes">
+  <div class="container">
+    <div class="ra-banner ra-preguntes fi">
+      <div class="ra-num">?</div>
+      <div>
+        <h2>10 Preguntes Teòriques</h2>
+        <p>Reflexiona i respon amb els teus propis mots. L'objectiu és demostrar que has interioritzat els principis, no memoritzar definicions.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-pres fi">Eines i entorn</div>
+    <h2 class="fi">Preguntes sobre eines i programari</h2>
+    <div class="grid fi" style="gap:.9rem;margin-bottom:3rem">
+
+      <div class="q-card">
+        <div class="q-num">1</div>
+        <div class="q-body">
+          <h4>Compara LibreOffice Impress amb Google Slides en tres aspectes: treball offline, col·laboració en temps real i compatibilitat amb el format .pptx de Microsoft PowerPoint. En quin context professional recomanaries cadascun? Justifica la resposta.</h4>
+          <p>Quin és el format natiu de LibreOffice Impress i quins avantatges té respecte a guardar en format .pptx?</p>
+          <span class="q-tag qt-pres">Eines</span>
+          <span class="q-tag qt-form">Comparació</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">2</div>
+        <div class="q-body">
+          <h4>Explica com s'instal·la LibreOffice Impress a Ubuntu i a Arch Linux. Quina diferència hi ha entre usar <code>apt</code> i <code>pacman</code> com a gestors de paquets? Quins paquets addicionals podries necessitar per tenir suport complet de fonts i exportació a PDF?</h4>
+          <p>Existeix alguna diferència entre instal·lar <code>libreoffice-still</code> i <code>libreoffice-fresh</code> a Arch? Quan triaries cadascun?</p>
+          <span class="q-tag qt-pres">Linux</span>
+          <span class="q-tag qt-form">Instal·lació</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">3</div>
+        <div class="q-body">
+          <h4>Descriu tres eines online gratuïtes (a part de Google Slides) que es puguin usar per crear presentacions multimèdia des d'un navegador a Linux. Per a cada eina, indica els seus punts forts i les seves limitacions en el pla gratuït.</h4>
+          <p>Existeix alguna eina de creació de presentacions basada en text pla (Markdown) que generi presentacions automàticament? Quin avantatge tindria per a un tècnic SMX?</p>
+          <span class="q-tag qt-pres">Eines online</span>
+          <span class="q-tag qt-form">FOSS</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-tag tag-teal fi">Disseny i composició</div>
+    <h2 class="fi">Preguntes sobre principis de disseny</h2>
+    <div class="grid fi" style="gap:.9rem;margin-bottom:3rem">
+
+      <div class="q-card">
+        <div class="q-num">4</div>
+        <div class="q-body">
+          <h4>Explica la "regla 6×6" per al contingut de les diapositives i raona per quin motiu incomplir-la perjudica la comunicació. Dissenya mentalment dues versions d'una mateixa diapositiva sobre "Les 5 mesures de ciberseguretat bàsiques": una que compleixi la regla i una que la violi. Descriu les diferències.</h4>
+          <p>Quin concepte és el contrari de "Death by PowerPoint" i com es pot assolir en una presentació professional?</p>
+          <span class="q-tag qt-dis">Disseny</span>
+          <span class="q-tag qt-pres">Contingut</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">5</div>
+        <div class="q-body">
+          <h4>Explica el model de proporcions 60-30-10 en la teoria del color aplicada al disseny de presentacions. Posa un exemple concret d'una presentació corporativa on apliquis aquest model, identificant quin color seria el dominant, el secundari i l'accent.</h4>
+          <p>Per quin motiu no és recomanable usar únicament el vermell i el verd per transmetre informació diferenciada (p.ex. correcte/incorrecte) en una presentació accessible?</p>
+          <span class="q-tag qt-dis">Color</span>
+          <span class="q-tag qt-acc">Accessibilitat</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">6</div>
+        <div class="q-body">
+          <h4>Descriu tres de les lleis de la Gestalt (proximitat, similitud, continuïtat, tancament, figura-fons) i explica com les aplicaries concretament en el disseny d'una diapositiva de tipus "comparativa de dues opcions" per a un públic no tècnic.</h4>
+          <p>Per quin motiu "l'espai en blanc" (white space) no és un error de disseny sinó un element actiu de la composició?</p>
+          <span class="q-tag qt-dis">Gestalt</span>
+          <span class="q-tag qt-pres">Composició</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">7</div>
+        <div class="q-body">
+          <h4>Quines característiques ha de tenir la tipografia d'una presentació que es projectarà en una sala per a 50 persones? Especifica la mida mínima recomanada per a títols i per al cos del text, i explica per quin motiu els tipus de lletra "de fantasies" o decoratives no són adequades per a la majoria de presentacions professionals.</h4>
+          <p>On pots trobar fonts de qualitat professional gratuïtes que siguin compatibles amb LibreOffice Impress a Linux?</p>
+          <span class="q-tag qt-dis">Tipografia</span>
+          <span class="q-tag qt-pres">Llegibilitat</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-tag tag-pregs fi">Multimèdia i presentació oral</div>
+    <h2 class="fi">Preguntes sobre multimèdia i comunicació</h2>
+    <div class="grid fi" style="gap:.9rem">
+
+      <div class="q-card">
+        <div class="q-num">8</div>
+        <div class="q-body">
+          <h4>Explica la diferència entre incrustar un vídeo i vincular-lo en una presentació de LibreOffice Impress. Quins problemes pràctics podrien sorgir en cadascun dels dos casos si compareixes la presentació amb un altre ordinador o la presentes en un equip diferent?</h4>
+          <p>Quin format de vídeo és el més recomanable per incrustar en una presentació pensada per ser presentada en un equip Linux? Per quins motius?</p>
+          <span class="q-tag qt-pres">Vídeo</span>
+          <span class="q-tag qt-form">Multimèdia</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">9</div>
+        <div class="q-body">
+          <h4>Un company vol afegir música de fons a tota la seva presentació i ha descarregat una cançó de Spotify per usar-la. Quins problemes legals i tècnics tindrà? On pot trobar música gratuïta amb llicència per a ús lliure? Explica com s'edita i redueix la durada d'un clip d'àudio amb Audacity a Linux.</h4>
+          <p>Quin és el format d'àudio recomanable per a LibreOffice Impress per garantir la màxima compatibilitat entre Linux i Windows?</p>
+          <span class="q-tag qt-pres">Àudio</span>
+          <span class="q-tag qt-acc">Llicències</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">10</div>
+        <div class="q-body">
+          <h4>Descriu les diferències entre la "vista normal", la "vista d'esquema", la "vista de classificador de diapositives" i la "vista de presentador" de LibreOffice Impress (o Google Slides). Per a quina tasca concreta durant la preparació d'una presentació és especialment útil cadascuna d'aquestes vistes?</h4>
+          <p>Durant la presentació oral, quin és l'avantatge d'usar la "Vista del presentador" en lloc de la presentació normal? Quina informació addicional ofereix al presentador?</p>
+          <span class="q-tag qt-pres">Interfície</span>
+          <span class="q-tag qt-avan">Presentació oral</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ RESUM FINAL ══════════════════ -->
+<section class="s-cream">
+  <div class="container fi">
+    <div class="section-tag tag-cobalt">Resum del RA7</div>
+    <h2>El que heu après</h2>
+    <p class="lead">Un repàs ràpid dels conceptes clau del RA7 i la seva aplicació professional com a tècnics SMX.</p>
+    <div class="grid g3 fi">
+      <div class="card bl-pres">
+        <div class="card-icon" style="background:#f5f3ff">🎨</div>
+        <h3>Disseny i Composició</h3>
+        <p><strong>Regla dels terços:</strong> posiciona els elements als punts forts. <strong>Regla 6×6:</strong> màxim 6 punts, 6 paraules. <strong>60-30-10:</strong> dominant, secundari, accent. <strong>Gestalt:</strong> proximitat, similitud, continuïtat. <strong>Jerarquia:</strong> mida, color i contrast guien la mirada. <em>Menys és sempre més.</em></p>
+      </div>
+      <div class="card bl-teal">
+        <div class="card-icon" style="background:#f0fdfa">🛠️</div>
+        <h3>Eines Gratuïtes per a Linux</h3>
+        <p><strong>LibreOffice Impress:</strong> presentacions offline, compatible .pptx. <strong>Google Slides:</strong> col·laboració en temps real. <strong>Canva:</strong> plantilles visuals. <strong>Inkscape + GIMP:</strong> disseny vectorial i edició d'imatge. <strong>Audacity:</strong> edició d'àudio. <strong>OpenShot/Kdenlive:</strong> edició de vídeo.</p>
+      </div>
+      <div class="card bl-blue">
+        <div class="card-icon" style="background:#eff6ff">🎬</div>
+        <h3>Multimèdia i Presentació</h3>
+        <p><strong>Imatges:</strong> Unsplash, Pexels (lliures). Sempre mantenir aspect ratio. <strong>Vídeo:</strong> .mp4 H.264, incrustat, màx. 60–90 s. <strong>Animació:</strong> fade in, discreta i coherent. <strong>Transicions:</strong> dissolució, uniformes. <strong>Exportació:</strong> .pptx, .pdf, .odp. <strong>Oral:</strong> contacte visual, notes, temporitzador.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p><strong>RA7 — Presentacions Multimèdia · SMX · Ofimàtica</strong></p>
+  <p style="margin-top:.4rem">Disseny · Composició · Eines FOSS · Multimèdia · Animació · Presentació oral</p>
+  <p style="margin-top:.4rem">Departament d'Informàtica · Sistemes Microinformàtics i Xarxes</p>
+</footer>
+
+<script>
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+  }, { threshold: 0.07, rootMargin: '0px 0px -30px 0px' });
+  document.querySelectorAll('.fi').forEach(el => io.observe(el));
+</script>
+</body>
+</html>

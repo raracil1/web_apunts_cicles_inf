@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Digitalització — SMX Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0f0f14;
+    --paper: #f5f3ee;
+    --cream: #ede9e0;
+    --navy: #1a1f4e;
+    --cobalt: #2d3bb5;
+    --sky: #4a6cf7;
+    --mint: #00c9a7;
+    --amber: #f4a833;
+    --rose: #e84560;
+    --muted: #6b6f85;
+    --border: #d4d0c8;
+    --card: #ffffff;
+    --radius: 16px;
+    --radius-sm: 8px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    font-size: 16px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(245,243,238,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 64px;
+  }
+  .nav-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.1rem; color: var(--navy); letter-spacing: -0.02em; }
+  .nav-logo span { color: var(--cobalt); }
+  .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+  .nav-links a { text-decoration: none; font-size: 0.85rem; font-weight: 500; color: var(--muted); transition: color .2s; }
+  .nav-links a:hover { color: var(--cobalt); }
+
+  /* ─── HERO ─── */
+  .hero {
+    min-height: 100vh;
+    display: grid; place-items: center;
+    background: var(--navy);
+    color: white;
+    position: relative;
+    overflow: hidden;
+    padding: 8rem 2rem 4rem;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 70% 40%, rgba(74,108,247,0.35) 0%, transparent 70%),
+                radial-gradient(ellipse 50% 40% at 20% 80%, rgba(0,201,167,0.2) 0%, transparent 60%);
+  }
+  .hero-grid {
+    position: absolute; inset: 0; opacity: 0.06;
+    background-image: linear-gradient(rgba(255,255,255,.3) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(255,255,255,.3) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+  .hero-content { position: relative; z-index: 1; text-align: center; max-width: 860px; }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(74,108,247,0.25); border: 1px solid rgba(74,108,247,0.5);
+    color: #a8b8ff; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.12em;
+    text-transform: uppercase; padding: 0.35rem 1rem; border-radius: 100px;
+    margin-bottom: 1.5rem;
+  }
+  .hero h1 {
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: clamp(2.8rem, 7vw, 5.5rem); line-height: 1.05;
+    letter-spacing: -0.03em; margin-bottom: 1.5rem;
+  }
+  .hero h1 em { font-style: normal; color: var(--sky); }
+  .hero p { font-size: 1.15rem; color: rgba(255,255,255,0.65); max-width: 560px; margin: 0 auto 2.5rem; }
+  .hero-tags { display: flex; flex-wrap: wrap; gap: .5rem; justify-content: center; }
+  .hero-tag {
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.7); padding: .3rem .85rem; border-radius: 100px;
+    font-size: 0.82rem;
+  }
+  .scroll-cue {
+    position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: .4rem;
+    color: rgba(255,255,255,0.35); font-size: 0.75rem; letter-spacing: 0.08em;
+  }
+  .scroll-cue::after {
+    content: ''; display: block; width: 1px; height: 40px;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.3), transparent);
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+  @keyframes scrollPulse { 0%,100%{opacity:.3;transform:scaleY(1)} 50%{opacity:1;transform:scaleY(1.3)} }
+
+  /* ─── SECTIONS ─── */
+  section { padding: 6rem 2rem; }
+  .container { max-width: 1100px; margin: 0 auto; }
+
+  .section-tag {
+    font-size: 0.75rem; font-weight: 700; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--cobalt);
+    display: flex; align-items: center; gap: .5rem; margin-bottom: 1rem;
+  }
+  .section-tag::before { content: ''; display: block; width: 24px; height: 2px; background: var(--cobalt); }
+
+  h2 {
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: clamp(1.8rem, 4vw, 2.8rem); line-height: 1.1;
+    letter-spacing: -0.02em; color: var(--navy); margin-bottom: 1rem;
+  }
+  h3 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.25rem; color: var(--navy); margin-bottom: .75rem; }
+  .lead { font-size: 1.1rem; color: var(--muted); max-width: 640px; margin-bottom: 3rem; }
+
+  /* ─── RA CHIPS ─── */
+  .ra-strip {
+    display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 4rem;
+  }
+  .ra-chip {
+    background: var(--navy); color: white; padding: .4rem 1rem;
+    border-radius: 100px; font-size: 0.8rem; font-weight: 600;
+    cursor: default;
+  }
+
+  /* ─── CARDS ─── */
+  .cards { display: grid; gap: 1.5rem; }
+  .cards-2 { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+  .cards-3 { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+
+  .card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 2rem;
+    transition: transform .2s, box-shadow .2s;
+  }
+  .card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(26,31,78,0.1); }
+  .card-icon {
+    width: 48px; height: 48px; border-radius: 12px;
+    display: grid; place-items: center; font-size: 1.4rem;
+    margin-bottom: 1rem;
+  }
+  .card p { color: var(--muted); font-size: 0.95rem; }
+
+  .card.accent-cobalt { border-left: 4px solid var(--cobalt); }
+  .card.accent-mint   { border-left: 4px solid var(--mint); }
+  .card.accent-amber  { border-left: 4px solid var(--amber); }
+  .card.accent-rose   { border-left: 4px solid var(--rose); }
+
+  /* ─── COMPARE TABLE ─── */
+  .compare { width: 100%; border-collapse: collapse; margin-top: 2rem; }
+  .compare th, .compare td { padding: 1rem 1.25rem; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+  .compare th { background: var(--navy); color: white; font-family: 'Syne', sans-serif; font-weight: 700; }
+  .compare th:first-child { border-radius: 8px 0 0 0; }
+  .compare th:last-child  { border-radius: 0 8px 0 0; }
+  .compare tr:hover td { background: var(--cream); }
+  .compare .bad  { color: #c0392b; font-weight: 500; }
+  .compare .good { color: #27ae60; font-weight: 500; }
+
+  /* ─── TIMELINE ─── */
+  .timeline { position: relative; padding-left: 2rem; }
+  .timeline::before { content:''; position:absolute; left:.5rem; top:0; bottom:0; width:2px; background: var(--border); }
+  .timeline-item { position: relative; margin-bottom: 2.5rem; }
+  .timeline-item::before {
+    content:''; position:absolute; left: -1.625rem; top: .35rem;
+    width:14px; height:14px; border-radius:50%;
+    background: var(--cobalt); border: 3px solid var(--paper);
+    box-shadow: 0 0 0 2px var(--cobalt);
+  }
+  .timeline-era { font-size: 0.72rem; text-transform: uppercase; letter-spacing: .1em; color: var(--cobalt); font-weight: 700; margin-bottom: .3rem; }
+  .timeline-item h4 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.1rem; color: var(--navy); margin-bottom: .4rem; }
+  .timeline-item p { color: var(--muted); font-size: 0.9rem; }
+
+  /* ─── CALLOUT ─── */
+  .callout {
+    background: linear-gradient(135deg, var(--navy) 0%, #2d3bb5 100%);
+    color: white; border-radius: var(--radius); padding: 2.5rem;
+    margin: 2rem 0;
+  }
+  .callout h4 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.1rem; margin-bottom: .75rem; color: #a8c4ff; }
+  .callout p  { color: rgba(255,255,255,0.8); font-size: 0.95rem; }
+
+  /* ─── EXAMPLE BOXES ─── */
+  .example-box {
+    background: var(--cream); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 1.25rem 1.5rem; margin: 1rem 0;
+  }
+  .example-box .ex-label {
+    font-size: 0.72rem; font-weight: 700; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--cobalt); margin-bottom: .4rem;
+  }
+  .example-box p { font-size: 0.9rem; color: var(--ink); }
+
+  /* ─── PILL LIST ─── */
+  .pill-list { display: flex; flex-wrap: wrap; gap: .5rem; margin: 1rem 0; }
+  .pill { background: var(--cream); border: 1px solid var(--border); padding: .3rem .85rem; border-radius: 100px; font-size: 0.82rem; color: var(--ink); }
+  .pill.blue { background: rgba(74,108,247,0.1); border-color: rgba(74,108,247,0.3); color: var(--cobalt); }
+  .pill.green { background: rgba(0,201,167,0.1); border-color: rgba(0,201,167,0.3); color: #007a65; }
+  .pill.orange { background: rgba(244,168,51,0.1); border-color: rgba(244,168,51,0.3); color: #8a5a00; }
+
+  /* ─── CLOUD DIAGRAM ─── */
+  .cloud-models { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin: 2rem 0; }
+  .cloud-card {
+    border-radius: var(--radius); padding: 1.75rem;
+    position: relative; overflow: hidden;
+  }
+  .cloud-card::before { content: attr(data-num); position: absolute; top: -10px; right: 12px; font-family: 'Syne', sans-serif; font-weight: 800; font-size: 4rem; color: rgba(255,255,255,0.12); line-height: 1; }
+  .cloud-card.publica  { background: linear-gradient(135deg, #2d3bb5, #4a6cf7); color: white; }
+  .cloud-card.privada  { background: linear-gradient(135deg, #1a1f4e, #2d3bb5); color: white; }
+  .cloud-card.hibrida  { background: linear-gradient(135deg, #007a65, #00c9a7); color: white; }
+  .cloud-card.comunit  { background: linear-gradient(135deg, #8a5a00, #f4a833); color: white; }
+  .cloud-card h4 { font-family:'Syne', sans-serif; font-weight:700; font-size:1.1rem; margin-bottom:.5rem; }
+  .cloud-card p  { font-size: 0.85rem; opacity: 0.85; margin-bottom: .75rem; }
+  .cloud-card .tag { display:inline-block; background:rgba(255,255,255,0.2); border-radius:100px; padding:.2rem .6rem; font-size:0.75rem; margin-right:.3rem; margin-bottom:.3rem; }
+
+  /* ─── SERVICE LADDER ─── */
+  .service-ladder { display: flex; flex-direction: column; gap: 1rem; margin: 2rem 0; }
+  .ladder-item { display: flex; gap: 1.5rem; align-items: flex-start; }
+  .ladder-label {
+    flex-shrink: 0; width: 64px; height: 64px;
+    border-radius: 12px; display: grid; place-items: center;
+    font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.1rem; color: white;
+  }
+  .ladder-label.iaas { background: var(--cobalt); }
+  .ladder-label.paas { background: var(--mint); }
+  .ladder-label.saas { background: var(--rose); }
+  .ladder-body { flex: 1; }
+  .ladder-body h4 { font-family:'Syne',sans-serif; font-weight:700; font-size:1rem; color:var(--navy); margin-bottom:.25rem; }
+  .ladder-body p  { color: var(--muted); font-size: 0.9rem; }
+  .ladder-body .examples { font-size: 0.82rem; color: var(--cobalt); font-weight: 500; margin-top: .3rem; }
+
+  /* ─── DARK SECTION ─── */
+  .section-dark {
+    background: var(--navy); color: white;
+  }
+  .section-dark h2 { color: white; }
+  .section-dark .lead { color: rgba(255,255,255,0.6); }
+  .section-dark .section-tag { color: #7a9fff; }
+  .section-dark .section-tag::before { background: #7a9fff; }
+  .section-dark .card { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1); }
+  .section-dark .card h3 { color: white; }
+  .section-dark .card p  { color: rgba(255,255,255,0.6); }
+
+  /* ─── ALT SECTION ─── */
+  .section-alt { background: var(--cream); }
+
+  /* ─── RA BANNER ─── */
+  .ra-banner {
+    background: var(--cobalt); color: white;
+    border-radius: var(--radius); padding: 1.5rem 2rem;
+    display: flex; align-items: center; gap: 1rem; margin-bottom: 3rem;
+  }
+  .ra-num { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 2.5rem; opacity: .3; flex-shrink: 0; }
+  .ra-banner h2 { color: white; font-size: 1.4rem; margin-bottom: .2rem; }
+  .ra-banner p  { color: rgba(255,255,255,0.7); font-size: 0.9rem; }
+
+  /* ─── KEY INSIGHT ─── */
+  .insight {
+    background: linear-gradient(135deg, rgba(0,201,167,0.12), rgba(74,108,247,0.12));
+    border: 1px solid rgba(74,108,247,0.25); border-radius: var(--radius);
+    padding: 1.5rem 2rem; margin: 2rem 0;
+    display: flex; gap: 1rem; align-items: flex-start;
+  }
+  .insight-icon { font-size: 1.5rem; flex-shrink: 0; margin-top: .1rem; }
+  .insight p { font-size: 0.95rem; color: var(--ink); }
+  .insight strong { color: var(--cobalt); }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: var(--ink); color: rgba(255,255,255,0.4);
+    padding: 3rem 2rem; text-align: center; font-size: 0.85rem;
+  }
+  footer strong { color: white; }
+
+  /* ─── ANIMATIONS ─── */
+  .fade-in { opacity: 0; transform: translateY(24px); transition: opacity .6s ease, transform .6s ease; }
+  .fade-in.visible { opacity: 1; transform: none; }
+
+  @media (max-width: 640px) {
+    .nav-links { display: none; }
+    .ra-banner { flex-direction: column; }
+    .ladder-item { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">SMX · <span>Digitalització</span></div>
+  <ul class="nav-links">
+    <li><a href="#ra1">RA1 Economia</a></li>
+    <li><a href="#ra2">RA2 Industria 4.0</a></li>
+    <li><a href="#ra3">RA3 Cloud</a></li>
+    <li><a href="#ra4">RA4 Comparativa</a></li>
+    <li><a href="#ra5">RA5 Activitat</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-badge">Sistemes Microinformàtics i Xarxes</div>
+    <h1>Digitalització<br><em>del món real</em></h1>
+    <p>Entén com la tecnologia transforma les empreses, l'economia i la nostra vida quotidiana. Del vapor als algoritmes.</p>
+    <div class="hero-tags">
+      <span class="hero-tag">Economia Circular</span>
+      <span class="hero-tag">Indústria 4.0</span>
+      <span class="hero-tag">IoT</span>
+      <span class="hero-tag">IA</span>
+      <span class="hero-tag">Cloud Computing</span>
+      <span class="hero-tag">Big Data</span>
+      <span class="hero-tag">Ciberseguretat</span>
+    </div>
+  </div>
+  <div class="scroll-cue">DESPLAÇA</div>
+</section>
+
+<!-- INTRO CONTEXTE -->
+<section style="padding: 4rem 2rem; background: var(--cream);">
+  <div class="container fade-in">
+    <div class="section-tag">Context general</div>
+    <h2>Per què estudiem digitalització?</h2>
+    <p class="lead">El món en el qual treballareu de tècnics de SMX ja no és analògic. Entendre com funcionen els nous sistemes digitals és tan essencial com saber instal·lar un sistema operatiu.</p>
+
+    <div class="cards cards-3">
+      <div class="card accent-cobalt fade-in">
+        <div class="card-icon" style="background:#e8ecff">🏭</div>
+        <h3>D'analògic a digital</h3>
+        <p>Les fàbriques, els hospitals, els bancs i fins i tot les granges utilitzen ara sensors, xarxes i intel·ligència artificial. El vostre rol com a tècnics és mantenir tot això funcionant.</p>
+      </div>
+      <div class="card accent-mint fade-in">
+        <div class="card-icon" style="background:#e0fdf8">🌍</div>
+        <h3>Sostenibilitat i tecnologia</h3>
+        <p>La digitalització no és només "fer-ho en ordinador". És fer les coses de manera més eficient, amb menys residus i amb millor ús dels recursos naturals.</p>
+      </div>
+      <div class="card accent-amber fade-in">
+        <div class="card-icon" style="background:#fff8e8">💼</div>
+        <h3>Oportunitats laborals</h3>
+        <p>Cada empresa que es digitalitza necessita tècnics. L'administrador de sistemes, el tècnic de xarxes, el responsable de seguretat... tots us necessiten a vosaltres.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RA1 -->
+<section id="ra1">
+  <div class="container">
+    <div class="ra-banner fade-in">
+      <div class="ra-num">RA1</div>
+      <div>
+        <h2>Models econòmics: Lineal vs Circular</h2>
+        <p>Estableix les diferències entre l'Economia Lineal i l'Economia Circular, identificant els avantatges de la EC en relació amb el medi ambient i el desenvolupament sostenible.</p>
+      </div>
+    </div>
+
+    <div class="section-tag">El problema de partida</div>
+    <h2>Com hem produït durant 200 anys</h2>
+    <p class="lead">Per entendre cap on anem, primer cal saber d'on venim. L'economia lineal ha estat el model dominant des de la Revolució Industrial.</p>
+
+    <div class="cards cards-2 fade-in">
+      <div class="card">
+        <div class="card-icon" style="background:#ffeaea;">🗑️</div>
+        <h3>Economia Lineal (EL)</h3>
+        <p>Segueix el patró: <strong>Extreure → Produir → Llençar</strong>. S'assumeix que els recursos naturals són infinits i que es pot generar residus sense conseqüències. Ha estat el model dominant de la industrialització.</p>
+        <div class="example-box" style="margin-top:1rem">
+          <div class="ex-label">Exemple concret</div>
+          <p>Un fabricant de mòbils disseny el seu telèfon perquè duri 2 anys (obsolescència programada). L'usuari el llença, el fabricant ven un nou model. La bateria no és reemplaçable, la pantalla no es pot reparar fàcilment. ♻️❌</p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#e0fdf8;">♻️</div>
+        <h3>Economia Circular (EC)</h3>
+        <p>Proposa un cicle tancat: <strong>Reduir → Reutilitzar → Reciclar → Regenerar</strong>. Els recursos es mantenen en ús el màxim temps possible. El "residu" d'un procés és la "matèria primera" d'un altre.</p>
+        <div class="example-box" style="margin-top:1rem">
+          <div class="ex-label">Exemple concret</div>
+          <p>Apple té el programa "Apple Trade In". Et recolleix el mòbil vell, en recupera els components reutilitzables (pantalla, càmera, xips) i fabrica nous dispositius amb menys materials verges. ♻️✅</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="insight fade-in">
+      <div class="insight-icon">💡</div>
+      <p><strong>Per a tècnics de SMX:</strong> Quan instal·leu un servidor nou, podeu gestionar-lo de manera circular: aprofitar l'equipament antic per a servidors de proves, reciclar components, usar virtualització per espremer el màxim de cada màquina física.</p>
+    </div>
+
+    <h3 style="margin-top:3rem;margin-bottom:1.5rem;">La comparativa detallada</h3>
+    <div style="overflow-x:auto;" class="fade-in">
+      <table class="compare">
+        <thead>
+          <tr><th>Àmbit</th><th>Economia Lineal</th><th>Economia Circular</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Recursos</strong></td><td class="bad">S'extreuen i es descarten</td><td class="good">Es mantenen en el cicle productiu</td></tr>
+          <tr><td><strong>Productes</strong></td><td class="bad">Dissenyats per caducar</td><td class="good">Dissenyats per durar i reparar-se</td></tr>
+          <tr><td><strong>Residus</strong></td><td class="bad">Generen contaminació</td><td class="good">Tornen a ser matèria primera</td></tr>
+          <tr><td><strong>Energia</strong></td><td class="bad">Majoritàriament fòssil</td><td class="good">Cap a les energies renovables</td></tr>
+          <tr><td><strong>Relació client</strong></td><td class="bad">Venda única</td><td class="good">Servei / subscripció contínua</td></tr>
+          <tr><td><strong>Exemple tech</strong></td><td class="bad">Impressora de tinta cara (obsolescència)</td><td class="good">Servei d'impressió per pàgines (Xerox)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="cards cards-2" style="margin-top:3rem;">
+      <div class="card accent-cobalt fade-in">
+        <h3>🖥️ El paper de la Informàtica en l'EC</h3>
+        <p style="margin-bottom:1rem;">La tecnologia és un habilitador clau de l'economia circular:</p>
+        <div class="pill-list">
+          <span class="pill blue">IoT: monitora el desgast dels productes</span>
+          <span class="pill blue">IA: prediu quan cal manteniment</span>
+          <span class="pill blue">Blockchain: traça l'origen dels materials</span>
+          <span class="pill blue">Plataformes digitals de reutilització</span>
+          <span class="pill blue">Impressió 3D de recanvis</span>
+        </div>
+        <div class="example-box">
+          <div class="ex-label">Cas real: Renault</div>
+          <p>La fàbrica de Flins (França) usa IA per detectar peces d'automòbil reaprofitables. Estalvien milers de tones de ferro cada any. Vosaltres podríeu mantenir la xarxa de sensors i servidors d'aquesta fàbrica.</p>
+        </div>
+      </div>
+      <div class="card accent-mint fade-in">
+        <h3>✅ Avantatges de l'Economia Circular</h3>
+        <div class="example-box">
+          <div class="ex-label">Ambiental</div>
+          <p>Reducció de CO₂, menys abocadors, conservació d'ecosistemes. Ex: menys mines de coltan (material dels nostres mòbils).</p>
+        </div>
+        <div class="example-box">
+          <div class="ex-label">Econòmic</div>
+          <p>Nous models de negoci: renting de maquinari, plataformes de revenda (Wallapop, Vinted), servitització.</p>
+        </div>
+        <div class="example-box">
+          <div class="ex-label">Social</div>
+          <p>Creació de llocs de treball locals en reparació, recollida i transformació de materials.</p>
+        </div>
+        <div class="example-box">
+          <div class="ex-label">Tecnològic</div>
+          <p>Impuls a la innovació: nous materials, nous algoritmes d'optimització, noves plataformes digitals.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RA2 -->
+<section id="ra2" class="section-dark">
+  <div class="container">
+    <div class="ra-banner" style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);" class="fade-in">
+      <div class="ra-num">RA2</div>
+      <div>
+        <h2>La 4a Revolució Industrial</h2>
+        <p>Caracteritza els principals aspectes de la 4a Revolució Industrial indicant els canvis i els avantatges tant des del punt de vista dels clients com de les empreses.</p>
+      </div>
+    </div>
+
+    <div class="section-tag">Context històric</div>
+    <h2>Les quatre revolucions</h2>
+    <p class="lead">Per entendre on som ara, cal saber el camí recorregut. Cada revolució va transformar completament la manera de treballar i viure.</p>
+
+    <div class="timeline fade-in" style="margin-bottom:4rem;">
+      <div class="timeline-item">
+        <div class="timeline-era">Segles XVIII-XIX · 1760–1840</div>
+        <h4>1a Revolució Industrial — La màquina de vapor 🚂</h4>
+        <p>La força animal i humana es substitueix per la màquina de vapor. Apareixen les primeres fàbriques tèxtils, les mines s'automatitzen i el ferrocarril connecta les ciutats. El treball artesà es transforma en treball industrial.</p>
+        <div class="example-box" style="background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.1);">
+          <div class="ex-label" style="color:#7a9fff;">Impacte</div>
+          <p style="color:rgba(255,255,255,0.7);">Un teixidor artesà que feia 10 metres de tela al dia, ara amb la màquina de vapor en produeix 1.000. Productivitat ×100.</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-era">Finals XIX - Principis XX · 1870–1914</div>
+        <h4>2a Revolució Industrial — Electricitat i cadena de muntatge ⚡</h4>
+        <p>L'electricitat substitueix el vapor. Henry Ford inventa la línia de producció en cadena: cada obrer fa sempre la mateixa tasca. Els productes es fabriquen en sèrie i es tornen assequibles per a tothom.</p>
+        <div class="example-box" style="background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.1);">
+          <div class="ex-label" style="color:#7a9fff;">Impacte</div>
+          <p style="color:rgba(255,255,255,0.7);">Ford tarda 12 hores a fabricar un cotxe el 1908. El 1913, amb la cadena de muntatge, tarda 93 minuts. El preu cau un 75%.</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-era">Dècades 1960-1990</div>
+        <h4>3a Revolució Industrial — Informàtica i robòtica 💻</h4>
+        <p>L'ordinador entra a les fàbriques i les oficines. Els PLCs (controladors programables) automatitzen les línies de producció. Internet connecta els ordinadors del món. Apareix el treball d'oficina tal com el coneixem.</p>
+        <div class="example-box" style="background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.1);">
+          <div class="ex-label" style="color:#7a9fff;">Impacte</div>
+          <p style="color:rgba(255,255,255,0.7);">Una nòmina que tardava 2 dies a calcular manualment, ara l'ordinador la fa en 30 segons. Les fàbriques de cotxes substitueixen obrers per braços robotitzats per pintura i soldadura.</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-era">Avui · 2010 — Present</div>
+        <h4>4a Revolució Industrial — Intel·ligència i connexió total 🤖</h4>
+        <p>Tot es connecta a Internet (IoT). Les màquines aprenen (IA). Les dades es processen en temps real (Big Data). La frontera entre món físic i digital desapareix. No només s'automatitzen tasques físiques, sinó també tasques intel·lectuals.</p>
+        <div class="example-box" style="background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.1);">
+          <div class="ex-label" style="color:#7a9fff;">Impacte</div>
+          <p style="color:rgba(255,255,255,0.7);">Un camió de Mercadona sap automàticament que ha de reposar les maduixes de la secció 3 perquè el sensor de la nevera detecta que n'hi queden 4 kg. Ho fa sense cap persona implicada.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-tag">Les tecnologies clau</div>
+    <h2>Els sis pilars de la Indústria 4.0</h2>
+    <p class="lead" style="color:rgba(255,255,255,0.6);">Cada tecnologia aporta una capa diferent al sistema. Juntes creen una xarxa intel·ligent que s'autogestiona.</p>
+
+    <div class="cards cards-2 fade-in">
+      <div class="card">
+        <div class="card-icon" style="background:rgba(74,108,247,0.2);">📡</div>
+        <h3>Internet de les Coses (IoT)</h3>
+        <p>Qualsevol objecte físic connectat a Internet que pot enviar i rebre dades. Transforma objectes "muts" en objectes "intel·ligents".</p>
+        <div class="example-box" style="background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.1);margin-top:1rem;">
+          <div class="ex-label" style="color:#7a9fff;">Exemples per a SMX</div>
+          <p style="color:rgba(255,255,255,0.7);">
+            🌡️ <strong>Sensor de temperatura</strong> al CPD que envia una alerta al mòbil del tècnic si supera 25°C.<br><br>
+            📊 <strong>Impressores</strong> que avisen automàticament quan queden menys del 10% de tinta.<br><br>
+            🚪 <strong>Control d'accés</strong> amb targetes RFID que registra qui entra i a quina hora al servidor de la xarxa.
+          </p>
+        </div>
+        <div class="pill-list" style="margin-top:.75rem;">
+          <span class="pill blue">Sensors</span>
+          <span class="pill blue">RFID</span>
+          <span class="pill blue">Actuadors</span>
+          <span class="pill blue">Gateway IoT</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-icon" style="background:rgba(0,201,167,0.2);">🧠</div>
+        <h3>Intel·ligència Artificial (IA)</h3>
+        <p>Sistemes capaços d'aprendre de les dades i prendre decisions sense programació explícita. Des de filtres d'spam fins a cotxes autònoms.</p>
+        <div class="example-box" style="background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.1);margin-top:1rem;">
+          <div class="ex-label" style="color:#7a9fff;">Exemples per a SMX</div>
+          <p style="color:rgba(255,255,255,0.7);">
+            🔒 <strong>Detecció d'intrusos</strong>: un sistema de IA analitza el tràfic de xarxa i detecta patrons anòmals (possible ransomware).<br><br>
+            📧 <strong>Antispam</strong>: Gmail usa IA per classificar 300 mil milions de correus al dia.<br><br>
+            🩺 <strong>Diagnosi mèdica</strong>: algoritmes que detecten tumors en radiografies amb més precisió que alguns radiòlegs.
+          </p>
+        </div>
+        <div class="pill-list" style="margin-top:.75rem;">
+          <span class="pill green">Machine Learning</span>
+          <span class="pill green">Deep Learning</span>
+          <span class="pill green">NLP</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-icon" style="background:rgba(244,168,51,0.2);">📊</div>
+        <h3>Big Data</h3>
+        <p>Conjunts de dades tan grans i complexos que les eines tradicionals no els poden processar. Es caracteritza per les 5V: Volum, Velocitat, Varietat, Veracitat, Valor.</p>
+        <div class="example-box" style="background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.1);margin-top:1rem;">
+          <div class="ex-label" style="color:#7a9fff;">Dades del món real</div>
+          <p style="color:rgba(255,255,255,0.7);">
+            📱 WhatsApp processa <strong>100.000 milions de missatges diaris</strong>.<br><br>
+            🛒 Mercadona analitza els tiquets de compra de milions de clients per saber quins productes posar junts a la prestatgeria.<br><br>
+            🚦 Barcelona gestiona el semàfor del carrer Balmes amb dades de tràfic en temps real (sensors + Big Data).
+          </p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-icon" style="background:rgba(232,69,96,0.2);">🤖</div>
+        <h3>Robòtica Avançada</h3>
+        <p>Robots que van molt més enllà de repetir moviments. Els cobots (robots col·laboratius) treballen al costat de persones sense risc. Poden aprendre tasques noves.</p>
+        <div class="example-box" style="background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.1);margin-top:1rem;">
+          <div class="ex-label" style="color:#7a9fff;">Exemples per a SMX</div>
+          <p style="color:rgba(255,255,255,0.7);">
+            🏭 <strong>SEAT Martorell</strong>: usa cobots per soldar xassis de cotxes. El robot fa la feina perillosa, el tècnic supervisa i programa.<br><br>
+            📦 <strong>Amazon</strong>: robots Kiva mouen les prestatgeries fins als treballadors (no al revés). Estalvien 20 km de caminada diaris per treballador.
+          </p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-icon" style="background:rgba(74,108,247,0.2);">☁️</div>
+        <h3>Cloud Computing</h3>
+        <p>Accés a recursos informàtics (servidors, emmagatzematge, aplicacions) a través d'Internet, sense necessitat d'infraestructura pròpia. Pagues pel que uses.</p>
+        <div class="example-box" style="background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.1);margin-top:1rem;">
+          <div class="ex-label" style="color:#7a9fff;">Exemples per a SMX</div>
+          <p style="color:rgba(255,255,255,0.7);">
+            🎬 <strong>Netflix</strong>: usa AWS (Amazon Web Services) per servir vídeo a 200 milions d'usuaris. El Black Friday, afegeix servidors automàticament sense comprar hardware.<br><br>
+            🏫 <strong>Institut amb Google Workspace</strong>: els correus, documents i Drive de tot el centre estan al núvol. Si s'espatlla el servidor local, els alumnes no perden res.
+          </p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-icon" style="background:rgba(232,69,96,0.2);">🛡️</div>
+        <h3>Ciberseguretat</h3>
+        <p>Quan tot és digital i connectable, la superfície d'atac creix exponencialment. Protegir dades i sistemes és tan important com tenir-los. La seguretat és transversal a tota la Indústria 4.0.</p>
+        <div class="example-box" style="background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.1);margin-top:1rem;">
+          <div class="ex-label" style="color:#7a9fff;">Per què importa</div>
+          <p style="color:rgba(255,255,255,0.7);">
+            🏥 El 2021, un atac ransomware va paralitzar l'hospital de Mataró durant dies.<br><br>
+            🏭 Un hacker va intentar canviar la composició química de l'aigua potable d'una ciutat de Florida via Internet.<br><br>
+            Si els dispositius IoT no estan ben protegits, qualsevol bombeta "intel·ligent" pot ser una porta d'entrada a la xarxa.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Impacte empresarial -->
+    <div style="margin-top:4rem;">
+      <div class="section-tag">Impacte empresarial</div>
+      <h2>Com canvia la Indústria 4.0 les empreses</h2>
+      <div class="cards cards-3 fade-in" style="margin-top:2rem;">
+        <div class="card">
+          <h3>🎯 Personalització massiva</h3>
+          <p>Abans: un model de cotxe, un color. Ara: pots configurar el teu Tesla online amb 1.000 combinacions i el produeixen igualment en cadena de muntatge.</p>
+        </div>
+        <div class="card">
+          <h3>⚡ Eficiència operativa</h3>
+          <p>Un algoritme de IA de DHL calcula la ruta de repartiment optimal per a 50 paquets en 0,3 segons. Un humà tardaria hores i probablement no seria tan bona.</p>
+        </div>
+        <div class="card">
+          <h3>🔮 Manteniment predictiu</h3>
+          <p>En lloc d'esperar que una màquina s'espatlli (reactiu), sensors i IA predirán quan s'espatllarà i programen la revisió. Estalvi del 30-40% en manteniment.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RA3 -->
+<section id="ra3">
+  <div class="container">
+    <div class="ra-banner fade-in">
+      <div class="ra-num">RA3</div>
+      <div>
+        <h2>Cloud Computing: Estructura i Tipologia</h2>
+        <p>Identifica l'estructura dels sistemes basats en cloud/núvol descrivint la seva tipologia i camp d'aplicació.</p>
+      </div>
+    </div>
+
+    <div class="section-tag">Fonaments</div>
+    <h2>Què és exactament el núvol?</h2>
+    <p class="lead">El "núvol" no és màgia ni és literalment un núvol. Són ordinadors d'una altra empresa a les quals accedeixes per Internet. Però amb moltes propietats especials.</p>
+
+    <div class="callout fade-in">
+      <h4>📖 Definició del NIST (Institut Nacional d'Estàndards i Tecnologia dels EUA)</h4>
+      <p>El cloud computing és un model que permet l'accés ubic, convenient i sota demanda a un conjunt compartit de recursos informàtics configurables (xarxes, servidors, emmagatzematge, aplicacions i serveis) que es poden aprovisionar i alliberar ràpidament amb un esforç mínim de gestió o interacció del proveïdor de servei.</p>
+    </div>
+
+    <div class="cards cards-2 fade-in" style="margin:3rem 0;">
+      <div class="card accent-cobalt">
+        <h3>🏗️ Arquitectura del Cloud</h3>
+        <div class="example-box" style="margin-bottom:.75rem;">
+          <div class="ex-label">Front-End (el que veus)</div>
+          <p>El navegador web, l'app del mòbil o el programa d'escriptori. És la interfície amb la qual l'usuari interactua. Ex: quan obres Google Drive al Chrome.</p>
+        </div>
+        <div class="example-box" style="margin-bottom:.75rem;">
+          <div class="ex-label">Back-End (el que no veus)</div>
+          <p>Milers de servidors en centres de dades (CPDs) repartits per tot el món. Google, per exemple, té 21 regions i 64 zones de disponibilitat.</p>
+        </div>
+        <div class="example-box">
+          <div class="ex-label">Xarxa (el que ho connecta)</div>
+          <p>Internet i xarxes privades d'alta velocitat. AWS té el seu propi cable submarí per connectar Europa i Amèrica del Nord amb latència mínima.</p>
+        </div>
+      </div>
+      <div class="card accent-mint">
+        <h3>✨ Característiques essencials</h3>
+        <div class="example-box" style="margin-bottom:.75rem;">
+          <div class="ex-label">Autoservei sota demanda</div>
+          <p>Un tècnic pot crear un servidor nou en 3 minuts sense trucar a ningú. Compareu-ho amb comprar hardware físic: 2-4 setmanes.</p>
+        </div>
+        <div class="example-box" style="margin-bottom:.75rem;">
+          <div class="ex-label">Accés des de qualsevol lloc</div>
+          <p>Mentre hi hagi connexió a Internet, pots accedir als recursos. Treballar des de casa és possible gràcies al núvol.</p>
+        </div>
+        <div class="example-box" style="margin-bottom:.75rem;">
+          <div class="ex-label">Elasticitat ràpida</div>
+          <p>El Black Friday, Amazon afegeix automàticament milers de servidors en minuts per aguantar el pic de visites. Quan acaba, els elimina.</p>
+        </div>
+        <div class="example-box">
+          <div class="ex-label">Mesura del servei (pay-as-you-go)</div>
+          <p>Pagues exactament el que uses, com la llum o l'aigua. Una startup petita paga pocs euros al mes. Netflix paga milions.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIRTUALITZACIO -->
+    <div class="section-tag">Tecnologia fonamental</div>
+    <h2>Virtualització: el secret del núvol</h2>
+    <p class="lead">Sense virtualització no hi hauria cloud. Permet crear múltiples ordinadors "virtuals" dins d'un sol ordinador físic.</p>
+
+    <div class="insight fade-in">
+      <div class="insight-icon">🖥️</div>
+      <p><strong>Analogia per a SMX:</strong> Imagina un servidor físic potent (32 GB RAM, 16 nuclis, 2 TB disc). Amb virtualització (VMware, Hyper-V, KVM), pots crear 10 màquines virtuals independents: una per al servidor web, una per a la base de dades, una per als correus, una per a proves... Tot en el mateix hardware físic, sense que cap interfereixi amb les altres.</p>
+    </div>
+
+    <div class="cards cards-3 fade-in" style="margin:2rem 0;">
+      <div class="card">
+        <div class="card-icon" style="background:#e8ecff">⚙️</div>
+        <h3>Middleware</h3>
+        <p>Software que fa de pont entre aplicacions, serveis i dispositius diferents. Actua com un "traductor universal" entre sistemes que no parlen el mateix idioma.</p>
+        <div class="example-box" style="margin-top:.75rem;">
+          <div class="ex-label">Exemple SMX</div>
+          <p>Un sistema de facturació antic (Oracle) i una app mòbil nova (React Native). El middleware (API Gateway) els fa comunicar-se sense que cap hagi de canviar el codi.</p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#e0fdf8">📨</div>
+        <h3>Message Brokers</h3>
+        <p>Gestionen la comunicació asíncrona entre sistemes. Un sistema envia un missatge i el broker l'emmagatzema fins que el receptor el pugui processar.</p>
+        <div class="example-box" style="margin-top:.75rem;">
+          <div class="ex-label">Exemple real</div>
+          <p>Apache Kafka a Twitter (ara X) processa 700 milions de tweets al dia de forma ordenada. MQTT connecta els sensors IoT de una fàbrica al servidor central.</p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#fff8e8">🔗</div>
+        <h3>API Gateways</h3>
+        <p>Punt d'entrada únic i controlat per a totes les peticions externes a un sistema. Gestiona autenticació, permisos, límits de peticions i enrutament.</p>
+        <div class="example-box" style="margin-top:.75rem;">
+          <div class="ex-label">Exemple SMX</div>
+          <p>Quan una app de tercers vol accedir a la teva API d'empresa, passa primer per l'API Gateway que comprova si té permís i registra la petició.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODELS DE DESPLEGAMENT -->
+    <div class="section-tag" style="margin-top:4rem;">Models de desplegament</div>
+    <h2>Els quatre tipus de núvol</h2>
+    <p class="lead">No tots els núvols són iguals. Cada model té avantatges i inconvenients segons les necessitats de l'organització.</p>
+
+    <div class="cloud-models fade-in">
+      <div class="cloud-card publica" data-num="1">
+        <h4>☁️ Núvol Pública</h4>
+        <p>Recursos compartits entre múltiples organitzacions. Gestionada per un proveïdor extern. Pagues pel que uses.</p>
+        <div><span class="tag">AWS</span><span class="tag">Azure</span><span class="tag">Google Cloud</span></div>
+        <div style="margin-top:.75rem;font-size:0.82rem;opacity:.9;">
+          ✅ Cost baix · Alta escalabilitat<br>
+          ❌ Menys control · Dependència del proveïdor
+        </div>
+        <div class="example-box" style="background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.2);margin-top:.75rem;">
+          <p style="opacity:.9;font-size:0.82rem;">📌 <strong>Ideal per a:</strong> Startups, apps web, projectes amb demanda variable. Una botiga online que no sap si tindrà 100 o 100.000 visites al dia.</p>
+        </div>
+      </div>
+
+      <div class="cloud-card privada" data-num="2">
+        <h4>🔒 Núvol Privada</h4>
+        <p>Infraestructura dedicada exclusivament a una sola organització. Pot ser on-premise (al propi edifici) o gestionada externament.</p>
+        <div><span class="tag">OpenStack</span><span class="tag">VMware</span><span class="tag">Proxmox</span></div>
+        <div style="margin-top:.75rem;font-size:0.82rem;opacity:.9;">
+          ✅ Màxim control · Seguretat i compliment normatiu<br>
+          ❌ Cost elevat (CAPEX) · Escalabilitat limitada
+        </div>
+        <div class="example-box" style="background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.2);margin-top:.75rem;">
+          <p style="opacity:.9;font-size:0.82rem;">📌 <strong>Ideal per a:</strong> Bancs, hospitals, govern. Dades molt sensibles que no es poden posar en servidors compartits (historials mèdics, dades financeres).</p>
+        </div>
+      </div>
+
+      <div class="cloud-card hibrida" data-num="3">
+        <h4>🔄 Núvol Híbrida</h4>
+        <p>Combina el millor del núvol pública i privada. Dades crítiques a la privada, càrregues no crítiques a la pública.</p>
+        <div><span class="tag">Azure Arc</span><span class="tag">AWS Outposts</span><span class="tag">Kubernetes</span></div>
+        <div style="margin-top:.75rem;font-size:0.82rem;opacity:.9;">
+          ✅ Flexibilitat · Balanç cost-seguretat<br>
+          ❌ Complexitat · Latència entre entorns
+        </div>
+        <div class="example-box" style="background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.2);margin-top:.75rem;">
+          <p style="opacity:.9;font-size:0.82rem;">📌 <strong>Exemple:</strong> Un banc manté els comptes dels clients al seu CPD privat, però el seu web i l'app mòbil estan a la núvol pública d'Azure.</p>
+        </div>
+      </div>
+
+      <div class="cloud-card comunit" data-num="4">
+        <h4>🤝 Núvol Comunitària</h4>
+        <p>Infraestructura compartida entre diverses organitzacions amb interessos comuns (sector, requisits legals, etc.).</p>
+        <div><span class="tag">Salut</span><span class="tag">Universitats</span><span class="tag">Govern</span></div>
+        <div style="margin-top:.75rem;font-size:0.82rem;opacity:.9;">
+          ✅ Compliment normatiu · Costos compartits<br>
+          ❌ Menys adopció · Acords complexos
+        </div>
+        <div class="example-box" style="background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.2);margin-top:.75rem;">
+          <p style="opacity:.9;font-size:0.82rem;">📌 <strong>Exemple:</strong> La xarxa d'hospitals de Catalunya comparteix una infraestructura cloud comunitària per als sistemes de diagnosi per imatge (TACs, radiografies).</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODELS DE SERVEI -->
+    <div class="section-tag" style="margin-top:4rem;">Models de servei</div>
+    <h2>IaaS, PaaS i SaaS</h2>
+    <p class="lead">La pregunta clau: <em>fins on vol gestionar l'empresa?</em> Com més gestiona el proveïdor, menys control tens tu, però menys feina tens de manteniment.</p>
+
+    <div class="insight fade-in">
+      <div class="insight-icon">🍕</div>
+      <p><strong>Analogia de la pizzeria:</strong> Fer pizza a casa (On-premise) = tu compres tot. Demanar ingredients a domicili (IaaS) = el proveïdor porta els ingredients, tu cuines. Pizza per emportar (PaaS) = el restaurant fa la pizza, tu la poses al forn. Pizza a domicili (SaaS) = et porten la pizza feta i la menges directament.</p>
+    </div>
+
+    <div class="service-ladder fade-in" style="margin:3rem 0;">
+      <div class="ladder-item">
+        <div class="ladder-label iaas">IaaS</div>
+        <div class="ladder-body">
+          <h4>Infrastructure as a Service — Infraestructura com a Servei</h4>
+          <p>El proveïdor t'ofereix servidors virtuals, emmagatzematge i xarxa. Tu gestiones el sistema operatiu, les aplicacions i les dades. Màxima flexibilitat, màxima responsabilitat.</p>
+          <div class="examples">📌 Exemples: AWS EC2, Azure Virtual Machines, Google Compute Engine, Proxmox (privat)</div>
+          <div class="example-box" style="margin-top:.75rem;">
+            <div class="ex-label">Qui ho usa i per a què</div>
+            <p>Un tècnic de SMX configura un servidor Ubuntu a AWS EC2 per allotjar un servidor web Nginx. Ell instal·la el sistema operatiu, el servidor web i configura el firewall. El proveïdor li garanteix que el hardware físic funciona.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="ladder-item">
+        <div class="ladder-label paas">PaaS</div>
+        <div class="ladder-body">
+          <h4>Platform as a Service — Plataforma com a Servei</h4>
+          <p>El proveïdor gestiona la infraestructura, el sistema operatiu i el middleware. Tu et centres en desenvoluapr i desplegar les teves aplicacions. Ideal per a equips de desenvolupament.</p>
+          <div class="examples">📌 Exemples: Heroku, AWS Elastic Beanstalk, Azure App Service, Google App Engine</div>
+          <div class="example-box" style="margin-top:.75rem;">
+            <div class="ex-label">Qui ho usa i per a què</div>
+            <p>Un equip de programadors puja el seu codi Python a Heroku. La plataforma instal·la automàticament les dependències, configura el servidor i balanceja la càrrega. Els programadors no toquen mai cap servidor.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="ladder-item">
+        <div class="ladder-label saas">SaaS</div>
+        <div class="ladder-body">
+          <h4>Software as a Service — Programari com a Servei</h4>
+          <p>Una aplicació completa accessible per Internet. El proveïdor gestiona absolutament tot: infraestructura, sistema operatiu, aplicació i dades. Tu simplement la uses.</p>
+          <div class="examples">📌 Exemples: Gmail, Microsoft 365, Salesforce, Slack, Dropbox, Google Workspace, Moodle (SaaS)</div>
+          <div class="example-box" style="margin-top:.75rem;">
+            <div class="ex-label">Qui ho usa i per a què</div>
+            <p>El vostre institut usa Google Workspace (Gmail, Meet, Classroom). El tècnic d'informàtica crea comptes d'alumnes, estableix polítiques de seguretat i gestiona permisos, però mai toca un servidor físic de Google.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COMPARATIVA SERVEIS -->
+    <div style="overflow-x:auto;" class="fade-in">
+      <table class="compare">
+        <thead>
+          <tr>
+            <th>Característica</th>
+            <th>IaaS</th>
+            <th>PaaS</th>
+            <th>SaaS</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Control de l'usuari</strong></td><td class="good">Alt (SO, emmagatzem., apps)</td><td>Mig (apps i config.)</td><td class="bad">Baix (ús de l'app)</td></tr>
+          <tr><td><strong>Gestió del proveïdor</strong></td><td class="bad">Hardware i virtualització</td><td>Infraest., SO, Middleware</td><td class="good">Tot (infra, SO, app, dades)</td></tr>
+          <tr><td><strong>Flexibilitat</strong></td><td class="good">Molt alta</td><td>Alta</td><td class="bad">Baixa</td></tr>
+          <tr><td><strong>Complexitat de gestió</strong></td><td class="bad">Alta</td><td>Mitja</td><td class="good">Baixa</td></tr>
+          <tr><td><strong>Temps de desplegament</strong></td><td class="bad">Dies (config. manual)</td><td>Hores</td><td class="good">Minuts (registre)</td></tr>
+          <tr><td><strong>Cost inicial</strong></td><td>Mig</td><td>Mig-baix</td><td class="good">Molt baix (subscripció)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- RA4 -->
+<section id="ra4" class="section-alt">
+  <div class="container">
+    <div class="ra-banner fade-in">
+      <div class="ra-num">RA4</div>
+      <div>
+        <h2>Sistemes Clàssics vs Sistemes Digitalitzats</h2>
+        <p>Compara els sistemes de producció/prestació de serveis digitalitzats amb els sistemes clàssics identificant les millores introduïdes.</p>
+      </div>
+    </div>
+
+    <div class="section-tag">El gran canvi</div>
+    <h2>Dos móns: analògic i digital</h2>
+    <p class="lead">No es tracta de "bo" i "dolent", sinó d'entendre per què el món ha canviat i quines millores concretes aporta la digitalització.</p>
+
+    <div class="cards cards-2 fade-in">
+      <div class="card">
+        <div class="card-icon" style="background:#ffeaea;">🏛️</div>
+        <h3>Sistemes Clàssics</h3>
+        <div class="example-box" style="margin-bottom:.75rem;">
+          <div class="ex-label">Informació</div>
+          <p>Principalment en paper. Una comanda al proveïdor: un fax, una trucada, un paper signat, un registre manual al quadern.</p>
+        </div>
+        <div class="example-box" style="margin-bottom:.75rem;">
+          <div class="ex-label">Processos</div>
+          <p>Manuals i seqüencials. Si el responsable estava de vacances, la decisió s'endarreria dies. Cada pas esperava el pas anterior.</p>
+        </div>
+        <div class="example-box" style="margin-bottom:.75rem;">
+          <div class="ex-label">Comunicació</div>
+          <p>Lenta, formal i jeràrquica. Un problema a la planta de producció tardava hores o dies en arribar a la direcció.</p>
+        </div>
+        <div class="example-box">
+          <div class="ex-label">Exemple real: Fàbrica de cotxes 1980</div>
+          <p>El cap de producció mirava físicament l'estoc de peces cada mati. Si en faltaven, telefonava al proveïdor. El camió trigava 2 dies. La cadena s'aturava. Pèrdues de milers d'euros.</p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#e0fdf8;">🚀</div>
+        <h3>Sistemes Digitalitzats</h3>
+        <div class="example-box" style="margin-bottom:.75rem;">
+          <div class="ex-label">Informació</div>
+          <p>Digitalitzada, integrada i accessible en temps real des de qualsevol lloc. Un ERP centralitza totes les dades de l'empresa.</p>
+        </div>
+        <div class="example-box" style="margin-bottom:.75rem;">
+          <div class="ex-label">Processos</div>
+          <p>Automatitzats i paral·lels. Quan un client fa una comanda online, el sistema automàticament reserva estoc, genera la factura i programa l'enviament.</p>
+        </div>
+        <div class="example-box" style="margin-bottom:.75rem;">
+          <div class="ex-label">Comunicació</div>
+          <p>Ràpida, horitzontal i en temps real. Un sensor detecta un problema a la planta: Slack, SMS i correu arriben simultàniament a totes les persones rellevants.</p>
+        </div>
+        <div class="example-box">
+          <div class="ex-label">Exemple real: Fàbrica de cotxes Avui (Toyota)</div>
+          <p>Sensors IoT monitoren cada caixa de peces. Quan queden 50 unitats (mínim de seguretat), el sistema fa automàticament la comanda al proveïdor. El camió autònom de SEAT arriba en 4 hores. Mai s'atura la cadena.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAULA COMPARATIVA GRAN -->
+    <h3 style="margin:3rem 0 1.5rem;">Comparativa completa per àmbits</h3>
+    <div style="overflow-x:auto;" class="fade-in">
+      <table class="compare">
+        <thead>
+          <tr>
+            <th>Característica</th>
+            <th>Sistema Clàssic</th>
+            <th>Sistema Digitalitzat</th>
+            <th>Millores introduïdes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Informació</strong></td>
+            <td class="bad">Paper, silos, inaccessible</td>
+            <td class="good">Digital, integrada, temps real</td>
+            <td>Decisions més ràpides i basades en dades reals</td>
+          </tr>
+          <tr>
+            <td><strong>Processos</strong></td>
+            <td class="bad">Manuals, seqüencials, errors freqüents</td>
+            <td class="good">Automatitzats, paral·lels, traçables</td>
+            <td>Reducció de costos, velocitat i precisió</td>
+          </tr>
+          <tr>
+            <td><strong>Comunicació</strong></td>
+            <td class="bad">Lenta, jeràrquica, formal</td>
+            <td class="good">Ràpida, horitzontal, multicanal</td>
+            <td>Millor col·laboració, resolució de problemes àgil</td>
+          </tr>
+          <tr>
+            <td><strong>Escalabilitat</strong></td>
+            <td class="bad">Limitada, cara d'ampliar</td>
+            <td class="good">Alta, adaptable a la demanda</td>
+            <td>Capacitat de créixer sense inversions massives</td>
+          </tr>
+          <tr>
+            <td><strong>Interacció client</strong></td>
+            <td class="bad">Física, limitada a horari laboral</td>
+            <td class="good">Multicanal, 24/7, personalitzada</td>
+            <td>Millor experiència, fidelització, nous ingressos</td>
+          </tr>
+          <tr>
+            <td><strong>Anàlisi i millora</strong></td>
+            <td class="bad">Retrospectiva, basada en experiència</td>
+            <td class="good">Predictiva, basada en dades, temps real</td>
+            <td>Detecció proactiva de problemes, innovació contínua</td>
+          </tr>
+          <tr>
+            <td><strong>Agilitat</strong></td>
+            <td class="bad">Dies per llançar un producte</td>
+            <td class="good">Hores o minuts (CI/CD, impressió 3D)</td>
+            <td>Competitivitat i adaptació al mercat</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- TRES MILLORES AMB EXEMPLES -->
+    <h3 style="margin:3rem 0 1.5rem;">Les tres millores clau amb exemples pràctics</h3>
+    <div class="cards cards-3 fade-in">
+      <div class="card accent-cobalt">
+        <div class="card-icon" style="background:#e8ecff">🎯</div>
+        <h3>Precisió</h3>
+        <p>Reducció d'errors humans gràcies als algorismes.</p>
+        <div class="example-box" style="margin-top:.75rem;">
+          <div class="ex-label">Exemple SMX</div>
+          <p>Un sistema de inventari manual tenia un 3-5% d'errors (peces mal comptades). Amb codi de barres + lector + ERP, l'error és del 0,01%.</p>
+        </div>
+        <div class="example-box" style="margin-top:.5rem;">
+          <div class="ex-label">Exemple mèdic</div>
+          <p>Sistemes de visió per computador detecten errors de medicació a hospitals amb una precisió del 99,9%. Salven vides.</p>
+        </div>
+      </div>
+      <div class="card accent-mint">
+        <div class="card-icon" style="background:#e0fdf8">🌱</div>
+        <h3>Sostenibilitat</h3>
+        <p>Optimització de recursos gràcies a la IA.</p>
+        <div class="example-box" style="margin-top:.75rem;">
+          <div class="ex-label">Exemple logística</div>
+          <p>UPS usa IA per calcular rutes de repartiment. Estalvien 100 milions de milles de conducció anuals = menys combustible, menys CO₂.</p>
+        </div>
+        <div class="example-box" style="margin-top:.5rem;">
+          <div class="ex-label">Exemple energia</div>
+          <p>Google usa IA per gestionar el refredament dels seus CPDs. Ha reduït el consum energètic d'aquest sistema en un 40%.</p>
+        </div>
+      </div>
+      <div class="card accent-amber">
+        <div class="card-icon" style="background:#fff8e8">🔄</div>
+        <h3>Adaptabilitat</h3>
+        <p>ML per ajustar processos de forma dinàmica.</p>
+        <div class="example-box" style="margin-top:.75rem;">
+          <div class="ex-label">Exemple comerç</div>
+          <p>Zara analitza les vendes en temps real. Si un model de camisa triomfa a Barcelona, en 2 setmanes ja el produeix i envia a totes les botigues d'Espanya.</p>
+        </div>
+        <div class="example-box" style="margin-top:.5rem;">
+          <div class="ex-label">Requeriments de l'era digital</div>
+          <p>Però cal inversió en ciberseguretat, formació del personal i gestió del canvi organitzacional. No tot és fàcil.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RA5 -->
+<section id="ra5" class="section-dark">
+  <div class="container">
+    <div class="ra-banner" style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);" class="fade-in">
+      <div class="ra-num">RA5</div>
+      <div>
+        <h2>Pla de Transformació Digital</h2>
+        <p>Elabora un pla de transformació digital d'una empresa clàssica al concepte 4.0, determinant els canvis i com afecta als recursos humans.</p>
+      </div>
+    </div>
+
+    <div class="section-tag">Metodologia</div>
+    <h2>Com elaborar el pla</h2>
+    <p class="lead" style="color:rgba(255,255,255,0.65);">El pla segueix una metodologia estructurada: des de la visió fins a la implementació concreta, incloent l'impacte en les persones.</p>
+
+    <div class="cards cards-2 fade-in">
+      <div class="card">
+        <div class="card-icon" style="background:rgba(74,108,247,0.2)">🏢</div>
+        <h3>Pas 1: Selecció i context de l'empresa</h3>
+        <p>Escull una empresa clàssica del sector (idealment de l'àmbit de SMX, com una empresa de suport informàtic tradicional, una impremta, un taller de reparació d'electrònica, etc.).</p>
+        <div class="example-box" style="background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.1);margin-top:1rem;">
+          <div class="ex-label" style="color:#7a9fff;">Exemple d'empresa</div>
+          <p style="color:rgba(255,255,255,0.7);">"Informàtica Pérez S.L." — empresa familiar de reparació d'ordinadors i venda de hardware a Cornellà de Llobregat, fundada el 1995. 5 treballadors. Processos 100% manuals.</p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:rgba(0,201,167,0.2)">🎯</div>
+        <h3>Pas 2: Definició de la Visió 4.0 (Objectius SMART)</h3>
+        <p>Estableix objectius Específics, Mesurables, Assolibles, Rellevants i amb Termini definit (SMART).</p>
+        <div class="example-box" style="background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.1);margin-top:1rem;">
+          <div class="ex-label" style="color:#7a9fff;">Exemples d'objectius SMART</div>
+          <p style="color:rgba(255,255,255,0.7);">
+            ✅ Reduir el temps de gestió d'incidències en un 50% en 12 mesos.<br>
+            ✅ Assolir un 80% de clients amb accés al portal web en 18 mesos.<br>
+            ✅ Implantar un sistema d'inventari digital amb error &lt;0.5% en 6 mesos.
+          </p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:rgba(244,168,51,0.2)">🔍</div>
+        <h3>Pas 3: Anàlisi de la situació actual (AS-IS)</h3>
+        <p>Mapeja tots els processos actuals i identifica els colls d'ampolla, ineficiències i àrees de millora. Sigues molt concret.</p>
+        <div class="example-box" style="background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.1);margin-top:1rem;">
+          <div class="ex-label" style="color:#7a9fff;">Àrees a analitzar</div>
+          <p style="color:rgba(255,255,255,0.7);">
+            📋 <strong>Recepció de comandes</strong>: per telèfon, paper, cua física.<br>
+            🔧 <strong>Gestió de reparacions</strong>: quadern manual, sense seguiment client.<br>
+            📦 <strong>Inventari</strong>: comptatge manual mensual, errors freqüents.<br>
+            💰 <strong>Facturació</strong>: fulles d'Excel, factures paper.<br>
+            👥 <strong>RRHH</strong>: fitxes en paper, horaris en pissarra.
+          </p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:rgba(232,69,96,0.2)">🚀</div>
+        <h3>Pas 4: Definició de l'estat desitjat (TO-BE)</h3>
+        <p>Conceptualitza el nou model operatiu integrant tecnologies 4.0. Explica quina tecnologia va a cada procés i per què.</p>
+        <div class="example-box" style="background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.1);margin-top:1rem;">
+          <div class="ex-label" style="color:#7a9fff;">Tecnologies a incorporar</div>
+          <p style="color:rgba(255,255,255,0.7);">
+            📱 <strong>SaaS</strong>: Sistemes de tickets (Freshdesk, Zendesk).<br>
+            ☁️ <strong>Cloud</strong>: Inventari i facturació (Holded, FacturaDirecta).<br>
+            🔔 <strong>IoT</strong>: Sensor d'estoc de components crítics.<br>
+            🤖 <strong>IA</strong>: Diagnosi assistida de falles comunes.<br>
+            📊 <strong>Big Data</strong>: Anàlisi de patrons de reparació.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- IMPACTE RRHH -->
+    <div style="margin-top:4rem;" class="fade-in">
+      <div class="section-tag">Element clau del RA5</div>
+      <h2>L'impacte en les persones (RRHH)</h2>
+      <p class="lead" style="color:rgba(255,255,255,0.65);">La digitalització no substitueix les persones. Transforma el que fan. Però cal gestionar el canvi.</p>
+
+      <div class="cards cards-3 fade-in">
+        <div class="card">
+          <div class="card-icon" style="background:rgba(232,69,96,0.2)">⚠️</div>
+          <h3>Reptes per als treballadors</h3>
+          <p style="margin-bottom:.75rem;">La por al canvi és normal. Cal reconèixer-la.</p>
+          <div class="pill-list">
+            <span class="pill">Por a perdre la feina</span>
+            <span class="pill">Resistència al canvi</span>
+            <span class="pill">Bretxa digital (saber usar les eines)</span>
+            <span class="pill">Nous rols desconeguts</span>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-icon" style="background:rgba(0,201,167,0.2)">📚</div>
+          <h3>Solucions i formació</h3>
+          <p style="margin-bottom:.75rem;">La clau és la formació contínua i la comunicació clara.</p>
+          <div class="pill-list">
+            <span class="pill green">Plans de formació interna</span>
+            <span class="pill green">Reskilling (noves habilitats)</span>
+            <span class="pill green">Upskilling (millora les actuals)</span>
+            <span class="pill green">Participació en el canvi</span>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-icon" style="background:rgba(74,108,247,0.2)">🌟</div>
+          <h3>Nous perfils professionals</h3>
+          <p style="margin-bottom:.75rem;">La digitalització crea nous rols, molts dels quals seran vosaltres!</p>
+          <div class="pill-list">
+            <span class="pill blue">Administrador de sistemes cloud</span>
+            <span class="pill blue">Tècnic de ciberseguretat</span>
+            <span class="pill blue">Especialista IoT</span>
+            <span class="pill blue">Analista de dades</span>
+            <span class="pill blue">Gestor de transformació digital</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EXEMPLE COMPLET -->
+    <div class="callout fade-in" style="margin-top:3rem;">
+      <h4>📋 Exemple complet: Informàtica Pérez → Informàtica Pérez 4.0</h4>
+      <p style="margin-bottom:1rem;">
+        <strong>AS-IS:</strong> El client truca, explica el problema, porta l'ordinador, espera en cua, el tècnic anota en paper, fa la reparació sense comunicar-ho, el client ha de trucar per saber l'estat. Factura en paper. Estoc en quadern.<br><br>
+        <strong>TO-BE:</strong> El client obre el portal web 24/7, descriu el problema, rep un número de ticket, segueix l'estat en temps real via SMS/app. El tècnic usa tablet per registrar el diagnòstic i peces usades (actualitza inventari automàticament). El sistema genera la factura digital i envia el rebut per correu. Un algoritme analitza les reparacions més freqüents per tenir stoc optimitzat. La direcció veu un dashboard amb KPIs en temps real.<br><br>
+        <strong>Impacte RRHH:</strong> El tècnic deixa de fer papers i pot atendre un 30% més de clients. Cal formació en ús del sistema de tickets. El responsable d'administració ara gestiona el portal web i analitza les dades. Es crea un nou rol de "Responsable Digital" (un antic tècnic format en gestió digital).
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- RESUM FINAL -->
+<section style="background: var(--paper);">
+  <div class="container fade-in">
+    <div class="section-tag">Síntesi</div>
+    <h2>El que heu après</h2>
+    <p class="lead">Un resum de tots els Resultats d'Aprenentatge per consolidar els conceptes.</p>
+
+    <div class="ra-strip">
+      <span class="ra-chip">RA1: Economia Lineal vs Circular</span>
+      <span class="ra-chip">RA2: Indústria 4.0</span>
+      <span class="ra-chip">RA3: Cloud Computing</span>
+      <span class="ra-chip">RA4: Clàssic vs Digital</span>
+      <span class="ra-chip">RA5: Pla de Transformació</span>
+    </div>
+
+    <div class="cards cards-3 fade-in">
+      <div class="card accent-cobalt">
+        <div class="card-icon" style="background:#e8ecff">♻️</div>
+        <h3>RA1 — Models econòmics</h3>
+        <p>L'economia lineal (extreure-produir-llençar) és insostenible. L'economia circular (reduir-reutilitzar-reciclar) és el futur, i la tecnologia (IoT, IA, blockchain) és la seva palanca.</p>
+      </div>
+      <div class="card accent-mint">
+        <div class="card-icon" style="background:#e0fdf8">🏭</div>
+        <h3>RA2 — Indústria 4.0</h3>
+        <p>La 4a revolució connecta tot (IoT), fa aprendre a les màquines (IA), processa dades massives (Big Data) i ho allotja tot al núvol (Cloud). La ciberseguretat és transversal.</p>
+      </div>
+      <div class="card accent-amber">
+        <div class="card-icon" style="background:#fff8e8">☁️</div>
+        <h3>RA3 — Cloud Computing</h3>
+        <p>El núvol = ordinadors d'un altre accessible per Internet. Models de desplegament (pública, privada, híbrida, comunitària). Models de servei (IaaS, PaaS, SaaS). Virtualització + middleware.</p>
+      </div>
+      <div class="card accent-rose">
+        <div class="card-icon" style="background:#ffeaea">📊</div>
+        <h3>RA4 — Comparativa</h3>
+        <p>Els sistemes digitalitzats aporten precisió (menys errors), sostenibilitat (optimització de recursos) i adaptabilitat (ML dinàmic). Però requereixen ciberseguretat i formació.</p>
+      </div>
+      <div class="card accent-cobalt">
+        <div class="card-icon" style="background:#e8ecff">📋</div>
+        <h3>RA5 — Transformació Digital</h3>
+        <p>Un pla de transformació té quatre fases: context, visió 4.0 (SMART), anàlisi AS-IS i definició TO-BE. L'impacte en RRHH (formació, nous rols, gestió del canvi) és fonamental.</p>
+      </div>
+      <div class="card" style="background:var(--navy);color:white;border-color:var(--navy);">
+        <div class="card-icon" style="background:rgba(255,255,255,0.1)">💡</div>
+        <h3 style="color:white;">Vostre rol com a SMX</h3>
+        <p style="color:rgba(255,255,255,0.7);">Vosaltres sereu els qui instal·lareu, configureu i mantindreu tots aquests sistemes: sensors IoT, servidors virtuals, xarxes cloud, plataformes SaaS i sistemes de seguretat.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p><strong>Digitalització — Sistemes Microinformàtics i Xarxes</strong></p>
+  <p style="margin-top:.5rem;">Material pedagògic ampliat per a alumnes de cicles formatius de grau mig d'SMX.</p>
+  <p style="margin-top:.5rem;">Departament d'Informàtica</p>
+</footer>
+
+<script>
+  // Intersection Observer for fade-in animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>

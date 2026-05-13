@@ -1,0 +1,1453 @@
+html
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RA8 — Correu i Agenda Electrònica · SMX</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink:    #0d0f1a;
+    --paper:  #f4f2ed;
+    --cream:  #eceae3;
+    --navy:   #1a1f4e;
+    --cobalt: #2d3bb5;
+    --sky:    #4a6cf7;
+    --gmail:  #ea4335;
+    --gcal:   #1a73e8;
+    --gdrive: #0f9d58;
+    --yellow: #fbbc04;
+    --muted:  #6b6f85;
+    --border: #d6d2c9;
+    --card:   #ffffff;
+    --radius: 16px;
+    --radius-sm: 8px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    font-size: 16px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(244,242,237,0.94);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 62px;
+  }
+  .nav-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1rem; color: var(--navy); letter-spacing: -0.02em; }
+  .nav-logo span { color: var(--cobalt); }
+  .nav-pills { display: flex; gap: .5rem; list-style: none; }
+  .nav-pills a {
+    text-decoration: none; font-size: 0.78rem; font-weight: 600;
+    padding: .3rem .85rem; border-radius: 100px;
+    color: var(--muted); transition: all .2s;
+    border: 1px solid transparent;
+  }
+  .nav-pills a:hover { color: var(--cobalt); border-color: var(--cobalt); background: rgba(74,108,247,0.07); }
+  .nav-pills a.gmail  { color: var(--gmail); }
+  .nav-pills a.gcal   { color: var(--gcal); }
+  .nav-pills a.gdrive { color: var(--gdrive); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: grid; place-items: center;
+    background: var(--navy);
+    color: white;
+    position: relative;
+    overflow: hidden;
+    padding: 8rem 2rem 4rem;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 80% 30%, rgba(234,67,53,0.25) 0%, transparent 65%),
+      radial-gradient(ellipse 50% 40% at 20% 70%, rgba(26,115,232,0.2) 0%, transparent 65%),
+      radial-gradient(ellipse 40% 35% at 50% 90%, rgba(15,157,88,0.15) 0%, transparent 60%);
+  }
+  .hero-dots {
+    position: absolute; inset: 0; opacity: 0.07;
+    background-image: radial-gradient(rgba(255,255,255,.6) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+  .hero-content { position: relative; z-index: 1; text-align: center; max-width: 820px; }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: .5rem;
+    background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.8); font-size: 0.78rem; font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    padding: .35rem 1rem; border-radius: 100px; margin-bottom: 1.5rem;
+  }
+  .hero h1 {
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: clamp(2.6rem, 6.5vw, 5rem); line-height: 1.06;
+    letter-spacing: -0.03em; margin-bottom: 1.5rem;
+  }
+  .hero h1 .g { color: #4285f4; }
+  .hero h1 .r { color: #ea4335; }
+  .hero h1 .y { color: #fbbc04; }
+  .hero h1 .gn{ color: #34a853; }
+  .hero p { font-size: 1.1rem; color: rgba(255,255,255,0.6); max-width: 520px; margin: 0 auto 2.5rem; }
+  .hero-apps { display: flex; justify-content: center; gap: 1.25rem; flex-wrap: wrap; }
+  .hero-app {
+    display: flex; align-items: center; gap: .6rem;
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+    padding: .6rem 1.2rem; border-radius: 12px; font-size: 0.9rem; font-weight: 500;
+    color: white; text-decoration: none; transition: all .25s;
+  }
+  .hero-app:hover { background: rgba(255,255,255,0.15); transform: translateY(-2px); }
+  .hero-app .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .scroll-hint {
+    position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: .4rem;
+    color: rgba(255,255,255,0.3); font-size: 0.72rem; letter-spacing: 0.1em;
+  }
+  .scroll-hint::after {
+    content: ''; display: block; width: 1px; height: 36px;
+    background: linear-gradient(to bottom, rgba(255,255,255,.35), transparent);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:.3} 50%{opacity:1} }
+
+  /* ── LAYOUT ── */
+  section { padding: 6rem 2rem; }
+  .container { max-width: 1080px; margin: 0 auto; }
+  .section-tag {
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em;
+    text-transform: uppercase; display: flex; align-items: center; gap: .5rem;
+    margin-bottom: .9rem;
+  }
+  .section-tag::before { content: ''; display: block; width: 20px; height: 2px; }
+  .tag-cobalt { color: var(--cobalt); } .tag-cobalt::before { background: var(--cobalt); }
+  .tag-gmail  { color: var(--gmail);  } .tag-gmail::before  { background: var(--gmail); }
+  .tag-gcal   { color: var(--gcal);   } .tag-gcal::before   { background: var(--gcal); }
+  .tag-drive  { color: var(--gdrive); } .tag-drive::before  { background: var(--gdrive); }
+  .tag-practica { color: #7c3aed; } .tag-practica::before { background: #7c3aed; }
+  .tag-preguntes { color: #b45309; } .tag-preguntes::before { background: #b45309; }
+
+  h2 {
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: clamp(1.7rem, 3.5vw, 2.6rem); line-height: 1.1;
+    letter-spacing: -0.025em; color: var(--navy); margin-bottom: .9rem;
+  }
+  h3 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.15rem; color: var(--navy); margin-bottom: .65rem; }
+  h4 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.95rem; color: var(--navy); margin-bottom: .4rem; }
+  .lead { font-size: 1.05rem; color: var(--muted); max-width: 680px; margin-bottom: 3rem; line-height: 1.7; }
+
+  /* ── CARDS ── */
+  .grid { display: grid; gap: 1.25rem; }
+  .g2 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+  .g3 { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+  .g4 { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+  .card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 1.75rem;
+    transition: transform .2s, box-shadow .2s;
+  }
+  .card:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(26,31,78,0.1); }
+  .card p { color: var(--muted); font-size: 0.92rem; }
+  .card-icon {
+    width: 44px; height: 44px; border-radius: 10px;
+    display: grid; place-items: center; font-size: 1.3rem; margin-bottom: .9rem;
+  }
+  .bl { border-left: 3px solid var(--cobalt); }
+  .bl-gmail  { border-left: 3px solid var(--gmail); }
+  .bl-gcal   { border-left: 3px solid var(--gcal); }
+  .bl-drive  { border-left: 3px solid var(--gdrive); }
+
+  /* ── PROTOCOL DIAGRAM ── */
+  .proto-flow {
+    display: flex; align-items: stretch; gap: 0;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius); overflow: hidden; margin: 2rem 0;
+  }
+  .proto-node {
+    flex: 1; padding: 1.5rem 1rem; text-align: center;
+    font-size: 0.82rem; min-width: 0;
+  }
+  .proto-node .icon { font-size: 1.8rem; margin-bottom: .4rem; }
+  .proto-node .label { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.85rem; color: var(--navy); }
+  .proto-node .sub { color: var(--muted); font-size: 0.75rem; margin-top: .2rem; }
+  .proto-arrow {
+    display: flex; align-items: center; padding: 0 .25rem;
+    color: var(--muted); font-size: 1.2rem; flex-shrink: 0;
+  }
+  .proto-node.sender  { background: rgba(234,67,53,0.06); }
+  .proto-node.server  { background: rgba(26,115,232,0.06); }
+  .proto-node.recv    { background: rgba(15,157,88,0.06); }
+
+  /* ── PROTOCOL TABLE ── */
+  .ptable { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+  .ptable th, .ptable td { padding: .85rem 1rem; text-align: left; border-bottom: 1px solid var(--border); }
+  .ptable th { background: var(--navy); color: white; font-family: 'Syne', sans-serif; font-weight: 700; }
+  .ptable th:first-child { border-radius: 8px 0 0 0; }
+  .ptable th:last-child  { border-radius: 0 8px 0 0; }
+  .ptable tr:hover td { background: var(--cream); }
+  .badge {
+    display: inline-block; padding: .15rem .55rem; border-radius: 100px;
+    font-size: 0.72rem; font-weight: 700; font-family: 'Syne', sans-serif;
+  }
+  .b-smtp  { background: rgba(234,67,53,0.12);  color: var(--gmail); }
+  .b-imap  { background: rgba(26,115,232,0.12); color: var(--gcal); }
+  .b-pop3  { background: rgba(251,188,4,0.18);  color: #8a6500; }
+  .b-https { background: rgba(15,157,88,0.12);  color: var(--gdrive); }
+
+  /* ── EXAMPLE BOX ── */
+  .ex { background: var(--cream); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1rem 1.25rem; margin: .65rem 0; }
+  .ex .ex-lbl { font-size: 0.68rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; margin-bottom: .3rem; }
+  .ex p { font-size: 0.87rem; color: var(--ink); }
+  .ex-gmail  .ex-lbl { color: var(--gmail); }
+  .ex-gcal   .ex-lbl { color: var(--gcal); }
+  .ex-drive  .ex-lbl { color: var(--gdrive); }
+
+  /* ── CODE ── */
+  .code {
+    background: #13172e; border-radius: var(--radius-sm);
+    padding: 1.1rem 1.4rem; font-family: 'Courier New', monospace;
+    font-size: 0.8rem; color: #a8c4ff; overflow-x: auto; line-height: 1.65;
+    margin: .65rem 0;
+  }
+  .code .cm { color: #4a6070; }
+  .code .kw { color: var(--yellow); }
+  .code .st { color: #57e3b0; }
+  .code .er { color: #ff7b7b; }
+
+  /* ── CALLOUT ── */
+  .callout {
+    border-radius: var(--radius); padding: 2rem 2.25rem; margin: 1.5rem 0;
+    display: flex; gap: 1rem; align-items: flex-start;
+  }
+  .callout-icon { font-size: 1.4rem; flex-shrink: 0; margin-top: .1rem; }
+  .callout p, .callout li { font-size: 0.92rem; }
+  .callout ul { padding-left: 1.2rem; }
+  .callout li { margin-bottom: .25rem; }
+  .cl-blue   { background: rgba(74,108,247,0.08); border: 1px solid rgba(74,108,247,0.2); }
+  .cl-red    { background: rgba(234,67,53,0.07);  border: 1px solid rgba(234,67,53,0.2); }
+  .cl-green  { background: rgba(15,157,88,0.07);  border: 1px solid rgba(15,157,88,0.2); }
+  .cl-amber  { background: rgba(251,188,4,0.1);   border: 1px solid rgba(251,188,4,0.3); }
+
+  /* ── SECTION THEMES ── */
+  .s-dark { background: var(--navy); color: white; }
+  .s-dark h2, .s-dark h3, .s-dark h4 { color: white; }
+  .s-dark .lead { color: rgba(255,255,255,0.58); }
+  .s-dark .card { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1); }
+  .s-dark .card h3, .s-dark .card h4 { color: white; }
+  .s-dark .card p { color: rgba(255,255,255,0.6); }
+  .s-dark .ex { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1); }
+  .s-dark .ex p { color: rgba(255,255,255,0.75); }
+  .s-dark .ptable th { background: rgba(255,255,255,0.1); }
+  .s-dark .ptable td { border-color: rgba(255,255,255,0.1); color: rgba(255,255,255,0.8); }
+  .s-dark .ptable tr:hover td { background: rgba(255,255,255,0.05); }
+
+  .s-gmail  { background: #fff8f7; }
+  .s-gcal   { background: #f7f9ff; }
+  .s-drive  { background: #f7fff9; }
+  .s-cream  { background: var(--cream); }
+
+  /* ── RA BANNER ── */
+  .ra-banner {
+    border-radius: var(--radius); padding: 1.5rem 2rem;
+    display: flex; align-items: center; gap: 1.25rem; margin-bottom: 3rem;
+    color: white;
+  }
+  .ra-num { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 2.4rem; opacity: .25; flex-shrink: 0; line-height: 1; }
+  .ra-banner h2 { color: white; font-size: 1.35rem; margin-bottom: .2rem; }
+  .ra-banner p  { color: rgba(255,255,255,0.7); font-size: 0.88rem; }
+  .ra-gmail  { background: linear-gradient(135deg, #c5221f, var(--gmail)); }
+  .ra-gcal   { background: linear-gradient(135deg, #1557b0, var(--gcal)); }
+  .ra-drive  { background: linear-gradient(135deg, #0b7a45, var(--gdrive)); }
+  .ra-practica { background: linear-gradient(135deg, #5b21b6, #7c3aed); }
+  .ra-preguntes { background: linear-gradient(135deg, #92400e, #d97706); }
+
+  /* ── PRACTICE CARDS ── */
+  .practice-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius); overflow: hidden;
+    transition: transform .2s, box-shadow .2s;
+  }
+  .practice-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,0.1); }
+  .practice-header {
+    padding: 1.5rem 2rem;
+    display: flex; align-items: center; gap: 1rem;
+    color: white;
+  }
+  .practice-num {
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: 1.8rem; opacity: .35; line-height: 1;
+  }
+  .practice-header h3 { color: white; font-size: 1.2rem; margin: 0; }
+  .practice-header p  { color: rgba(255,255,255,0.7); font-size: 0.82rem; margin: .2rem 0 0; }
+  .practice-body { padding: 2rem; }
+  .p1-bg { background: linear-gradient(135deg, #b31412, var(--gmail)); }
+  .p2-bg { background: linear-gradient(135deg, #1251a3, var(--gcal)); }
+  .p3-bg { background: linear-gradient(135deg, #0a6b3c, var(--gdrive)); }
+
+  /* ── STEPS ── */
+  .steps { counter-reset: st; list-style: none; display: flex; flex-direction: column; gap: .85rem; }
+  .steps li {
+    counter-increment: st;
+    display: flex; gap: .9rem; align-items: flex-start;
+    padding: .9rem 1.1rem; background: var(--cream);
+    border-radius: var(--radius-sm); font-size: 0.9rem;
+  }
+  .steps li::before {
+    content: counter(st);
+    flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%;
+    background: var(--cobalt); color: white;
+    display: grid; place-items: center;
+    font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.8rem;
+  }
+  .steps li p { color: var(--ink); margin: 0; }
+  .steps li strong { color: var(--navy); }
+
+  /* ── QUESTION CARDS ── */
+  .q-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 1.5rem 2rem;
+    display: flex; gap: 1.25rem; align-items: flex-start;
+    transition: transform .2s, box-shadow .2s;
+  }
+  .q-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+  .q-num {
+    flex-shrink: 0; width: 36px; height: 36px; border-radius: 50%;
+    background: var(--cream); border: 2px solid var(--border);
+    display: grid; place-items: center;
+    font-family: 'Syne', sans-serif; font-weight: 800; font-size: 0.88rem; color: var(--cobalt);
+  }
+  .q-body h4 { margin-bottom: .35rem; color: var(--navy); font-size: 0.95rem; }
+  .q-body p  { color: var(--muted); font-size: 0.85rem; font-style: italic; }
+  .q-tag {
+    display: inline-block; padding: .15rem .6rem; border-radius: 100px;
+    font-size: 0.7rem; font-weight: 700; margin-top: .5rem;
+  }
+  .qt-gmail  { background: rgba(234,67,53,0.1);  color: var(--gmail); }
+  .qt-gcal   { background: rgba(26,115,232,0.1); color: var(--gcal); }
+  .qt-drive  { background: rgba(15,157,88,0.1);  color: var(--gdrive); }
+  .qt-proto  { background: rgba(74,108,247,0.1); color: var(--cobalt); }
+  .qt-mixed  { background: rgba(124,58,237,0.1); color: #5b21b6; }
+
+  /* ── PILLS ── */
+  .pills { display: flex; flex-wrap: wrap; gap: .4rem; margin: .65rem 0; }
+  .pill {
+    padding: .22rem .75rem; border-radius: 100px; font-size: 0.78rem;
+    border: 1px solid var(--border); background: var(--cream); color: var(--ink);
+  }
+  .pill-r { background: rgba(234,67,53,0.1); border-color: rgba(234,67,53,0.3); color: #b31412; }
+  .pill-b { background: rgba(26,115,232,0.1); border-color: rgba(26,115,232,0.3); color: #1251a3; }
+  .pill-g { background: rgba(15,157,88,0.1);  border-color: rgba(15,157,88,0.3);  color: #0a6b3c; }
+  .pill-v { background: rgba(124,58,237,0.1); border-color: rgba(124,58,237,0.3); color: #5b21b6; }
+
+  /* ── DIVIDER ── */
+  hr { border: none; border-top: 1px solid var(--border); margin: 3rem 0; }
+
+  /* ── FOOTER ── */
+  footer { background: var(--ink); color: rgba(255,255,255,0.4); padding: 3rem 2rem; text-align: center; font-size: 0.85rem; }
+  footer strong { color: white; }
+
+  /* ── ANIMATIONS ── */
+  .fi { opacity: 0; transform: translateY(18px); transition: opacity .55s ease, transform .55s ease; }
+  .fi.in { opacity: 1; transform: none; }
+
+  @media (max-width: 640px) {
+    .nav-pills { display: none; }
+    .proto-flow { flex-direction: column; }
+    .proto-arrow { transform: rotate(90deg); }
+    .practice-header { flex-direction: column; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">SMX · <span>RA8</span></div>
+  <ul class="nav-pills">
+    <li><a href="#intro">Introducció</a></li>
+    <li><a href="#gmail" class="gmail">Gmail</a></li>
+    <li><a href="#gcal" class="gcal">Calendar</a></li>
+    <li><a href="#gdrive" class="gdrive">Drive</a></li>
+    <li><a href="#practiques">Pràctiques</a></li>
+    <li><a href="#preguntes">Preguntes</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="top">
+  <div class="hero-bg"></div>
+  <div class="hero-dots"></div>
+  <div class="hero-content">
+    <div class="hero-badge">📧 Sistemes Microinformàtics i Xarxes · RA8</div>
+    <h1>
+      <span class="g">G</span><span class="r">o</span><span class="y">o</span><span class="gn">g</span><span class="g">l</span><span class="r">e</span><br>
+      Workspace
+    </h1>
+    <p>Gestió professional del correu electrònic, l'agenda i l'emmagatzematge al núvol. Teoria, protocols i pràctiques reals.</p>
+    <div class="hero-apps">
+      <a href="#gmail" class="hero-app">
+        <span class="dot" style="background:var(--gmail)"></span>Gmail & Protocols
+      </a>
+      <a href="#gcal" class="hero-app">
+        <span class="dot" style="background:var(--gcal)"></span>Google Calendar
+      </a>
+      <a href="#gdrive" class="hero-app">
+        <span class="dot" style="background:var(--gdrive)"></span>Google Drive
+      </a>
+      <a href="#practiques" class="hero-app">
+        <span class="dot" style="background:#7c3aed"></span>3 Pràctiques
+      </a>
+    </div>
+  </div>
+  <div class="scroll-hint">DESPLAÇA</div>
+</section>
+
+<!-- INTRO RA8 -->
+<section id="intro" class="s-cream">
+  <div class="container fi">
+    <div class="section-tag tag-cobalt">Resultat d'Aprenentatge 8</div>
+    <h2>Gestió del correu i l'agenda electrònica</h2>
+    <p class="lead">Realitza operacions de gestió del correu i l'agenda electrònica, relacionant-ne les necessitats d'ús amb la seva configuració. En aquest bloc treballarem les tres eines principals de Google Workspace.</p>
+
+    <div class="grid g3 fi">
+      <div class="card bl">
+        <div class="card-icon" style="background:#fef2f2">📧</div>
+        <h3>Gmail</h3>
+        <p>Client de correu electrònic de Google. Analitzarem els protocols de correu (SMTP, IMAP, POP3), la configuració i les bones pràctiques de gestió professional.</p>
+        <div class="pills" style="margin-top:.75rem">
+          <span class="pill pill-r">SMTP</span>
+          <span class="pill pill-r">IMAP</span>
+          <span class="pill pill-r">POP3</span>
+        </div>
+      </div>
+      <div class="card" style="border-left:3px solid var(--gcal)">
+        <div class="card-icon" style="background:#eff6ff">📅</div>
+        <h3>Google Calendar</h3>
+        <p>Agenda electrònica col·laborativa. Aprendrem a gestionar esdeveniments, calendaris compartits, invitacions i l'ús professional de l'agenda en un entorn empresarial.</p>
+        <div class="pills" style="margin-top:.75rem">
+          <span class="pill pill-b">Esdeveniments</span>
+          <span class="pill pill-b">Compartir</span>
+        </div>
+      </div>
+      <div class="card" style="border-left:3px solid var(--gdrive)">
+        <div class="card-icon" style="background:#f0fdf4">💾</div>
+        <h3>Google Drive</h3>
+        <p>Sistema d'emmagatzematge i col·laboració al núvol. Veurem com gestionar fitxers, carpetes, permisos i treballar en equip de forma eficient.</p>
+        <div class="pills" style="margin-top:.75rem">
+          <span class="pill pill-g">Cloud</span>
+          <span class="pill pill-g">Col·laboració</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout cl-blue fi" style="margin-top:2rem">
+      <span class="callout-icon">🎓</span>
+      <div>
+        <strong>Criteri d'avaluació principal:</strong>
+        <p style="margin-top:.3rem">L'alumnat ha de ser capaç de configurar i gestionar les eines de correu i agenda electrònica de forma autònoma, aplicant les bones pràctiques professionals i entenent els protocols de comunicació subjacents.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════
+     GMAIL — TEORIA
+════════════════════════════════════ -->
+<section id="gmail" class="s-gmail">
+  <div class="container">
+    <div class="ra-banner ra-gmail fi">
+      <div class="ra-num">G</div>
+      <div>
+        <h2>Gmail — Correu Electrònic</h2>
+        <p>Conceptes bàsics, protocols, configuració i gestió professional del correu electrònic amb Gmail.</p>
+      </div>
+    </div>
+
+    <!-- QUÈ ÉS EL CORREU -->
+    <div class="section-tag tag-gmail fi">Fonaments del correu electrònic</div>
+    <h2 class="fi">Com funciona el correu electrònic?</h2>
+    <p class="lead fi">El correu electrònic és un sistema de missatgeria digital asíncrona que permet enviar i rebre missatges a través d'Internet. Abans de configurar Gmail, cal entendre com funciona per sota.</p>
+
+    <!-- DIAGRAMA DE FLUX -->
+    <div class="proto-flow fi">
+      <div class="proto-node sender">
+        <div class="icon">👤</div>
+        <div class="label">Remitent</div>
+        <div class="sub">anna@gmail.com</div>
+      </div>
+      <div class="proto-arrow">→</div>
+      <div class="proto-node server">
+        <div class="icon">📤</div>
+        <div class="label">Servidor d'enviament</div>
+        <div class="sub">SMTP · Port 587</div>
+      </div>
+      <div class="proto-arrow">→</div>
+      <div class="proto-node server">
+        <div class="icon">🌐</div>
+        <div class="label">Internet</div>
+        <div class="sub">DNS + MX Records</div>
+      </div>
+      <div class="proto-arrow">→</div>
+      <div class="proto-node server">
+        <div class="icon">📥</div>
+        <div class="label">Servidor de recepció</div>
+        <div class="sub">IMAP/POP3 · 993/995</div>
+      </div>
+      <div class="proto-arrow">→</div>
+      <div class="proto-node recv">
+        <div class="icon">👤</div>
+        <div class="label">Destinatari</div>
+        <div class="sub">pere@hotmail.com</div>
+      </div>
+    </div>
+
+    <div class="callout cl-blue fi">
+      <span class="callout-icon">💡</span>
+      <div>
+        <strong>Analogia postal:</strong>
+        <p style="margin-top:.3rem">El correu electrònic funciona com el correu postal. SMTP és el "carter" que porta la carta. El servidor de correu és l'"oficina de correus" on s'emmagatzema. IMAP/POP3 és el "bústia" des d'on recuperes les cartes. L'adreça de correu (anna@gmail.com) és la teva "adreça postal".</p>
+      </div>
+    </div>
+
+    <!-- PROTOCOLS -->
+    <div class="section-tag tag-gmail fi" style="margin-top:3rem">Protocols de correu electrònic</div>
+    <h2 class="fi">SMTP, IMAP i POP3</h2>
+    <p class="lead fi">Els protocols defineixen les "regles del joc" de com es comuniquen els servidors de correu. Com a tècnics SMX, cal conèixer-los per configurar clients de correu correctament.</p>
+
+    <!-- SMTP -->
+    <div class="card fi" style="margin-bottom:1.25rem; border-left:4px solid var(--gmail)">
+      <div style="display:flex;gap:1rem;flex-wrap:wrap;align-items:flex-start">
+        <div style="flex:1;min-width:240px">
+          <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem">
+            <span class="badge b-smtp">SMTP</span>
+            <h3 style="margin:0">Simple Mail Transfer Protocol</h3>
+          </div>
+          <p style="color:var(--muted);font-size:.92rem">Protocol d'<strong>enviament</strong> de correus. Quan premeu "Enviar" a Gmail, el missatge viatja del vostre ordinador al servidor de Google via SMTP, i d'aquí al servidor del destinatari.</p>
+          <div class="pills" style="margin-top:.75rem">
+            <span class="pill">Port 25 (servidor a servidor)</span>
+            <span class="pill">Port 587 (client → servidor, TLS)</span>
+            <span class="pill">Port 465 (SSL/TLS, obsolet)</span>
+          </div>
+        </div>
+        <div style="flex:1.4;min-width:260px">
+          <div class="ex ex-gmail">
+            <div class="ex-lbl">📤 Configuració SMTP de Gmail per a Thunderbird</div>
+            <p>
+              Servidor: <strong>smtp.gmail.com</strong><br>
+              Port: <strong>587</strong> (amb STARTTLS)<br>
+              Autenticació: <strong>Contrasenya normal</strong><br>
+              Usuari: <strong>el.teu.correu@gmail.com</strong>
+            </p>
+          </div>
+          <div class="code">
+            <span class="cm"># Seqüència de comandes SMTP (simplificada)</span><br>
+            <span class="kw">EHLO</span> client.empresa.com<br>
+            <span class="kw">AUTH LOGIN</span><br>
+            <span class="kw">MAIL FROM:</span> <span class="st">&lt;anna@gmail.com&gt;</span><br>
+            <span class="kw">RCPT TO:</span>  <span class="st">&lt;pere@hotmail.com&gt;</span><br>
+            <span class="kw">DATA</span><br>
+            Subject: Reunió de demà<br>
+            Hola Pere, ...<br>
+            <span class="kw">QUIT</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- IMAP -->
+    <div class="card fi" style="margin-bottom:1.25rem; border-left:4px solid var(--gcal)">
+      <div style="display:flex;gap:1rem;flex-wrap:wrap;align-items:flex-start">
+        <div style="flex:1;min-width:240px">
+          <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem">
+            <span class="badge b-imap">IMAP</span>
+            <h3 style="margin:0">Internet Message Access Protocol</h3>
+          </div>
+          <p style="color:var(--muted);font-size:.92rem">Protocol de <strong>lectura sincronitzada</strong> del correu. Els missatges es mantenen al servidor. Si obres Gmail al mòbil i a l'ordinador, veus el mateix. Perfecte per a múltiples dispositius.</p>
+          <div class="pills" style="margin-top:.75rem">
+            <span class="pill">Port 143 (sense xifrar)</span>
+            <span class="pill">Port 993 (SSL/TLS) ✅ Recomanat</span>
+          </div>
+          <div class="callout cl-green" style="margin-top:.75rem;padding:1rem">
+            <span class="callout-icon">✅</span>
+            <p><strong>IMAP és el protocol recomanat</strong> per a qualsevol entorn professional actual. Permet sincronització entre dispositius i no esborra els missatges del servidor.</p>
+          </div>
+        </div>
+        <div style="flex:1.4;min-width:260px">
+          <div class="ex ex-gmail">
+            <div class="ex-lbl">📱 Configuració IMAP de Gmail</div>
+            <p>
+              Servidor entrant: <strong>imap.gmail.com</strong><br>
+              Port: <strong>993</strong> (amb SSL/TLS)<br>
+              Autenticació: <strong>OAuth2 o contrasenya d'app</strong><br>
+              Usuari: <strong>el.teu.correu@gmail.com</strong>
+            </p>
+          </div>
+          <div class="ex ex-gmail" style="margin-top:.5rem">
+            <div class="ex-lbl">🔄 Com funciona IMAP</div>
+            <p>El missatge <strong>roman al servidor</strong>. El client (Thunderbird, mòbil) mostra una còpia local sincronitzada. Pots llegir-lo des del mòbil, marcar-lo com a llegit, i quan obres l'ordinador, ja apareix llegit. Les carpetes que crees es repliquen a tots els dispositius.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- POP3 -->
+    <div class="card fi" style="margin-bottom:2rem; border-left:4px solid var(--yellow)">
+      <div style="display:flex;gap:1rem;flex-wrap:wrap;align-items:flex-start">
+        <div style="flex:1;min-width:240px">
+          <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem">
+            <span class="badge b-pop3">POP3</span>
+            <h3 style="margin:0">Post Office Protocol v3</h3>
+          </div>
+          <p style="color:var(--muted);font-size:.92rem">Protocol de <strong>descàrrega</strong> del correu. Descarrega els missatges del servidor al dispositiu i (normalment) els esborra del servidor. Dissenyat per a un sol dispositiu. Protocol més antic que IMAP.</p>
+          <div class="pills" style="margin-top:.75rem">
+            <span class="pill">Port 110 (sense xifrar)</span>
+            <span class="pill">Port 995 (SSL/TLS)</span>
+          </div>
+          <div class="callout cl-amber" style="margin-top:.75rem;padding:1rem">
+            <span class="callout-icon">⚠️</span>
+            <p><strong>POP3 en desús progressiu.</strong> Si descarregues al PC i esborres del servidor, el mòbil no veurà els missatges antics. Avui només s'usa en casos molt específics (accés sense connexió constant, espai limitat al servidor).</p>
+          </div>
+        </div>
+        <div style="flex:1.4;min-width:260px">
+          <div class="ex ex-gmail">
+            <div class="ex-lbl">📲 Configuració POP3 de Gmail</div>
+            <p>
+              Servidor entrant: <strong>pop.gmail.com</strong><br>
+              Port: <strong>995</strong> (amb SSL/TLS)<br>
+              Nota: Cal activar POP3 a la configuració de Gmail. Per defecte, Google manté una còpia al servidor encara que descarreguis via POP3.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAULA COMPARATIVA PROTOCOLS -->
+    <h3 class="fi">Comparativa de protocols</h3>
+    <div style="overflow-x:auto" class="fi">
+      <table class="ptable">
+        <thead>
+          <tr><th>Característica</th><th><span class="badge b-smtp">SMTP</span></th><th><span class="badge b-imap">IMAP</span></th><th><span class="badge b-pop3">POP3</span></th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Funció</strong></td><td>Enviar correus</td><td>Llegir/sincronitzar</td><td>Descarregar correus</td></tr>
+          <tr><td><strong>Port estàndard (segur)</strong></td><td>587 (STARTTLS)</td><td>993 (SSL)</td><td>995 (SSL)</td></tr>
+          <tr><td><strong>Missatges al servidor</strong></td><td>—</td><td>✅ Sempre</td><td>❌ S'esborren (per defecte)</td></tr>
+          <tr><td><strong>Sincronització multi-dispositiu</strong></td><td>—</td><td>✅ Sí</td><td>❌ No</td></tr>
+          <tr><td><strong>Necessita connexió per llegir</strong></td><td>—</td><td>Sí (o caché local)</td><td>No (un cop descarregat)</td></tr>
+          <tr><td><strong>Recomanat per a SMX</strong></td><td>✅ Sempre</td><td>✅ Sí</td><td>⚠️ Casos específics</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- GMAIL CONCEPTES BÀSICS -->
+    <div class="section-tag tag-gmail fi" style="margin-top:4rem">Gmail — Conceptes i gestió</div>
+    <h2 class="fi">Gestió professional del correu amb Gmail</h2>
+    <p class="lead fi">Gmail és molt més que una bústia d'entrada. Dominar-lo redueix el temps dedicat al correu i millora la comunicació professional.</p>
+
+    <div class="grid g2 fi">
+      <div class="card bl-gmail">
+        <div class="card-icon" style="background:#fef2f2">🏷️</div>
+        <h3>Etiquetes (Labels)</h3>
+        <p>Gmail no usa carpetes tradicionals, sinó etiquetes. Un correu pot tenir múltiples etiquetes simultàniament. Permeten organitzar per projecte, client, prioritat o qualsevol criteri.</p>
+        <div class="ex ex-gmail" style="margin-top:.75rem">
+          <div class="ex-lbl">Exemple professional</div>
+          <p>Un tècnic SMX crea les etiquetes: <strong>🔴 Urgent</strong>, <strong>📁 Clients/Empresa X</strong>, <strong>🔧 Incidències</strong>, <strong>📋 Factures</strong>. Pot aplicar múltiples etiquetes al mateix correu: "Incidència + Urgent + Client X".</p>
+        </div>
+      </div>
+
+      <div class="card bl-gmail">
+        <div class="card-icon" style="background:#fef2f2">🔍</div>
+        <h3>Filtres automàtics</h3>
+        <p>Regles que s'apliquen automàticament als correus entrants. Permeten classificar, arxivar, eliminar o reenviar missatges sense intervenció manual.</p>
+        <div class="ex ex-gmail" style="margin-top:.75rem">
+          <div class="ex-lbl">Filtres útils per a SMX</div>
+          <p>
+            • Tots els correus de <em>factures@proveidor.com</em> → Etiqueta "Factures" + Arxivar<br>
+            • Assumpte conté "URGENT" → Marcar com a important + Notificació<br>
+            • De <em>*@spamdomini.com</em> → Eliminar directament
+          </p>
+        </div>
+      </div>
+
+      <div class="card bl-gmail">
+        <div class="card-icon" style="background:#fef2f2">⭐</div>
+        <h3>Prioritat i marcat</h3>
+        <p>Gmail usa IA per identificar els correus importants (Priority Inbox). A més, podeu marcar manualment correus amb estel (⭐) per recuperar-los ràpidament.</p>
+        <div class="ex ex-gmail" style="margin-top:.75rem">
+          <div class="ex-lbl">Bandeja de prioritat</div>
+          <p>La <strong>Safata d'entrada prioritària</strong> separa automàticament: correus importants i no llegits, correus marcats amb estel, i la resta. Redueix el soroll visual.</p>
+        </div>
+      </div>
+
+      <div class="card bl-gmail">
+        <div class="card-icon" style="background:#fef2f2">📤</div>
+        <h3>Respostes automàtiques i signatures</h3>
+        <p>La signatura professional inclou nom, càrrec, telèfon i empresa. La resposta automàtica (Out of Office) informa els remitents quan esteu de vacances o fora de l'oficina.</p>
+        <div class="ex ex-gmail" style="margin-top:.75rem">
+          <div class="ex-lbl">Signatura professional típica</div>
+          <p>
+            <em>Anna García · Tècnica de Sistemes</em><br>
+            <em>TecnoSupport S.L. · Tel: 93 XXX XX XX</em><br>
+            <em>anna.garcia@tecnosupport.cat</em>
+          </p>
+        </div>
+      </div>
+
+      <div class="card bl-gmail">
+        <div class="card-icon" style="background:#fef2f2">🔒</div>
+        <h3>Seguretat: SPF, DKIM i DMARC</h3>
+        <p>Mecanismes de seguretat que autentiquen els correus i prevenen el phishing i la suplantació d'identitat (spoofing). Fonamentals en entorns corporatius.</p>
+        <div class="ex ex-gmail" style="margin-top:.75rem">
+          <div class="ex-lbl">Què fan?</div>
+          <p>
+            <strong>SPF:</strong> llista quins servidors poden enviar correus del teu domini.<br>
+            <strong>DKIM:</strong> signatura digital que verifica que el correu no ha estat modificat.<br>
+            <strong>DMARC:</strong> política que indica als servidors receptors què fer si SPF/DKIM fallen.
+          </p>
+        </div>
+      </div>
+
+      <div class="card bl-gmail">
+        <div class="card-icon" style="background:#fef2f2">🗂️</div>
+        <h3>Cerca avançada</h3>
+        <p>Gmail permet cerques molt precises amb operadors especials. Imprescindible per trobar correus concrets en safates plenes de milers de missatges.</p>
+        <div class="code" style="font-size:.75rem">
+          <span class="cm"># Operadors de cerca de Gmail</span><br>
+          <span class="kw">from:</span><span class="st">anna@empresa.com</span> <span class="cm">→ correus d'Anna</span><br>
+          <span class="kw">to:</span><span class="st">pere</span> <span class="cm">→ correus enviats a Pere</span><br>
+          <span class="kw">subject:</span><span class="st">factura</span> <span class="cm">→ assumpte conté "factura"</span><br>
+          <span class="kw">has:attachment</span> <span class="cm">→ amb fitxers adjunts</span><br>
+          <span class="kw">after:</span><span class="st">2025/01/01</span> <span class="kw">before:</span><span class="st">2025/03/31</span><br>
+          <span class="kw">is:unread</span> <span class="cm">→ no llegits</span><br>
+          <span class="kw">label:</span><span class="st">Urgent</span> <span class="cm">→ amb etiqueta "Urgent"</span><br>
+          <span class="kw">larger:</span><span class="st">10M</span> <span class="cm">→ adjunts de més de 10 MB</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- BONES PRÀCTIQUES -->
+    <div class="callout cl-red fi" style="margin-top:2rem">
+      <span class="callout-icon">📋</span>
+      <div>
+        <strong>Bones pràctiques del correu professional</strong>
+        <ul style="margin-top:.5rem">
+          <li><strong>Assumpte clar i específic:</strong> "Reunió dijous 15/5 a les 10h" és millor que "Reunió".</li>
+          <li><strong>Un tema per correu:</strong> si tractes dos temes diferents, envia dos correus separats.</li>
+          <li><strong>CC vs BCC:</strong> CC per a persones que han de saber-ho; BCC per a llistes grans o privacitat dels destinataris.</li>
+          <li><strong>Respon en 24 hores:</strong> si no pots respondre ara, envia un acús de rebuda breu.</li>
+          <li><strong>No enviis dades sensibles per correu</strong> sense xifrar (contrasenyes, dades bancàries).</li>
+          <li><strong>Arxiva, no elimines:</strong> els correus antics poden ser necessaris per a auditories o disputes legals.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════
+     GOOGLE CALENDAR — TEORIA
+════════════════════════════════════ -->
+<section id="gcal" class="s-gcal">
+  <div class="container">
+    <div class="ra-banner ra-gcal fi">
+      <div class="ra-num">📅</div>
+      <div>
+        <h2>Google Calendar — Agenda Electrònica</h2>
+        <p>Gestió d'esdeveniments, calendaris compartits, invitacions i integració amb el correu electrònic.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-gcal fi">Fonaments de l'agenda electrònica</div>
+    <h2 class="fi">Per a què serveix Google Calendar?</h2>
+    <p class="lead fi">Google Calendar és molt més que un calendari digital. És una eina de coordinació col·laborativa que permet gestionar el temps propi i de tot un equip des d'un únic lloc.</p>
+
+    <div class="grid g3 fi">
+      <div class="card" style="border-left:3px solid var(--gcal)">
+        <div class="card-icon" style="background:#eff6ff">📆</div>
+        <h3>Calendaris múltiples</h3>
+        <p>Pots tenir varis calendaris simultàniament, cadascun amb un color diferent: personal, feina, vacances, projectes, etc. Es mostren integrats en una sola vista.</p>
+        <div class="ex ex-gcal" style="margin-top:.75rem">
+          <div class="ex-lbl">Exemple organització tècnic SMX</div>
+          <p>🔵 Feina general · 🔴 Incidències urgents · 🟡 Manteniment preventiu · 🟢 Vacances equip · 🟣 Formació</p>
+        </div>
+      </div>
+
+      <div class="card" style="border-left:3px solid var(--gcal)">
+        <div class="card-icon" style="background:#eff6ff">👥</div>
+        <h3>Compartir calendaris</h3>
+        <p>Pots compartir un calendari amb permisos específics: veure disponibilitat, veure detalls dels esdeveniments, editar o gestionar i compartir.</p>
+        <div class="ex ex-gcal" style="margin-top:.75rem">
+          <div class="ex-lbl">Nivells de permís</div>
+          <p>
+            👁️ <strong>Veure si hi estic lliure/ocupat</strong><br>
+            📋 <strong>Veure tots els detalls</strong><br>
+            ✏️ <strong>Fer canvis als esdeveniments</strong><br>
+            ⚙️ <strong>Gestionar i compartir el calendari</strong>
+          </p>
+        </div>
+      </div>
+
+      <div class="card" style="border-left:3px solid var(--gcal)">
+        <div class="card-icon" style="background:#eff6ff">🔔</div>
+        <h3>Recordatoris i notificacions</h3>
+        <p>Configura recordatoris per correu electrònic, notificació push al mòbil o notificació al navegador, amb l'antelació que vulguis (10 minuts, 1 hora, 1 dia...).</p>
+        <div class="ex ex-gcal" style="margin-top:.75rem">
+          <div class="ex-lbl">Recordatoris recomanats</div>
+          <p>Per a reunions: 1 dia + 30 minuts.<br>Per a manteniment preventiu: 1 setmana + 1 dia.<br>Per a renovació de llicències: 1 mes d'antelació.</p>
+        </div>
+      </div>
+
+      <div class="card" style="border-left:3px solid var(--gcal)">
+        <div class="card-icon" style="background:#eff6ff">📧</div>
+        <h3>Invitacions i respostes</h3>
+        <p>Quan crees un esdeveniment i afegeixes convidats, Google Calendar envia automàticament una invitació per correu. Cada convidat respon Sí / Potser / No. Veus qui assistirà en temps real.</p>
+        <div class="ex ex-gcal" style="margin-top:.75rem">
+          <div class="ex-lbl">Format iCalendar (.ics)</div>
+          <p>Les invitacions usen el format estàndard <strong>iCalendar (RFC 5545)</strong>. Compatible amb Google Calendar, Outlook, Apple Calendar. L'arxiu .ics conté tots els detalls de l'event.</p>
+        </div>
+      </div>
+
+      <div class="card" style="border-left:3px solid var(--gcal)">
+        <div class="card-icon" style="background:#eff6ff">🔁</div>
+        <h3>Esdeveniments recurrents</h3>
+        <p>Reunions setmanals, manteniments mensuals, renovacions anuals... Crea l'event un cop i defineix la periodicitat. Google Calendar ho gestiona sol automàticament.</p>
+        <div class="ex ex-gcal" style="margin-top:.75rem">
+          <div class="ex-lbl">Exemples de recurrència</div>
+          <p>
+            🔄 Reunió d'equip: cada dilluns a les 9h<br>
+            🔄 Còpia de seguretat: cada divendres a les 22h<br>
+            🔄 Revisió antivirus: primer dijous de cada mes<br>
+            🔄 Renovació domini: cada any l'1 de juny
+          </p>
+        </div>
+      </div>
+
+      <div class="card" style="border-left:3px solid var(--gcal)">
+        <div class="card-icon" style="background:#eff6ff">🔗</div>
+        <h3>Integració amb Google Meet</h3>
+        <p>Quan crees una reunió al Calendar, pots afegir un enllaç de Google Meet automàticament. Tots els convidats reben l'enllaç a la invitació i al recordatori.</p>
+        <div class="ex ex-gcal" style="margin-top:.75rem">
+          <div class="ex-lbl">Flux de treball habitual</div>
+          <p>Crear event → Afegir convidats → Activar Meet → Enviar → Convidats accepten → El dia, tothom accedeix via l'enllaç del recordatori.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- USOS PROFESSIONALS -->
+    <div class="section-tag tag-gcal fi" style="margin-top:4rem">Ús professional</div>
+    <h2 class="fi">Google Calendar en un entorn de suport IT</h2>
+
+    <div class="grid g2 fi">
+      <div>
+        <div class="ex ex-gcal">
+          <div class="ex-lbl">📅 Calendari de manteniment preventiu</div>
+          <p>Cada servidor té events recurrents mensuals per verificar espai en disc, revisar logs, aplicar parxos i fer còpies de seguretat. El calendari compartit amb tot l'equip tècnic evita duplicitats i oblits.</p>
+        </div>
+        <div class="ex ex-gcal" style="margin-top:.5rem">
+          <div class="ex-lbl">🔧 Gestió de finestres de manteniment</div>
+          <p>Les actualizaciones de servidors de producció s'han de fer en "finestres de manteniment" (normalment caps de setmana a la matinada). El Calendar permet bloquejar aquest temps i notificar els usuaris afectats amb antelació.</p>
+        </div>
+        <div class="ex ex-gcal" style="margin-top:.5rem">
+          <div class="ex-lbl">👥 Gestió de torns i disponibilitat</div>
+          <p>En equips de suport tècnic, el calendari compartit mostra qui fa guàrdia cada dia, qui està de vacances i qui porta quins clients. Evita confusions sobre responsabilitats.</p>
+        </div>
+      </div>
+      <div>
+        <div class="callout cl-blue">
+          <span class="callout-icon">🔗</span>
+          <div>
+            <strong>Integració Calendar + Gmail</strong>
+            <p style="margin-top:.3rem">Quan reps un correu amb una data ("Ens veiem el dijous 15 de maig"), Gmail la detecta automàticament i et proposa afegir l'event al Calendar. Si reps un .ics adjunt, s'afegeix directament al teu calendari amb un clic.</p>
+          </div>
+        </div>
+        <div class="callout cl-green" style="margin-top:1rem">
+          <span class="callout-icon">📱</span>
+          <div>
+            <strong>Accés mòbil i sincronització</strong>
+            <p style="margin-top:.3rem">Google Calendar sincronitza automàticament entre web, app mòbil (Android i iOS) i aplicacions d'escriptori. Un event creat al mòbil apareix immediatament al PC. Funciona amb connexió mínima gràcies a la caché local.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════
+     GOOGLE DRIVE — TEORIA
+════════════════════════════════════ -->
+<section id="gdrive" class="s-drive">
+  <div class="container">
+    <div class="ra-banner ra-drive fi">
+      <div class="ra-num">💾</div>
+      <div>
+        <h2>Google Drive — Emmagatzematge al Núvol</h2>
+        <p>Gestió de fitxers, carpetes, permisos, col·laboració en temps real i integració amb Google Workspace.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-drive fi">Fonaments de Google Drive</div>
+    <h2 class="fi">Què és Google Drive i com funciona?</h2>
+    <p class="lead fi">Google Drive és un servei d'emmagatzematge al núvol (SaaS) que permet guardar, organitzar i compartir fitxers de qualsevol tipus des de qualsevol dispositiu amb connexió a Internet.</p>
+
+    <div class="callout cl-green fi">
+      <span class="callout-icon">☁️</span>
+      <div>
+        <strong>Drive vs emmagatzematge local — La gran diferència</strong>
+        <p style="margin-top:.3rem">Un fitxer guardat al disc dur del PC és accessible <em>només des d'aquell PC</em>. Un fitxer a Google Drive és accessible des de <strong>qualsevol dispositiu</strong> amb el teu compte. Si el PC s'espatlla, el fitxer segueix al núvol. Si vols col·laborar, comparteixes l'enllaç.</p>
+      </div>
+    </div>
+
+    <div class="grid g2 fi" style="margin-top:2rem">
+      <div class="card bl-drive">
+        <div class="card-icon" style="background:#f0fdf4">📁</div>
+        <h3>Organització de fitxers i carpetes</h3>
+        <p>Drive permet crear una estructura de carpetes similar a un disc dur local. A diferència dels discos locals, un fitxer pot estar en múltiples carpetes simultàniament (com les etiquetes de Gmail) gràcies als "accesos directes".</p>
+        <div class="ex ex-drive" style="margin-top:.75rem">
+          <div class="ex-lbl">Estructura recomanada per a SMX</div>
+          <p>
+            📁 Empresa<br>
+            &nbsp;&nbsp;📁 Clients<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;📁 Client A<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;📁 Client B<br>
+            &nbsp;&nbsp;📁 Documentació tècnica<br>
+            &nbsp;&nbsp;📁 Factures 2025<br>
+            &nbsp;&nbsp;📁 Manuals i procediments
+          </p>
+        </div>
+      </div>
+
+      <div class="card bl-drive">
+        <div class="card-icon" style="background:#f0fdf4">🔑</div>
+        <h3>Sistema de permisos</h3>
+        <p>Cada fitxer o carpeta té permisos independents. Pots compartir amb persones concretes (per correu), amb un grup, amb tothom qui tingui l'enllaç, o mantenir-ho privat.</p>
+        <div class="ex ex-drive" style="margin-top:.75rem">
+          <div class="ex-lbl">Nivells de permís a Drive</div>
+          <p>
+            👁️ <strong>Visualitzador:</strong> pot llegir però no modificar<br>
+            💬 <strong>Comentarista:</strong> pot llegir i deixar comentaris<br>
+            ✏️ <strong>Editor:</strong> pot modificar el contingut<br>
+            👑 <strong>Propietari:</strong> control total (eliminar, transferir)
+          </p>
+        </div>
+      </div>
+
+      <div class="card bl-drive">
+        <div class="card-icon" style="background:#f0fdf4">👥</div>
+        <h3>Col·laboració en temps real</h3>
+        <p>Múltiples persones poden editar el mateix document simultàniament. Veus el cursor i els canvis de cada persona en temps real, amb un indicador del color del col·laborador.</p>
+        <div class="ex ex-drive" style="margin-top:.75rem">
+          <div class="ex-lbl">Cas pràctic: Informe d'incidències</div>
+          <p>Dos tècnics SMX editen alhora un informe d'incidències del client. Mentre un afegeix la secció tècnica, l'altre escriu les conclusions. Sense el risc de sobreescriure la feina de l'altre (conflictes de versió típics amb Word + correu).</p>
+        </div>
+      </div>
+
+      <div class="card bl-drive">
+        <div class="card-icon" style="background:#f0fdf4">🕐</div>
+        <h3>Historial de versions</h3>
+        <p>Drive guarda automàticament l'historial complet de canvis de cada document. Pots veure qui ha modificat el document, quan i quins canvis ha fet, i restaurar qualsevol versió anterior.</p>
+        <div class="ex ex-drive" style="margin-top:.75rem">
+          <div class="ex-lbl">Per a tècnics SMX</div>
+          <p>Si algú esborra accidentalment el contingut d'un document important, en menys de 2 minuts pots restaurar la versió anterior. Cap pèrdua de dades. L'historial es manté per a sempre (en comptes de pagament).</p>
+        </div>
+      </div>
+
+      <div class="card bl-drive">
+        <div class="card-icon" style="background:#f0fdf4">🔍</div>
+        <h3>Cerca intel·ligent</h3>
+        <p>El motor de cerca de Drive usa IA per trobar fitxers per nom, contingut, propietari, data o tipus. Fins i tot cerca dins de documents PDF i imatges (OCR automàtic).</p>
+        <div class="ex ex-drive" style="margin-top:.75rem">
+          <div class="ex-lbl">Cerca avançada</div>
+          <p>Pots filtrar per: tipus de fitxer (Docs, Sheets, PDF...), propietari, data de modificació, ubicació (carpeta específica) i si el fitxer és compartit o no.</p>
+        </div>
+      </div>
+
+      <div class="card bl-drive">
+        <div class="card-icon" style="background:#f0fdf4">💻</div>
+        <h3>Drive per a l'escriptori (Sync)</h3>
+        <p>L'aplicació "Google Drive per a l'escriptori" sincronitza les carpetes de Drive amb el PC. Els fitxers apareixen com una unitat de xarxa. Pots treballar offline i es sincronitzen quan hi ha connexió.</p>
+        <div class="ex ex-drive" style="margin-top:.75rem">
+          <div class="ex-lbl">Avantatge per a SMX</div>
+          <p>El tècnic treballa amb els fitxers des de l'Explorador de Windows (o Finder) normalment. Drive els sincronitza automàticament al núvol. Còpia de seguretat automàtica sense fer res extra.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- DRIVES COMPARTITS -->
+    <div class="section-tag tag-drive fi" style="margin-top:3rem">Ús empresarial</div>
+    <h2 class="fi">Drives compartits (Shared Drives)</h2>
+    <p class="lead fi">A diferència del Drive personal, els Drives compartits pertanyen a l'organització, no a una persona. Si l'empleat marxa, els fitxers romanen. Essencial en entorns corporatius.</p>
+
+    <div class="grid g2 fi">
+      <div>
+        <div class="ex ex-drive">
+          <div class="ex-lbl">Drive personal vs Drive compartit</div>
+          <p>
+            👤 <strong>Drive personal:</strong> pertany a l'usuari. Si l'empresa el desactiva, els fitxers queden en suspens. Ideal per a fitxers personals i esborranys.<br><br>
+            🏢 <strong>Drive compartit:</strong> pertany a l'organització. Independentment de qui entra o surt de l'empresa, els fitxers sempre estan disponibles. Ideal per a documentació corporativa.
+          </p>
+        </div>
+        <div class="ex ex-drive" style="margin-top:.75rem">
+          <div class="ex-lbl">📦 Tipus de fitxers que Google Drive suporta</div>
+          <p>
+            ✅ Google Docs, Sheets, Slides, Forms (natius, sense ocupar quota)<br>
+            ✅ Word (.docx), Excel (.xlsx), PowerPoint (.pptx)<br>
+            ✅ PDF, imatges (JPG, PNG, RAW...), vídeos (MP4...)<br>
+            ✅ Fitxers ZIP, executables, codi font (.py, .js, .sh...)<br>
+            ✅ Qualsevol tipus de fitxer (fins a 5 TB per fitxer en plans de pagament)
+          </p>
+        </div>
+      </div>
+      <div>
+        <div class="callout cl-green">
+          <span class="callout-icon">🔐</span>
+          <div>
+            <strong>Seguretat a Google Drive</strong>
+            <ul style="margin-top:.4rem">
+              <li>Totes les transferències estan xifrades amb <strong>TLS</strong></li>
+              <li>Les dades en repòs estan xifrades amb <strong>AES-256</strong></li>
+              <li>L'administrador de Google Workspace pot auditar tots els accessos</li>
+              <li>Es poden desactivar les descàrregues i impressions per a comparticions externes</li>
+              <li>DLP (Data Loss Prevention): impedir compartir fitxers amb dades sensibles fora de l'organització</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════
+     PRÀCTIQUES
+════════════════════════════════════ -->
+<section id="practiques" class="s-dark">
+  <div class="container">
+    <div class="ra-banner ra-practica fi">
+      <div class="ra-num">P</div>
+      <div>
+        <h2>Les 3 Pràctiques</h2>
+        <p>Activitats guiades per posar en pràctica els conceptes teòrics de Gmail, Google Calendar i Google Drive.</p>
+      </div>
+    </div>
+
+    <div class="section-tag" style="color:#c4b5fd;margin-bottom:.75rem" class="fi">
+      <span style="display:inline-block;width:20px;height:2px;background:#c4b5fd;margin-right:.5rem;vertical-align:middle"></span>
+      Activitats pràctiques
+    </div>
+    <h2 class="fi">Practica el que has après</h2>
+    <p class="lead fi">Cada pràctica és independent i s'entrega a través de Moodle. Necessitareu un compte de Google. Llegiu tots els passos abans de començar.</p>
+
+    <!-- PRÀCTICA 1: GMAIL -->
+    <div class="practice-card fi" style="margin-bottom:2rem">
+      <div class="practice-header p1-bg">
+        <div class="practice-num">01</div>
+        <div>
+          <h3>Configuració professional de Gmail i protocols</h3>
+          <p>📧 Gmail · Etiquetes · Filtres · Thunderbird · Protocols SMTP/IMAP</p>
+        </div>
+      </div>
+      <div class="practice-body">
+        <div class="grid g2">
+          <div>
+            <h4>🎯 Objectiu</h4>
+            <p style="color:var(--muted);font-size:.92rem;margin-bottom:1.25rem">Configurar Gmail de forma professional amb etiquetes, filtres automàtics i signatures, i connectar-lo a un client de correu extern (Thunderbird) usant els protocols IMAP i SMTP correctes.</p>
+
+            <h4>🛠️ Eines necessàries</h4>
+            <div class="pills" style="margin-bottom:1.25rem">
+              <span class="pill pill-r">Compte Gmail</span>
+              <span class="pill">Mozilla Thunderbird</span>
+              <span class="pill">Navegador web</span>
+            </div>
+
+            <h4>📋 Tasques a realitzar</h4>
+            <ol class="steps" style="margin-top:.75rem">
+              <li><p><strong>Configuració inicial de Gmail:</strong> activa la <em>Safata d'entrada prioritària</em> (Configuració → Safata d'entrada → Tipus: Prioritària). Observa com separa els correus.</p></li>
+              <li><p><strong>Crea l'estructura d'etiquetes:</strong> crea almenys 4 etiquetes: <em>🔴 Urgent</em>, <em>📁 Projectes</em>, <em>🔧 Incidències</em> i <em>📋 Factures</em>. Personalitza el color de cadascuna.</p></li>
+              <li><p><strong>Crea un filtre automàtic:</strong> tots els correus amb la paraula "URGENT" a l'assumpte → aplica l'etiqueta "Urgent" i marca com a important. Prova el filtre enviant-te un correu de prova des d'un altre compte.</p></li>
+              <li><p><strong>Crea una signatura professional:</strong> inclou nom complet, càrrec fictici, telèfon i empresa fictícia. Activa-la per defecte en correus nous i en respostes.</p></li>
+              <li><p><strong>Connecta Thunderbird amb Gmail via IMAP:</strong> configura el compte usant <em>imap.gmail.com:993</em> i <em>smtp.gmail.com:587</em>. Necessitaràs activar la verificació en dos passos i generar una "contrasenya d'aplicació" a Google.</p></li>
+              <li><p><strong>Envia un correu de prova des de Thunderbird</strong> al company de taula i verifica que el rebreu correctament a Gmail. Comprova que l'enviament apareix a la carpeta "Enviats" de Gmail.</p></li>
+            </ol>
+          </div>
+          <div>
+            <h4>📸 Evidències a entregar</h4>
+            <div class="ex" style="margin-bottom:.65rem">
+              <div class="ex-lbl" style="color:var(--gmail)">Captures de pantalla requerides</div>
+              <p>
+                1. Safata d'entrada prioritària activa amb correus organitzats<br>
+                2. Les 4 etiquetes creades amb colors<br>
+                3. Configuració del filtre automàtic creat<br>
+                4. Signatura professional configurada<br>
+                5. Thunderbird configurat i connectat (panell de configuració del compte)<br>
+                6. Correu enviat des de Thunderbird visible a Gmail
+              </p>
+            </div>
+
+            <h4>🔍 Qüestions de reflexió</h4>
+            <div class="ex">
+              <div class="ex-lbl" style="color:var(--gmail)">Respon per escrit (mínim 3 línies cadascuna)</div>
+              <p>
+                a) Per què s'usa el port 993 per a IMAP i no el 143?<br>
+                b) Quina diferència hi ha entre configurar Gmail via IMAP o via POP3 si el teu objectiu és llegir el correu des del mòbil i l'ordinador alhora?<br>
+                c) En quin cas seria millor NO usar filtres automàtics?
+              </p>
+            </div>
+
+            <div class="callout cl-amber" style="margin-top:1rem;padding:1rem">
+              <span class="callout-icon">⚠️</span>
+              <p><strong>Nota important:</strong> Per connectar Thunderbird a Gmail, Google exigeix una "contrasenya d'aplicació" (no la contrasenya normal). Primer activa la verificació en dos passos al teu compte Google, i des de "Seguretat" genera una contrasenya específica per a Thunderbird.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRÀCTICA 2: GOOGLE CALENDAR -->
+    <div class="practice-card fi" style="margin-bottom:2rem">
+      <div class="practice-header p2-bg">
+        <div class="practice-num">02</div>
+        <div>
+          <h3>Gestió d'una agenda d'equip tècnic amb Google Calendar</h3>
+          <p>📅 Google Calendar · Calendaris compartits · Invitacions · Esdeveniments recurrents</p>
+        </div>
+      </div>
+      <div class="practice-body">
+        <div class="grid g2">
+          <div>
+            <h4>🎯 Objectiu</h4>
+            <p style="color:var(--muted);font-size:.92rem;margin-bottom:1.25rem">Simular la gestió de l'agenda d'un equip tècnic de suport IT: creació de calendaris, compartició amb companys, organització de reunions amb invitació i configuració de manteniments recurrents.</p>
+
+            <h4>🏢 Context del rol</h4>
+            <div class="ex ex-gcal" style="margin-bottom:1.25rem">
+              <div class="ex-lbl">Simulació empresarial</div>
+              <p>Ets el cap de l'equip tècnic de "TecnoSupport S.L." Tens 2 tècnics al teu càrrec (company/a de classe). Heu de coordinar el vostre calendari de feina: reunions setmanals, manteniments preventius als clients i gestió de les guàrdies setmanals.</p>
+            </div>
+
+            <h4>📋 Tasques a realitzar</h4>
+            <ol class="steps" style="margin-top:.75rem">
+              <li><p><strong>Crea 3 calendaris nous:</strong> <em>🔵 TecnoSupport - Reunions</em>, <em>🔴 Manteniment Clients</em> i <em>🟡 Guàrdies</em>. Assigna un color diferent a cada un.</p></li>
+              <li><p><strong>Comparteix el calendari "TecnoSupport - Reunions"</strong> amb 2 companys/es de classe amb permís "Fer canvis als esdeveniments". Comprova que apareix al seu Calendar.</p></li>
+              <li><p><strong>Crea una reunió setmanal recurrent:</strong> "Reunió d'equip TecnoSupport" cada dilluns de 9:00 a 9:30h durant 2 mesos. Afegeix els 2 companys/es com a convidats. Configura un recordatori de 30 minuts i un d'1 dia abans.</p></li>
+              <li><p><strong>Crea un manteniment preventiu recurrent:</strong> "Manteniment servidor Client X" el primer dimecres de cada mes de 20:00 a 23:00h. Afegeix una descripció detallada del que s'ha de fer: verificar logs, revisar espai en disc, aplicar parxos, fer còpia de seguretat.</p></li>
+              <li><p><strong>Crea un event "Guàrdia setmanal"</strong> per a tota la setmana vinent (de dilluns a divendres) amb el teu nom. El company/a fa el mateix per a la setmana següent. Compartiu el calendari "Guàrdies" per a que tothom vegi qui fa guàrdia cada setmana.</p></li>
+              <li><p><strong>Accepta o rebutja les invitacions</strong> que us hagin enviat els companys/es i verifica que l'estat (Sí/No/Potser) és visible per a tothom.</p></li>
+            </ol>
+          </div>
+          <div>
+            <h4>📸 Evidències a entregar</h4>
+            <div class="ex" style="margin-bottom:.65rem">
+              <div class="ex-lbl" style="color:var(--gcal)">Captures de pantalla requerides</div>
+              <p>
+                1. Vista mensual del teu Calendar mostrant els 3 calendaris actius amb colors<br>
+                2. Configuració de compartició del calendari "Reunions" amb els companys<br>
+                3. Event recurrent de reunió setmanal amb la llista de convidats<br>
+                4. Event de manteniment amb la descripció detallada<br>
+                5. Vista de "Guàrdies" mostrant la distribució setmanal de l'equip<br>
+                6. Un exemple d'invitació rebuda amb les opcions Sí/Potser/No
+              </p>
+            </div>
+
+            <h4>🔍 Qüestions de reflexió</h4>
+            <div class="ex">
+              <div class="ex-lbl" style="color:var(--gcal)">Respon per escrit</div>
+              <p>
+                a) Quins avantatges aporta un calendari compartit respecte a gestionar les reunions per correu electrònic?<br>
+                b) Per a quin tipus d'informació <strong>no</strong> seria adequat usar un calendari compartit? Per quin motiu?<br>
+                c) Com gestionaries la privacitat si vols compartir la teva disponibilitat però no els detalls de cada event?
+              </p>
+            </div>
+
+            <div class="callout cl-blue" style="margin-top:1rem;padding:1rem">
+              <span class="callout-icon">💡</span>
+              <p><strong>Consell:</strong> Useu comptes reals de Gmail (podeu crear comptes de prova). La funcionalitat de calendaris compartits requereix que ambdós comptes siguin Google. Alternativament, l'administrador de Google Workspace de l'institut pot crear comptes de pràctiques.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRÀCTICA 3: GOOGLE DRIVE -->
+    <div class="practice-card fi">
+      <div class="practice-header p3-bg">
+        <div class="practice-num">03</div>
+        <div>
+          <h3>Gestió documental d'un projecte IT amb Google Drive</h3>
+          <p>💾 Google Drive · Permisos · Col·laboració · Historial de versions · Organització</p>
+        </div>
+      </div>
+      <div class="practice-body">
+        <div class="grid g2">
+          <div>
+            <h4>🎯 Objectiu</h4>
+            <p style="color:var(--muted);font-size:.92rem;margin-bottom:1.25rem">Simular la gestió documental d'un projecte d'instal·lació d'una xarxa corporativa per a un client fictici, usant Google Drive com a repositori central de documentació col·laborativa.</p>
+
+            <h4>🏢 Context del projecte</h4>
+            <div class="ex ex-drive" style="margin-bottom:1.25rem">
+              <div class="ex-lbl">Simulació empresarial</div>
+              <p>TecnoSupport S.L. ha guanyat un projecte d'instal·lació d'una xarxa corporativa per a "Empresa ABC". El projecte dura 2 mesos i hi treballen 2 tècnics (tu i el company/a). Cal organitzar tota la documentació al Drive perquè el client pugui seguir el progrés, però no pugui editar els documents tècnics.</p>
+            </div>
+
+            <h4>📋 Tasques a realitzar</h4>
+            <ol class="steps" style="margin-top:.75rem">
+              <li><p><strong>Crea l'estructura de carpetes del projecte</strong> al teu Google Drive: <em>📁 Projecte EmpresaABC</em> → subcarpetes: <em>📁 01_Documentació_Tècnica</em>, <em>📁 02_Proposta_Comercial</em>, <em>📁 03_Evidències_Fotografiques</em>, <em>📁 04_Informes_Setmanals</em>.</p></li>
+              <li><p><strong>Crea un Google Doc "Pla de xarxa"</strong> a la carpeta tècnica. Redacta un document fictici però realista que inclogui: objectiu del projecte, material necessari (switches, router, cablejat), diagrama de xarxa en text i cronograma de 4 setmanes.</p></li>
+              <li><p><strong>Crea un Google Sheet "Inventari de material"</strong> amb columnes: Referència, Descripció, Quantitat, Preu unitari, Total. Afegeix almenys 8 elements de xarxa fictici amb preus reals aproximats. Crea una fila de TOTAL amb suma automàtica.</p></li>
+              <li><p><strong>Gestiona els permisos:</strong> comparteix la carpeta principal amb el company/a com a <em>Editor</em>. Comparteix la subcarpeta "Informes Setmanals" amb una adreça de correu fictícia del client com a <em>Visualitzador</em>. Comprova que el client no pot editar.</p></li>
+              <li><p><strong>Col·laboració en temps real:</strong> obriu simultàniament el Google Doc "Pla de xarxa" tu i el company/a. Cada un afegeix una secció diferent mentre l'altre edita. Feu una captura mostrant els dos cursors/colors de col·laboradors.</p></li>
+              <li><p><strong>Prova l'historial de versions:</strong> al Google Doc, fes 3 canvis significatius en moments diferents. Accedeix a <em>Fitxer → Historial de versions → Veure historial</em>. Restaura una versió anterior i documenta el procés.</p></li>
+            </ol>
+          </div>
+          <div>
+            <h4>📸 Evidències a entregar</h4>
+            <div class="ex" style="margin-bottom:.65rem">
+              <div class="ex-lbl" style="color:var(--gdrive)">Captures de pantalla requerides</div>
+              <p>
+                1. Estructura de carpetes completa al Drive<br>
+                2. Google Doc "Pla de xarxa" amb contingut realista<br>
+                3. Google Sheet "Inventari" amb fórmules i totals<br>
+                4. Configuració de permisos diferenciats (editor + visualitzador)<br>
+                5. Col·laboració en temps real (dos cursors visibles al Doc)<br>
+                6. Historial de versions mostrant els canvis realitzats<br>
+                7. Una versió restaurada amb evidència del canvi
+              </p>
+            </div>
+
+            <h4>🔍 Qüestions de reflexió</h4>
+            <div class="ex">
+              <div class="ex-lbl" style="color:var(--gdrive)">Respon per escrit</div>
+              <p>
+                a) Quines diferències veus entre treballar amb Google Docs compartit i treballar amb Word i enviar-lo per correu a cada canvi?<br>
+                b) En quin moment de la pràctica haurieu pogut perdre informació si haguéssiu usat un servidor local sense còpia de seguretat? Com ho ha evitat Drive?<br>
+                c) En un entorn real d'empresa, quins fitxers <strong>NO</strong> hauríeu de pujar mai a Google Drive (fins i tot privat)? Raona la resposta.
+              </p>
+            </div>
+
+            <div class="callout cl-amber" style="margin-top:1rem;padding:1rem">
+              <span class="callout-icon">⭐</span>
+              <p><strong>Ampliació opcional (+1 punt):</strong> Instal·la "Google Drive per a l'escriptori" al teu ordinador. Verifica que la carpeta del projecte apareix sincronitzada localment. Crea un fitxer des de Windows (o Mac) i comprova que apareix automàticament al Drive web. Adjunta evidències.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════
+     PREGUNTES TEÒRIQUES
+════════════════════════════════════ -->
+<section id="preguntes">
+  <div class="container">
+    <div class="ra-banner ra-preguntes fi">
+      <div class="ra-num">?</div>
+      <div>
+        <h2>Preguntes Teòriques de Repàs</h2>
+        <p>Preguntes per consolidar la comprensió dels conceptes de l'RA8. Útils per preparar l'examen teòric.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-preguntes fi">Conceptes de protocols de correu</div>
+    <h2 class="fi">Preguntes sobre Gmail i Protocols</h2>
+    <div class="grid fi" style="gap:.9rem;margin-bottom:3rem">
+
+      <div class="q-card">
+        <div class="q-num">1</div>
+        <div class="q-body">
+          <h4>Quin és el propòsit del protocol SMTP i en quins ports opera normalment?</h4>
+          <p>Explica la diferència entre el port 25 (servidor a servidor) i el port 587 (client a servidor). Per quin motiu el port 25 sovint es bloqueja pels ISPs en connexions domèstiques?</p>
+          <span class="q-tag qt-proto">Protocols</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">2</div>
+        <div class="q-body">
+          <h4>Explica amb les teves pròpies paraules la diferència entre IMAP i POP3.</h4>
+          <p>Posa un exemple pràctic de quan usaries cadascun d'ells. En un entorn empresarial on els treballadors usen mòbil, portàtil i PC d'escriptori, quin protocol és l'adequat i per quin motiu?</p>
+          <span class="q-tag qt-proto">Protocols</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">3</div>
+        <div class="q-body">
+          <h4>Quan configures un compte de Gmail a Thunderbird, quins paràmetres exactes necessites per a IMAP i SMTP?</h4>
+          <p>Inclou: nom del servidor, port, tipus de seguretat (SSL/TLS o STARTTLS) i tipus d'autenticació. Per quin motiu Google exigeix una "contrasenya d'aplicació" en lloc de la contrasenya normal del compte?</p>
+          <span class="q-tag qt-gmail">Gmail</span><span class="q-tag qt-proto">Protocols</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">4</div>
+        <div class="q-body">
+          <h4>Quin és el paper dels registres MX (Mail eXchanger) en el sistema de correu electrònic?</h4>
+          <p>Explica com un servidor d'enviament sap a quin servidor ha d'entregar un correu destinat a <em>pere@empresa.com</em>. Quin rol juga el DNS en aquest procés?</p>
+          <span class="q-tag qt-proto">Protocols</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">5</div>
+        <div class="q-body">
+          <h4>Quin és l'objectiu dels mecanismes SPF, DKIM i DMARC? Per quin motiu són importants en el context de la ciberseguretat?</h4>
+          <p>Explica el concepte de "spoofing" o suplantació d'identitat per correu electrònic. Com prevenen SPF i DKIM que algú pugui enviar correus fent-se passar per <em>@empresa.cat</em>?</p>
+          <span class="q-tag qt-gmail">Gmail</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">6</div>
+        <div class="q-body">
+          <h4>Descriu tres bones pràctiques del correu electrònic professional que un tècnic SMX hauria de seguir sempre.</h4>
+          <p>Per a cadascuna, explica les conseqüències negatives de no seguir-la en un context empresarial (per exemple: problemes legals, de seguretat, d'eficiència o de reputació professional).</p>
+          <span class="q-tag qt-gmail">Gmail</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-tag tag-gcal fi">Agenda electrònica</div>
+    <h2 class="fi">Preguntes sobre Google Calendar</h2>
+    <div class="grid fi" style="gap:.9rem;margin-bottom:3rem">
+
+      <div class="q-card">
+        <div class="q-num">7</div>
+        <div class="q-body">
+          <h4>Quina diferència hi ha entre tenir múltiples calendaris separats (ex: Personal, Feina, Guàrdies) i tenir-ho tot en un sol calendari?</h4>
+          <p>Posa un exemple pràctic en el qual tenir calendaris separats faciliti la gestió. Quins avantatges ofereix en termes de compartició i privacitat?</p>
+          <span class="q-tag qt-gcal">Calendar</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">8</div>
+        <div class="q-body">
+          <h4>Un client t'envia un fitxer .ics per correu electrònic. Explica: Quin és el format .ics? Per a quin estàndard correspon (RFC)? Quines aplicacions el suporten? Com l'importaríeu a Google Calendar?</h4>
+          <p>Quin avantatge ofereix un fitxer .ics respecte a comunicar la data i hora d'una reunió directament al cos del correu?</p>
+          <span class="q-tag qt-gcal">Calendar</span><span class="q-tag qt-proto">Protocols</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">9</div>
+        <div class="q-body">
+          <h4>En un entorn professional, quin nivell de permís de Calendar donaries a cadascuna d'aquestes persones: el teu cap, un company de feina, un client extern i una persona de fora de l'empresa?</h4>
+          <p>Justifica cada decisió pensant en la privacitat i la seguretat de la informació de l'empresa.</p>
+          <span class="q-tag qt-gcal">Calendar</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-tag tag-drive fi">Emmagatzematge al núvol</div>
+    <h2 class="fi">Preguntes sobre Google Drive</h2>
+    <div class="grid fi" style="gap:.9rem;margin-bottom:3rem">
+
+      <div class="q-card">
+        <div class="q-num">10</div>
+        <div class="q-body">
+          <h4>Explica la diferència entre el Drive personal d'un usuari i un Drive compartit (Shared Drive) de l'organització.</h4>
+          <p>En una empresa, per quin motiu és millor guardar la documentació corporativa en un Drive compartit i no en el Drive personal del tècnic? Quins riscos evita?</p>
+          <span class="q-tag qt-drive">Drive</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">11</div>
+        <div class="q-body">
+          <h4>Descriu els quatre nivells de permís de Google Drive i posa un exemple d'ús per a cadascun.</h4>
+          <p>En un projecte d'instal·lació de xarxa, quin permís donaries al client, al tècnic sènior, al tècnic junior i al gestor del projecte? Justifica cada decisió.</p>
+          <span class="q-tag qt-drive">Drive</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">12</div>
+        <div class="q-body">
+          <h4>Quin és el mecanisme de l'historial de versions de Google Drive? En quins escenaris pot ser crítica aquesta funcionalitat per a un tècnic SMX?</h4>
+          <p>Compara l'historial de versions de Drive amb el sistema de còpies de seguretat tradicional (còpia en disc extern). Quines limitacions té l'historial de versions que el backup tradicional no té, i viceversa?</p>
+          <span class="q-tag qt-drive">Drive</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">13</div>
+        <div class="q-body">
+          <h4>Google Drive xifra les dades en trànsit i en repòs. Explica quin protocol usa en cada cas i per quin motiu el xifrat és essencial en un servei al núvol.</h4>
+          <p>Malgrat el xifrat, un tècnic SMX decideix <strong>no</strong> pujar certs fitxers a Drive. Quin tipus de fitxers serien i per quin motiu? (Pensa en aspectes legals, de confidencialitat i de normativa GDPR.)</p>
+          <span class="q-tag qt-drive">Drive</span><span class="q-tag qt-mixed">Seguretat</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-tag tag-cobalt fi">Integració de les eines</div>
+    <h2 class="fi">Preguntes d'integració Google Workspace</h2>
+    <div class="grid fi" style="gap:.9rem">
+
+      <div class="q-card">
+        <div class="q-num">14</div>
+        <div class="q-body">
+          <h4>Descriu el flux de treball complet d'una reunió virtual amb un client usant únicament eines de Google Workspace.</h4>
+          <p>Des del moment en que es decideix fer la reunió fins que s'envia l'informe posterior. Quines eines intervenen (Gmail, Calendar, Meet, Drive) i en quin ordre? Identifica en quins moments de Google detecta dates o adjunts i els integra automàticament.</p>
+          <span class="q-tag qt-mixed">Integració</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">15</div>
+        <div class="q-body">
+          <h4>Compara Google Workspace amb Microsoft 365 en termes de les eines equivalents (Gmail↔Outlook, Calendar↔Calendar, Drive↔OneDrive).</h4>
+          <p>Quines similituds i diferències principals hi ha? En quin tipus d'empresa triaries un o l'altre i per quin motiu? Considera aspectes com el cost, la compatibilitat, les funcionalitats i la seguretat.</p>
+          <span class="q-tag qt-mixed">Integració</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESUM FINAL -->
+<section class="s-cream">
+  <div class="container fi">
+    <div class="section-tag tag-cobalt">Resum del RA8</div>
+    <h2>El que heu après</h2>
+    <p class="lead">Un resum dels conceptes clau de l'RA8 i la seva aplicació professional com a tècnics SMX.</p>
+    <div class="grid g3 fi">
+      <div class="card bl-gmail">
+        <div class="card-icon" style="background:#fef2f2">📧</div>
+        <h3>Gmail i Protocols</h3>
+        <p><strong>SMTP</strong> envia (port 587). <strong>IMAP</strong> sincronitza (port 993). <strong>POP3</strong> descarrega (port 995). Gmail s'organitza amb etiquetes i filtres. SPF, DKIM i DMARC protegeixen de spoofing. Thunderbird es connecta via IMAP+SMTP amb contrasenya d'aplicació.</p>
+      </div>
+      <div class="card" style="border-left:3px solid var(--gcal)">
+        <div class="card-icon" style="background:#eff6ff">📅</div>
+        <h3>Google Calendar</h3>
+        <p>Calendaris múltiples per organitzar per àmbits. Compartir amb permisos granulars. Invitacions via iCalendar (.ics). Esdeveniments recurrents per manteniments. Integració directa amb Gmail i Meet. Essencial per coordinar equips tècnics.</p>
+      </div>
+      <div class="card" style="border-left:3px solid var(--gdrive)">
+        <div class="card-icon" style="background:#f0fdf4">💾</div>
+        <h3>Google Drive</h3>
+        <p>Emmagatzematge SaaS al núvol. Permisos de Visualitzador, Comentarista, Editor i Propietari. Col·laboració en temps real. Historial de versions automàtic. Drive compartit per a documentació corporativa. Xifrat TLS + AES-256.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p><strong>RA8 — Gestió del correu i l'agenda electrònica · SMX</strong></p>
+  <p style="margin-top:.4rem">Gmail · Google Calendar · Google Drive · Protocols SMTP · IMAP · POP3</p>
+  <p style="margin-top:.4rem">Departament d'Informàtica · Sistemes Microinformàtics i Xarxes</p>
+</footer>
+
+<script>
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+  }, { threshold: 0.07, rootMargin: '0px 0px -30px 0px' });
+  document.querySelectorAll('.fi').forEach(el => io.observe(el));
+</script>
+</body>
+</html>
