@@ -1,0 +1,1572 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RA6 — Monitoratge del Rendiment del Sistema · ASIX · MP0369</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0d0f1a;--paper:#f4f2ed;--cream:#eceae3;--navy:#1a1f4e;
+  --asix:#6d28d9;--asix-l:#7c3aed;--asix-d:#4c1d95;
+  --win:#0078d4;--win-d:#005a9e;
+  --ubuntu:#e95420;--ubuntu-d:#c2440e;
+  --green:#059669;--amber:#d97706;--red:#dc2626;
+  --teal:#0891b2;--teal-d:#0e7490;
+  --mon:#0f4c81;--mon-l:#1a6bb5;
+  --muted:#6b6f85;--border:#d6d2c9;--card:#ffffff;
+  --term:#0f111a;--term2:#161b2e;
+  --radius:16px;--radius-sm:8px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);font-size:16px;line-height:1.7;overflow-x:hidden;}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(244,242,237,.94);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:62px;}
+.nav-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:.95rem;color:var(--navy);letter-spacing:-.02em;}
+.nav-logo span{color:var(--asix-l);}
+.nav-pills{display:flex;gap:.3rem;list-style:none;flex-wrap:wrap;}
+.nav-pills a{text-decoration:none;font-size:.7rem;font-weight:600;padding:.22rem .6rem;border-radius:100px;color:var(--muted);transition:all .2s;border:1px solid transparent;}
+.nav-pills a:hover,.nav-pills a.act{color:var(--asix-l);border-color:var(--asix-l);background:rgba(109,40,217,.07);}
+
+.hero{min-height:100vh;display:grid;place-items:center;background:var(--navy);color:white;position:relative;overflow:hidden;padding:8rem 2rem 4rem;}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 70% 55% at 80% 20%,rgba(8,145,178,.4) 0%,transparent 60%),radial-gradient(ellipse 55% 45% at 15% 75%,rgba(109,40,217,.3) 0%,transparent 60%),radial-gradient(ellipse 45% 35% at 50% 95%,rgba(5,150,105,.2) 0%,transparent 55%);}
+.hero-dots{position:absolute;inset:0;opacity:.06;background-image:radial-gradient(rgba(255,255,255,.7) 1px,transparent 1px);background-size:28px 28px;}
+.hero-grid{position:absolute;inset:0;opacity:.04;background-image:linear-gradient(rgba(255,255,255,.4) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.4) 1px,transparent 1px);background-size:48px 48px;}
+.hero-content{position:relative;z-index:1;text-align:center;max-width:900px;}
+.hero-badge{display:inline-flex;align-items:center;gap:.5rem;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.85);font-size:.78rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:.35rem 1rem;border-radius:100px;margin-bottom:1.5rem;}
+.hero h1{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(2.4rem,6vw,4.8rem);line-height:1.05;letter-spacing:-.03em;margin-bottom:1.5rem;}
+.hero h1 .a{color:#6ee7b7;}.hero h1 .b{color:#60adf0;}.hero h1 .c{color:#fbbf24;}
+.hero p{font-size:1.05rem;color:rgba(255,255,255,.6);max-width:640px;margin:0 auto 2.5rem;}
+.hero-pills-row{display:flex;justify-content:center;gap:.6rem;flex-wrap:wrap;margin-bottom:2rem;}
+.hero-pill{display:inline-flex;align-items:center;gap:.5rem;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);padding:.45rem 1rem;border-radius:10px;font-size:.8rem;font-weight:500;color:white;text-decoration:none;transition:all .25s;}
+.hero-pill:hover{background:rgba(255,255,255,.15);transform:translateY(-2px);}
+.hero-pill .dot{width:9px;height:9px;border-radius:50%;}
+.scroll-hint{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.4rem;color:rgba(255,255,255,.3);font-size:.72rem;letter-spacing:.1em;}
+.scroll-hint::after{content:'';display:block;width:1px;height:36px;background:linear-gradient(to bottom,rgba(255,255,255,.35),transparent);animation:pulse 2s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:.3}50%{opacity:1}}
+
+section{padding:5.5rem 2rem;}
+.container{max-width:1100px;margin:0 auto;}
+.section-tag{font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;display:flex;align-items:center;gap:.5rem;margin-bottom:.9rem;}
+.section-tag::before{content:'';display:block;width:20px;height:2px;}
+.tag-asix{color:var(--asix-l);}.tag-asix::before{background:var(--asix-l);}
+.tag-win{color:var(--win);}.tag-win::before{background:var(--win);}
+.tag-ubuntu{color:var(--ubuntu);}.tag-ubuntu::before{background:var(--ubuntu);}
+.tag-green{color:var(--green);}.tag-green::before{background:var(--green);}
+.tag-amber{color:var(--amber);}.tag-amber::before{background:var(--amber);}
+.tag-teal{color:var(--teal);}.tag-teal::before{background:var(--teal);}
+.tag-red{color:var(--red);}.tag-red::before{background:var(--red);}
+.tag-mon{color:var(--mon-l);}.tag-mon::before{background:var(--mon-l);}
+.tag-pregs{color:#92400e;}.tag-pregs::before{background:#92400e;}
+
+h2{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(1.65rem,3.5vw,2.5rem);line-height:1.1;letter-spacing:-.025em;color:var(--navy);margin-bottom:.9rem;}
+h3{font-family:'Syne',sans-serif;font-weight:700;font-size:1.12rem;color:var(--navy);margin-bottom:.6rem;}
+h4{font-family:'Syne',sans-serif;font-weight:700;font-size:.93rem;color:var(--navy);margin-bottom:.4rem;}
+.lead{font-size:1.02rem;color:var(--muted);max-width:740px;margin-bottom:2.5rem;line-height:1.75;}
+
+.grid{display:grid;gap:1.2rem;}
+.g2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr));}
+.g3{grid-template-columns:repeat(auto-fit,minmax(230px,1fr));}
+.g4{grid-template-columns:repeat(auto-fit,minmax(200px,1fr));}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.65rem;transition:transform .2s,box-shadow .2s;}
+.card:hover{transform:translateY(-3px);box-shadow:0 12px 32px rgba(26,31,78,.1);}
+.card p{color:var(--muted);font-size:.91rem;}
+.card-icon{width:42px;height:42px;border-radius:10px;display:grid;place-items:center;font-size:1.25rem;margin-bottom:.85rem;}
+.bl-asix{border-left:3px solid var(--asix-l);}.bl-win{border-left:3px solid var(--win);}
+.bl-ubuntu{border-left:3px solid var(--ubuntu);}.bl-green{border-left:3px solid var(--green);}
+.bl-amber{border-left:3px solid var(--amber);}.bl-red{border-left:3px solid var(--red);}
+.bl-teal{border-left:3px solid var(--teal);}.bl-mon{border-left:3px solid var(--mon-l);}
+
+.ra-banner{border-radius:var(--radius);padding:1.4rem 2rem;display:flex;align-items:center;gap:1.2rem;margin-bottom:2.5rem;color:white;}
+.ra-num{font-family:'Syne',sans-serif;font-weight:800;font-size:2.2rem;opacity:.22;flex-shrink:0;line-height:1;}
+.ra-banner h2{color:white;font-size:1.3rem;margin-bottom:.15rem;}
+.ra-banner p{color:rgba(255,255,255,.68);font-size:.86rem;}
+.ra-asix{background:linear-gradient(135deg,var(--asix-d),var(--asix-l));}
+.ra-win{background:linear-gradient(135deg,var(--win-d),var(--win));}
+.ra-ubuntu{background:linear-gradient(135deg,var(--ubuntu-d),var(--ubuntu));}
+.ra-green{background:linear-gradient(135deg,#064e3b,var(--green));}
+.ra-teal{background:linear-gradient(135deg,var(--teal-d),var(--teal));}
+.ra-mon{background:linear-gradient(135deg,var(--mon),var(--mon-l));}
+.ra-preguntes{background:linear-gradient(135deg,#92400e,#d97706);}
+.ra-both{background:linear-gradient(135deg,var(--teal-d),var(--asix-l));}
+.ra-proc{background:linear-gradient(135deg,#064e3b,var(--teal-d));}
+
+.callout{border-radius:var(--radius);padding:1.4rem 1.65rem;margin:1.4rem 0;display:flex;gap:.9rem;align-items:flex-start;}
+.callout-icon{font-size:1.35rem;flex-shrink:0;margin-top:.1rem;}
+.callout p,.callout li{font-size:.91rem;}
+.callout ul{padding-left:1.15rem;}.callout li{margin-bottom:.22rem;}
+.cl-asix{background:rgba(109,40,217,.07);border:1px solid rgba(109,40,217,.2);}
+.cl-blue{background:rgba(0,120,212,.07);border:1px solid rgba(0,120,212,.2);}
+.cl-green{background:rgba(5,150,105,.07);border:1px solid rgba(5,150,105,.2);}
+.cl-amber{background:rgba(251,188,4,.1);border:1px solid rgba(251,188,4,.3);}
+.cl-red{background:rgba(220,38,38,.07);border:1px solid rgba(220,38,38,.2);}
+.cl-teal{background:rgba(8,145,178,.07);border:1px solid rgba(8,145,178,.2);}
+.cl-mon{background:rgba(15,76,129,.07);border:1px solid rgba(15,76,129,.2);}
+
+.terminal{background:var(--term);border-radius:var(--radius-sm);overflow:hidden;margin:.75rem 0;font-family:'JetBrains Mono',monospace;font-size:.79rem;}
+.term-bar{background:var(--term2);padding:.5rem 1rem;display:flex;align-items:center;gap:.5rem;border-bottom:1px solid rgba(255,255,255,.06);}
+.term-dot{width:11px;height:11px;border-radius:50%;}
+.term-title{color:rgba(255,255,255,.4);font-size:.7rem;letter-spacing:.05em;margin-left:.25rem;flex:1;}
+.term-os{font-size:.67rem;font-weight:600;padding:.1rem .45rem;border-radius:4px;margin-left:auto;}
+.term-os-win{background:rgba(0,120,212,.25);color:#60adf0;}
+.term-os-ubuntu{background:rgba(233,84,32,.25);color:#f4956a;}
+.term-os-both{background:rgba(109,40,217,.25);color:#c084fc;}
+.term-body{padding:.9rem 1.2rem;line-height:1.75;}
+.prompt-win{color:#60adf0;}.prompt-ub{color:#f4956a;}
+.cmd{color:#e2e8f0;}.out{color:#94a3b8;}
+.comment{color:#475569;}.ok{color:#6ee7b7;}
+.err{color:#fca5a5;}.path{color:#fbbf24;}
+.flag{color:#c084fc;}.val{color:#86efac;}.hi{color:#f0abfc;}
+.warn{color:#fbbf24;}.num{color:#34d399;}
+
+.lab-card{background:linear-gradient(135deg,#0f111a,#161b2e);border:1px solid rgba(255,255,255,.08);border-radius:var(--radius);overflow:hidden;margin:2rem 0;}
+.lab-header{padding:.95rem 1.5rem;display:flex;align-items:center;gap:.9rem;border-bottom:1px solid rgba(255,255,255,.07);}
+.lab-icon{font-size:1.45rem;flex-shrink:0;}
+.lab-title-block h4{font-family:'Syne',sans-serif;font-weight:700;font-size:.98rem;color:white;margin:0 0 .1rem;}
+.lab-title-block p{font-size:.76rem;color:rgba(255,255,255,.5);margin:0;}
+.lab-os-tags{display:flex;gap:.35rem;margin-left:auto;}
+.os-tag{font-size:.66rem;font-weight:700;padding:.18rem .6rem;border-radius:100px;letter-spacing:.04em;white-space:nowrap;}
+.os-win{background:rgba(0,120,212,.3);color:#60adf0;border:1px solid rgba(0,120,212,.4);}
+.os-ubuntu{background:rgba(233,84,32,.3);color:#f4956a;border:1px solid rgba(233,84,32,.4);}
+.os-both{background:rgba(109,40,217,.3);color:#c084fc;border:1px solid rgba(109,40,217,.4);}
+.lab-body{padding:1.4rem;}
+.lab-body p{color:rgba(255,255,255,.7);font-size:.88rem;margin-bottom:.7rem;}
+.lab-body h5{font-family:'Syne',sans-serif;font-weight:700;font-size:.83rem;color:rgba(255,255,255,.9);margin:.7rem 0 .38rem;}
+.lab-steps{counter-reset:ls;list-style:none;padding:0;display:flex;flex-direction:column;gap:.45rem;}
+.lab-steps li{counter-increment:ls;display:flex;gap:.7rem;align-items:flex-start;font-size:.86rem;color:rgba(255,255,255,.65);}
+.lab-steps li::before{content:counter(ls);flex-shrink:0;width:23px;height:23px;border-radius:50%;background:rgba(8,145,178,.5);color:#6ee7b7;display:grid;place-items:center;font-family:'Syne',sans-serif;font-weight:700;font-size:.7rem;}
+.lab-steps li strong{color:rgba(255,255,255,.9);}
+.lab-entrega{background:rgba(8,145,178,.12);border:1px solid rgba(8,145,178,.3);border-radius:var(--radius-sm);padding:.8rem 1rem;margin-top:.9rem;font-size:.82rem;color:rgba(255,255,255,.7);}
+.lab-entrega strong{color:#6ee7b7;}
+
+.ptable{width:100%;border-collapse:collapse;font-size:.86rem;}
+.ptable th,.ptable td{padding:.78rem .95rem;text-align:left;border-bottom:1px solid var(--border);}
+.ptable th{background:var(--navy);color:white;font-family:'Syne',sans-serif;font-weight:700;}
+.ptable th:first-child{border-radius:8px 0 0 0;}.ptable th:last-child{border-radius:0 8px 0 0;}
+.ptable tr:hover td{background:var(--cream);}
+.badge{display:inline-block;padding:.13rem .5rem;border-radius:100px;font-size:.71rem;font-weight:700;font-family:'Syne',sans-serif;}
+.b-asix{background:rgba(109,40,217,.12);color:var(--asix-l);}
+.b-win{background:rgba(0,120,212,.12);color:var(--win);}
+.b-ubuntu{background:rgba(233,84,32,.12);color:var(--ubuntu);}
+.b-green{background:rgba(5,150,105,.12);color:var(--green);}
+.b-amber{background:rgba(217,119,6,.15);color:#92400e;}
+.b-red{background:rgba(220,38,38,.1);color:var(--red);}
+.b-teal{background:rgba(8,145,178,.12);color:var(--teal);}
+.b-mon{background:rgba(15,76,129,.12);color:var(--mon-l);}
+
+.ex{background:var(--cream);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.9rem 1.15rem;margin:.6rem 0;}
+.ex .ex-lbl{font-size:.67rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.28rem;}
+.ex p{font-size:.86rem;color:var(--ink);}
+.ex-asix .ex-lbl{color:var(--asix-l);}.ex-win .ex-lbl{color:var(--win);}
+.ex-ubuntu .ex-lbl{color:var(--ubuntu);}.ex-green .ex-lbl{color:var(--green);}
+.ex-amber .ex-lbl{color:var(--amber);}.ex-red .ex-lbl{color:var(--red);}
+.ex-teal .ex-lbl{color:var(--teal);}
+
+.pills{display:flex;flex-wrap:wrap;gap:.38rem;margin:.6rem 0;}
+.pill{padding:.2rem .7rem;border-radius:100px;font-size:.77rem;border:1px solid var(--border);background:var(--cream);color:var(--ink);}
+.pill-a{background:rgba(109,40,217,.1);border-color:rgba(109,40,217,.3);color:var(--asix-l);}
+.pill-w{background:rgba(0,120,212,.1);border-color:rgba(0,120,212,.3);color:var(--win);}
+.pill-u{background:rgba(233,84,32,.1);border-color:rgba(233,84,32,.3);color:var(--ubuntu);}
+.pill-g{background:rgba(5,150,105,.1);border-color:rgba(5,150,105,.3);color:var(--green);}
+.pill-r{background:rgba(220,38,38,.1);border-color:rgba(220,38,38,.3);color:var(--red);}
+.pill-t{background:rgba(8,145,178,.1);border-color:rgba(8,145,178,.3);color:var(--teal);}
+
+.s-cream{background:var(--cream);}.s-asix{background:#f5f3ff;}
+.s-win{background:#f0f7ff;}.s-ubuntu{background:#fff5f1;}
+.s-green{background:#f0fdf4;}.s-teal{background:#ecfeff;}
+.s-mon{background:#f0f4ff;}.s-proc{background:#f0fdf7;}
+.s-dark{background:var(--navy);color:white;}
+.s-dark h2,.s-dark h3,.s-dark h4{color:white;}
+.s-dark .lead{color:rgba(255,255,255,.6);}
+.s-dark .card{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.1);}
+.s-dark .card h3,.s-dark .card h4{color:white;}
+.s-dark .card p{color:rgba(255,255,255,.6);}
+.s-dark .ptable th{background:rgba(255,255,255,.1);}
+.s-dark .ptable td{border-color:rgba(255,255,255,.1);color:rgba(255,255,255,.8);}
+.s-dark .ptable tr:hover td{background:rgba(255,255,255,.05);}
+
+/* Metric bars */
+.metric-row{display:flex;align-items:center;gap:.75rem;padding:.5rem 0;border-bottom:1px solid var(--border);}
+.metric-label{font-family:'Syne',sans-serif;font-weight:600;font-size:.8rem;width:120px;flex-shrink:0;}
+.metric-bar{flex:1;height:12px;border-radius:6px;background:var(--cream);overflow:hidden;}
+.metric-fill{height:100%;border-radius:6px;}
+.metric-val{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--muted);width:60px;text-align:right;flex-shrink:0;}
+.fill-ok{background:var(--green);}.fill-warn{background:var(--amber);}.fill-crit{background:var(--red);}
+.fill-info{background:var(--teal);}
+
+/* Tool card */
+.tool-card{background:white;border:2px solid var(--border);border-radius:var(--radius);padding:1.5rem;transition:all .2s;}
+.tool-card:hover{border-color:var(--teal);transform:translateY(-2px);box-shadow:0 8px 24px rgba(8,145,178,.12);}
+.tool-header{display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem;}
+.tool-icon{width:38px;height:38px;border-radius:8px;display:grid;place-items:center;font-size:1.15rem;flex-shrink:0;}
+.tool-name{font-family:'Syne',sans-serif;font-weight:700;color:var(--navy);font-size:.95rem;}
+.tool-type{font-size:.7rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-top:.1rem;}
+
+/* Event viewer diagram */
+.ev-level{display:flex;align-items:center;gap:.75rem;padding:.6rem 1rem;border-radius:var(--radius-sm);margin:.35rem 0;font-size:.87rem;}
+.ev-badge{font-family:'Syne',sans-serif;font-weight:700;font-size:.72rem;padding:.2rem .65rem;border-radius:4px;flex-shrink:0;min-width:80px;text-align:center;}
+.ev-crit{background:#7f1d1d;color:#fca5a5;}
+.ev-err{background:rgba(220,38,38,.15);color:var(--red);border:1px solid rgba(220,38,38,.3);}
+.ev-warn{background:rgba(217,119,6,.1);color:#92400e;border:1px solid rgba(217,119,6,.3);}
+.ev-info{background:rgba(0,120,212,.1);color:var(--win);border:1px solid rgba(0,120,212,.2);}
+.ev-verb{background:var(--cream);color:var(--muted);border:1px solid var(--border);}
+
+/* Process tree */
+.proc-tree{font-family:'JetBrains Mono',monospace;font-size:.81rem;background:var(--term);border-radius:var(--radius-sm);padding:1.2rem 1.5rem;color:#94a3b8;line-height:2;}
+.proc-tree .ph{color:#f0abfc;font-weight:700;}
+.proc-tree .pc{color:#6ee7b7;}
+.proc-tree .ps{color:#60adf0;}
+.proc-tree .pp{color:#fbbf24;}
+.proc-tree .lk{color:#475569;}
+.proc-tree .mem{color:#34d399;}
+.proc-tree .cpu{color:#fb923c;}
+
+/* Grafana mock */
+.dash-widget{background:var(--term2);border-radius:var(--radius-sm);padding:1rem 1.25rem;border:1px solid rgba(255,255,255,.07);}
+.dash-widget h5{font-family:'Syne',sans-serif;font-weight:700;font-size:.78rem;color:rgba(255,255,255,.6);margin-bottom:.6rem;letter-spacing:.05em;text-transform:uppercase;}
+.spark{display:flex;align-items:flex-end;gap:2px;height:40px;}
+.spark-bar{flex:1;border-radius:2px 2px 0 0;}
+
+.q-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.4rem 1.85rem;display:flex;gap:1.15rem;align-items:flex-start;transition:transform .2s,box-shadow .2s;}
+.q-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.08);}
+.q-num{flex-shrink:0;width:34px;height:34px;border-radius:50%;background:var(--cream);border:2px solid var(--border);display:grid;place-items:center;font-family:'Syne',sans-serif;font-weight:800;font-size:.86rem;color:var(--teal);}
+.q-body h4{margin-bottom:.3rem;color:var(--navy);font-size:.93rem;}
+.q-body p{color:var(--muted);font-size:.84rem;font-style:italic;}
+.q-tag{display:inline-block;padding:.13rem .55rem;border-radius:100px;font-size:.69rem;font-weight:700;margin-top:.45rem;margin-right:.28rem;}
+.qt-win{background:rgba(0,120,212,.1);color:var(--win);}
+.qt-ubuntu{background:rgba(233,84,32,.1);color:var(--ubuntu);}
+.qt-green{background:rgba(5,150,105,.1);color:var(--green);}
+.qt-teal{background:rgba(8,145,178,.1);color:var(--teal);}
+.qt-both{background:rgba(109,40,217,.1);color:var(--asix-l);}
+.qt-sec{background:rgba(220,38,38,.1);color:var(--red);}
+.qt-mon{background:rgba(15,76,129,.1);color:var(--mon-l);}
+.qt-proc{background:rgba(5,150,105,.1);color:var(--green);}
+
+hr{border:none;border-top:1px solid var(--border);margin:2.5rem 0;}
+footer{background:var(--ink);color:rgba(255,255,255,.4);padding:3rem 2rem;text-align:center;font-size:.84rem;}
+footer strong{color:white;}
+.fi{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fi.in{opacity:1;transform:none;}
+@media(max-width:640px){.nav-pills{display:none;}.lab-os-tags{display:none;}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">ASIX · <span>MP0369 RA6</span> · Implantació SO</div>
+  <ul class="nav-pills">
+    <li><a href="#temps-real">Temps Real</a></li>
+    <li><a href="#continuat">Monit. Continu</a></li>
+    <li><a href="#analisi">Anàlisi</a></li>
+    <li><a href="#logs">Registre</a></li>
+    <li><a href="#events">Successos</a></li>
+    <li><a href="#processos">Processos</a></li>
+    <li><a href="#preguntes" class="act">Preguntes</a></li>
+  </ul>
+</nav>
+
+<section class="hero" id="top">
+  <div class="hero-bg"></div><div class="hero-dots"></div><div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-badge">📊 ASIX · Implantació de Sistemes Operatius · MP0369 · RA6</div>
+    <h1><span class="a">Monitoratge</span> del<br><span class="b">Rendiment</span> del <span class="c">Sistema</span></h1>
+    <p>Eines de monitoratge en temps real i continu, anàlisi de rendiment, registre de successos, gestió de processos i monitoratge d'aplicacions. Teoria CFGS amb exercicis pràctics a Windows i Ubuntu.</p>
+    <div class="hero-pills-row">
+      <a href="#temps-real" class="hero-pill"><span class="dot" style="background:#6ee7b7"></span>Temps Real</a>
+      <a href="#continuat" class="hero-pill"><span class="dot" style="background:var(--teal)"></span>Monit. Continu</a>
+      <a href="#analisi" class="hero-pill"><span class="dot" style="background:var(--win)"></span>Anàlisi Rendiment</a>
+      <a href="#logs" class="hero-pill"><span class="dot" style="background:var(--ubuntu)"></span>Logs del Sistema</a>
+      <a href="#events" class="hero-pill"><span class="dot" style="background:var(--amber)"></span>Successos</a>
+      <a href="#processos" class="hero-pill"><span class="dot" style="background:var(--green)"></span>Processos</a>
+      <a href="#preguntes" class="hero-pill"><span class="dot" style="background:#f59e0b"></span>10 Preguntes</a>
+    </div>
+  </div>
+  <div class="scroll-hint">DESPLAÇA</div>
+</section>
+
+<!-- INTRO -->
+<section class="s-cream" id="intro">
+  <div class="container fi">
+    <div class="section-tag tag-teal">Resultat d'Aprenentatge 6 · MP0369</div>
+    <h2>Detecta problemes de rendiment monitorant el sistema</h2>
+    <p class="lead">Amb les eines adequades i documentant el procediment. El RA6 cobreix totes les dimensions del monitoratge d'un sistema en producció: des de la lectura en temps real fins als sistemes de monitoratge continu empresarial (Prometheus, Grafana, Zabbix) i la gestió avançada de processos.</p>
+    <div class="grid g4 fi">
+      <div class="card bl-teal">
+        <div class="card-icon" style="background:#ecfeff">⚡</div>
+        <h3>Temps Real</h3>
+        <p>top, htop, btop, Task Manager, Ressource Monitor. CPU, RAM, disc, xarxa en directe.</p>
+        <div class="pills" style="margin-top:.6rem"><span class="pill pill-t">T1</span></div>
+      </div>
+      <div class="card bl-mon">
+        <div class="card-icon" style="background:#f0f4ff">📈</div>
+        <h3>Monit. Continu</h3>
+        <p>Prometheus, Grafana, Zabbix, Nagios, sar, collectd. Dashboards, alertes i tendències.</p>
+        <div class="pills" style="margin-top:.6rem"><span class="pill pill-t">T2</span></div>
+      </div>
+      <div class="card bl-win">
+        <div class="card-icon" style="background:#f0f7ff">🔬</div>
+        <h3>Anàlisi Rendiment</h3>
+        <p>Performance Monitor, perf, iostat, vmstat, netstat. Cuellos de botella i diagnosi.</p>
+        <div class="pills" style="margin-top:.6rem"><span class="pill pill-w">T3</span></div>
+      </div>
+      <div class="card bl-ubuntu">
+        <div class="card-icon" style="background:#fff5f1">📋</div>
+        <h3>Logs i Processos</h3>
+        <p>journalctl, Visor d'Esdeveniments, systemd, ps, kill, nice, cgroups i auditoria.</p>
+        <div class="pills" style="margin-top:.6rem"><span class="pill pill-u">T4–T7</span></div>
+      </div>
+    </div>
+    <div class="callout cl-teal fi" style="margin-top:1.5rem">
+      <span class="callout-icon">🔬</span>
+      <div><strong>Llegenda:</strong> <span style="color:var(--win);font-weight:600">🪟 Windows</span> · <span style="color:var(--ubuntu);font-weight:600">🐧 Ubuntu/Linux</span> · <span style="color:var(--asix-l);font-weight:600">🔀 Ambdós</span>. Els labs amb fons fosc indiquen exercicis pràctics immediats. Aprèn a llegir mètriques reals, identificar colls d'ampolla i documentar incidents.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ T1: EINES DE MONITORATGE EN TEMPS REAL ═══ -->
+<section id="temps-real" class="s-teal">
+  <div class="container">
+    <div class="ra-banner ra-teal fi">
+      <div class="ra-num">1</div>
+      <div>
+        <h2>Eines de monitoratge en temps real</h2>
+        <p>top, htop, btop, glances, Task Manager, Resource Monitor. Lectura i interpretació de mètriques del sistema.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-teal fi">Mètriques fonamentals</div>
+    <h2 class="fi">Les 4 mètriques clau d'un sistema</h2>
+    <p class="lead fi">Qualsevol problema de rendiment pot traçar-se a un dels quatre recursos fonamentals del sistema. Un tècnic ASIX ha de saber llegir cadascun, identificar valors anòmals i correlacionar-los entre si.</p>
+
+    <div class="grid g2 fi">
+      <!-- Panell de mètriques simulat -->
+      <div class="card bl-teal">
+        <div class="card-icon" style="background:#ecfeff">🖥️</div>
+        <h3>Panell de mètriques d'un servidor en producció</h3>
+        <div style="margin-top:.75rem">
+          <div class="metric-row">
+            <span class="metric-label">CPU total</span>
+            <div class="metric-bar"><div class="metric-fill fill-warn" style="width:72%"></div></div>
+            <span class="metric-val warn">72%</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">CPU sistema</span>
+            <div class="metric-bar"><div class="metric-fill fill-ok" style="width:8%"></div></div>
+            <span class="metric-val ok">8%</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">RAM usada</span>
+            <div class="metric-bar"><div class="metric-fill fill-warn" style="width:85%"></div></div>
+            <span class="metric-val warn">6,8G/8G</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">Swap usada</span>
+            <div class="metric-bar"><div class="metric-fill fill-crit" style="width:45%"></div></div>
+            <span class="metric-val err">2,2G</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">Disc I/O r</span>
+            <div class="metric-bar"><div class="metric-fill fill-info" style="width:30%"></div></div>
+            <span class="metric-val" style="color:var(--teal)">45MB/s</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">Disc I/O w</span>
+            <div class="metric-bar"><div class="metric-fill fill-info" style="width:18%"></div></div>
+            <span class="metric-val" style="color:var(--teal)">22MB/s</span>
+          </div>
+          <div class="metric-row" style="border:none">
+            <span class="metric-label">Xarxa TX</span>
+            <div class="metric-bar"><div class="metric-fill fill-ok" style="width:12%"></div></div>
+            <span class="metric-val ok">120MB/s</span>
+          </div>
+        </div>
+        <div class="callout cl-amber" style="margin-top:.75rem;padding:.75rem 1rem">
+          <span class="callout-icon">⚠️</span>
+          <p><strong>Diagnosi:</strong> Swap activa (2,2 GB) i RAM al 85% → el sistema ha exhaurit la RAM física i fa ús del disc virtual → rendiment degradat. Investigar quin procés consumeix la RAM.</p>
+        </div>
+      </div>
+      <div>
+        <div class="card bl-teal" style="margin-bottom:1rem">
+          <div class="card-icon" style="background:#ecfeff">⚙️</div>
+          <h3>CPU — Interpretar l'ús</h3>
+          <ul style="list-style:none;padding:0">
+            <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.87rem;color:var(--muted)">👤 <strong style="color:var(--ink)">user (us):</strong> temps en processos d'usuari. Alt és normal si hi ha càrrega legítima.</li>
+            <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.87rem;color:var(--muted)">🔧 <strong style="color:var(--ink)">system (sy):</strong> temps al kernel. >15% indica sobrecàrrega de crides al sistema.</li>
+            <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.87rem;color:var(--muted)">⏳ <strong style="color:var(--ink)">iowait (wa):</strong> CPU esperant I/O de disc. >20% indica coll d'ampolla de disc.</li>
+            <li style="padding:.3rem 0;font-size:.87rem;color:var(--muted)">🔴 <strong style="color:var(--ink)">steal (st):</strong> temps robat per l'hipervisor (en VMs). >5% indica contencions al host físic.</li>
+          </ul>
+        </div>
+        <div class="card bl-asix">
+          <div class="card-icon" style="background:#f5f3ff">💾</div>
+          <h3>RAM — La tríada: free, cached, buffer</h3>
+          <div class="ex ex-teal">
+            <div class="ex-lbl">Interpretació de free -h</div>
+            <p><code>total=8G, used=6.8G, free=0.2G, buff/cache=1.0G, available=1.2G</code><br><strong>Clau:</strong> <code>available</code> (no <code>free</code>) és la RAM realment usable sense fer swapping. Si <code>available</code> és baix i Swap s'usa activament → problema greu.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- top/htop/btop -->
+    <div class="section-tag tag-teal fi" style="margin-top:3.5rem">Eines Linux de temps real</div>
+    <h2 class="fi">top, htop, btop, glances — De bàsic a avançat</h2>
+
+    <div class="terminal fi">
+      <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">top — interpretació completa del capçalera</span><span class="term-os term-os-ubuntu">🐧 Ubuntu</span></div>
+      <div class="term-body">
+        <div><span class="comment">── Capçalera de top ──────────────────────────────────────────────────</span></div>
+        <div><span class="ok">top</span> - <span class="num">14:32:07</span> up <span class="num">3 days, 2:15</span>,  <span class="num">3</span> users,  load average: <span class="warn">1.45</span>, <span class="warn">1.62</span>, <span class="num">1.38</span></div>
+        <div><span class="comment">#          ↑ hora   ↑ temps actiu      ↑ usuaris  ↑ load 1min  5min  15min</span></div>
+        <div><span class="comment"># Load average: CPU amb N nuclis → load&lt;N = normal, load>N = sobrecarregat</span></div>
+        <div style="margin-top:.3rem"><span class="out">Tasks: </span><span class="num">247</span> total,   <span class="ok">3</span> running, <span class="num">244</span> sleeping,   <span class="num">0</span> stopped,   <span class="num">0</span> zombie</div>
+        <div><span class="out">%Cpu(s): </span><span class="warn">64.2</span> us,  <span class="ok">7.1</span> sy,  <span class="num">0.0</span> ni, <span class="ok">21.3</span> id,  <span class="warn">7.4</span> wa,  <span class="num">0.0</span> hi,  <span class="num">0.0</span> si,  <span class="num">0.0</span> st</div>
+        <div><span class="comment">#  ↑ user  ↑ system  ↑ nice  ↑ idle  ↑ iowait (disc espera!) ↑ steal (VM)</span></div>
+        <div><span class="out">MiB Mem : </span><span class="num">8192.0</span> total, <span class="warn">   208.4</span> free,  <span class="warn">6943.2</span> used,  <span class="ok">1040.4</span> buff/cache</div>
+        <div><span class="out">MiB Swap: </span><span class="num">4096.0</span> total,  <span class="err">1878.3</span> free,  <span class="err">2217.7</span> used.  <span class="warn">1306.8</span> avail Mem</div>
+        <div><span class="comment"># ↑ Swap USADA = problema! El sistema fa paginació al disc → molt lent</span></div>
+        <div style="margin-top:.5rem"><span class="comment">── Columnes de processos ─────────────────────────────────────────────</span></div>
+        <div><span class="hi">  PID USER      PR  NI    VIRT    RES    SHR  S  %CPU  %MEM     TIME+ COMMAND</span></div>
+        <div><span class="out"> 1842 mysql     20   0  2.1g  1.4g   32m  S  38.5  17.5   8:42.31 mysqld</span></div>
+        <div><span class="out"> 2156 www-data  20   0  524m  312m   18m  S  19.2   3.8   2:15.44 apache2</span></div>
+        <div><span class="out"> 3341 root      20   0  125m   24m    8m  R  12.1   0.3   0:22.01 backup.sh</span></div>
+        <div><span class="comment"># VIRT=mem virtual, RES=mem física real, SHR=mem compartida, S=estat (S=Sleep,R=Run,Z=Zombie)</span></div>
+        <div style="margin-top:.5rem"><span class="comment">── Dreceres interactives de top ──────────────────────────────────────</span></div>
+        <div><span class="comment"># k = kill PID, r = renice, M = ordenar per RAM, P = per CPU, 1 = veure per nucli</span></div>
+        <div><span class="comment"># f = afegir/treure camps, W = guardar configuració, q = sortir</span></div>
+        <div style="margin-top:.5rem"><span class="comment">── htop: versió millorada (instal·la: sudo apt install htop) ──────────</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">htop -u mysql</span>              <span class="comment"># Filtrar per usuari</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">htop -p 1842,2156</span>          <span class="comment"># Monitorar PIDs específics</span></div>
+        <div style="margin-top:.3rem"><span class="comment">── btop: el més avançat (gràfics ASCII) ──────────────────────────────</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">sudo apt install btop && btop</span></div>
+        <div style="margin-top:.3rem"><span class="comment">── glances: monitoratge complet en un sol panell ─────────────────────</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">pip3 install glances && glances</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">glances -w</span>                 <span class="comment"># Mode web (port 61208)</span></div>
+      </div>
+    </div>
+
+    <!-- Windows Task Manager i Resource Monitor -->
+    <div class="section-tag tag-win fi" style="margin-top:3rem">Windows — eines de temps real</div>
+    <h2 class="fi">Task Manager, Resource Monitor i Performance Monitor</h2>
+
+    <div class="grid g3 fi">
+      <div class="tool-card">
+        <div class="tool-header">
+          <div class="tool-icon" style="background:#f0f7ff;font-size:1.2rem">📊</div>
+          <div>
+            <div class="tool-name">Task Manager (taskmgr)</div>
+            <div class="tool-type" style="color:var(--win)">Drecera: Ctrl+Shift+Esc</div>
+          </div>
+        </div>
+        <p style="font-size:.88rem;color:var(--muted)">Visió general ràpida de CPU, RAM, disc, xarxa i GPU. Pestanyes: Processos, Rendiment, Historial de l'aplicació, Inici, Usuaris, Detalls, Serveis.</p>
+        <div class="terminal" style="margin-top:.5rem">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-title">PowerShell equivalent</span><span class="term-os term-os-win">🪟</span></div>
+          <div class="term-body" style="font-size:.74rem">
+            <div><span class="prompt-win">PS></span> <span class="cmd">Get-Process | Sort CPU -Desc | Select -First 10</span></div>
+            <div><span class="prompt-win">PS></span> <span class="cmd">Get-Process | Sort WorkingSet -Desc | Select -First 5 Name,CPU,WorkingSet</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-header">
+          <div class="tool-icon" style="background:#f0f7ff;font-size:1.2rem">🔬</div>
+          <div>
+            <div class="tool-name">Resource Monitor (resmon)</div>
+            <div class="tool-type" style="color:var(--win)">Vista detallada per recurs</div>
+          </div>
+        </div>
+        <p style="font-size:.88rem;color:var(--muted)">Anàlisi profunda en temps real: CPU per procés+thread, RAM amb paginació, Disc per fitxer obert, Xarxa per connexió activa i ports en escolta.</p>
+        <div class="ex ex-win" style="margin-top:.5rem">
+          <div class="ex-lbl">Cas d'ús</div>
+          <p>Identifica quin procés té el fitxer <code>backup.db</code> obert i bloquejat → pestanya Disc → cerca el fitxer.</p>
+        </div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-header">
+          <div class="tool-icon" style="background:#f0f7ff;font-size:1.2rem">📉</div>
+          <div>
+            <div class="tool-name">Performance Monitor (perfmon)</div>
+            <div class="tool-type" style="color:var(--win)">Anàlisi i enregistrament</div>
+          </div>
+        </div>
+        <p style="font-size:.88rem;color:var(--muted)">Afegeix comptadors de rendiment específics i enregistra dades durant hores/dies. Imprescindible per analitzar problemes intermitents.</p>
+        <div class="terminal" style="margin-top:.5rem">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-title">typeperf CLI</span><span class="term-os term-os-win">🪟</span></div>
+          <div class="term-body" style="font-size:.74rem">
+            <div><span class="prompt-win">></span> <span class="cmd">typeperf "\Processor(_Total)\% Processor Time" -si 2</span></div>
+            <div><span class="prompt-win">></span> <span class="cmd">typeperf "\Memory\Available MBytes" -si 5 -sc 60 -o cpu.csv</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="lab-card fi">
+      <div class="lab-header">
+        <span class="lab-icon">🧪</span>
+        <div class="lab-title-block">
+          <h4>Lab 1.1 — Monitoratge en temps real i identificació de colls d'ampolla</h4>
+          <p>Genera càrrega artificial al sistema i identifica els recursos afectats amb les eines de temps real</p>
+        </div>
+        <div class="lab-os-tags"><span class="os-tag os-both">🔀 Ambdós</span></div>
+      </div>
+      <div class="lab-body">
+        <p>Generareu càrrega artificial als recursos del sistema i aprendreu a llegir les mètriques per identificar el recurs saturat.</p>
+        <h5>🐧 Ubuntu — Generació de càrrega i monitoratge</h5>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-title">Generació de càrrega i monitoratge en paral·lel</span><span class="term-os term-os-ubuntu">🐧 Ubuntu</span></div>
+          <div class="term-body">
+            <div><span class="comment"># Instal·lar eines de generació de càrrega</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">sudo apt install stress-ng htop sysstat -y</span></div>
+            <div style="margin-top:.4rem"><span class="comment"># Terminal 1: monitorar en temps real</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">htop</span></div>
+            <div style="margin-top:.4rem"><span class="comment"># Terminal 2: generar càrrega CPU (4 workers durant 60s)</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">stress-ng --cpu 4 --timeout 60s --metrics-brief</span></div>
+            <div style="margin-top:.3rem"><span class="comment"># Observa a htop: CPU puja al ~100% per cada nucli</span></div>
+            <div style="margin-top:.4rem"><span class="comment"># Generar càrrega RAM (800MB)</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">stress-ng --vm 1 --vm-bytes 800M --timeout 30s</span></div>
+            <div style="margin-top:.4rem"><span class="comment"># Generar càrrega I/O disc</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">stress-ng --io 4 --timeout 30s</span></div>
+            <div><span class="comment"># A htop, observa iowait (wa) pujant</span></div>
+            <div style="margin-top:.4rem"><span class="comment"># Monitorar amb watch (actualitza cada 2s)</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">watch -n 2 "free -h && echo '---' && iostat -xz 1 1 | tail -5"</span></div>
+            <div style="margin-top:.4rem"><span class="comment"># Comprovar load average contínuament</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">watch -n 1 "uptime && cat /proc/loadavg"</span></div>
+          </div>
+        </div>
+        <h5>🪟 Windows — Generació de càrrega</h5>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-title">PowerShell — Generació de càrrega CPU i RAM</span><span class="term-os term-os-win">🪟 Windows</span></div>
+          <div class="term-body">
+            <div><span class="comment"># Càrrega CPU (usa tots els nuclis durant 30s)</span></div>
+            <div><span class="prompt-win">PS></span> <span class="cmd">1..4 | ForEach-Object { Start-Job { while ($true) { [math]::Sqrt(1234567) } } }</span></div>
+            <div><span class="prompt-win">PS></span> <span class="cmd">Start-Sleep 30; Get-Job | Stop-Job; Get-Job | Remove-Job</span></div>
+            <div style="margin-top:.4rem"><span class="comment"># Monitorar CPU en temps real (cada 2s, 30 mostres)</span></div>
+            <div><span class="prompt-win">PS></span> <span class="cmd">Get-Counter "\Processor(_Total)\% Processor Time" -SampleInterval 2 -MaxSamples 30 | Select-Object -ExpandProperty CounterSamples | Select CookedValue</span></div>
+            <div style="margin-top:.4rem"><span class="comment"># Monitorar RAM disponible</span></div>
+            <div><span class="prompt-win">PS></span> <span class="cmd">Get-Counter "\Memory\Available MBytes" -SampleInterval 2 -MaxSamples 15</span></div>
+          </div>
+        </div>
+        <ul class="lab-steps">
+          <li><strong>Documenta la línia base (baseline):</strong> Sense càrrega artificial, anota els valors normals de CPU, RAM, disc i xarxa. Aquests valors de referència et permetran detectar anomalies futures.</li>
+          <li><strong>Experimenta amb cada tipus de càrrega</strong> (CPU, RAM, I/O) per separat. Documenta quin indicador a htop/Task Manager és el primer en reaccionar per a cada tipus de càrrega.</li>
+          <li><strong>Interpreta el Load Average:</strong> en un equip de 4 nuclis, si el load average és 4.0, 6.0 o 0.5, quin indica sobrecàrrega? Explica el concepte de "load average normalitzat" (load / nombre de nuclis).</li>
+          <li><strong>Identifica un procés zombie:</strong> Crea un procés zombie artificialment i comprova com apareix a htop (estat Z). <code>bash -c '(sleep 5 & wait; kill -9 $$) &'</code></li>
+        </ul>
+        <div class="lab-entrega"><strong>📋 Documenta:</strong> Captura de htop/Task Manager amb cada tipus de càrrega activa. Taula de valors baseline vs sota càrrega. Explicació de quin indicador es va saturar primer i per quin motiu.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ T2: MONITORATGE CONTINU ═══ -->
+<section id="continuat" class="s-mon">
+  <div class="container">
+    <div class="ra-banner ra-mon fi">
+      <div class="ra-num">2</div>
+      <div>
+        <h2>Eines de monitoratge continu</h2>
+        <p>Prometheus + Grafana, Zabbix, Nagios, sar, collectd. Dashboards, alertes automàtiques i tendències.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-mon fi">Arquitectura de monitoratge empresarial</div>
+    <h2 class="fi">De les mètriques puntuals al monitoratge continu: per quin motiu?</h2>
+    <p class="lead fi">Les eines de temps real (top, htop) mostren l'estat <em>actual</em> però no conserven l'historial. Un problema de rendiment que passa a les 3h de la matinada és indetectable sense monitoratge continu. Els sistemes professionals recullen, emmagatzemen i visualitzen mètriques durant mesos o anys.</p>
+
+    <div class="grid g3 fi">
+      <div class="card bl-mon">
+        <div class="card-icon" style="background:#f0f4ff">🎯</div>
+        <h3>Per a què serveix el monitoratge continu?</h3>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.87rem;color:var(--muted)">📉 <strong style="color:var(--ink)">Detectar tendències:</strong> un disc que s'omple gradualment, una fuga de memòria que creix each dia.</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.87rem;color:var(--muted)">⚠️ <strong style="color:var(--ink)">Alertes proactives:</strong> avisar ABANS que el servei caigui. Ex: alerta quan disc > 80%.</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.87rem;color:var(--muted)">🔎 <strong style="color:var(--ink)">Post-mortem:</strong> analitzar l'historial per entendre per quin motiu va caure un servei ahir.</li>
+          <li style="padding:.3rem 0;font-size:.87rem;color:var(--muted)">📊 <strong style="color:var(--ink)">Planificació:</strong> predir quan caldrà ampliar el hardware basant-se en tendències reals.</li>
+        </ul>
+      </div>
+      <div class="card bl-teal">
+        <div class="card-icon" style="background:#ecfeff">🔧</div>
+        <h3>sar — System Activity Reporter</h3>
+        <p style="margin-bottom:.6rem">Part del paquet <code>sysstat</code>. Recull mètriques cada 10 min (configurable) i les guarda a <code>/var/log/sysstat/</code>. Gratuït, lleuger, sempre disponible.</p>
+        <div class="terminal" style="margin-top:.4rem">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-title">sar — exemples</span><span class="term-os term-os-ubuntu">🐧</span></div>
+          <div class="term-body" style="font-size:.74rem">
+            <div><span class="prompt-ub">$</span> <span class="cmd">sudo apt install sysstat -y</span></div>
+            <div><span class="comment"># Activar recopilació automàtica</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">sudo sed -i 's/ENABLED="false"/ENABLED="true"/' /etc/default/sysstat</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">sudo systemctl restart sysstat</span></div>
+            <div style="margin-top:.3rem"><span class="comment"># CPU dels últims 7 dies</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">sar -u -f /var/log/sysstat/sa$(date +%d -d yesterday)</span></div>
+            <div><span class="comment"># RAM d'avui (cada 10min)</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">sar -r 1</span></div>
+            <div><span class="comment"># Disc I/O d'avui</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">sar -b 1</span></div>
+            <div><span class="comment"># Xarxa d'avui</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">sar -n DEV 1</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="card bl-green">
+        <div class="card-icon" style="background:#f0fdf4">📦</div>
+        <h3>Eines de monitoratge empresarial</h3>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.87rem;color:var(--muted)">🔥 <strong style="color:var(--ink)">Prometheus + Grafana:</strong> stack modern de codi obert. Pull-based, exporters, PromQL, dashboards.</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.87rem;color:var(--muted)">🛡️ <strong style="color:var(--ink)">Zabbix:</strong> monitoratge tradicional empresarial. Agent-based. Alertes per correu/Telegram/webhook.</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.87rem;color:var(--muted)">👁️ <strong style="color:var(--ink)">Nagios / Icinga2:</strong> el clàssic de monitoratge de serveis i hosts. Checks actius i passius.</li>
+          <li style="padding:.3rem 0;font-size:.87rem;color:var(--muted)">📊 <strong style="color:var(--ink)">Netdata:</strong> instal·lació en 1 min, dashboards automàtics, gratuït i lleuger.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Prometheus + Grafana -->
+    <div class="section-tag tag-teal fi" style="margin-top:3rem">Prometheus + Grafana</div>
+    <h2 class="fi">Prometheus + Grafana: l'stack de monitoratge modern</h2>
+    <p class="lead fi"><strong>Prometheus</strong> és una base de dades de sèries temporals que recull mètriques fent scraping (pull) a endpoints HTTP cada N segons. <strong>Grafana</strong> és la capa de visualització que crea dashboards interactius sobre les dades de Prometheus.</p>
+
+    <div class="grid g2 fi">
+      <div>
+        <!-- Dashboard simulat -->
+        <div style="background:var(--term2);border-radius:var(--radius);padding:1.2rem;border:1px solid rgba(255,255,255,.08)">
+          <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:.85rem;color:rgba(255,255,255,.6);margin-bottom:1rem;letter-spacing:.05em">📊 DASHBOARD — SERVIDOR WEB SRV-01 (últimes 6h)</div>
+          <div class="grid g2" style="gap:.75rem">
+            <div class="dash-widget">
+              <h5>CPU Usage</h5>
+              <div class="spark">
+                <div class="spark-bar" style="height:30%;background:var(--green)"></div>
+                <div class="spark-bar" style="height:35%;background:var(--green)"></div>
+                <div class="spark-bar" style="height:28%;background:var(--green)"></div>
+                <div class="spark-bar" style="height:75%;background:var(--amber)"></div>
+                <div class="spark-bar" style="height:90%;background:var(--red)"></div>
+                <div class="spark-bar" style="height:45%;background:var(--green)"></div>
+              </div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--amber);margin-top:.3rem">Actual: 45% | Max 6h: 90%</div>
+            </div>
+            <div class="dash-widget">
+              <h5>Memory Available</h5>
+              <div class="spark">
+                <div class="spark-bar" style="height:80%;background:var(--green)"></div>
+                <div class="spark-bar" style="height:70%;background:var(--green)"></div>
+                <div class="spark-bar" style="height:55%;background:var(--amber)"></div>
+                <div class="spark-bar" style="height:40%;background:var(--amber)"></div>
+                <div class="spark-bar" style="height:20%;background:var(--red)"></div>
+                <div class="spark-bar" style="height:50%;background:var(--amber)"></div>
+              </div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--amber);margin-top:.3rem">Actual: 1.2GB | Min 6h: 512MB</div>
+            </div>
+            <div class="dash-widget">
+              <h5>HTTP Requests/s</h5>
+              <div class="spark">
+                <div class="spark-bar" style="height:25%;background:var(--teal)"></div>
+                <div class="spark-bar" style="height:30%;background:var(--teal)"></div>
+                <div class="spark-bar" style="height:60%;background:var(--teal)"></div>
+                <div class="spark-bar" style="height:100%;background:var(--teal)"></div>
+                <div class="spark-bar" style="height:45%;background:var(--teal)"></div>
+                <div class="spark-bar" style="height:38%;background:var(--teal)"></div>
+              </div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:.8rem;color:#6ee7b7;margin-top:.3rem">Actual: 380 req/s | Max: 1240</div>
+            </div>
+            <div class="dash-widget">
+              <h5>Disk I/O (MB/s)</h5>
+              <div class="spark">
+                <div class="spark-bar" style="height:10%;background:var(--asix-l)"></div>
+                <div class="spark-bar" style="height:8%;background:var(--asix-l)"></div>
+                <div class="spark-bar" style="height:70%;background:var(--red)"></div>
+                <div class="spark-bar" style="height:80%;background:var(--red)"></div>
+                <div class="spark-bar" style="height:15%;background:var(--asix-l)"></div>
+                <div class="spark-bar" style="height:12%;background:var(--asix-l)"></div>
+              </div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:.8rem;color:#c084fc;margin-top:.3rem">Actual: 12MB/s | Pic: 85MB/s</div>
+            </div>
+          </div>
+          <div style="font-size:.72rem;color:rgba(255,255,255,.3);margin-top:.75rem;text-align:center">⚠️ Alerta disparada fa 2h: Memory Available &lt; 512MB → Enviada per Slack #alertes-infra</div>
+        </div>
+      </div>
+      <div>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-title">Instal·lació Prometheus + Node Exporter + Grafana</span><span class="term-os term-os-ubuntu">🐧 Ubuntu</span></div>
+          <div class="term-body">
+            <div><span class="comment"># Node Exporter: exposa mètriques del sistema a /metrics</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">wget https://github.com/prometheus/node_exporter/releases/latest/download/node_exporter-*.linux-amd64.tar.gz</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">tar xvf node_exporter-*.tar.gz && sudo mv node_exporter-*/node_exporter /usr/local/bin/</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">sudo systemctl enable --now node_exporter</span></div>
+            <div><span class="comment"># Verificar que exposa mètriques</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">curl http://localhost:9100/metrics | head -20</span></div>
+            <div><span class="out">node_cpu_seconds_total{cpu="0",mode="idle"} 12345.67</span></div>
+            <div><span class="out">node_memory_MemAvailable_bytes 1.234e+09</span></div>
+            <div><span class="out">node_filesystem_avail_bytes{mountpoint="/"} 4.567e+10</span></div>
+            <div style="margin-top:.5rem"><span class="comment"># Prometheus: recull les mètriques del node_exporter</span></div>
+            <div><span class="comment"># Fitxer /etc/prometheus/prometheus.yml</span></div>
+            <div><span class="val">scrape_configs:</span></div>
+            <div>  <span class="val">- job_name:</span> <span class="cmd">'node'</span></div>
+            <div>    <span class="val">scrape_interval:</span> <span class="cmd">15s</span></div>
+            <div>    <span class="val">static_configs:</span></div>
+            <div>      <span class="val">- targets:</span> <span class="cmd">['localhost:9100', '192.168.1.20:9100']</span></div>
+            <div style="margin-top:.5rem"><span class="comment"># Alertes a alertmanager.yml (alerta quan disc > 80%)</span></div>
+            <div><span class="val">- alert:</span> <span class="cmd">DiskAlmostFull</span></div>
+            <div>  <span class="val">expr:</span> <span class="cmd">node_filesystem_avail_bytes / node_filesystem_size_bytes * 100 &lt; 20</span></div>
+            <div>  <span class="val">for:</span> <span class="cmd">5m</span></div>
+            <div>  <span class="val">annotations:</span></div>
+            <div>    <span class="val">summary:</span> <span class="cmd">"Disc gairebé ple: {{ $labels.instance }}"</span></div>
+            <div style="margin-top:.5rem"><span class="comment"># Query PromQL: CPU % per host (últims 5min)</span></div>
+            <div><span class="cmd">100 - (avg by (instance)(rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100)</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Zabbix i Netdata -->
+    <div class="section-tag tag-mon fi" style="margin-top:3rem">Alternatives: Zabbix i Netdata</div>
+    <h2 class="fi">Zabbix i Netdata: monitoratge complet amb configuració mínima</h2>
+    <div class="grid g2 fi">
+      <div class="card bl-mon">
+        <div class="card-icon" style="background:#f0f4ff">🛡️</div>
+        <h3>Zabbix — Monitoratge empresarial tradicional</h3>
+        <p style="margin-bottom:.6rem">Zabbix és un sistema de monitoratge madur amb agent, agentless (SNMP), checks actius/passius, escalada d'alertes i informes. Molt usat en grans empreses.</p>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)">🔧 <strong style="color:var(--ink)">Agent:</strong> instal·la <code>zabbix-agent2</code> al servidor a monitorar. Comunica amb el server central.</li>
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)">📋 <strong style="color:var(--ink)">Templates:</strong> plantilles preconfigurades per a Linux, Windows, MySQL, Apache, etc.</li>
+          <li style="padding:.25rem 0;font-size:.85rem;color:var(--muted)">🔔 <strong style="color:var(--ink)">Alertes:</strong> correu, Slack, Telegram, webhook quan un trigger dispara.</li>
+        </ul>
+        <div class="terminal" style="margin-top:.5rem">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-title">Instal·lar agent Zabbix</span><span class="term-os term-os-ubuntu">🐧</span></div>
+          <div class="term-body" style="font-size:.74rem">
+            <div><span class="prompt-ub">$</span> <span class="cmd">sudo apt install zabbix-agent2 -y</span></div>
+            <div><span class="comment"># /etc/zabbix/zabbix_agent2.conf</span></div>
+            <div><span class="val">Server=192.168.1.5</span>  <span class="comment"># IP del Zabbix Server</span></div>
+            <div><span class="val">Hostname=srv-web-01</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">sudo systemctl enable --now zabbix-agent2</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="card bl-teal">
+        <div class="card-icon" style="background:#ecfeff">📊</div>
+        <h3>Netdata — El més ràpid d'instal·lar</h3>
+        <p style="margin-bottom:.6rem">Netdata ofereix dashboards en temps real automàtics en menys d'un minut. Detecta automàticament serveis i aplicacions instal·lades.</p>
+        <div class="terminal" style="margin-top:.5rem">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-title">Instal·lació Netdata (1 comanda)</span><span class="term-os term-os-ubuntu">🐧</span></div>
+          <div class="term-body" style="font-size:.74rem">
+            <div><span class="prompt-ub">$</span> <span class="cmd">wget -O /tmp/netdata-kickstart.sh https://my-netdata.io/kickstart.sh && bash /tmp/netdata-kickstart.sh</span></div>
+            <div><span class="comment"># Dashboard disponible a: http://localhost:19999</span></div>
+            <div><span class="comment"># Detecta automàticament: MySQL, Apache, Nginx, Docker, etc.</span></div>
+            <div style="margin-top:.3rem"><span class="comment"># Alerta configurada a /etc/netdata/health.d/</span></div>
+            <div><span class="val">alarm:</span> <span class="cmd">disk_space_usage</span></div>
+            <div>  <span class="val">on:</span> <span class="cmd">disk.space</span></div>
+            <div>  <span class="val">warn:</span> <span class="cmd">$used_space > 80</span></div>
+            <div>  <span class="val">crit:</span> <span class="cmd">$used_space > 90</span></div>
+          </div>
+        </div>
+        <div class="ex ex-teal" style="margin-top:.5rem">
+          <div class="ex-lbl">Windows Monitor</div>
+          <p><strong>Windows Admin Center</strong> és l'equivalent Microsoft: instal·lació senzilla, monitoratge d'un o múltiples servidors, gràfics de rendiment i gestió integrada.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="lab-card fi">
+      <div class="lab-header">
+        <span class="lab-icon">🧪</span>
+        <div class="lab-title-block">
+          <h4>Lab 2.1 — Desplegar Prometheus + Node Exporter + Grafana en un servidor</h4>
+          <p>Configura el stack complet de monitoratge continu amb dashboards i alertes</p>
+        </div>
+        <div class="lab-os-tags"><span class="os-tag os-ubuntu">🐧 Ubuntu</span></div>
+      </div>
+      <div class="lab-body">
+        <ul class="lab-steps">
+          <li><strong>Desplega Node Exporter</strong> al servidor a monitorar. Verifica que <code>curl http://localhost:9100/metrics</code> retorna mètriques. Identifica 5 mètriques rellevants i explica el seu significat.</li>
+          <li><strong>Instal·la Prometheus</strong> (o usa Docker: <code>docker run -p 9090:9090 prom/prometheus</code>). Configura el <code>prometheus.yml</code> per fer scraping del node exporter. Accedeix a <code>http://localhost:9090</code> i executa la query PromQL: <code>node_filesystem_avail_bytes{mountpoint="/"}</code>.</li>
+          <li><strong>Connecta Grafana a Prometheus</strong> (instal·la Grafana o Docker). Importa el dashboard "Node Exporter Full" (ID: 1860) des de Grafana.com. Comprova que veus CPU, RAM, disc i xarxa en gràfics de temps.</li>
+          <li><strong>Configura una alerta:</strong> Crea una alerta a Grafana (o al alertmanager) que s'activi quan la CPU superi el 70% durant 2 minuts. Prova-la amb <code>stress-ng --cpu 4 --timeout 180s</code>.</li>
+          <li><strong>Alternativa ràpida:</strong> Si no disposes de temps, instal·la Netdata en 1 comanda i explora el dashboard automàtic. Identifica el gràfic de paginació i explica que significaria veure activitat alta en "pgmajfault".</li>
+        </ul>
+        <div class="lab-entrega"><strong>📋 Documenta:</strong> Captura del dashboard Grafana amb dades reals. Query PromQL que has creat. Configuració de l'alerta. Captura de l'alerta disparada durant la prova de càrrega.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ T3: ANÀLISI DEL RENDIMENT ═══ -->
+<section id="analisi" class="s-win">
+  <div class="container">
+    <div class="ra-banner ra-win fi">
+      <div class="ra-num">3</div>
+      <div>
+        <h2>Eines d'anàlisi del rendiment</h2>
+        <p>iostat, vmstat, netstat/ss, perf, lsof, strace — diagnosi professional de colls d'ampolla.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-win fi">Anàlisi de subsistemes</div>
+    <h2 class="fi">Eines de diagnosi profunda per subsistema</h2>
+    <p class="lead fi">Quan l'eina de temps real indica un problema, cal eines d'anàlisi per identificar la causa arrel. Cada subsistema (CPU, memòria, disc, xarxa) té les seves eines especialitzades.</p>
+
+    <div class="terminal fi">
+      <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">Anàlisi de rendiment per subsistema — Ubuntu i Windows</span><span class="term-os term-os-both">🔀 Ambdós</span></div>
+      <div class="term-body">
+        <div><span class="comment">══════ CPU — perf i mpstat ══════</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">mpstat -P ALL 2 5</span>    <span class="comment"># CPU per nucli, 5 mostres cada 2s</span></div>
+        <div><span class="out">07:30:01     CPU    %usr   %sys   %iowait  %steal  %idle</span></div>
+        <div><span class="out">07:30:03     all   64.20   7.10     7.40    0.00  21.30</span></div>
+        <div><span class="out">07:30:03       0   91.00   9.00     0.00    0.00   0.00   ← Nucli 0 saturat!</span></div>
+        <div><span class="out">07:30:03       1   35.00   4.00    18.00    0.00  43.00</span></div>
+        <div style="margin-top:.5rem"><span class="comment"># perf: profiling de CPU (identifica quines funcions consumeixen)</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">sudo perf top -p 1842</span>  <span class="comment"># Top de funcions del PID 1842 en temps real</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">sudo perf record -g -p 1842 sleep 10 && sudo perf report</span></div>
+        <div style="margin-top:.75rem"><span class="comment">══════ MEMÒRIA — vmstat i /proc ══════</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">vmstat 2 10</span>        <span class="comment"># Estadístiques de VM cada 2s, 10 vegades</span></div>
+        <div><span class="out">procs -----------memory---------- ---swap-- -----io---- -system-- ------cpu-----</span></div>
+        <div><span class="out"> r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa st</span></div>
+        <div><span class="out"> 3  0 2273380 208456 12340 1041024  124  380   234   892 1230 2400 64  7 21  7  0</span></div>
+        <div><span class="comment"># r=processos esperant CPU, b=processos bloquejats en I/O</span></div>
+        <div><span class="comment"># si/so=swap in/out (si>0 → sistema fent paginació des del disc!)</span></div>
+        <div><span class="comment"># bi/bo=bloc input/output (disc), in=interrupcions, cs=context switches</span></div>
+        <div style="margin-top:.5rem"><span class="comment"># Detectar fugues de memòria (creixement sostingut)</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">while true; do ps -o pid,rss,comm -p 1842; sleep 5; done</span>  <span class="comment"># RSS creixent = fuga</span></div>
+        <div style="margin-top:.75rem"><span class="comment">══════ DISC — iostat i iotop ══════</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">iostat -xz 2 5</span>     <span class="comment"># Estadístiques extenses per dispositiu</span></div>
+        <div><span class="out">Device  r/s    w/s   rMB/s  wMB/s  await  svctm  %util</span></div>
+        <div><span class="out">sda    45.20  22.10  12.30   5.60  18.40   1.20  98.50  ← %util=98%! Disc saturat</span></div>
+        <div><span class="comment"># await>20ms → latència alta; %util>80% → disc saturat</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">sudo iotop -o -P</span>  <span class="comment"># Quins processos fan més I/O de disc (sols actius)</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">sudo lsof +D /var/log</span>  <span class="comment"># Quins processos han obert fitxers en un directori</span></div>
+        <div style="margin-top:.75rem"><span class="comment">══════ XARXA — ss, netstat, iftop ══════</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">ss -tunapl</span>         <span class="comment"># Sockets: tcp/udp, numerics, all, ports, listening</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">ss -s</span>              <span class="comment"># Resum estadístic de sockets</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">sudo iftop -n -i ens33</span>  <span class="comment"># Tràfic en temps real per connexió</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">sudo nethogs ens33</span>   <span class="comment"># Tràfic per procés (com iotop però per xarxa)</span></div>
+        <div style="margin-top:.5rem"><span class="comment">═══ WINDOWS — PowerShell equivalents ═══</span></div>
+        <div><span class="prompt-win">PS></span> <span class="cmd">Get-Counter "\PhysicalDisk(*)\% Disk Time" -SampleInterval 2 -MaxSamples 10</span></div>
+        <div><span class="prompt-win">PS></span> <span class="cmd">Get-Counter "\Memory\Pages/sec","\Memory\Page Faults/sec" -SampleInterval 2</span></div>
+        <div><span class="prompt-win">PS></span> <span class="cmd">netstat -ano | findstr ":80 " | findstr ESTABLISHED</span></div>
+        <div><span class="prompt-win">PS></span> <span class="cmd">Get-NetTCPConnection -State Established | Group-Object RemoteAddress | Sort Count -Desc</span></div>
+      </div>
+    </div>
+
+    <!-- strace i lsof -->
+    <div class="section-tag tag-ubuntu fi" style="margin-top:3rem">Diagnosi avançada: strace i lsof</div>
+    <h2 class="fi">strace i lsof: seguir la pista d'un procés fins a la causa arrel</h2>
+    <div class="grid g2 fi">
+      <div class="card bl-ubuntu">
+        <div class="card-icon" style="background:#fff5f1">🕵️</div>
+        <h3>strace — interceptar crides al sistema</h3>
+        <p style="margin-bottom:.6rem"><code>strace</code> intercepta totes les crides al sistema (syscalls) que fa un procés. Permet veure quins fitxers obre, quines connexions fa i on es queda penjat.</p>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-title">strace — exemples de diagnosi</span><span class="term-os term-os-ubuntu">🐧</span></div>
+          <div class="term-body" style="font-size:.75rem">
+            <div><span class="comment"># Seguir un procés existent (PID 1842)</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">sudo strace -p 1842 -e trace=network</span></div>
+            <div><span class="out">connect(5, {sa_family=AF_INET, sin_port=3306...} ← Connexió a MySQL</span></div>
+            <div style="margin-top:.3rem"><span class="comment"># Crides al sistema d'un programa (quins fitxers obre)</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">strace -e trace=open,openat ls /etc 2>&1 | head -10</span></div>
+            <div style="margin-top:.3rem"><span class="comment"># Temps per crida (on es perd temps)</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">sudo strace -p 1842 -T -e trace=read,write 2>&1 | head -20</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="card bl-teal">
+        <div class="card-icon" style="background:#ecfeff">📂</div>
+        <h3>lsof — Llistar fitxers oberts</h3>
+        <p style="margin-bottom:.6rem"><code>lsof</code> (List Open Files) mostra tots els fitxers, sockets i pipes oberts per qualsevol procés. A Linux, tot és un fitxer.</p>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-title">lsof — diagnosi de fitxers i xarxa</span><span class="term-os term-os-ubuntu">🐧</span></div>
+          <div class="term-body" style="font-size:.75rem">
+            <div><span class="comment"># Qui té obert un fitxer específic?</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">sudo lsof /var/log/syslog</span></div>
+            <div><span class="comment"># Fitxers oberts per un procés</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">sudo lsof -p 1842</span></div>
+            <div><span class="comment"># Connexions de xarxa actives d'un procés</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">sudo lsof -p 1842 -i</span></div>
+            <div><span class="comment"># Quins processos escolten al port 443?</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">sudo lsof -i :443</span></div>
+            <div><span class="comment"># Fitxers esborrats però encara en ús (espai alliberat)</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">sudo lsof | grep deleted | awk '{print $1,$2,$7}' | sort -k3 -rn | head</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="lab-card fi">
+      <div class="lab-header">
+        <span class="lab-icon">🧪</span>
+        <div class="lab-title-block">
+          <h4>Lab 3.1 — Diagnosi professional: identifica la causa arrel d'un problema de rendiment</h4>
+          <p>Investiga un escenari de problema real: servidor lent, disc saturat, fuga de memòria</p>
+        </div>
+        <div class="lab-os-tags"><span class="os-tag os-both">🔀 Ambdós</span></div>
+      </div>
+      <div class="lab-body">
+        <p>Simularàs un servidor web amb problemes i aplicaràs el mètode d'investigació sistemàtic: Observar → Mesurar → Hipòtesi → Verificar → Solucionar.</p>
+        <ul class="lab-steps">
+          <li><strong>Escenari 1 — Disc saturat:</strong> Genera un fitxer enorme: <code>dd if=/dev/zero of=/tmp/big.dat bs=1M count=5000</code> mentre monitores amb <code>iostat -xz 2</code>. Observa el %util del disc. Usa <code>sudo iotop -o</code> per identificar el procés culpable. Calcula quan trigaria a omplir el disc al ritme actual (<code>df -h</code> + velocitat d'escriptura).</li>
+          <li><strong>Escenari 2 — Fuga de memòria simulada:</strong> Executa: <code>python3 -c "data=[]; [(data.append(' '*1024*1024)) for _ in range(500)]"</code>. Mentre s'executa, monitora amb <code>watch -n 1 "ps -o pid,rss,comm -C python3"</code>. Observa com creix el RSS. Usa <code>vmstat 1</code> per veure l'impacte al swap.</li>
+          <li><strong>Escenari 3 — Connexions de xarxa esgotades:</strong> Instal·la Apache (<code>sudo apt install apache2</code>). Usa <code>ab -n 10000 -c 500 http://localhost/</code> per generar càrrega. Monitora: <code>ss -s</code> (estadística de sockets), <code>netstat -an | grep TIME_WAIT | wc -l</code>. Interpreta l'estat TIME_WAIT.</li>
+          <li><strong>Windows — Performance Monitor:</strong> Crea un Data Collector Set que enregistri cada 5s durant 5 min: % de temps del processador, MB disponibles, Pàgines/s, Temps d'inactivitat del disc. Analitza el fitxer .blg generat i identifica el pic de càrrega.</li>
+        </ul>
+        <div class="lab-entrega"><strong>📋 Documenta:</strong> Per a cada escenari: mètriques observades, hipòtesi inicial, confirmació, causa arrel identificada i solució proposada. Format: informe d'incident amb timestamp, símptomes, diagnosi i resolució.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ T4-T5: REGISTRE DE SUCCESSOS ═══ -->
+<section id="logs" class="s-ubuntu">
+  <div class="container">
+    <div class="ra-banner ra-ubuntu fi">
+      <div class="ra-num">4</div>
+      <div>
+        <h2>Registre de successos — Logs del sistema</h2>
+        <p>journald, /var/log, syslog, Visor d'Esdeveniments Windows. Lectura, filtratge i anàlisi de logs.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-ubuntu fi">Arquitectura de logs a Linux</div>
+    <h2 class="fi">journald i /var/log: els dos sistemes de logs de Linux</h2>
+    <p class="lead fi">Linux modern usa <strong>journald</strong> (part de systemd) com a sistema de logging principal: recopila logs de tots els serveis en format binari indexat. Els logs clàssics en text pla segueixen disponibles a <strong>/var/log/</strong>, alimentats per rsyslog/syslog-ng.</p>
+
+    <div class="grid g2 fi">
+      <div class="card bl-ubuntu">
+        <div class="card-icon" style="background:#fff5f1">📖</div>
+        <h3>journalctl — La porta al journald</h3>
+        <div class="terminal" style="margin-top:.5rem">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-title">journalctl — referències completes</span><span class="term-os term-os-ubuntu">🐧 Ubuntu</span></div>
+          <div class="term-body" style="font-size:.75rem">
+            <div><span class="comment"># Logs de tot el sistema (des de l'arrencada)</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">journalctl</span></div>
+            <div style="margin-top:.3rem"><span class="comment"># Seguir en temps real (com tail -f)</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">journalctl -f</span></div>
+            <div style="margin-top:.3rem"><span class="comment"># Logs d'un servei concret</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">journalctl -u nginx.service -f</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">journalctl -u ssh.service --since "1 hour ago"</span></div>
+            <div style="margin-top:.3rem"><span class="comment"># Filtrar per prioritat (err,warning,info,debug)</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">journalctl -p err -b</span>    <span class="comment"># Errors de l'arrencada actual (-b=boot)</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">journalctl -p warning --since today</span></div>
+            <div style="margin-top:.3rem"><span class="comment"># Filtrar per rang de temps</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">journalctl --since "2025-06-01 08:00" --until "2025-06-01 10:00"</span></div>
+            <div style="margin-top:.3rem"><span class="comment"># Format JSON (per processar amb jq)</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">journalctl -u sshd -o json-pretty | jq '.MESSAGE'</span></div>
+            <div style="margin-top:.3rem"><span class="comment"># Veure arrencades anteriors</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">journalctl --list-boots</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">journalctl -b -1 -p err</span>     <span class="comment"># Errors de l'arrencada anterior</span></div>
+            <div style="margin-top:.3rem"><span class="comment"># Gestió d'espai del journal</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">journalctl --disk-usage</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">sudo journalctl --vacuum-size=500M</span>  <span class="comment"># Netejar fins a 500MB</span></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="card bl-ubuntu" style="margin-bottom:1rem">
+          <div class="card-icon" style="background:#fff5f1">📁</div>
+          <h3>Fitxers clau de /var/log</h3>
+          <ul style="list-style:none;padding:0">
+            <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)"><code style="color:var(--ink)">/var/log/syslog</code> — Log general del sistema</li>
+            <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)"><code style="color:var(--ink)">/var/log/auth.log</code> — Autenticació: logins, sudo, SSH</li>
+            <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)"><code style="color:var(--ink)">/var/log/kern.log</code> — Logs del kernel</li>
+            <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)"><code style="color:var(--ink)">/var/log/dpkg.log</code> — Instal·lació de paquets</li>
+            <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)"><code style="color:var(--ink)">/var/log/nginx/</code> — Logs d'Nginx (access, error)</li>
+            <li style="padding:.25rem 0;font-size:.85rem;color:var(--muted)"><code style="color:var(--ink)">/var/log/mysql/</code> — Logs de MySQL</li>
+          </ul>
+        </div>
+        <div class="card bl-teal">
+          <div class="card-icon" style="background:#ecfeff">🔄</div>
+          <h3>logrotate — Rotació de logs</h3>
+          <p style="margin-bottom:.5rem">Evita que els logs omplin el disc rotant-los automàticament:</p>
+          <div class="ex ex-teal">
+            <div class="ex-lbl">/etc/logrotate.d/nginx</div>
+            <p><code>/var/log/nginx/*.log {<br>
+            &nbsp;&nbsp;daily<br>
+            &nbsp;&nbsp;rotate 14<br>
+            &nbsp;&nbsp;compress<br>
+            &nbsp;&nbsp;delaycompress<br>
+            &nbsp;&nbsp;missingok<br>
+            &nbsp;&nbsp;postrotate<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;nginx -s reopen<br>
+            &nbsp;&nbsp;endscript<br>
+            }</code></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Visor d'Esdeveniments Windows -->
+    <div class="section-tag tag-win fi" style="margin-top:3.5rem">Windows — Visor d'Esdeveniments</div>
+    <h2 class="fi">Event Viewer (eventvwr) i PowerShell: els logs de Windows</h2>
+    <p class="lead fi">Windows centralitza tots els logs al <strong>Visor d'Esdeveniments</strong> (Event Viewer). Cada log és un arxiu <code>.evtx</code>. Les entrades es classifiquen per nivell de gravetat i es filtren per criteris XPath.</p>
+
+    <div class="grid g2 fi">
+      <div>
+        <h3>Nivells de gravetat dels events</h3>
+        <div style="margin-top:1rem">
+          <div class="ev-level"><span class="ev-badge ev-crit">Critical (1)</span><span style="font-size:.87rem;color:var(--muted)">Error greu que pot causar pèrdua de dades. Ex: Kernel panic, BSOD, fallada hardware.</span></div>
+          <div class="ev-level"><span class="ev-badge ev-err">Error (2)</span><span style="font-size:.87rem;color:var(--muted)">Funcionalitat fallida però el sistema segueix. Ex: Servei que no arrenca, driver que falla.</span></div>
+          <div class="ev-level"><span class="ev-badge ev-warn">Warning (3)</span><span style="font-size:.87rem;color:var(--muted)">Possible problema futur. Ex: Disc al 85%, disc defectuós (S.M.A.R.T.), timeout de xarxa.</span></div>
+          <div class="ev-level"><span class="ev-badge ev-info">Information (4)</span><span style="font-size:.87rem;color:var(--muted)">Events normals del sistema. Ex: Servei iniciat, usuari ha iniciat sessió, instal·lació de software.</span></div>
+          <div class="ev-level"><span class="ev-badge ev-verb">Verbose (5)</span><span style="font-size:.87rem;color:var(--muted)">Informació de depuració molt detallada. Desactivat per defecte (ompliria el disc).</span></div>
+        </div>
+      </div>
+      <div class="terminal fi">
+        <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-title">PowerShell — Get-EventLog i Get-WinEvent</span><span class="term-os term-os-win">🪟 Windows</span></div>
+        <div class="term-body">
+          <div><span class="comment"># Logs disponibles al sistema</span></div>
+          <div><span class="prompt-win">PS></span> <span class="cmd">Get-WinEvent -ListLog * | Where-Object {$_.RecordCount -gt 0} | Select LogName,RecordCount</span></div>
+          <div style="margin-top:.4rem"><span class="comment"># Errors del Sistema de les últimes 24h</span></div>
+          <div><span class="prompt-win">PS></span> <span class="cmd">Get-WinEvent -FilterHashtable @{LogName='System';Level=2;StartTime=(Get-Date).AddHours(-24)} | Select TimeCreated,Id,Message | Format-Table -Wrap</span></div>
+          <div style="margin-top:.4rem"><span class="comment"># Cercar events d'inici de sessió fallits (EventID 4625)</span></div>
+          <div><span class="prompt-win">PS></span> <span class="cmd">Get-WinEvent -FilterHashtable @{LogName='Security';Id=4625} | Select -First 20 TimeCreated,Message</span></div>
+          <div style="margin-top:.4rem"><span class="comment"># Events d'inici de sessió reeixits (4624)</span></div>
+          <div><span class="prompt-win">PS></span> <span class="cmd">Get-WinEvent -FilterHashtable @{LogName='Security';Id=4624;StartTime=(Get-Date).AddDays(-1)}</span></div>
+          <div style="margin-top:.4rem"><span class="comment"># Exportar a CSV per a anàlisi</span></div>
+          <div><span class="prompt-win">PS></span> <span class="cmd">Get-WinEvent -FilterHashtable @{LogName='System';Level=1,2} | Export-Csv C:\logs_errors.csv -NoTypeInformation</span></div>
+          <div style="margin-top:.4rem"><span class="comment"># Events crítics de les últimes 48h amb text del missatge</span></div>
+          <div><span class="prompt-win">PS></span> <span class="cmd">Get-WinEvent -ComputerName SRV-01 -FilterHashtable @{LogName='*';Level=1;StartTime=(Get-Date).AddHours(-48)} | ForEach-Object { "$($_.TimeCreated) | $($_.LogName) | $($_.Message.Substring(0,[Math]::Min(100,$_.Message.Length)))" }</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- IDs importants Windows -->
+    <div class="section-tag tag-win fi" style="margin-top:3rem">Event IDs rellevants</div>
+    <h2 class="fi">Event IDs crítics que tot ASIX ha de conèixer</h2>
+    <div style="overflow-x:auto" class="fi">
+      <table class="ptable">
+        <thead><tr><th>Event ID</th><th>Log</th><th>Significat</th><th>Acció recomanada</th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge b-red">4625</span></td><td>Security</td><td>Intent de login FALLIT. Indica un atac de força bruta si n'hi ha molts.</td><td>Analitzar IP d'origen. Bloquejar si és extern.</td></tr>
+          <tr><td><span class="badge b-green">4624</span></td><td>Security</td><td>Login reeixit. Auditar logins fora d'horari o des d'IPs no habituals.</td><td>Alertar si login a les 3h de la matinada.</td></tr>
+          <tr><td><span class="badge b-amber">4720</span></td><td>Security</td><td>Compte d'usuari creat. Possible moviment lateral d'un atacant.</td><td>Alertar si no correspon a un ticket de canvi.</td></tr>
+          <tr><td><span class="badge b-red">4728</span></td><td>Security</td><td>Membre afegit a un grup privilegiat (Admins). Escalada de privilegis?</td><td>Alertar immediata si no és operació planificada.</td></tr>
+          <tr><td><span class="badge b-mon">7036</span></td><td>System</td><td>Servei canvia d'estat (iniciat/aturat). Normal però alertar si és crític.</td><td>Monitorar serveis crítics (SQL Server, AD DS).</td></tr>
+          <tr><td><span class="badge b-red">41</span></td><td>System</td><td>El sistema s'ha reiniciat sense apagar-se correctament (apagada sobtada, BSOD).</td><td>Investigar causa. Revisar temperatura, hardware.</td></tr>
+          <tr><td><span class="badge b-amber">1001</span></td><td>Application</td><td>Error d'una aplicació (crash). Conté el nom de l'app i el codi d'error.</td><td>Revisar la causa del crash de l'aplicació.</td></tr>
+          <tr><td><span class="badge b-red">6008</span></td><td>System</td><td>Tancament inesperat del sistema. Associat a BSOD o tall de llum.</td><td>Analitzar minidump a C:\Windows\Minidump.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="lab-card fi">
+      <div class="lab-header">
+        <span class="lab-icon">🧪</span>
+        <div class="lab-title-block">
+          <h4>Lab 4.1 — Anàlisi de logs: detecta un intent d'atac als logs del sistema</h4>
+          <p>Investiga intents d'accés no autoritzat als logs de SSH (Ubuntu) i al Visor d'Esdeveniments (Windows)</p>
+        </div>
+        <div class="lab-os-tags"><span class="os-tag os-both">🔀 Ambdós</span></div>
+      </div>
+      <div class="lab-body">
+        <h5>🐧 Ubuntu — Anàlisi d'intents SSH</h5>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-title">Detectar atacs de força bruta SSH</span><span class="term-os term-os-ubuntu">🐧 Ubuntu</span></div>
+          <div class="term-body">
+            <div><span class="comment"># Intents fallits de login SSH</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">sudo grep "Failed password" /var/log/auth.log | tail -20</span></div>
+            <div><span class="comment"># Top 10 IPs que han intentat accedir (possibles atacants)</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">sudo grep "Failed password" /var/log/auth.log | awk '{print $(NF-3)}' | sort | uniq -c | sort -rn | head -10</span></div>
+            <div style="margin-top:.4rem"><span class="comment"># Usuaris inexistents intentats</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">sudo grep "Invalid user" /var/log/auth.log | awk '{print $8}' | sort | uniq -c | sort -rn | head</span></div>
+            <div style="margin-top:.4rem"><span class="comment"># Logins reeixits (per confirmar que els nostres usuaris entren bé)</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">sudo grep "Accepted" /var/log/auth.log | tail -10</span></div>
+            <div style="margin-top:.4rem"><span class="comment"># Detectar sudo uses</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">sudo journalctl -u sudo --since "24 hours ago" | grep "COMMAND"</span></div>
+            <div style="margin-top:.4rem"><span class="comment"># Instal·lar fail2ban (bloqueja IPs automàticament)</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">sudo apt install fail2ban -y</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">sudo fail2ban-client status sshd</span>  <span class="comment"># IPs bannajades</span></div>
+          </div>
+        </div>
+        <ul class="lab-steps">
+          <li><strong>Ubuntu — Simula intents de login fallits:</strong> Des d'un altre terminal, intenta fer SSH amb contrasenyes incorrectes 5 vegades: <code>ssh usuari_inexistent@localhost</code>. Comprova que apareix a <code>/var/log/auth.log</code> i a <code>journalctl -u ssh</code>.</li>
+          <li><strong>Ubuntu — Crea un script d'anàlisi:</strong> Script bash que llegeixi <code>/var/log/auth.log</code>, compti els intents fallits per IP i envi una alerta al log si alguna IP supera 10 intents.</li>
+          <li><strong>Windows — Audit Policy:</strong> Activa l'auditoria d'inici de sessió: <em>secpol.msc → Directives locals → Política d'auditoria → Auditar events d'inici de sessió → Encert i Error</em>. Fes 3 intents de login fallits. Cerca l'Event ID 4625 al Visor d'Esdeveniments.</li>
+          <li><strong>Windows — Script de detecció:</strong> Script PowerShell que cerqui Event IDs 4625 de les últimes 2 hores i mostri les IPs/usuaris que han fallat més de 3 vegades.</li>
+        </ul>
+        <div class="lab-entrega"><strong>📋 Documenta:</strong> Sortida de l'anàlisi d'auth.log amb les IPs sospitoses. Captura de l'Event ID 4625 al Visor d'Esdeveniments. Script de detecció complet i comentat. Recomanació de mesures per mitigar els atacs de força bruta detectats.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ T5-T7: PROCESSOS I APLICACIONS ═══ -->
+<section id="events" class="s-green">
+  <div class="container">
+    <div class="ra-banner ra-proc fi">
+      <div class="ra-num">5</div>
+      <div>
+        <h2>Monitoratge de successos i alertes</h2>
+        <p>Subscripcions d'events, alertes automàtiques, correlació de logs i escalada d'incidents.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-green fi">Monitoratge proactiu d'events</div>
+    <h2 class="fi">De la detecció reactiva a la proactiva: alertes i correlació</h2>
+    <p class="lead fi">Un sistema de monitoratge madur no espera que l'administrador vagi a mirar els logs: els <strong>monitoritza automàticament</strong> i envia alertes quan detecta patrons anòmals. La <strong>correlació de logs</strong> permet relacionar events de diverses fonts per detectar incidents complexos.</p>
+
+    <div class="grid g2 fi">
+      <div class="card bl-green">
+        <div class="card-icon" style="background:#f0fdf4">🔔</div>
+        <h3>Windows — Task Scheduler + Event Triggers</h3>
+        <p style="margin-bottom:.6rem">El Programador de Tasques de Windows pot executar scripts automàticament quan es produeix un event específic al Visor d'Esdeveniments:</p>
+        <div class="terminal" style="margin-top:.5rem">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-title">Alerta per event - PowerShell</span><span class="term-os term-os-win">🪟</span></div>
+          <div class="term-body" style="font-size:.75rem">
+            <div><span class="comment"># Crear alerta que envia email quan Event 4625 apareix</span></div>
+            <div><span class="prompt-win">PS></span> <span class="cmd">$filter = "Security!*[System[(EventID=4625)]]"</span></div>
+            <div><span class="prompt-win">PS></span> <span class="cmd">$action = New-ScheduledTaskAction -Execute "powershell.exe" -Argument "-File C:\scripts\alerta_login.ps1"</span></div>
+            <div><span class="prompt-win">PS></span> <span class="cmd">$trigger = New-ScheduledTaskTrigger -AtEvent -LogName Security -EventID 4625</span></div>
+            <div><span class="prompt-win">PS></span> <span class="cmd">Register-ScheduledTask -TaskName "AlertaLoginFallit" -Action $action -Trigger $trigger</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="card bl-ubuntu">
+        <div class="card-icon" style="background:#fff5f1">📧</div>
+        <h3>Linux — systemd-analyze i alertes per correu</h3>
+        <div class="terminal" style="margin-top:.5rem">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-title">Alertes automàtiques Linux</span><span class="term-os term-os-ubuntu">🐧</span></div>
+          <div class="term-body" style="font-size:.75rem">
+            <div><span class="comment"># Analitzar temps d'arrencada del sistema</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">systemd-analyze blame | head -20</span></div>
+            <div><span class="out">32.453s  NetworkManager-wait-online.service</span></div>
+            <div><span class="out"> 4.201s  mysql.service</span></div>
+            <div style="margin-top:.3rem"><span class="comment"># Monitorar un servei i reiniciar si cau (OnFailure)</span></div>
+            <div><span class="comment"># /etc/systemd/system/nginx.service.d/alert.conf</span></div>
+            <div><span class="val">[Service]</span></div>
+            <div><span class="val">OnFailure=email-alert@%n.service</span></div>
+            <div style="margin-top:.3rem"><span class="comment"># Cron per monitorar disc i enviar alerta</span></div>
+            <div><span class="val">*/15 * * * * root /usr/local/bin/check_disk.sh</span></div>
+          </div>
+        </div>
+        <div class="ex ex-ubuntu" style="margin-top:.5rem">
+          <div class="ex-lbl">Script check_disk.sh</div>
+          <p><code>USO=$(df / | tail -1 | awk '{print $5}' | tr -d '%')<br>
+          [ $USO -gt 80 ] && echo "ALERTA: Disc al $USO%" | mail -s "Disc gairebé ple" admin@empresa.com</code></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ELK Stack -->
+    <div class="section-tag tag-green fi" style="margin-top:3rem">SIEM i correlació de logs</div>
+    <h2 class="fi">ELK Stack i SIEM: correlació de logs a escala</h2>
+    <div class="grid g3 fi">
+      <div class="card bl-green">
+        <div class="card-icon" style="background:#f0fdf4">🔍</div>
+        <h3>Elasticsearch + Logstash + Kibana</h3>
+        <p style="margin-bottom:.5rem">El stack ELK permet centralitzar i analitzar logs de centenars de servidors:</p>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)">📥 <strong style="color:var(--ink)">Logstash/Filebeat:</strong> recull logs dels servidors i els envia a Elasticsearch.</li>
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)">🗄️ <strong style="color:var(--ink)">Elasticsearch:</strong> indexa i emmagatzema logs per a consultes ràpides.</li>
+          <li style="padding:.25rem 0;font-size:.85rem;color:var(--muted)">📊 <strong style="color:var(--ink)">Kibana:</strong> dashboards i alertes sobre els logs indexats.</li>
+        </ul>
+      </div>
+      <div class="card bl-teal">
+        <div class="card-icon" style="background:#ecfeff">🛡️</div>
+        <h3>SIEM — Correlació de seguretat</h3>
+        <p style="margin-bottom:.5rem">Un <strong>SIEM (Security Information and Event Management)</strong> correlaciona events de seguretat de múltiples fonts per detectar atacs complexos:</p>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)">🔍 <strong style="color:var(--ink)">Wazuh (gratuït):</strong> SIEM de codi obert basat en OSSEC.</li>
+          <li style="padding:.25rem 0;font-size:.85rem;color:var(--muted)">🏢 <strong style="color:var(--ink)">Microsoft Sentinel:</strong> SIEM cloud de Microsoft Azure.</li>
+        </ul>
+        <div class="ex ex-teal">
+          <div class="ex-lbl">Exemple de correlació</div>
+          <p>Regla: si un usuari falla login >5 vegades (4625) des de la mateixa IP en 5 min, i després té un login reeixit (4624) → sospita de credencials filtrades.</p>
+        </div>
+      </div>
+      <div class="card bl-asix">
+        <div class="card-icon" style="background:#f5f3ff">🤖</div>
+        <h3>Filebeat — Agent lleuger de logs</h3>
+        <p style="margin-bottom:.5rem">Filebeat és l'agent lleuger per enviar logs al stack ELK:</p>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-title">filebeat.yml</span><span class="term-os term-os-ubuntu">🐧</span></div>
+          <div class="term-body" style="font-size:.74rem">
+            <div><span class="val">filebeat.inputs:</span></div>
+            <div>  <span class="val">- type:</span> <span class="cmd">log</span></div>
+            <div>    <span class="val">paths:</span></div>
+            <div>      <span class="val">- /var/log/nginx/*.log</span></div>
+            <div>      <span class="val">- /var/log/auth.log</span></div>
+            <div><span class="val">output.elasticsearch:</span></div>
+            <div>  <span class="val">hosts:</span> <span class="cmd">["elk-server:9200"]</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ T6-T7: GESTIÓ DE PROCESSOS ═══ -->
+<section id="processos" class="s-proc">
+  <div class="container">
+    <div class="ra-banner ra-teal fi">
+      <div class="ra-num">6</div>
+      <div>
+        <h2>Gestió d'aplicacions, processos i subprocessos</h2>
+        <p>ps, kill, nice, renice, cgroups, signals, systemd units, processos zombies i monitoratge avançat.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-teal fi">L'arbre de processos</div>
+    <h2 class="fi">Com s'organitzen els processos a Linux i Windows</h2>
+    <p class="lead fi">Tot procés a Linux té un <strong>PID</strong> (Process ID) i un <strong>PPID</strong> (Parent Process ID). Els processos s'organitzen en un arbre jeràrquic on <code>systemd</code> (PID 1) és l'arrel. Entendre l'arbre és fonamental per gestionar processos correctament.</p>
+
+    <div class="grid g2 fi">
+      <div>
+        <h3>Arbre de processos (pstree)</h3>
+        <div class="proc-tree">
+          <div><span class="ph">systemd</span><span class="lk">(1)</span></div>
+          <div><span class="lk">├─ </span><span class="ps">sshd</span><span class="lk">(845)</span></div>
+          <div><span class="lk">│  └─ </span><span class="ps">sshd</span><span class="lk">(2341)</span> <span class="comment">← Sessió SSH de joan.garcia</span></div>
+          <div><span class="lk">│     └─ </span><span class="pc">bash</span><span class="lk">(2342) </span><span class="mem">[RSS:4MB]</span></div>
+          <div><span class="lk">│        ├─ </span><span class="pc">top</span><span class="lk">(2398)</span></div>
+          <div><span class="lk">│        └─ </span><span class="pc">stress-ng</span><span class="lk">(3100)</span> <span class="cpu">[CPU:98%]</span></div>
+          <div><span class="lk">├─ </span><span class="ps">mysql</span><span class="lk">(1842)</span> <span class="mem">[RSS:1.4GB]</span></div>
+          <div><span class="lk">│  └─ </span><span class="ps">mysql</span><span class="lk">(1843-1890)</span> <span class="comment">← 48 worker threads</span></div>
+          <div><span class="lk">├─ </span><span class="ps">nginx</span><span class="lk">(2156) master</span></div>
+          <div><span class="lk">│  ├─ </span><span class="ps">nginx</span><span class="lk">(2157) worker</span></div>
+          <div><span class="lk">│  └─ </span><span class="ps">nginx</span><span class="lk">(2158) worker</span></div>
+          <div><span class="lk">└─ </span><span class="pp">backup.sh</span><span class="lk">(3341) </span><span class="warn">[ZOMBIE?]</span></div>
+        </div>
+      </div>
+      <div>
+        <div class="terminal fi">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-title">Gestió de processos — Ubuntu i Windows</span><span class="term-os term-os-both">🔀 Ambdós</span></div>
+          <div class="term-body">
+            <div><span class="comment">═══ LINUX — ps, kill, nice ═══</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">ps aux</span>                      <span class="comment"># Tots els processos (BSD)</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">ps -ef</span>                      <span class="comment"># Tots amb PPID (Unix)</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">ps -eo pid,ppid,user,stat,rss,pcpu,comm --sort=-pcpu | head -15</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">pstree -p -u joan.garcia</span>  <span class="comment"># Arbre de joan.garcia</span></div>
+            <div style="margin-top:.4rem"><span class="comment"># Senyals: matar/aturar/reprendre processos</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">kill -l</span>                     <span class="comment"># Llistar totes les senyals</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">kill -15 3100</span>               <span class="comment"># SIGTERM: finalitzar correctament</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">kill -9 3100</span>               <span class="comment"># SIGKILL: matar immediatament (no cleanable)</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">kill -19 3100</span>               <span class="comment"># SIGSTOP: pausar procés</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">kill -18 3100</span>               <span class="comment"># SIGCONT: reprendre procés pausat</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">killall nginx</span>               <span class="comment"># Matar per nom</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">pkill -u joan.garcia</span>        <span class="comment"># Matar tots els processos d'un usuari</span></div>
+            <div style="margin-top:.4rem"><span class="comment"># Prioritat: nice (-20=màx prio, 19=mín prio)</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">nice -n 19 backup.sh</span>       <span class="comment"># Iniciar amb baixa prioritat</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">renice -n 10 -p 3100</span>       <span class="comment"># Canviar prioritat procés existent</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">renice -n -5 -u mysql</span>      <span class="comment"># Aumentar prioritat de tots els processos de mysql</span></div>
+            <div style="margin-top:.75rem"><span class="comment">═══ WINDOWS ═══</span></div>
+            <div><span class="prompt-win">PS></span> <span class="cmd">Get-Process | Sort CPU -Desc | Select -First 10 Name,CPU,WorkingSet,Id</span></div>
+            <div><span class="prompt-win">PS></span> <span class="cmd">Stop-Process -Id 3100 -Force</span></div>
+            <div><span class="prompt-win">PS></span> <span class="cmd">Stop-Process -Name "chrome" -Force</span></div>
+            <div><span class="prompt-win">PS></span> <span class="cmd">(Get-Process -Id 3100).PriorityClass = "BelowNormal"</span></div>
+            <div><span class="prompt-win">PS></span> <span class="cmd">Get-WmiObject Win32_Process | Select Name,ProcessId,ParentProcessId,WorkingSetSize | Sort WorkingSetSize -Desc</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- cgroups i systemd -->
+    <div class="section-tag tag-green fi" style="margin-top:3rem">cgroups i systemd — Control de recursos</div>
+    <h2 class="fi">cgroups: limitar els recursos d'un procés o servei</h2>
+    <p class="lead fi">Els <strong>Control Groups (cgroups)</strong> permeten limitar, prioritzar i aïllar els recursos (CPU, RAM, I/O, xarxa) que un grup de processos pot consumir. systemd usa cgroups per a cada servei de forma transparent.</p>
+
+    <div class="terminal fi">
+      <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">cgroups i systemd — control de recursos per servei</span><span class="term-os term-os-ubuntu">🐧 Ubuntu</span></div>
+      <div class="term-body">
+        <div><span class="comment"># Veure l'ús de recursos per servei (systemd + cgroups)</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">systemd-cgtop</span>              <span class="comment"># Com top però per cgroup/servei</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">systemctl status mysql</span>     <span class="comment"># Inclou: Memory: 1.4G, CPU: 38%</span></div>
+        <div style="margin-top:.5rem"><span class="comment"># Limitar CPU i RAM d'un servei via unit file</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">sudo systemctl edit nginx</span>  <span class="comment"># Crea override.conf</span></div>
+        <div><span class="comment"># Contingut de /etc/systemd/system/nginx.service.d/override.conf:</span></div>
+        <div><span class="val">[Service]</span></div>
+        <div><span class="val">CPUQuota=50%</span>               <span class="comment"># Màxim 50% de CPU (1 nucli en un sistema de 2)</span></div>
+        <div><span class="val">MemoryMax=512M</span>             <span class="comment"># Màxim 512MB de RAM. Si supera → OOM killer</span></div>
+        <div><span class="val">MemoryHigh=400M</span>            <span class="comment"># A partir de 400MB comença a fer backpressure</span></div>
+        <div><span class="val">IOWeight=50</span>                <span class="comment"># Pes d'I/O (100=normal, 50=meitat de prioritat)</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">sudo systemctl daemon-reload && sudo systemctl restart nginx</span></div>
+        <div style="margin-top:.5rem"><span class="comment"># Verificar límits aplicats</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">systemctl show nginx | grep -E "CPU|Memory|IO"</span></div>
+        <div style="margin-top:.5rem"><span class="comment"># Veure jerarquia cgroups</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">cat /sys/fs/cgroup/system.slice/nginx.service/memory.current</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">cat /sys/fs/cgroup/system.slice/nginx.service/cpu.stat</span></div>
+        <div style="margin-top:.5rem"><span class="comment"># OOM Score: quin procés mata el kernel quan la RAM s'esgota</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">cat /proc/1842/oom_score</span>  <span class="comment"># Valor alt = candidat a ser matat primer</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">echo -1000 | sudo tee /proc/1842/oom_score_adj</span>  <span class="comment"># Protegir MySQL del OOM killer</span></div>
+      </div>
+    </div>
+
+    <!-- Processos zombies -->
+    <div class="section-tag tag-red fi" style="margin-top:3rem">Processos especials</div>
+    <h2 class="fi">Processos zombies, orfes i dimonis</h2>
+    <div class="grid g3 fi">
+      <div class="card bl-red">
+        <div class="card-icon" style="background:#fff5f5">🧟</div>
+        <h3>Processos zombie (Z)</h3>
+        <p style="margin-bottom:.6rem">Un procés zombie ha acabat però el seu pare no ha recollit el codi de sortida (<code>wait()</code>). Ocupa una entrada a la taula de processos però no consumeix CPU ni RAM.</p>
+        <div class="ex ex-red">
+          <div class="ex-lbl">Diagnosi</div>
+          <p><code>ps aux | grep Z</code> per detectar-los. <code>ps -eo ppid,pid,stat,comm | grep Z</code> per identificar el pare. La solució és matar el procés PARE (no el zombie).</p>
+        </div>
+        <div class="callout cl-amber" style="margin-top:.5rem;padding:.75rem 1rem">
+          <span class="callout-icon">⚠️</span>
+          <p>Un sistema amb centenars de zombies indica un bug al procés pare. Pot exhaurir la taula de PIDs (<code>/proc/sys/kernel/pid_max</code>).</p>
+        </div>
+      </div>
+      <div class="card bl-amber">
+        <div class="card-icon" style="background:#fffbeb">👻</div>
+        <h3>Processos orfes</h3>
+        <p style="margin-bottom:.6rem">Un procés orfe el pare del qual ha mort. A Linux, <code>init/systemd</code> (PID 1) adopta automàticament els processos orfes. No sol ser un problema.</p>
+        <div class="ex ex-amber">
+          <div class="ex-lbl">Exemple</div>
+          <p>Un administrador llança un procés llarg per SSH i tanca la sessió. Si el procés estava en primer pla, mor; si estava en background desvinculat (nohup, screen, tmux), continua com a orfe adoptat per systemd.</p>
+        </div>
+      </div>
+      <div class="card bl-teal">
+        <div class="card-icon" style="background:#ecfeff">🔮</div>
+        <h3>Dimonis (daemons)</h3>
+        <p style="margin-bottom:.6rem">Processos de llarga durada que s'executen en segon pla, sense terminal associat. Normalment el nom acaba en <code>d</code>: <code>sshd</code>, <code>mysqld</code>, <code>nginx</code> (worker).</p>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.25rem 0;font-size:.85rem;color:var(--muted)">🔧 <strong style="color:var(--ink)">systemd:</strong> gestiona tots els dimonis al Linux modern via units (<code>.service</code>).</li>
+          <li style="padding:.25rem 0;font-size:.85rem;color:var(--muted)">🪟 <strong style="color:var(--ink)">Windows Services:</strong> equivalent Windows. Gestió amb <code>services.msc</code> o PowerShell.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="lab-card fi">
+      <div class="lab-header">
+        <span class="lab-icon">🧪</span>
+        <div class="lab-title-block">
+          <h4>Lab 6.1 — Gestió avançada de processos: prioritat, cgroups i processos zombies</h4>
+          <p>Controla els recursos d'un servei amb cgroups, gestiona prioritats i detecta zombies</p>
+        </div>
+        <div class="lab-os-tags"><span class="os-tag os-both">🔀 Ambdós</span></div>
+      </div>
+      <div class="lab-body">
+        <ul class="lab-steps">
+          <li><strong>Ubuntu — Crea un zombie:</strong> Executa aquest codi Python que crea un procés fill zombie: <code>python3 -c "import os,time; pid=os.fork(); (os.getpid()==pid and os._exit(0)) or time.sleep(60)"</code>. Detecta-lo amb <code>ps aux | grep Z</code>. Identifica el pare i comprova per quin motiu no es pot matar directament el zombie.</li>
+          <li><strong>Ubuntu — Limita un servei amb cgroups:</strong> Instal·la Apache (<code>sudo apt install apache2</code>). Edita la unit amb <code>sudo systemctl edit apache2</code> i afegeix <code>CPUQuota=20%</code> i <code>MemoryMax=256M</code>. Verifica amb <code>systemctl show apache2 | grep CPU</code> i testa la limitació amb un benchmark (<code>ab -n 1000 -c 50 http://localhost/</code>).</li>
+          <li><strong>Ubuntu — nice/renice:</strong> Executa un script CPU-intensiu amb prioritat baixa (<code>nice -n 19 bash -c 'while true; do :; done'</code>). Comprova a htop que la seva prioritat (NI=19) no interfereix amb altres processos. Canvia la prioritat en calent amb <code>renice</code>.</li>
+          <li><strong>Windows — Prioritats:</strong> Obre el Task Manager → pestanya Detalls → clic dret sobre un procés → Establir prioritat. Canvia la prioritat de Notepad a "Per sota del normal" i comprova la diferència a l'executar tasques amb alta càrrega.</li>
+          <li><strong>Documentació:</strong> Crea un informe de l'estat dels processos del teu sistema: processos per usuari, els 5 que més CPU consumeixen, els 5 amb més RAM, si n'hi ha algun zombie i quants dimonis hi ha actius (<code>ps -ef | grep " 1 " | wc -l</code>).</li>
+        </ul>
+        <div class="lab-entrega"><strong>📋 Documenta:</strong> Captura del procés zombie amb <code>ps aux</code>. Verificació de la limitació cgroups d'Apache amb el benchmark. Informe complet de l'estat dels processos del sistema.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRÀCTICA FINAL -->
+<section class="s-dark">
+  <div class="container">
+    <div class="section-tag tag-teal fi">Pràctica Final Integradora</div>
+    <h2 class="fi">Sistema de monitoratge professional per a TechCorp S.L.</h2>
+    <p class="lead fi">Integra tots els continguts del RA6: monitoratge en temps real, continu, anàlisi de logs, alertes i gestió de processos en un entorn de producció simulat.</p>
+
+    <div class="lab-card fi">
+      <div class="lab-header">
+        <span class="lab-icon">🏆</span>
+        <div class="lab-title-block">
+          <h4>Pràctica Integradora — Infraestructura de monitoratge i diagnosi de TechCorp</h4>
+          <p>Ubuntu Server + Windows Server + Prometheus + Grafana + ELK · Durada: 5–6h · Nivell CFGS avançat</p>
+        </div>
+        <div class="lab-os-tags"><span class="os-tag os-both">🔀 Ambdós</span></div>
+      </div>
+      <div class="lab-body">
+        <p>TechCorp t'ha encomanat dissenyar i implementar la infraestructura completa de monitoratge per a un parc de servidors: 2 Ubuntu (web + BD) i 1 Windows Server.</p>
+
+        <h5>📋 FASE 1 — Monitoratge en temps real i baseline</h5>
+        <ul class="lab-steps">
+          <li><strong>Estableix la baseline:</strong> Per a cada servidor, documenta els valors normals (sense càrrega) de CPU, RAM, disc i xarxa. Usa htop (Ubuntu) i Task Manager (Windows). Anota: CPU idle%, RAM available, disc %util, xarxa MB/s.</li>
+          <li><strong>Eina de temps real avançada:</strong> Instal·la <code>btop</code> als servidors Ubuntu. Configura-lo per mostrar: CPU per nucli, RAM amb buff/cache, top 10 processos, I/O disc i tràfic de xarxa simultàniament. Captura una pantalla completa.</li>
+          <li><strong>sar — Recopilació automàtica:</strong> Configura sysstat a tots els Ubuntu. Programa una recopilació cada 5 minuts. Comprova que genera dades a <code>/var/log/sysstat/</code> i que pots consultar les de la darrera hora amb <code>sar -u 1</code>.</li>
+        </ul>
+
+        <h5>📋 FASE 2 — Stack de monitoratge continu</h5>
+        <ul class="lab-steps">
+          <li><strong>Desplegament Prometheus + Grafana:</strong> Instal·la Prometheus al servidor de monitoratge central. Desplegua Node Exporter a cada servidor Ubuntu i Windows Exporter al Windows Server. Configura el prometheus.yml per fer scraping dels 3 servidors.</li>
+          <li><strong>Dashboards Grafana:</strong> Crea un dashboard amb: CPU i RAM per servidor (comparació en temps real), espai de disc (barra de progrés amb threshold de colors: verd &lt;70%, groc 70-85%, vermell &gt;85%), tràfic de xarxa agregat i top 5 processos per CPU.</li>
+          <li><strong>Alertes:</strong> Configura alertes via Alertmanager (o Grafana): CPU >80% durant 5min, RAM disponible &lt;512MB, Disc &lt;15% lliure, servei caigut (up == 0). Les alertes han d'anar a un canal de Slack o a un email.</li>
+        </ul>
+
+        <h5>📋 FASE 3 — Centralització i anàlisi de logs</h5>
+        <ul class="lab-steps">
+          <li><strong>Logs Ubuntu centralitzats:</strong> Configura rsyslog per reenviar tots els logs de nivell warning o superior al servidor central. Al servidor central, agrupa i filtra els logs per servidor d'origen. Crea un script que generi un resum diari de warnings/errors.</li>
+          <li><strong>Logs Windows:</strong> Configura subscripcions d'events de Windows Event Log per recollir els Event IDs crítics (4625, 4720, 4728, 41, 7036) dels clients Windows. Crea un script PowerShell que generi un informe HTML diari d'events de seguretat.</li>
+          <li><strong>Detecció d'atac:</strong> Simula un atac de força bruta SSH (10 intents fallits). Verifica que apareix a auth.log, a journalctl i a Grafana (si has afegit un counter de logins fallits). Documenta el procés de detecció pas a pas.</li>
+        </ul>
+
+        <h5>📋 FASE 4 — Gestió de processos i incidents</h5>
+        <ul class="lab-steps">
+          <li><strong>Limitació de recursos:</strong> Configura cgroups per limitar MySQL al 60% de CPU i 2GB de RAM. Configura Nginx al 30% de CPU. Verifica les limitacions sota càrrega.</li>
+          <li><strong>Script d'autorecuperació:</strong> Crea un script que monitoritzi el procés nginx cada 30s. Si nginx no respon (curl http://localhost retorna error), el reinicia automàticament i registra l'incident al log. Vincula-ho a un cron o un systemd timer.</li>
+          <li><strong>Simulació d'incident:</strong> Atura nginx intencionadament. Comprova que: (a) l'alerta de Prometheus s'activa, (b) el script d'autorecuperació el reinicia, (c) el log registra l'incident. Documenta el temps entre la caiguda i la recuperació (MTTR).</li>
+        </ul>
+
+        <h5>📋 FASE 5 — Documentació tècnica</h5>
+        <ul class="lab-steps">
+          <li><strong>Runbook de monitoratge:</strong> Document que descriu: (1) l'arquitectura del sistema de monitoratge (diagrama), (2) llista de mètriques monitorades i els seus thresholds, (3) procediment d'escalada d'alertes, (4) guia de diagnosi per als 5 alertes més comuns.</li>
+          <li><strong>Informe de baseline:</strong> Taula comparativa de les mètriques baseline de cada servidor. Base per detectar futures desviacions.</li>
+          <li><strong>Post-mortem de l'incident:</strong> Documenta la simulació d'incident de nginx en format post-mortem: timeline, causa arrel, impacte, detecció, resolució i mesures preventives.</li>
+        </ul>
+
+        <div class="lab-entrega">
+          <strong>📦 Lliurament complet:</strong><br>
+          • Arxiu prometheus.yml i alertes configurades<br>
+          • Captura del dashboard Grafana complet amb dades reals<br>
+          • Script d'autorecuperació de serveis (bash)<br>
+          • Script d'informe diari de logs (bash + PowerShell)<br>
+          • Runbook de monitoratge (PDF)<br>
+          • Informe de baseline de cada servidor<br>
+          • Post-mortem de l'incident simulat
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PREGUNTES -->
+<section id="preguntes" class="s-cream">
+  <div class="container">
+    <div class="ra-banner ra-preguntes fi">
+      <div class="ra-num">?</div>
+      <div>
+        <h2>Preguntes teòriques — RA6</h2>
+        <p>10 preguntes de nivell CFGS. Sense resposta — per a reflexió i preparació d'examen.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-pregs fi">Monitoratge i rendiment</div>
+    <h2 class="fi">Preguntes sobre mètriques, eines i interpretació</h2>
+    <div class="grid fi" style="gap:.9rem;margin-bottom:3rem">
+
+      <div class="q-card">
+        <div class="q-num">1</div>
+        <div class="q-body">
+          <h4>Explica el concepte de "load average" a Linux. En un servidor amb 8 nuclis, interpreta els valors "load average: 4.5, 8.2, 12.1". Quin valor és normal i quin indica sobrecàrrega? Per quin motiu el load a 15 minuts és molt superior al d'1 minut? Descriu quin tipus de tasques podrien causar un load alt amb una CPU idle alta (la paradoxa del iowait).</h4>
+          <p>Diferencia entre un procés CPU-bound i un I/O-bound. Com es manifesta cadascun a la sortida de top/htop?</p>
+          <span class="q-tag qt-ubuntu">Load Average</span><span class="q-tag qt-both">CPU</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">2</div>
+        <div class="q-body">
+          <h4>Un servidor reporta els valors següents a vmstat: <code>si=450, so=280, wa=22</code>. Explica el significat de cada camp, interpreta l'estat del sistema i descriu les accions correctores que prendries (en ordre de prioritat). Per quin motiu l'ús de swap es produeix fins i tot quan queda RAM "disponible" al camp free de vmstat? Quina diferència hi ha entre l'OOM Killer i el swap?</h4>
+          <p>Quina diferència hi ha entre el camp "free" i el camp "available" de la sortida de <code>free -h</code>? Per quin camp t'has de fixar realment per saber si hi ha mancança de RAM?</p>
+          <span class="q-tag qt-ubuntu">RAM/Swap</span><span class="q-tag qt-both">vmstat</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">3</div>
+        <div class="q-body">
+          <h4>Compara les eines Prometheus+Grafana, Zabbix i Nagios per a un entorn empresarial de 100 servidors. Per a cada una: arquitectura (push vs pull), facilitat d'instal·lació, capacitat d'alertes, visualització i cost (econòmic i de manteniment). Quina recomanaries per a una startup tecnològica amb equip IT de 2 persones? I per a un banc amb equip de 20 persones? Justifica les respostes.</h4>
+          <p>Per quin motiu el model "pull" de Prometheus és considerat més fiable que el model "push" per a la detecció de servidors caiguts?</p>
+          <span class="q-tag qt-mon">Prometheus</span><span class="q-tag qt-both">Zabbix</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">4</div>
+        <div class="q-body">
+          <h4>Descriu el sistema de logging de Linux modern: la relació entre systemd-journald i rsyslog/syslog-ng. Per quin motiu coexisteixen els dos sistemes? Quins avantatges ofereix journald (format binari indexat) respecte als logs de text pla, i quins desavantatges? En quin cas és útil tenir els dos sistemes actius simultàniament?</h4>
+          <p>Per quin motiu no es recomana deshabilitar rsyslog fins i tot tenint journald actiu en un servidor de producció? Pensa en escenaris de recuperació i auditoria externa.</p>
+          <span class="q-tag qt-ubuntu">journald</span><span class="q-tag qt-teal">Logs</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-tag tag-pregs fi">Logs, processos i diagnosi</div>
+    <h2 class="fi">Preguntes sobre logs, processos i incidents</h2>
+    <div class="grid fi" style="gap:.9rem">
+
+      <div class="q-card">
+        <div class="q-num">5</div>
+        <div class="q-body">
+          <h4>Descriu el significat dels Event IDs 4625, 4624, 4720 i 4728 al Visor d'Esdeveniments de Windows. Per a cada un: qui el genera, quan apareix i quina acció hauria de desencadenar en un SOC (Security Operations Center). Dissenya una regla de correlació que detecti un possible atac de força bruta seguit d'un login reeixit a Windows (especifica els Event IDs, les condicions i la finestra temporal).</h4>
+          <p>Quin és el valor de l'auditoria de "Logon/Logoff" per als equips d'una empresa? Pot tenir impacte negatiu en el rendiment del sistema activar un nivell d'auditoria massa alt?</p>
+          <span class="q-tag qt-win">Event IDs</span><span class="q-tag qt-sec">Seguretat</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">6</div>
+        <div class="q-body">
+          <h4>Explica les diferències entre les senyals SIGTERM (15), SIGKILL (9) i SIGSTOP (19) a Linux. Per quin motiu s'ha d'intentar sempre SIGTERM abans de SIGKILL? Quins problemes pot causar matar un procés de base de dades (MySQL, PostgreSQL) amb SIGKILL en lloc de SIGTERM? Descriu el procés de gestió d'un procés zombie: com es detecta, per quin motiu existeix i com s'elimina.</h4>
+          <p>Quin és el paper del procés init (PID 1, systemd) en la gestió de processos zombies? Per quin motiu un procés zombie no ocupa CPU però sí que pot ser un problema?</p>
+          <span class="q-tag qt-ubuntu">Senyals</span><span class="q-tag qt-proc">Zombies</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">7</div>
+        <div class="q-body">
+          <h4>Descriu com els cgroups de Linux permeten limitar els recursos d'un servei systemd. Explica la diferència entre CPUQuota, MemoryMax i MemoryHigh. Per quin motiu és perillós configurar MemoryMax sense MemoryHigh? Descriu l'OOM Killer: quan actua, com decideix quin procés matar (oom_score) i com es pot protegir un servei crític del OOM Killer.</h4>
+          <p>En quin escenari seria recomanable limitar els recursos d'un servei web de producció via cgroups? Quins avantatges té respecte a altres mètodes de control de recursos?</p>
+          <span class="q-tag qt-ubuntu">cgroups</span><span class="q-tag qt-proc">OOM</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">8</div>
+        <div class="q-body">
+          <h4>Explica per quin motiu iostat és superior a simplement mirar l'ús de CPU per diagnosticar un problema de rendiment de disc. Interpreta el camp <code>%util=98%</code> i <code>await=45ms</code> a la sortida d'iostat. En quins casos un %util baix pot amagar un problema de rendiment de disc? Descriu com usaries <code>iotop</code> i <code>lsof</code> junts per identificar quin procés específic i quin fitxer concret estan causant la saturació del disc.</h4>
+          <p>Quina diferència hi ha entre latència d'I/O (await) i throughput (MB/s) com a mètriques de rendiment de disc? Quin és el més important per a una base de dades transaccional?</p>
+          <span class="q-tag qt-ubuntu">iostat</span><span class="q-tag qt-both">Disc</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">9</div>
+        <div class="q-body">
+          <h4>Descriu el procés complet per diagnosticar un servidor web que respon lentament. Aplica el mètode sistemàtic: (1) Observació inicial (quines eines uses i en quin ordre), (2) Hipòtesis possibles (CPU, RAM, disc, xarxa, aplicació), (3) Mesures específiques per a cada hipòtesi, (4) Com confirmes la causa arrel i (5) Accions correctores per a cada causa possible. Especifica les comandes exactes que usaries a Ubuntu.</h4>
+          <p>En quin punt del diagnosi usaries <code>strace</code> i per quin motiu? Quines limitacions té strace (overhead de rendiment, seguretat)?</p>
+          <span class="q-tag qt-ubuntu">Diagnosi</span><span class="q-tag qt-both">Metodologia</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">10</div>
+        <div class="q-body">
+          <h4>Dissenya una estratègia completa de monitoratge per a una empresa de serveis financers (alta disponibilitat, compliment PCI-DSS) amb 50 servidors (30 Linux, 20 Windows). Inclou: eines seleccionades i justificació, mètriques monitorades per capa (infraestructura, SO, aplicació), thresholds d'alerta, escalada d'incidents, retenció de logs (amb consideracions legals), capacitat de correlació de seguretat (SIEM) i impacte del monitoratge en el rendiment dels servidors monitorats. Calcula una estimació d'espai d'emmagatzematge per als logs de 6 mesos.</h4>
+          <p>Quines implicacions de compliment normativa (PCI-DSS, RGPD, ENS) té la retenció i l'anàlisi de logs d'accés i autenticació en el sector financer?</p>
+          <span class="q-tag qt-both">Disseny</span><span class="q-tag qt-sec">PCI-DSS</span><span class="q-tag qt-mon">SIEM</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESUM -->
+<section class="s-cream">
+  <div class="container fi">
+    <div class="section-tag tag-teal">Resum del RA6</div>
+    <h2>El que heu après</h2>
+    <p class="lead">Repàs dels conceptes clau del RA6 i la seva aplicació professional com a tècnics ASIX.</p>
+    <div class="grid g4 fi">
+      <div class="card bl-teal">
+        <div class="card-icon" style="background:#ecfeff">⚡</div>
+        <h3>Temps Real</h3>
+        <p><strong>Linux:</strong> top (us/sy/wa/st, load avg), htop, btop, glances. <strong>Windows:</strong> Task Manager (Ctrl+Shift+Esc), resmon, perfmon. <strong>Clau:</strong> iowait alt = disc, si/so = swap actiu, load/nuclis = saturació.</p>
+      </div>
+      <div class="card bl-mon">
+        <div class="card-icon" style="background:#f0f4ff">📈</div>
+        <h3>Monit. Continu</h3>
+        <p><strong>Stack:</strong> Prometheus (pull, PromQL) + Grafana (dashboards) + Alertmanager. <strong>Alternatives:</strong> Zabbix (agent-based), Netdata (auto). <strong>CLI:</strong> sar -u/-r/-b/-n. Alertes: disc &gt;80%, RAM &lt;512MB.</p>
+      </div>
+      <div class="card bl-ubuntu">
+        <div class="card-icon" style="background:#fff5f1">📋</div>
+        <h3>Logs</h3>
+        <p><strong>Linux:</strong> journalctl (-f, -u, -p, -b, --since). /var/log/auth.log (SSH). logrotate. <strong>Windows:</strong> eventvwr, Get-WinEvent, IDs: 4625 (login fallit), 4624 (ok), 4720 (compte creat), 41 (apagada inesperada).</p>
+      </div>
+      <div class="card bl-green">
+        <div class="card-icon" style="background:#f0fdf4">⚙️</div>
+        <h3>Processos</h3>
+        <p><strong>ps, kill, nice/renice.</strong> Signals: SIGTERM (15, graceful), SIGKILL (9, força). <strong>cgroups:</strong> CPUQuota, MemoryMax. Zombie: fill mort, pare no fa wait(). OOM Killer. <strong>Windows:</strong> Get-Process, Stop-Process, prioritats.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p><strong>RA6 — Monitoratge del Rendiment del Sistema · ASIX · MP0369 · Implantació de Sistemes Operatius</strong></p>
+  <p style="margin-top:.4rem">top · htop · Prometheus · Grafana · sar · journalctl · strace · cgroups · iostat · Event Viewer</p>
+  <p style="margin-top:.4rem">Departament d'Informàtica · Administració de Sistemes Informàtics en Xarxa</p>
+</footer>
+
+<script>
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+}, { threshold: 0.05, rootMargin: '0px 0px -30px 0px' });
+document.querySelectorAll('.fi').forEach(el => io.observe(el));
+</script>
+</body>
+</html>

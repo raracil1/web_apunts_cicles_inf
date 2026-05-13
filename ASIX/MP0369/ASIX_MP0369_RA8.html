@@ -1,0 +1,1530 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RA8 — Implantació de Programari Client/Servidor · ASIX · MP0369</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:       #0b0f18;
+  --paper:     #f3f2ee;
+  --cream:     #eae8e1;
+  --navy:      #18234a;
+  --asix:      #0ea5e9;
+  --asix-l:    #38bdf8;
+  --asix-d:    #0369a1;
+  --win:       #0078d4;
+  --win-d:     #005a9e;
+  --ubuntu:    #e95420;
+  --ubuntu-d:  #c2440e;
+  --green:     #059669;
+  --green-d:   #064e3b;
+  --amber:     #d97706;
+  --amber-d:   #78350f;
+  --purple:    #7c3aed;
+  --purple-d:  #4c1d95;
+  --teal:      #0d9488;
+  --teal-d:    #134e4a;
+  --muted:     #6b6f85;
+  --border:    #d4d0c8;
+  --card:      #ffffff;
+  --term:      #0e1117;
+  --term2:     #151c2e;
+  --radius:    16px;
+  --radius-sm: 8px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);font-size:16px;line-height:1.7;overflow-x:hidden;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(243,242,238,0.93);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:62px;}
+.nav-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:.9rem;color:var(--navy);letter-spacing:-.02em;}
+.nav-logo span{color:var(--asix);}
+.nav-pills{display:flex;gap:.25rem;list-style:none;flex-wrap:wrap;}
+.nav-pills a{text-decoration:none;font-size:.68rem;font-weight:600;padding:.22rem .6rem;border-radius:100px;color:var(--muted);transition:all .2s;border:1px solid transparent;}
+.nav-pills a:hover{color:var(--asix);border-color:var(--asix);background:rgba(14,165,233,.07);}
+
+/* HERO */
+.hero{min-height:100vh;display:grid;place-items:center;background:var(--navy);color:white;position:relative;overflow:hidden;padding:8rem 2rem 4rem;}
+.hero-bg{position:absolute;inset:0;background:
+  radial-gradient(ellipse 65% 50% at 80% 15%,rgba(14,165,233,.32) 0%,transparent 60%),
+  radial-gradient(ellipse 55% 45% at 10% 80%,rgba(13,148,136,.25) 0%,transparent 60%),
+  radial-gradient(ellipse 45% 38% at 50% 105%,rgba(124,58,237,.2) 0%,transparent 55%);}
+.hero-dots{position:absolute;inset:0;opacity:.05;background-image:radial-gradient(rgba(255,255,255,.8) 1px,transparent 1px);background-size:28px 28px;}
+.hero-grid{position:absolute;inset:0;opacity:.04;background-image:linear-gradient(rgba(255,255,255,.4) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.4) 1px,transparent 1px);background-size:48px 48px;}
+.hero-content{position:relative;z-index:1;text-align:center;max-width:880px;}
+.hero-badge{display:inline-flex;align-items:center;gap:.5rem;background:rgba(14,165,233,.15);border:1px solid rgba(14,165,233,.35);color:rgba(186,230,253,.9);font-size:.78rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:.35rem 1rem;border-radius:100px;margin-bottom:1.5rem;}
+.hero h1{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(2.3rem,5.8vw,4.6rem);line-height:1.05;letter-spacing:-.03em;margin-bottom:1.5rem;}
+.hero h1 .a{color:#7dd3fc;} .hero h1 .b{color:#6ee7b7;} .hero h1 .c{color:#c4b5fd;}
+.hero p{font-size:1.02rem;color:rgba(255,255,255,.58);max-width:580px;margin:0 auto 2.5rem;}
+.hero-pills-row{display:flex;justify-content:center;gap:.75rem;flex-wrap:wrap;margin-bottom:2rem;}
+.hero-pill{display:inline-flex;align-items:center;gap:.5rem;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);padding:.48rem 1.05rem;border-radius:10px;font-size:.8rem;font-weight:500;color:white;text-decoration:none;transition:all .25s;}
+.hero-pill:hover{background:rgba(255,255,255,.14);transform:translateY(-2px);}
+.hero-pill .dot{width:9px;height:9px;border-radius:50%;}
+.scroll-hint{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.4rem;color:rgba(255,255,255,.28);font-size:.72rem;letter-spacing:.1em;}
+.scroll-hint::after{content:'';display:block;width:1px;height:36px;background:linear-gradient(to bottom,rgba(255,255,255,.3),transparent);animation:pulse 2s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:.3}50%{opacity:1}}
+
+/* LAYOUT */
+section{padding:5.5rem 2rem;}
+.container{max-width:1080px;margin:0 auto;}
+.section-tag{font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;display:flex;align-items:center;gap:.5rem;margin-bottom:.9rem;}
+.section-tag::before{content:'';display:block;width:20px;height:2px;}
+.tag-asix{color:var(--asix);} .tag-asix::before{background:var(--asix);}
+.tag-win{color:var(--win);} .tag-win::before{background:var(--win);}
+.tag-ubuntu{color:var(--ubuntu);} .tag-ubuntu::before{background:var(--ubuntu);}
+.tag-green{color:var(--green);} .tag-green::before{background:var(--green);}
+.tag-amber{color:var(--amber);} .tag-amber::before{background:var(--amber);}
+.tag-teal{color:var(--teal);} .tag-teal::before{background:var(--teal);}
+.tag-purple{color:var(--purple);} .tag-purple::before{background:var(--purple);}
+
+h2{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(1.6rem,3.2vw,2.4rem);line-height:1.1;letter-spacing:-.025em;color:var(--navy);margin-bottom:.9rem;}
+h3{font-family:'Syne',sans-serif;font-weight:700;font-size:1.1rem;color:var(--navy);margin-bottom:.6rem;}
+h4{font-family:'Syne',sans-serif;font-weight:700;font-size:.94rem;color:var(--navy);margin-bottom:.4rem;}
+.lead{font-size:1.02rem;color:var(--muted);max-width:720px;margin-bottom:2.5rem;line-height:1.75;}
+
+/* CARDS */
+.grid{display:grid;gap:1.25rem;}
+.g2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr));}
+.g3{grid-template-columns:repeat(auto-fit,minmax(240px,1fr));}
+.g4{grid-template-columns:repeat(auto-fit,minmax(196px,1fr));}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.75rem;transition:transform .2s,box-shadow .2s;}
+.card:hover{transform:translateY(-3px);box-shadow:0 12px 32px rgba(24,35,74,.09);}
+.card p{color:var(--muted);font-size:.91rem;}
+.card-icon{width:44px;height:44px;border-radius:10px;display:grid;place-items:center;font-size:1.3rem;margin-bottom:.9rem;}
+.bl-asix{border-left:3px solid var(--asix);}
+.bl-win{border-left:3px solid var(--win);}
+.bl-ubuntu{border-left:3px solid var(--ubuntu);}
+.bl-green{border-left:3px solid var(--green);}
+.bl-amber{border-left:3px solid var(--amber);}
+.bl-teal{border-left:3px solid var(--teal);}
+.bl-purple{border-left:3px solid var(--purple);}
+
+/* RA BANNER */
+.ra-banner{border-radius:var(--radius);padding:1.5rem 2rem;display:flex;align-items:center;gap:1.25rem;margin-bottom:3rem;color:white;}
+.ra-num{font-family:'Syne',sans-serif;font-weight:800;font-size:2.4rem;opacity:.22;flex-shrink:0;line-height:1;}
+.ra-banner h2{color:white;font-size:1.32rem;margin-bottom:.2rem;}
+.ra-banner p{color:rgba(255,255,255,.7);font-size:.87rem;}
+.ra-asix{background:linear-gradient(135deg,var(--asix-d),var(--asix));}
+.ra-win{background:linear-gradient(135deg,var(--win-d),var(--win));}
+.ra-ubuntu{background:linear-gradient(135deg,var(--ubuntu-d),var(--ubuntu));}
+.ra-green{background:linear-gradient(135deg,var(--green-d),var(--green));}
+.ra-amber{background:linear-gradient(135deg,var(--amber-d),var(--amber));}
+.ra-teal{background:linear-gradient(135deg,var(--teal-d),var(--teal));}
+.ra-purple{background:linear-gradient(135deg,var(--purple-d),var(--purple));}
+.ra-preguntes{background:linear-gradient(135deg,#92400e,#d97706);}
+
+/* CALLOUTS */
+.callout{border-radius:var(--radius);padding:1.4rem 1.7rem;margin:1.5rem 0;display:flex;gap:1rem;align-items:flex-start;}
+.callout-icon{font-size:1.4rem;flex-shrink:0;margin-top:.1rem;}
+.callout p,.callout li{font-size:.91rem;}
+.callout ul{padding-left:1.2rem;} .callout li{margin-bottom:.25rem;}
+.cl-asix{background:rgba(14,165,233,.07);border:1px solid rgba(14,165,233,.22);}
+.cl-blue{background:rgba(0,120,212,.07);border:1px solid rgba(0,120,212,.2);}
+.cl-green{background:rgba(5,150,105,.07);border:1px solid rgba(5,150,105,.2);}
+.cl-amber{background:rgba(217,119,6,.08);border:1px solid rgba(217,119,6,.25);}
+.cl-teal{background:rgba(13,148,136,.07);border:1px solid rgba(13,148,136,.2);}
+.cl-purple{background:rgba(124,58,237,.07);border:1px solid rgba(124,58,237,.2);}
+.cl-ubuntu{background:rgba(233,84,32,.07);border:1px solid rgba(233,84,32,.2);}
+.cl-red{background:rgba(220,38,38,.07);border:1px solid rgba(220,38,38,.2);}
+
+/* TERMINAL */
+.terminal{background:var(--term);border-radius:var(--radius-sm);overflow:hidden;margin:.75rem 0;font-family:'JetBrains Mono',monospace;font-size:.79rem;}
+.term-bar{background:var(--term2);padding:.55rem 1rem;display:flex;align-items:center;gap:.5rem;border-bottom:1px solid rgba(255,255,255,.06);}
+.term-dot{width:11px;height:11px;border-radius:50%;}
+.term-title{color:rgba(255,255,255,.38);font-size:.72rem;letter-spacing:.05em;margin-left:.25rem;}
+.term-os{font-size:.67rem;font-weight:600;padding:.1rem .5rem;border-radius:4px;margin-left:auto;}
+.term-os-win{background:rgba(0,120,212,.25);color:#7dd3fc;}
+.term-os-ubuntu{background:rgba(233,84,32,.25);color:#f4956a;}
+.term-os-both{background:rgba(14,165,233,.25);color:#7dd3fc;}
+.term-os-ps{background:rgba(0,120,212,.3);color:#93c5fd;}
+.term-body{padding:1rem 1.25rem;line-height:1.85;}
+.pb .prompt-ps{color:#93c5fd;}
+.pb .prompt-win{color:#7dd3fc;}
+.pb .prompt-ub{color:#f4956a;}
+.pb .cmd{color:#e2e8f0;}
+.pb .out{color:#94a3b8;}
+.pb .comment{color:#475569;}
+.pb .ok{color:#6ee7b7;}
+.pb .err{color:#fca5a5;}
+.pb .warn{color:#fbbf24;}
+.pb .path{color:#fbbf24;}
+.pb .flag{color:#c084fc;}
+.pb .str{color:#86efac;}
+.pb .num{color:#fca5a5;}
+.pb .xml{color:#7dd3fc;}
+.pb .key{color:#f9a8d4;}
+.pb .val{color:#86efac;}
+.pb .hi{color:#ffd700;font-weight:700;}
+
+/* LAB CARD */
+.lab-card{background:linear-gradient(135deg,#0e1117,#151c2e);border:1px solid rgba(255,255,255,.08);border-radius:var(--radius);overflow:hidden;margin:2rem 0;}
+.lab-header{padding:1rem 1.5rem;display:flex;align-items:center;gap:1rem;border-bottom:1px solid rgba(255,255,255,.07);}
+.lab-icon{font-size:1.5rem;flex-shrink:0;}
+.lab-tb h4{font-family:'Syne',sans-serif;font-weight:700;font-size:.98rem;color:white;margin:0 0 .1rem;}
+.lab-tb p{font-size:.78rem;color:rgba(255,255,255,.45);margin:0;}
+.lab-os-tags{display:flex;gap:.4rem;margin-left:auto;}
+.os-tag{font-size:.67rem;font-weight:700;padding:.2rem .65rem;border-radius:100px;letter-spacing:.04em;white-space:nowrap;}
+.os-win{background:rgba(0,120,212,.3);color:#7dd3fc;border:1px solid rgba(0,120,212,.4);}
+.os-ubuntu{background:rgba(233,84,32,.3);color:#f4956a;border:1px solid rgba(233,84,32,.4);}
+.os-both{background:rgba(14,165,233,.3);color:#7dd3fc;border:1px solid rgba(14,165,233,.4);}
+.os-doc{background:rgba(13,148,136,.3);color:#5eead4;border:1px solid rgba(13,148,136,.4);}
+.lab-body{padding:1.5rem;}
+.lab-body p{color:rgba(255,255,255,.68);font-size:.9rem;margin-bottom:.75rem;}
+.lab-body h5{font-family:'Syne',sans-serif;font-weight:700;font-size:.85rem;color:rgba(255,255,255,.9);margin:.75rem 0 .4rem;}
+.lab-entrega{background:rgba(14,165,233,.1);border:1px solid rgba(14,165,233,.25);border-radius:var(--radius-sm);padding:.85rem 1.1rem;margin-top:1rem;font-size:.83rem;color:rgba(255,255,255,.7);}
+.lab-entrega strong{color:#7dd3fc;}
+
+/* TABLE */
+.ptable{width:100%;border-collapse:collapse;font-size:.87rem;}
+.ptable th,.ptable td{padding:.8rem 1rem;text-align:left;border-bottom:1px solid var(--border);}
+.ptable th{background:var(--navy);color:white;font-family:'Syne',sans-serif;font-weight:700;}
+.ptable th:first-child{border-radius:8px 0 0 0;} .ptable th:last-child{border-radius:0 8px 0 0;}
+.ptable tr:hover td{background:var(--cream);}
+.badge{display:inline-block;padding:.14rem .55rem;border-radius:100px;font-size:.72rem;font-weight:700;font-family:'Syne',sans-serif;}
+.b-asix{background:rgba(14,165,233,.12);color:var(--asix-d);}
+.b-win{background:rgba(0,120,212,.12);color:var(--win);}
+.b-green{background:rgba(5,150,105,.12);color:var(--green);}
+.b-amber{background:rgba(217,119,6,.15);color:#92400e;}
+.b-teal{background:rgba(13,148,136,.12);color:var(--teal);}
+.b-purple{background:rgba(124,58,237,.12);color:var(--purple);}
+.b-ubuntu{background:rgba(233,84,32,.12);color:var(--ubuntu);}
+.b-red{background:rgba(220,38,38,.1);color:#dc2626;}
+
+/* EX BOX */
+.ex{background:var(--cream);border:1px solid var(--border);border-radius:var(--radius-sm);padding:1rem 1.25rem;margin:.65rem 0;}
+.ex .ex-lbl{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.3rem;}
+.ex p{font-size:.87rem;color:var(--ink);}
+.ex code{font-family:'JetBrains Mono',monospace;font-size:.82rem;background:rgba(14,165,233,.07);padding:.1rem .3rem;border-radius:3px;color:var(--asix-d);}
+.ex-asix .ex-lbl{color:var(--asix-d);}
+.ex-win .ex-lbl{color:var(--win);}
+.ex-ubuntu .ex-lbl{color:var(--ubuntu);}
+.ex-green .ex-lbl{color:var(--green);}
+.ex-teal .ex-lbl{color:var(--teal);}
+
+/* STEPS */
+.steps{counter-reset:st;list-style:none;display:flex;flex-direction:column;gap:.8rem;}
+.steps li{counter-increment:st;display:flex;gap:.9rem;align-items:flex-start;padding:.9rem 1.1rem;background:var(--cream);border-radius:var(--radius-sm);font-size:.9rem;}
+.steps li::before{content:counter(st);flex-shrink:0;width:28px;height:28px;border-radius:50%;background:var(--asix);color:white;display:grid;place-items:center;font-family:'Syne',sans-serif;font-weight:700;font-size:.8rem;}
+.steps li p{color:var(--ink);margin:0;} .steps li strong{color:var(--navy);}
+
+/* Q CARDS */
+.q-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem 2rem;display:flex;gap:1.25rem;align-items:flex-start;transition:transform .2s,box-shadow .2s;}
+.q-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.08);}
+.q-num{flex-shrink:0;width:36px;height:36px;border-radius:50%;background:var(--cream);border:2px solid var(--border);display:grid;place-items:center;font-family:'Syne',sans-serif;font-weight:800;font-size:.88rem;color:var(--asix-d);}
+.q-body h4{margin-bottom:.35rem;color:var(--navy);font-size:.94rem;}
+.q-body p{color:var(--muted);font-size:.85rem;font-style:italic;}
+.q-tag{display:inline-block;padding:.15rem .6rem;border-radius:100px;font-size:.7rem;font-weight:700;margin-top:.5rem;margin-right:.3rem;}
+.qt-doc{background:rgba(14,165,233,.1);color:var(--asix-d);}
+.qt-lic{background:rgba(5,150,105,.1);color:var(--green);}
+.qt-auto{background:rgba(13,148,136,.1);color:var(--teal);}
+.qt-win{background:rgba(0,120,212,.1);color:var(--win);}
+.qt-ubuntu{background:rgba(233,84,32,.1);color:var(--ubuntu);}
+.qt-remote{background:rgba(124,58,237,.1);color:var(--purple);}
+.qt-inc{background:rgba(217,119,6,.1);color:#92400e;}
+
+/* PILLS */
+.pills{display:flex;flex-wrap:wrap;gap:.4rem;margin:.65rem 0;}
+.pill{padding:.22rem .75rem;border-radius:100px;font-size:.78rem;border:1px solid var(--border);background:var(--cream);}
+.pill-a{background:rgba(14,165,233,.1);border-color:rgba(14,165,233,.3);color:var(--asix-d);}
+.pill-w{background:rgba(0,120,212,.1);border-color:rgba(0,120,212,.3);color:var(--win);}
+.pill-u{background:rgba(233,84,32,.1);border-color:rgba(233,84,32,.3);color:var(--ubuntu);}
+.pill-g{background:rgba(5,150,105,.1);border-color:rgba(5,150,105,.3);color:var(--green);}
+.pill-t{background:rgba(13,148,136,.1);border-color:rgba(13,148,136,.3);color:var(--teal);}
+.pill-p{background:rgba(124,58,237,.1);border-color:rgba(124,58,237,.3);color:var(--purple);}
+
+/* SECTION THEMES */
+.s-cream{background:var(--cream);}
+.s-asix{background:#f0f9ff;}
+.s-win{background:#f0f7ff;}
+.s-ubuntu{background:#fff5f1;}
+.s-green{background:#f0fdf4;}
+.s-teal{background:#f0fdfa;}
+.s-amber{background:#fffbeb;}
+.s-purple{background:#faf5ff;}
+.s-dark{background:var(--navy);color:white;}
+.s-dark h2,.s-dark h3,.s-dark h4{color:white;}
+.s-dark .lead{color:rgba(255,255,255,.6);}
+.s-dark .card{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.1);}
+.s-dark .card h3,.s-dark .card h4{color:white;}
+.s-dark .card p{color:rgba(255,255,255,.6);}
+.s-dark .ptable th{background:rgba(255,255,255,.1);}
+.s-dark .ptable td{border-color:rgba(255,255,255,.1);color:rgba(255,255,255,.8);}
+.s-dark .ptable tr:hover td{background:rgba(255,255,255,.05);}
+
+/* DOC TEMPLATE */
+.doc-template{background:white;border:1px solid var(--border);border-radius:var(--radius);padding:2rem;box-shadow:0 4px 20px rgba(0,0,0,.08);margin:1.5rem 0;font-size:.87rem;}
+.doc-template .doc-header{border-bottom:3px solid var(--asix);padding-bottom:1rem;margin-bottom:1.5rem;display:flex;justify-content:space-between;align-items:flex-start;}
+.doc-template .doc-title{font-family:'Syne',sans-serif;font-weight:800;font-size:1.2rem;color:var(--navy);}
+.doc-template .doc-meta{font-size:.8rem;color:var(--muted);text-align:right;}
+.doc-template .doc-section{margin-bottom:1.25rem;}
+.doc-template .doc-section h4{font-family:'Syne',sans-serif;font-weight:700;font-size:.82rem;text-transform:uppercase;letter-spacing:.06em;color:var(--asix-d);margin-bottom:.5rem;}
+.doc-template table{width:100%;border-collapse:collapse;font-size:.83rem;}
+.doc-template table th,.doc-template table td{padding:.5rem .75rem;border:1px solid var(--border);text-align:left;}
+.doc-template table th{background:var(--cream);}
+.doc-template .status-chip{display:inline-block;padding:.12rem .5rem;border-radius:4px;font-size:.72rem;font-weight:700;}
+.status-open{background:rgba(220,38,38,.1);color:#dc2626;}
+.status-progress{background:rgba(217,119,6,.12);color:#92400e;}
+.status-closed{background:rgba(5,150,105,.1);color:var(--green);}
+
+/* ITIL */
+.ticket-flow{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin:1.5rem 0;}
+.tf-step{flex:1;min-width:120px;background:white;border:1px solid var(--border);border-radius:var(--radius-sm);padding:.85rem;text-align:center;}
+.tf-step .tf-num{font-family:'Syne',sans-serif;font-weight:800;font-size:.72rem;color:var(--asix-d);letter-spacing:.06em;text-transform:uppercase;margin-bottom:.3rem;}
+.tf-step h5{font-family:'Syne',sans-serif;font-weight:700;font-size:.82rem;color:var(--navy);}
+.tf-step p{font-size:.75rem;color:var(--muted);margin-top:.2rem;}
+.tf-arrow{color:var(--muted);font-size:1rem;flex-shrink:0;}
+
+/* XML BLOCK */
+.xml-block{background:var(--term);border-radius:var(--radius-sm);padding:1.2rem;margin:.75rem 0;font-family:'JetBrains Mono',monospace;font-size:.78rem;line-height:1.75;overflow-x:auto;}
+.xb .tag{color:#7dd3fc;}
+.xb .attr{color:#f9a8d4;}
+.xb .val{color:#86efac;}
+.xb .comment{color:#475569;}
+
+hr{border:none;border-top:1px solid var(--border);margin:3rem 0;}
+.fi{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fi.in{opacity:1;transform:none;}
+footer{background:var(--ink);color:rgba(255,255,255,.4);padding:3rem 2rem;text-align:center;font-size:.85rem;}
+footer strong{color:white;}
+@media(max-width:640px){.nav-pills{display:none;}.lab-os-tags{display:none;}.ticket-flow{flex-direction:column;}}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">ASIX · <span>MP0369 RA8</span> · Client/Servidor</div>
+  <ul class="nav-pills">
+    <li><a href="#doc">Documentació</a></li>
+    <li><a href="#manuals">Manuals</a></li>
+    <li><a href="#llicencies">Llicències</a></li>
+    <li><a href="#desatesa">Desatesa</a></li>
+    <li><a href="#resposta">Fitxers resp.</a></li>
+    <li><a href="#wsus">WSUS/apt</a></li>
+    <li><a href="#incidents">Incidències</a></li>
+    <li><a href="#protocols">Protocols</a></li>
+    <li><a href="#remot">Adm. Remota</a></li>
+    <li><a href="#preguntes">Preguntes</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div><div class="hero-dots"></div><div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-badge">🖥️ ASIX · MP0369 · RA8 · Implantació Client/Servidor</div>
+    <h1><span class="a">Programari</span><br><span class="b">Client</span>/<span class="c">Servidor</span></h1>
+    <p>Documentació tècnica, instal·lacions desateses, WSUS/apt-mirror, administració remota, gestió d'incidències i protocols d'actuació professional.</p>
+    <div class="hero-pills-row">
+      <a href="#doc"       class="hero-pill"><span class="dot" style="background:#7dd3fc"></span>Documentació</a>
+      <a href="#llicencies"class="hero-pill"><span class="dot" style="background:#6ee7b7"></span>Llicències</a>
+      <a href="#desatesa"  class="hero-pill"><span class="dot" style="background:#5eead4"></span>Instal·lació desatesa</a>
+      <a href="#wsus"      class="hero-pill"><span class="dot" style="background:#fbbf24"></span>WSUS & apt-mirror</a>
+      <a href="#remot"     class="hero-pill"><span class="dot" style="background:#c4b5fd"></span>Admin. Remota</a>
+      <a href="#preguntes" class="hero-pill"><span class="dot" style="background:#fcd34d"></span>10 Preguntes</a>
+    </div>
+  </div>
+  <div class="scroll-hint">DESPLAÇA</div>
+</section>
+
+<!-- INTRO RA8 -->
+<section class="s-cream" id="intro">
+  <div class="container fi">
+    <div class="section-tag tag-asix">Resultat d'Aprenentatge 8 · MP0369</div>
+    <h2>Implanta programari específic amb estructura client/servidor</h2>
+    <p class="lead">Donant resposta als requisits funcionals. El RA8 cobreix des de la redacció de documentació tècnica fins a la gestió d'incidències, passant per la implantació de sistemes d'instal·lació automatitzada, servidors d'actualitzacions centralitzades i l'administració remota segura de sistemes.</p>
+    <div class="grid g4 fi">
+      <div class="card bl-asix">
+        <div class="card-icon" style="background:#f0f9ff">📝</div>
+        <h3>Documentació (T1–T2)</h3>
+        <p>Documentació tècnica, manuals d'instal·lació i configuració. Estàndards i bones pràctiques de documentació en entorns TI.</p>
+        <div class="pills"><span class="pill pill-a">T1–T2</span></div>
+      </div>
+      <div class="card bl-green">
+        <div class="card-icon" style="background:#f0fdf4">⚖️</div>
+        <h3>Llicències & Auto (T3–T5)</h3>
+        <p>Llicències de client i servidor (CAL, OEM, Volume), instal·lacions desateses i fitxers de resposta (autounattend.xml, preseed).</p>
+        <div class="pills"><span class="pill pill-g">T3–T5</span></div>
+      </div>
+      <div class="card bl-teal">
+        <div class="card-icon" style="background:#f0fdfa">🔄</div>
+        <h3>Actualitzacions (T6)</h3>
+        <p>WSUS (Windows Server Update Services), apt-cacher-ng, apt-mirror. Gestió centralitzada d'actualitzacions en entorns d'empresa.</p>
+        <div class="pills"><span class="pill pill-t">T6</span></div>
+      </div>
+      <div class="card bl-purple">
+        <div class="card-icon" style="background:#faf5ff">🔧</div>
+        <h3>Incidències & Remot (T7–T9)</h3>
+        <p>Parts d'incidències (ITIL), protocols d'actuació, administració remota (RDP, SSH, VNC, WinRM, Ansible).</p>
+        <div class="pills"><span class="pill pill-p">T7–T9</span></div>
+      </div>
+    </div>
+    <div class="callout cl-asix fi" style="margin-top:1.5rem">
+      <span class="callout-icon">🔬</span>
+      <div><strong>Llegenda:</strong> <span style="color:var(--win);font-weight:600">🪟 PowerShell/Windows</span> — WSUS, WinRM, RDP, autounattend.xml. <span style="color:var(--ubuntu);font-weight:600">🐧 Ubuntu/Linux</span> — apt-mirror, SSH, preseed, Ansible. <span style="color:var(--asix-d);font-weight:600">🔀 Ambdós</span> — documentació, incidències, administració remota.</div>
+    </div>
+  </div>
+</section>
+
+<!-- T1 — DOCUMENTACIÓ TÈCNICA -->
+<section id="doc" class="s-asix">
+  <div class="container">
+    <div class="ra-banner ra-asix fi">
+      <div class="ra-num">1</div>
+      <div><h2>Interpretació, anàlisi i elaboració de documentació tècnica</h2>
+        <p>Estàndards de documentació, eines, tipus de documents i com llegir fitxers tècnics (man pages, RFC, datasheets, changelogs).</p></div>
+    </div>
+
+    <div class="section-tag tag-asix fi">Per què la documentació importa</div>
+    <h2 class="fi">La documentació com a actiu crític de TI</h2>
+    <p class="lead fi">En TI professional, un sistema sense documentació és un <em>sistema de caixa negra</em>: quan falla (i fallarà), ningú sap com funciona per arreglar-lo. La documentació tècnica és el conjunt de documents que descriuen l'arquitectura, la configuració, els procediments i el manteniment dels sistemes. No és opcional: és part del servei que es lliura.</p>
+
+    <div class="grid g3 fi">
+      <div class="card bl-asix">
+        <div class="card-icon" style="background:#f0f9ff">📐</div>
+        <h3>Tipus de documentació tècnica</h3>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.87rem;color:var(--muted)">🗺️ <strong style="color:var(--ink)">Diagrames d'arquitectura:</strong> topologia de xarxa, diagrama de servidors, fluxos de dades. Eines: Lucidchart, draw.io, Visio.</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.87rem;color:var(--muted)">📋 <strong style="color:var(--ink)">Inventari d'actius (CMDB):</strong> llista de tots els equips, IPs, sistemes operatius, software, responsable. Eines: GLPI, OCS Inventory, Snipe-IT.</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.87rem;color:var(--muted)">📖 <strong style="color:var(--ink)">Runbooks / SOP:</strong> procediments pas a pas per a tasques recurrents. "Com reiniciar el servidor de correu", "Com fer un backup manual".</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.87rem;color:var(--muted)">🔧 <strong style="color:var(--ink)">Documentació de configuració:</strong> fitxers de configuració comentats, valors usats, raons per les decisions.</li>
+          <li style="padding:.3rem 0;font-size:.87rem;color:var(--muted)">📊 <strong style="color:var(--ink)">Changelog / Release Notes:</strong> registre de canvis aplicats al sistema (qui, quan, què, per quin motiu).</li>
+        </ul>
+      </div>
+      <div class="card bl-asix">
+        <div class="card-icon" style="background:#f0f9ff">📚</div>
+        <h3>Fonts de documentació tècnica externes</h3>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.87rem;color:var(--muted)">📄 <strong style="color:var(--ink)">Man pages (<code>man</code>):</strong> referència definitiva de cada comanda a Linux. Sempre llegir la secció SYNOPSIS, OPTIONS i EXAMPLES.</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.87rem;color:var(--muted)">📡 <strong style="color:var(--ink)">RFC (Request for Comments):</strong> estàndards de protocols d'Internet (IETF). Ex: RFC 7321 = DNS, RFC 5321 = SMTP, RFC 8446 = TLS 1.3.</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.87rem;color:var(--muted)">📰 <strong style="color:var(--ink)">KB Microsoft (Knowledge Base):</strong> articles tècnics de Microsoft sobre errors, configuració i solucions. Format KB + número.</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.87rem;color:var(--muted)">🐧 <strong style="color:var(--ink)">Ubuntu Server Guide / man.openbsd.org:</strong> documentació oficial de les distribucions.</li>
+          <li style="padding:.3rem 0;font-size:.87rem;color:var(--muted)">🔖 <strong style="color:var(--ink)">CVE / NVD:</strong> National Vulnerability Database. Cada CVE té descripció tècnica, puntuació CVSS i mitigació.</li>
+        </ul>
+      </div>
+      <div class="card bl-asix">
+        <div class="card-icon" style="background:#f0f9ff">📏</div>
+        <h3>Estàndards de qualitat documental</h3>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.87rem;color:var(--muted)">✍️ <strong style="color:var(--ink)">Claredat:</strong> qualsevol tècnic del teu nivell hauria de poder seguir el document sense preguntar.</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.87rem;color:var(--muted)">🔄 <strong style="color:var(--ink)">Actualització:</strong> un document obsolet és pitjor que cap document. Incloure data de revisió i responsable.</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.87rem;color:var(--muted)">🔢 <strong style="color:var(--ink)">Versionat:</strong> usar control de versions (Git, Confluence, SharePoint) per poder veure l'historial de canvis.</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.87rem;color:var(--muted)">🔍 <strong style="color:var(--ink)">Cerca:</strong> usar etiquetes, índexs i estructura coherent per trobar-ho ràpidament en un incident.</li>
+          <li style="padding:.3rem 0;font-size:.87rem;color:var(--muted)">🔐 <strong style="color:var(--ink)">Confidencialitat:</strong> la documentació amb contrasenyes, IPs internes o arquitectura s'ha de protegir i xifrar.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout cl-asix fi">
+      <span class="callout-icon">🧠</span>
+      <div><strong>Eines de documentació per a tècnics ASIX:</strong>
+        <div class="pills" style="margin-top:.5rem">
+          <span class="pill pill-a">Confluence (wiki empresarial)</span>
+          <span class="pill pill-a">Notion / Obsidian</span>
+          <span class="pill pill-a">draw.io / Lucidchart</span>
+          <span class="pill pill-a">Git (versionat docs)</span>
+          <span class="pill pill-a">MkDocs / Docusaurus</span>
+          <span class="pill pill-t">GLPI (inventari + ticketing)</span>
+          <span class="pill pill-w">SharePoint</span>
+          <span class="pill pill-g">Markdown (.md)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRÀCTICA 1 -->
+    <div class="lab-card fi">
+      <div class="lab-header">
+        <div class="lab-icon">🔬</div>
+        <div class="lab-tb">
+          <h4>Pràctica 8.1 — Elaborar documentació tècnica d'un sistema</h4>
+          <p>Crear la documentació de configuració d'un servidor (inventari, fitxers, diagrama)</p>
+        </div>
+        <div class="lab-os-tags"><span class="os-tag os-both">🔀 Windows + Ubuntu</span></div>
+      </div>
+      <div class="lab-body">
+        <p>Documentarem automàticament la configuració del sistema per generar la base d'una CMDB (Configuration Management Database).</p>
+        <h5>🐧 Ubuntu — Script de documentació automàtica del sistema</h5>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">Terminal — Script de documentació</span><span class="term-os term-os-ubuntu">Ubuntu</span></div>
+          <div class="term-body pb">
+            <span class="comment"># Script que genera un informe de configuració del sistema</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">cat > /usr/local/bin/doc-sistema.sh &lt;&lt; 'EOF'</span><br>
+            <span class="out">#!/bin/bash</span><br>
+            <span class="out">OUTPUT="/tmp/doc-sistema-$(hostname)-$(date +%Y%m%d).md"</span><br>
+            <span class="out">echo "# Documentació del Sistema: $(hostname)" > $OUTPUT</span><br>
+            <span class="out">echo "**Data:** $(date)" >> $OUTPUT</span><br>
+            <span class="out">echo "## Sistema Operatiu" >> $OUTPUT</span><br>
+            <span class="out">lsb_release -a 2>/dev/null >> $OUTPUT</span><br>
+            <span class="out">uname -a >> $OUTPUT</span><br>
+            <span class="out">echo "## Hardware" >> $OUTPUT</span><br>
+            <span class="out">echo "### CPU: $(lscpu | grep 'Model name' | cut -d: -f2 | xargs)" >> $OUTPUT</span><br>
+            <span class="out">echo "### RAM: $(free -h | awk '/^Mem/{print $2}')" >> $OUTPUT</span><br>
+            <span class="out">echo "## Xarxa" >> $OUTPUT</span><br>
+            <span class="out">ip addr show >> $OUTPUT</span><br>
+            <span class="out">echo "## Disc i particions" >> $OUTPUT</span><br>
+            <span class="out">lsblk -f >> $OUTPUT</span><br>
+            <span class="out">df -hT >> $OUTPUT</span><br>
+            <span class="out">echo "## Serveis actius" >> $OUTPUT</span><br>
+            <span class="out">systemctl list-units --type=service --state=active >> $OUTPUT</span><br>
+            <span class="out">echo "## Paquets instal·lats" >> $OUTPUT</span><br>
+            <span class="out">dpkg --get-selections | wc -l >> $OUTPUT</span><br>
+            <span class="out">echo "Informe generat a: $OUTPUT"</span><br>
+            <span class="out">EOF</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">chmod +x /usr/local/bin/doc-sistema.sh && doc-sistema.sh</span>
+          </div>
+        </div>
+        <h5>🪟 Windows — Inventari del sistema amb PowerShell</h5>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">PowerShell — Documentació automàtica</span><span class="term-os term-os-ps">PowerShell</span></div>
+          <div class="term-body pb">
+            <span class="comment"># Generar informe de configuració del sistema en HTML</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">$info = [ordered]@{</span><br>
+            <span class="cmd">    "Nom equip"       = $env:COMPUTERNAME</span><br>
+            <span class="cmd">    "Sistema operatiu"= (Get-WmiObject Win32_OperatingSystem).Caption</span><br>
+            <span class="cmd">    "Versió"          = (Get-WmiObject Win32_OperatingSystem).Version</span><br>
+            <span class="cmd">    "CPU"             = (Get-WmiObject Win32_Processor).Name</span><br>
+            <span class="cmd">    "RAM (GB)"        = [math]::Round((Get-WmiObject Win32_ComputerSystem).TotalPhysicalMemory/1GB,2)</span><br>
+            <span class="cmd">    "Domini"          = (Get-WmiObject Win32_ComputerSystem).Domain</span><br>
+            <span class="cmd">    "IP"              = (Get-NetIPAddress -AddressFamily IPv4 | Where-Object{$_.InterfaceAlias -notlike "*Loopback*"}).IPAddress</span><br>
+            <span class="cmd">    "Data doc"        = Get-Date</span><br>
+            <span class="cmd">}</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">$info | Format-List</span><br>
+            <span class="comment"># Exportar a CSV per la CMDB</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">[PSCustomObject]$info | Export-Csv "C:\docs\inventari-$env:COMPUTERNAME.csv" -NoTypeInformation</span>
+          </div>
+        </div>
+        <div class="lab-entrega"><strong>📋 Lliurament:</strong> (1) Fitxer Markdown generat per l'script d'Ubuntu. (2) Fitxer CSV de Windows. (3) Crea un diagrama de xarxa senzill (draw.io o a mà) del laboratori amb els equips del curs. Inclou: hostname, IP, SO i rol de cada màquina. (4) Per quin motiu és preferible usar UUIDs (en lloc de /dev/sda1) a la documentació de particions?</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- T2 — MANUALS -->
+<section id="manuals" class="s-cream">
+  <div class="container">
+    <div class="ra-banner ra-teal fi">
+      <div class="ra-num">2</div>
+      <div><h2>Manuals d'instal·lació i configuració</h2>
+        <p>Com redactar, estructurar i mantenir manuals tècnics per a sistemes operatius i aplicacions d'empresa.</p></div>
+    </div>
+
+    <div class="section-tag tag-teal fi">Estructura d'un manual tècnic</div>
+    <h2 class="fi">Anatomia d'un manual d'instal·lació professional</h2>
+    <p class="lead fi">Un manual d'instal·lació ben escrit permet a un tècnic replicar la configuració d'un sistema sense cap coneixement previ i sense haver de preguntar. La clau és l'especificitat: cada pas ha d'indicar el comando exacte, el valor a usar i el resultat esperat.</p>
+
+    <div class="grid g2 fi">
+      <div class="card bl-teal">
+        <h3>📋 Seccions obligatòries d'un manual d'instal·lació</h3>
+        <ol class="steps" style="margin-top:.5rem">
+          <li><p><strong>Objectiu i abast:</strong> Per a quin servei és, en quins sistemes s'aplica, qui és el destinatari (admin novell vs expert).</p></li>
+          <li><p><strong>Prerequisits:</strong> Maquinari mínim, SO requerit, ports que cal tenir oberts, credencials necessàries, dependències prèvies.</p></li>
+          <li><p><strong>Procediment d'instal·lació:</strong> Cada pas numerado amb el comand exacte, els valors a introduir i una captura si cal.</p></li>
+          <li><p><strong>Configuració post-instal·lació:</strong> Fitxers de configuració a modificar, paràmetres específics de l'entorn (IPs, noms de domini, contrasenyes).</p></li>
+          <li><p><strong>Verificació:</strong> Com comprovar que la instal·lació ha anat bé. Comandos de test, ports oberts, output esperat.</p></li>
+          <li><p><strong>Solució de problemes freqüents:</strong> Errors habituals, les seves causes i solucions. Arxius de log a consultar.</p></li>
+          <li><p><strong>Desinstal·lació / Rollback:</strong> Com desfer la instal·lació si cal. Imprescindible per a entorns de producció.</p></li>
+        </ol>
+      </div>
+      <div>
+        <div class="card bl-teal" style="margin-bottom:1.25rem">
+          <h3>✅ Bones pràctiques de redacció</h3>
+          <ul style="list-style:none;padding:0">
+            <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.87rem;color:var(--muted)">🎯 <strong style="color:var(--ink)">Usa veu activa i imperativa:</strong> "Executa", "Edita", "Comprova". No "S'ha d'executar".</li>
+            <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.87rem;color:var(--muted)">💻 <strong style="color:var(--ink)">Distingueix comandos del text:</strong> usa blocs de codi (<code>monospace</code>) per als comandos, sortides i noms de fitxers.</li>
+            <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.87rem;color:var(--muted)">⚠️ <strong style="color:var(--ink)">Marca les zones de risc:</strong> "⚠️ Atenció: aquest pas esborra tot el disc", "🔐 Substitueix CONTRASENYA per la real".</li>
+            <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.87rem;color:var(--muted)">🔢 <strong style="color:var(--ink)">Usa variables per als valors que canvien:</strong> <code>IP_SERVIDOR</code>, <code>NOM_DOMINI</code>, <code>VERSIO</code>.</li>
+            <li style="padding:.3rem 0;font-size:.87rem;color:var(--muted)">🧪 <strong style="color:var(--ink)">Prova el manual des de zero:</strong> un manual que no s'ha provat no és fiable. Fes-lo seguir a algú que no sap el sistema.</li>
+          </ul>
+        </div>
+        <div class="card bl-teal">
+          <h3>📌 Exemples de documentació de referència</h3>
+          <div class="ex ex-teal">
+            <div class="ex-lbl">Recursos per aprendre a documentar bé</div>
+            <p>
+              <strong>Ubuntu Server Guide:</strong> ubuntu.com/server/docs<br>
+              <strong>Red Hat Documentation:</strong> access.redhat.com/docs<br>
+              <strong>Microsoft Learn:</strong> learn.microsoft.com<br>
+              <strong>Ansible Galaxy:</strong> Roles amb README exemplars<br>
+              <strong>The Twelve-Factor App:</strong> 12factor.net (documentació de serveis cloud)
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- T3 — LLICÈNCIES -->
+<section id="llicencies" class="s-green">
+  <div class="container">
+    <div class="ra-banner ra-green fi">
+      <div class="ra-num">3</div>
+      <div><h2>Llicències de client i llicències de servidor</h2>
+        <p>CAL (Client Access License), llicències per núcleo, OEM, Volume Licensing, SPLA i llicències de programari lliure en entorns empresarials.</p></div>
+    </div>
+
+    <div class="section-tag tag-green fi">Model de llicències Microsoft</div>
+    <h2 class="fi">Llicències de servidor i d'accés de client (CAL)</h2>
+    <p class="lead fi">El model de llicències de Microsoft per a productes de servidor és complex. Entendre'l és imprescindible per a qualsevol tècnic ASIX que hagi d'implantar o auditar sistemes Windows en una empresa. Adquirir incorrectament les llicències pot resultar en multes i costos inesperats.</p>
+
+    <div class="grid g2 fi">
+      <div class="card bl-win">
+        <div class="card-icon" style="background:#f0f7ff">🖥️</div>
+        <h3>Llicències de Windows Server</h3>
+        <div style="overflow-x:auto">
+          <table class="ptable" style="font-size:.82rem;margin-top:.5rem">
+            <thead><tr><th>Model</th><th>Com es llicencia</th><th>Quan usar</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Per Core (Standard/Datacenter)</strong></td><td>2 llicències de Core per processador físic. Mínim 8 cores per servidor.</td><td>Model actual des de Server 2016. Obligatori per a la majoria de desplegaments.</td></tr>
+              <tr><td><strong>Standard</strong></td><td>Per núcleo. 2 màquines virtuals o 1 host físic.</td><td>PMEs amb pocs servidors virtuals.</td></tr>
+              <tr><td><strong>Datacenter</strong></td><td>Per núcleo. VMs il·limitades al host llicenciat.</td><td>Entorns d'hiperconvergència o moltes VMs.</td></tr>
+              <tr><td><strong>Essentials</strong></td><td>Preu fix. Màxim 25 usuaris, 50 dispositius.</td><td>Microempreses. No necessita CALs addicionals.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card bl-win">
+        <div class="card-icon" style="background:#f0f7ff">👤</div>
+        <h3>CAL — Client Access License</h3>
+        <p style="margin-bottom:.75rem">Per accedir a la majoria de productes de servidor Microsoft (Windows Server, Exchange, SQL Server, SharePoint), cada client necessita una <strong>CAL</strong> addicional a la llicència del servidor.</p>
+        <div style="overflow-x:auto">
+          <table class="ptable" style="font-size:.82rem;margin-top:.5rem">
+            <thead><tr><th>Tipus CAL</th><th>Assignada a</th><th>Quan usar</th></tr></thead>
+            <tbody>
+              <tr><td><strong>User CAL</strong></td><td>Un compte d'usuari</td><td>L'usuari accedeix des de múltiples dispositius (portàtil, mòbil, PC fixe)</td></tr>
+              <tr><td><strong>Device CAL</strong></td><td>Un dispositiu</td><td>Varis usuaris comparteixen el mateix PC (torns de treball, quioscos)</td></tr>
+              <tr><td><strong>RDS CAL</strong></td><td>Usuari/Dispositiu</td><td>Accés a Remote Desktop Services (escriptori remot / Terminal Server)</td></tr>
+              <tr><td><strong>External Connector</strong></td><td>El servidor (il·limitat)</td><td>Usuaris externs (clients, proveïdors) accedeixen al servidor</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout cl-amber fi">
+      <span class="callout-icon">⚠️</span>
+      <div><strong>Trampes habituals en llicències Microsoft:</strong>
+        <ul style="margin-top:.5rem">
+          <li><strong>La llicència del SO no inclou les CALs:</strong> comprar Windows Server 2022 Standard NO inclou les CALs per als clients que s'hi connecten. Cal comprar-les a part.</li>
+          <li><strong>Virtualització i Standard:</strong> Windows Server Standard llicencia 2 VMs. Per a 4 VMs calen 2 llicències Standard (no 1 Datacenter).</li>
+          <li><strong>SQL Server té el seu propi model:</strong> llicències per core o per servidor+CAL, independentment de Windows Server.</li>
+          <li><strong>OEM no és transferible:</strong> la llicència OEM queda lligada al hardware original. No es pot moure a un nou servidor.</li>
+        </ul>
+      </div>
+    </div>
+
+    <hr>
+    <div class="section-tag tag-green fi">Models de llicenciament alternatiu</div>
+    <div class="grid g3 fi">
+      <div class="card bl-green">
+        <div class="card-icon" style="background:#f0fdf4">📦</div>
+        <h3>Volume Licensing (VL)</h3>
+        <p>Per a empreses amb moltes llicències. Programes: <strong>Open License, EA (Enterprise Agreement), CSP (Cloud Solution Provider)</strong>. Avantatges: descomptes per volum, gestió centralitzada al VLSC, Software Assurance (dret d'actualització).</p>
+      </div>
+      <div class="card bl-green">
+        <div class="card-icon" style="background:#f0fdf4">☁️</div>
+        <h3>SPLA — Service Provider License Agreement</h3>
+        <p>Model de subscripció mensual per a proveïdors de serveis (hosters, MSPs) que volen oferir serveis Microsoft als seus clients. Es paga per usuari/mes actiu. Ideal per a empreses que ofereixen VDI, RDS o SaaS basat en Microsoft.</p>
+      </div>
+      <div class="card bl-ubuntu">
+        <div class="card-icon" style="background:#fff5f1">🐧</div>
+        <h3>Llicències en programari lliure</h3>
+        <p>El programari lliure té les seves pròpies consideracions: <strong>Ubuntu LTS</strong> és gratuït però Canonical ofereix suport comercial (Ubuntu Pro). <strong>RHEL</strong> és de pagament per subscripció però FOSS (el codi és obert). <strong>AlmaLinux/Rocky Linux</strong> = RHEL sense suport comercial.</p>
+      </div>
+    </div>
+
+    <!-- PRÀCTICA 2 -->
+    <div class="lab-card fi">
+      <div class="lab-header">
+        <div class="lab-icon">🔬</div>
+        <div class="lab-tb">
+          <h4>Pràctica 8.2 — Auditoria de llicències del sistema</h4>
+          <p>Identificar i documentar les llicències de tot el software instal·lat</p>
+        </div>
+        <div class="lab-os-tags"><span class="os-tag os-both">🔀 Windows + Ubuntu</span></div>
+      </div>
+      <div class="lab-body">
+        <h5>🪟 Windows — Auditoria de llicències i activació</h5>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">PowerShell — Audit de llicències</span><span class="term-os term-os-ps">PowerShell</span></div>
+          <div class="term-body pb">
+            <span class="comment"># Estat d'activació de Windows</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">slmgr /dli</span>          <span class="comment"># Informació bàsica de llicència</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">slmgr /dlv</span>          <span class="comment"># Informació detallada (canal, KMS, MAK…)</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">slmgr /xpr</span>          <span class="comment"># Data d'expiració</span><br><br>
+            <span class="comment"># Llistar tot el software instal·lat (útil per auditar llicències de tercers)</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*,</span><br>
+            <span class="cmd">    "HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*" |</span><br>
+            <span class="cmd">    Select-Object DisplayName, Publisher, DisplayVersion, InstallDate |</span><br>
+            <span class="cmd">    Sort-Object DisplayName |</span><br>
+            <span class="cmd">    Export-Csv "C:\docs\software-inventari.csv" -NoTypeInformation</span><br><br>
+            <span class="comment"># Comptar llicències CAL actives (si és un DC/servidor)</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">Get-WmiObject Win32_TSLicenseKeyPack</span>
+          </div>
+        </div>
+        <h5>🐧 Ubuntu — Auditoria de llicències de paquets</h5>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">Terminal</span><span class="term-os term-os-ubuntu">Ubuntu</span></div>
+          <div class="term-body pb">
+            <span class="comment"># Llistar paquets amb llicències no lliures instal·lats</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">apt install vrms -y && vrms</span><br>
+            <span class="out">Non-free packages installed on hostname:</span><br>
+            <span class="out">firmware-realtek   Firmware for Realtek...</span><br><br>
+            <span class="comment"># Llicència exacta de qualsevol paquet instal·lat</span><br>
+            <span class="prompt-ub">user@host:~$</span> <span class="cmd">apt-cache show nginx | grep -i "license\|section"</span><br><br>
+            <span class="comment"># Llistar TOTS els paquets amb les seves llicències (usa licensecheck)</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">apt install licensecheck -y</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">find /usr/share/doc -name "copyright" | head -20 | xargs licensecheck | sort -u</span><br><br>
+            <span class="comment"># Estat de subscripció Ubuntu Pro</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">pro status</span>
+          </div>
+        </div>
+        <div class="lab-entrega"><strong>📋 Lliurament:</strong> (1) Fitxer CSV amb tot el software de Windows + classificació de llicències (propietari/lliure/gratuït). (2) Llista de paquets no-free a Ubuntu (si n'hi ha). (3) Cas pràctic: l'empresa TechCorp SL té 50 usuaris que usen un servidor Windows Server 2022 Standard per a fitxers (SMB), Remote Desktop (RDS) i Microsoft Exchange. Quantes i quines CALs cal comprar? Justifica-ho.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- T4-5 — INSTAL·LACIÓ DESATESA I FITXERS RESPOSTA -->
+<section id="desatesa" class="s-teal">
+  <div class="container">
+    <div class="ra-banner ra-teal fi">
+      <div class="ra-num">4–5</div>
+      <div><h2>Instal·lacions desateses i fitxers de resposta</h2>
+        <p>Automatitzar la instal·lació de sistemes operatius a escala: autounattend.xml (Windows), preseed/cloud-init (Linux) i Windows Deployment Services (WDS).</p></div>
+    </div>
+
+    <div class="section-tag tag-teal fi">Per quin motiu automatitzar?</div>
+    <h2 class="fi">La necessitat d'instal·lació desatesa en entorns d'empresa</h2>
+    <p class="lead fi">Instal·lar manualment un sistema operatiu en un equip tarda entre 30-60 minuts amb la configuració bàsica. Multiplicat per 50 equips = 50 hores de treball manual i 50 oportunitats d'error. Les <strong>instal·lacions desateses</strong> permeten desplegar sistemes configurats de manera estàndard en minuts, sense intervenció humana.</p>
+
+    <div class="grid g2 fi">
+      <div class="card bl-win">
+        <div class="card-icon" style="background:#f0fdfa">🪟</div>
+        <h3>autounattend.xml — Windows</h3>
+        <p style="margin-bottom:.75rem">L'instal·lador de Windows llegeix el fitxer <code>autounattend.xml</code> (o <code>unattend.xml</code>) durant la instal·lació per respondre automàticament a totes les preguntes. S'ubica a l'arrel del USB d'instal·lació o en un recurs de xarxa.</p>
+        <div class="pills" style="margin-top:.5rem;margin-bottom:.75rem">
+          <span class="pill pill-t">Eina: Windows SIM (WAIK/ADK)</span>
+          <span class="pill pill-t">Generador web: schneegans.de</span>
+        </div>
+        <div class="ex ex-teal">
+          <div class="ex-lbl">Passes del procés d'instal·lació (7 passes)</div>
+          <p>
+            <strong>windowsPE:</strong> particionament i còpia de fitxers<br>
+            <strong>offlineServicing:</strong> paquets i controladors offline<br>
+            <strong>generalize:</strong> preparació per a imatge (sysprep)<br>
+            <strong>specialize:</strong> hostname, domèstic, zona horària<br>
+            <strong>auditSystem/auditUser:</strong> personalitzacions d'auditoria<br>
+            <strong>oobeSystem:</strong> compte d'usuari, contrasenya, privacitat
+          </p>
+        </div>
+      </div>
+      <div class="card bl-ubuntu">
+        <div class="card-icon" style="background:#fff5f1">🐧</div>
+        <h3>preseed / cloud-init — Linux</h3>
+        <p style="margin-bottom:.75rem">Linux disposa de diverses alternatives per a instal·lació desatesa:</p>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.87rem;color:var(--muted)">📋 <strong style="color:var(--ink)">Preseed (Debian/Ubuntu Legacy):</strong> fitxer de text que respon automàticament a les preguntes de debconf. Funciona amb PXE o CD.</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.87rem;color:var(--muted)">☁️ <strong style="color:var(--ink)">cloud-init:</strong> estàndard de facto per a VMs i cloud (AWS, Azure, OpenStack). Fitxer YAML que configura l'equip en el primer arrencada.</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.87rem;color:var(--muted)">📝 <strong style="color:var(--ink)">Autoinstall (Ubuntu 20.04+):</strong> el format modern d'Ubuntu, en YAML. Substitueix preseed per als instal·ladors nous.</li>
+          <li style="padding:.3rem 0;font-size:.87rem;color:var(--muted)">🎩 <strong style="color:var(--ink)">Kickstart (RHEL/CentOS/Fedora):</strong> fitxer .ks que configura particions, paquets, usuaris i scripts post-instal·lació.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- EXEMPLE autounattend.xml -->
+    <div class="section-tag tag-win fi" style="margin-top:2.5rem">Fitxer autounattend.xml</div>
+    <h2 class="fi">Exemple d'autounattend.xml per a Windows 11</h2>
+    <div class="xml-block fi xb">
+      <span class="comment">&lt;!-- autounattend.xml — Instal·lació desatesa Windows 11 Pro --&gt;</span><br>
+      <span class="tag">&lt;?xml version=<span class="val">"1.0"</span> encoding=<span class="val">"utf-8"</span>?&gt;</span><br>
+      <span class="tag">&lt;unattend</span> <span class="attr">xmlns=</span><span class="val">"urn:schemas-microsoft-com:unattend"</span><span class="tag">&gt;</span><br><br>
+      <span class="comment">  &lt;!-- PASSA 1: windowsPE — Particionament i selecció d'idioma --&gt;</span><br>
+      <span class="tag">  &lt;settings</span> <span class="attr">pass=</span><span class="val">"windowsPE"</span><span class="tag">&gt;</span><br>
+      <span class="tag">    &lt;component</span> <span class="attr">name=</span><span class="val">"Microsoft-Windows-International-Core-WinPE"</span><span class="tag">&gt;</span><br>
+      <span class="tag">      &lt;SetupUILanguage&gt;&lt;UILanguage&gt;</span><span class="val">ca-ES</span><span class="tag">&lt;/UILanguage&gt;&lt;/SetupUILanguage&gt;</span><br>
+      <span class="tag">      &lt;InputLocale&gt;</span><span class="val">0403:0000040A</span><span class="tag">&lt;/InputLocale&gt;</span><br>
+      <span class="tag">      &lt;UILanguage&gt;</span><span class="val">ca-ES</span><span class="tag">&lt;/UILanguage&gt;</span><br>
+      <span class="tag">      &lt;UserLocale&gt;</span><span class="val">ca-ES</span><span class="tag">&lt;/UserLocale&gt;</span><br>
+      <span class="tag">    &lt;/component&gt;</span><br>
+      <span class="tag">    &lt;component</span> <span class="attr">name=</span><span class="val">"Microsoft-Windows-Setup"</span><span class="tag">&gt;</span><br>
+      <span class="comment">      &lt;!-- Acceptar la llicència automàticament --&gt;</span><br>
+      <span class="tag">      &lt;UserData&gt;&lt;AcceptEula&gt;</span><span class="val">true</span><span class="tag">&lt;/AcceptEula&gt;&lt;/UserData&gt;</span><br>
+      <span class="comment">      &lt;!-- Particionament automàtic per a UEFI+GPT --&gt;</span><br>
+      <span class="tag">      &lt;DiskConfiguration&gt;&lt;Disk</span> <span class="attr">wcm:action=</span><span class="val">"add"</span><span class="tag">&gt;</span><br>
+      <span class="tag">        &lt;DiskID&gt;</span><span class="val">0</span><span class="tag">&lt;/DiskID&gt;</span><br>
+      <span class="tag">        &lt;WillWipeDisk&gt;</span><span class="val">true</span><span class="tag">&lt;/WillWipeDisk&gt;</span><br>
+      <span class="comment">        &lt;!-- Partition 1: EFI, 100MB --&gt;</span><br>
+      <span class="comment">        &lt;!-- Partition 2: MSR, 16MB --&gt;</span><br>
+      <span class="comment">        &lt;!-- Partition 3: Windows, resta del disc --&gt;</span><br>
+      <span class="tag">      &lt;/Disk&gt;&lt;/DiskConfiguration&gt;</span><br>
+      <span class="tag">    &lt;/component&gt;</span><br>
+      <span class="tag">  &lt;/settings&gt;</span><br><br>
+      <span class="comment">  &lt;!-- PASSA 4: specialize — Configuració del sistema --&gt;</span><br>
+      <span class="tag">  &lt;settings</span> <span class="attr">pass=</span><span class="val">"specialize"</span><span class="tag">&gt;</span><br>
+      <span class="tag">    &lt;component</span> <span class="attr">name=</span><span class="val">"Microsoft-Windows-Shell-Setup"</span><span class="tag">&gt;</span><br>
+      <span class="tag">      &lt;ComputerName&gt;</span><span class="val">PC-%RAND%</span><span class="tag">&lt;/ComputerName&gt;</span> <span class="comment">&lt;!-- Nom aleatori --&gt;</span><br>
+      <span class="tag">      &lt;TimeZone&gt;</span><span class="val">Romance Standard Time</span><span class="tag">&lt;/TimeZone&gt;</span><br>
+      <span class="tag">      &lt;RegisteredOwner&gt;</span><span class="val">TechCorp SL</span><span class="tag">&lt;/RegisteredOwner&gt;</span><br>
+      <span class="tag">    &lt;/component&gt;</span><br>
+      <span class="tag">  &lt;/settings&gt;</span><br><br>
+      <span class="comment">  &lt;!-- PASSA 7: oobeSystem — Compte inicial i privacitat --&gt;</span><br>
+      <span class="tag">  &lt;settings</span> <span class="attr">pass=</span><span class="val">"oobeSystem"</span><span class="tag">&gt;</span><br>
+      <span class="tag">    &lt;component</span> <span class="attr">name=</span><span class="val">"Microsoft-Windows-Shell-Setup"</span><span class="tag">&gt;</span><br>
+      <span class="tag">      &lt;UserAccounts&gt;&lt;LocalAccounts&gt;&lt;LocalAccount</span> <span class="attr">wcm:action=</span><span class="val">"add"</span><span class="tag">&gt;</span><br>
+      <span class="tag">        &lt;Name&gt;</span><span class="val">AdminLocal</span><span class="tag">&lt;/Name&gt;</span><br>
+      <span class="tag">        &lt;Group&gt;</span><span class="val">Administrators</span><span class="tag">&lt;/Group&gt;</span><br>
+      <span class="tag">        &lt;Password&gt;&lt;Value&gt;</span><span class="val">P@ssw0rd2024!</span><span class="tag">&lt;/Value&gt;&lt;/Password&gt;</span><br>
+      <span class="tag">      &lt;/LocalAccount&gt;&lt;/LocalAccounts&gt;&lt;/UserAccounts&gt;</span><br>
+      <span class="comment">      &lt;!-- Evitar la configuració inicial OOBE interactiva --&gt;</span><br>
+      <span class="tag">      &lt;OOBE&gt;&lt;HideEULAPage&gt;</span><span class="val">true</span><span class="tag">&lt;/HideEULAPage&gt;</span><br>
+      <span class="tag">        &lt;HideWirelessSetupInOOBE&gt;</span><span class="val">true</span><span class="tag">&lt;/HideWirelessSetupInOOBE&gt;</span><br>
+      <span class="tag">        &lt;SkipMachineOOBE&gt;</span><span class="val">true</span><span class="tag">&lt;/SkipMachineOOBE&gt;&lt;/OOBE&gt;</span><br>
+      <span class="tag">    &lt;/component&gt;</span><br>
+      <span class="tag">  &lt;/settings&gt;</span><br>
+      <span class="tag">&lt;/unattend&gt;</span>
+    </div>
+
+    <hr>
+    <div class="section-tag tag-ubuntu fi" id="resposta">cloud-init — Linux</div>
+    <h2 class="fi">cloud-init per a Ubuntu Server: fitxer user-data</h2>
+
+    <div class="xml-block fi xb" style="background:#0a1220">
+      <span class="comment">#cloud-config — user-data per a Ubuntu Server 24.04</span><br>
+      <span class="comment"># Ubicació: /var/lib/cloud/instance/user-data.txt o via metadata del cloud</span><br><br>
+      <span class="key">hostname:</span> <span class="val">srv-web-01</span><br>
+      <span class="key">timezone:</span> <span class="val">Europe/Madrid</span><br>
+      <span class="key">locale:</span> <span class="val">ca_ES.UTF-8</span><br><br>
+      <span class="key">users:</span><br>
+      <span class="val">  - name: sysadmin</span><br>
+      <span class="val">    gecos: "Administrador del sistema"</span><br>
+      <span class="val">    groups: sudo</span><br>
+      <span class="val">    shell: /bin/bash</span><br>
+      <span class="val">    sudo: ['ALL=(ALL) NOPASSWD:ALL']</span><br>
+      <span class="val">    ssh_authorized_keys:</span><br>
+      <span class="val">      - ssh-ed25519 AAAAC3Nz... sysadmin@empresa</span><br><br>
+      <span class="key">packages:</span><br>
+      <span class="val">  - nginx</span><br>
+      <span class="val">  - git</span><br>
+      <span class="val">  - htop</span><br>
+      <span class="val">  - curl</span><br>
+      <span class="val">  - ufw</span><br><br>
+      <span class="key">package_update:</span> <span class="val">true</span><br>
+      <span class="key">package_upgrade:</span> <span class="val">true</span><br><br>
+      <span class="key">runcmd:</span><br>
+      <span class="val">  - ufw allow 22/tcp</span><br>
+      <span class="val">  - ufw allow 80/tcp</span><br>
+      <span class="val">  - ufw allow 443/tcp</span><br>
+      <span class="val">  - ufw --force enable</span><br>
+      <span class="val">  - systemctl enable nginx</span><br>
+      <span class="val">  - systemctl start nginx</span><br><br>
+      <span class="key">write_files:</span><br>
+      <span class="val">  - path: /etc/motd</span><br>
+      <span class="val">    content: |</span><br>
+      <span class="val">      TechCorp SL — Servidor web de producció</span><br>
+      <span class="val">      Accés restringit. Tota activitat és registrada.</span>
+    </div>
+
+    <!-- PRÀCTICA 3 -->
+    <div class="lab-card fi">
+      <div class="lab-header">
+        <div class="lab-icon">🔬</div>
+        <div class="lab-tb">
+          <h4>Pràctica 8.3 — Instal·lació desatesa amb cloud-init i autounattend.xml</h4>
+          <p>Crear i provar fitxers de resposta per a instal·lació automatitzada</p>
+        </div>
+        <div class="lab-os-tags"><span class="os-tag os-both">🔀 Windows + Ubuntu</span></div>
+      </div>
+      <div class="lab-body">
+        <h5>🐧 Ubuntu — Provar cloud-init localment amb multipass</h5>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">Terminal — cloud-init amb multipass</span><span class="term-os term-os-ubuntu">Ubuntu</span></div>
+          <div class="term-body pb">
+            <span class="comment"># Instal·lar multipass (hipervisor lleuger per a VMs Ubuntu)</span><br>
+            <span class="prompt-ub">user@host:~$</span> <span class="cmd">sudo snap install multipass</span><br><br>
+            <span class="comment"># Crear VM Ubuntu amb el nostre fitxer cloud-init</span><br>
+            <span class="prompt-ub">user@host:~$</span> <span class="cmd">multipass launch</span> <span class="flag">--name</span> <span class="str">srv-test-01</span> <span class="flag">--cpus 2 --memory 2G --disk 20G</span> <span class="flag">--cloud-init</span> <span class="str">user-data.yaml</span><br><br>
+            <span class="comment"># Verificar que cloud-init ha configurat tot correctament</span><br>
+            <span class="prompt-ub">user@host:~$</span> <span class="cmd">multipass exec srv-test-01 -- cloud-init status</span><br>
+            <span class="ok">status: done</span><br><br>
+            <span class="comment"># Verificar que nginx s'ha instal·lat i executa</span><br>
+            <span class="prompt-ub">user@host:~$</span> <span class="cmd">multipass exec srv-test-01 -- systemctl status nginx</span><br><br>
+            <span class="comment"># Verificar que UFW té les regles correctes</span><br>
+            <span class="prompt-ub">user@host:~$</span> <span class="cmd">multipass exec srv-test-01 -- sudo ufw status verbose</span><br><br>
+            <span class="comment"># Accedir a la VM per SSH (comprova les SSH keys del cloud-init)</span><br>
+            <span class="prompt-ub">user@host:~$</span> <span class="cmd">multipass shell srv-test-01</span><br><br>
+            <span class="comment"># Log complet del procés cloud-init (útil per a debugging)</span><br>
+            <span class="prompt-ub">user@host:~$</span> <span class="cmd">multipass exec srv-test-01 -- cat /var/log/cloud-init-output.log</span>
+          </div>
+        </div>
+        <h5>🪟 Windows — Validar autounattend.xml amb Windows ADK</h5>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">PowerShell — Validació del fitxer de resposta</span><span class="term-os term-os-ps">PowerShell</span></div>
+          <div class="term-body pb">
+            <span class="comment"># Descarregar l'ADK (Windows Assessment and Deployment Kit)</span><br>
+            <span class="comment"># https://aka.ms/adk → Inclou Windows SIM (System Image Manager)</span><br><br>
+            <span class="comment"># Validar un fitxer autounattend.xml existent des de línia de comandos</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">$adkPath = "${env:ProgramFiles(x86)}\Windows Kits\10\Assessment and Deployment Kit"</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">$wsim = "$adkPath\Deployment Tools\x86\WSIM\imgmgr.exe"</span><br><br>
+            <span class="comment"># Integrar l'autounattend.xml en una ISO (per a USB bootable)</span><br>
+            <span class="comment"># 1. Muntar la ISO de Windows 11</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">Mount-DiskImage -ImagePath "C:\ISOs\Win11_24H2.iso"</span><br>
+            <span class="comment"># 2. Copiar els fitxers i afegir autounattend.xml a l'arrel</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">New-Item -Path "C:\USB_Win11" -ItemType Directory -Force</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">Copy-Item -Path "E:\*" -Destination "C:\USB_Win11" -Recurse</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">Copy-Item -Path "C:\autounattend.xml" -Destination "C:\USB_Win11\"</span><br>
+            <span class="comment"># 3. Crear USB bootable (BCDBOOT o usar Rufus amb l'opció de fitxer de resposta)</span>
+          </div>
+        </div>
+        <div class="lab-entrega"><strong>📋 Lliurament:</strong> (1) Fitxer <code>user-data.yaml</code> per a cloud-init que configuri: hostname, 1 usuari admin amb SSH key, paquets nginx+git+ufw, regles ufw obertes (22/80/443), missatge MOTD personalitzat. (2) Captura de <code>cloud-init status</code> mostrant "done". (3) Captura d'<code>systemctl status nginx</code> dins la VM. (4) Quina diferència hi ha entre cloud-init <code>runcmd</code> i <code>bootcmd</code>? En quin ordre s'executen?</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- T6 — WSUS / apt-mirror -->
+<section id="wsus" class="s-win">
+  <div class="container">
+    <div class="ra-banner ra-win fi">
+      <div class="ra-num">6</div>
+      <div><h2>Servidors d'actualitzacions automàtiques</h2>
+        <p>WSUS (Windows Server Update Services) per a Windows i apt-cacher-ng/apt-mirror per a Ubuntu. Centralitzar i controlar les actualitzacions de tota la flota.</p></div>
+    </div>
+
+    <div class="section-tag tag-win fi">Per quin motiu un servidor d'actualitzacions?</div>
+    <h2 class="fi">La necessitat d'actualitzacions centralitzades</h2>
+    <p class="lead fi">En una empresa amb 100 equips, si cada un descarrega les actualitzacions directament d'Internet, es consumeix ample de banda enorme. A més, no hi ha control sobre quines actualitzacions s'apliquen ni quan. Un servidor d'actualitzacions centralitzat resol ambdós problemes: <strong>estalvi d'ample de banda + control de la implementació</strong>.</p>
+
+    <div class="grid g2 fi">
+      <div class="card bl-win">
+        <div class="card-icon" style="background:#f0f7ff">🔄</div>
+        <h3>WSUS — Windows Server Update Services</h3>
+        <p style="margin-bottom:.75rem">Rol de Windows Server que actua de proxy per a Microsoft Update. Descarrega les actualitzacions una vegada i les distribueix a tots els clients.</p>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.35rem 0;border-bottom:1px solid var(--border);font-size:.87rem;color:var(--muted)">⬇️ <strong style="color:var(--ink)">Sincronització:</strong> el servidor WSUS es sincronitza amb Microsoft Update periòdicament (un cop al dia). Els clients les descarreguen del servidor intern.</li>
+          <li style="padding:.35rem 0;border-bottom:1px solid var(--border);font-size:.87rem;color:var(--muted)">✅ <strong style="color:var(--ink)">Aprovació manual:</strong> un admin aprova cada actualització abans que s'instal·li als clients. Permet provar en una màquina pilot primer.</li>
+          <li style="padding:.35rem 0;border-bottom:1px solid var(--border);font-size:.87rem;color:var(--muted)">📊 <strong style="color:var(--ink)">Reporting:</strong> veure quins equips estan al dia, quins tenen actualizaciones pendents, quins han fallat.</li>
+          <li style="padding:.35rem 0;font-size:.87rem;color:var(--muted)">🔗 <strong style="color:var(--ink)">Integració amb GPO:</strong> els clients es configuren via GPO per apuntar al servidor WSUS en lloc de Microsoft Update.</li>
+        </ul>
+      </div>
+      <div class="card bl-ubuntu">
+        <div class="card-icon" style="background:#fff5f1">🐧</div>
+        <h3>apt-cacher-ng i apt-mirror — Ubuntu</h3>
+        <p style="margin-bottom:.75rem">Dos enfocaments per a centralitzar les actualitzacions APT a Linux:</p>
+        <div class="ex ex-ubuntu" style="margin-bottom:.75rem">
+          <div class="ex-lbl">apt-cacher-ng — Proxy caché (recomanat)</div>
+          <p>Actua com a proxy transparent: la primera vegada que un client demana un paquet, el descarrega d'Internet i el guarda en caché. Les properes vegades el serveix de la caché local. Sense necessitat de mirall complet. Molt menys espai en disc.</p>
+        </div>
+        <div class="ex ex-ubuntu">
+          <div class="ex-lbl">apt-mirror — Mirall complet (per a entorns offline)</div>
+          <p>Descarrega el repositori complet d'Ubuntu al servidor local. Útil en entorns sense accés a Internet. Requereix molt espai en disc (Ubuntu 24.04 complet: ~400 GB). Els clients apunten al servidor local com si fos un repositori d'Ubuntu oficial.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRÀCTICA 4 -->
+    <div class="lab-card fi">
+      <div class="lab-header">
+        <div class="lab-icon">🔬</div>
+        <div class="lab-tb">
+          <h4>Pràctica 8.4 — Instal·lar WSUS i apt-cacher-ng</h4>
+          <p>Configurar servidors d'actualitzacions centralitzats per a Windows i Ubuntu</p>
+        </div>
+        <div class="lab-os-tags"><span class="os-tag os-both">🔀 Windows + Ubuntu</span></div>
+      </div>
+      <div class="lab-body">
+        <h5>🪟 Windows Server — Instal·lar i configurar WSUS</h5>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">PowerShell — Administrador (Windows Server)</span><span class="term-os term-os-ps">PowerShell</span></div>
+          <div class="term-body pb">
+            <span class="comment"># Instal·lar el rol WSUS (amb base de dades WID interna)</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">Install-WindowsFeature</span> <span class="flag">-Name</span> <span class="str">UpdateServices</span> <span class="flag">-IncludeManagementTools</span><br>
+            <span class="out">Success Restart Needed  Feature Result</span><br>
+            <span class="ok">True    No              {UpdateServices, UpdateServices-Ui...}</span><br><br>
+            <span class="comment"># Configurar el directori d'emmagatzematge d'actualitzacions</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">New-Item -Path "D:\WSUS_Updates" -ItemType Directory -Force</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">cd "C:\Program Files\Update Services\Tools"</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">.\wsusutil.exe postinstall CONTENT_DIR="D:\WSUS_Updates"</span><br><br>
+            <span class="comment"># Configurar WSUS via PowerShell (cmdlets UpdateServices)</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">$wsus = Get-WsusServer -Name "SRV-DC01" -PortNumber 8530</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">$wsusConfig = $wsus.GetConfiguration()</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">$wsusConfig.SyncFromMicrosoftUpdate = $true</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">$wsusConfig.TargetingMode = "Client"</span>    <span class="comment"># Grups per client</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">$wsusConfig.Save()</span><br><br>
+            <span class="comment"># Configurar productes i classificació a sincronitzar</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">$sub = $wsus.GetSubscription()</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">$sub.StartSynchronizationForCategoryOnly()</span>   <span class="comment"># Sincronitzar categories primer</span><br><br>
+            <span class="comment"># Configurar clients via GPO — Group Policy</span><br>
+            <span class="comment"># Computer Config → Policies → Admin Templates → Windows Components → Windows Update</span><br>
+            <span class="comment"># "Specify intranet Microsoft update service location" → http://SRV-DC01:8530</span><br>
+            <span class="comment"># Alternatiu: via PowerShell en cada client:</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">Set-ItemProperty</span> <span class="path">"HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate"</span> <span class="flag">`</span><br>
+            <span class="cmd">    -Name WUServer -Value "http://SRV-DC01:8530"</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">Set-ItemProperty</span> <span class="path">"HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate"</span> <span class="flag">`</span><br>
+            <span class="cmd">    -Name WUStatusServer -Value "http://SRV-DC01:8530"</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">wuauclt /detectnow /reportnow</span>    <span class="comment"># Forçar detecció al client</span>
+          </div>
+        </div>
+        <h5>🐧 Ubuntu — Instal·lar apt-cacher-ng</h5>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">Terminal — Servidor</span><span class="term-os term-os-ubuntu">Ubuntu</span></div>
+          <div class="term-body pb">
+            <span class="comment"># ── SERVIDOR (10.0.0.1) ──</span><br>
+            <span class="prompt-ub">root@srv:~#</span> <span class="cmd">apt install apt-cacher-ng -y</span><br>
+            <span class="prompt-ub">root@srv:~#</span> <span class="cmd">systemctl enable --now apt-cacher-ng</span><br><br>
+            <span class="comment"># Configuració: /etc/apt-cacher-ng/acng.conf</span><br>
+            <span class="comment"># Port per defecte: 3142</span><br>
+            <span class="prompt-ub">root@srv:~#</span> <span class="cmd">ss -tlnp | grep 3142</span><br>
+            <span class="out">LISTEN 0 128 0.0.0.0:3142 users:(("apt-cacher-ng"...))</span><br><br>
+            <span class="comment"># Estadístiques de la caché (via web)</span><br>
+            <span class="comment"># http://10.0.0.1:3142/acng-report.html</span><br><br>
+            <span class="comment"># ── CLIENTS ──</span><br>
+            <span class="comment"># Configurar cada client Ubuntu per usar el proxy</span><br>
+            <span class="prompt-ub">root@client:~#</span> <span class="cmd">echo 'Acquire::http::Proxy "http://10.0.0.1:3142";' > /etc/apt/apt.conf.d/01proxy</span><br><br>
+            <span class="comment"># Verificar que el client usa la caché</span><br>
+            <span class="prompt-ub">root@client:~#</span> <span class="cmd">apt update</span><br>
+            <span class="out">Get:1 http://10.0.0.1:3142/archive.ubuntu.com noble InRelease</span><br>
+            <span class="comment"># La URL ha de passar per 10.0.0.1:3142 (el proxy)</span><br><br>
+            <span class="comment"># Automatitzar la configuració del proxy en clients nous amb cloud-init:</span><br>
+            <span class="comment"># apt_proxy: http://10.0.0.1:3142/</span>
+          </div>
+        </div>
+        <div class="lab-entrega"><strong>📋 Lliurament:</strong> (1) Captura de la consola WSUS mostrant el servidor configurat i almenys 1 grup de clients. (2) Captura d'un client Windows registrat a WSUS (des del WSUS Computers panel). (3) Captura de la pàgina web d'estadístiques d'apt-cacher-ng (<code>:3142/acng-report.html</code>) mostrant paquets en caché. (4) Quin és l'estalvi d'ample de banda estimat si 30 equips Ubuntu descarreguen les mateixes actualitzacions del proxy vs directament d'Internet?</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- T7-8 — INCIDENTS I PROTOCOLS -->
+<section id="incidents" class="s-amber">
+  <div class="container">
+    <div class="ra-banner ra-amber fi">
+      <div class="ra-num">7–8</div>
+      <div><h2>Parts d'incidències i protocols d'actuació</h2>
+        <p>ITIL v4, cicle de vida d'una incidència, classificació, escalada, SLA i protocols d'actuació davant incidents habituals.</p></div>
+    </div>
+
+    <div class="section-tag tag-amber fi">ITIL i gestió d'incidents</div>
+    <h2 class="fi">El marc ITIL per a la gestió d'incidències</h2>
+    <p class="lead fi"><strong>ITIL</strong> (Information Technology Infrastructure Library) és el marc de referència internacional per a la gestió de serveis TI. Defineix el procés de <em>Gestió d'Incidents</em> com el procés responsable de gestionar el cicle de vida de tots els incidents, amb l'objectiu de restaurar el servei normal tan ràpidament com sigui possible.</p>
+
+    <div class="ticket-flow fi">
+      <div class="tf-step">
+        <div class="tf-num">01</div>
+        <h5>Detecció</h5>
+        <p>Usuari reporta o monitoratge detecta l'incident</p>
+      </div>
+      <div class="tf-arrow">→</div>
+      <div class="tf-step">
+        <div class="tf-num">02</div>
+        <h5>Registre</h5>
+        <p>Obre tiquet al sistema (GLPI, Jira, ServiceNow)</p>
+      </div>
+      <div class="tf-arrow">→</div>
+      <div class="tf-step">
+        <div class="tf-num">03</div>
+        <h5>Classificació</h5>
+        <p>Categoritza per tipus, prioritat i urgència</p>
+      </div>
+      <div class="tf-arrow">→</div>
+      <div class="tf-step">
+        <div class="tf-num">04</div>
+        <h5>Diagnosi</h5>
+        <p>Cerca la causa arrel. Consulta la base de coneixement</p>
+      </div>
+      <div class="tf-arrow">→</div>
+      <div class="tf-step">
+        <div class="tf-num">05</div>
+        <h5>Resolució</h5>
+        <p>Aplica la solució, documenta els passos</p>
+      </div>
+      <div class="tf-arrow">→</div>
+      <div class="tf-step">
+        <div class="tf-num">06</div>
+        <h5>Tancament</h5>
+        <p>Verifica amb l'usuari, tanca el tiquet, actualitza KB</p>
+      </div>
+    </div>
+
+    <div class="grid g2 fi" style="margin-top:2rem">
+      <div class="card bl-amber">
+        <h3>🎯 Classificació d'incidents: prioritat i SLA</h3>
+        <div style="overflow-x:auto">
+          <table class="ptable" style="font-size:.82rem;margin-top:.5rem">
+            <thead><tr><th>Prioritat</th><th>Impacte</th><th>Temps de resposta</th><th>Exemple</th></tr></thead>
+            <tbody>
+              <tr><td><span style="color:#dc2626;font-weight:700">P1 Crític</span></td><td>Sistema central caigut</td><td>&lt; 15 minuts</td><td>Servidor de producció no respon, domini caigut</td></tr>
+              <tr><td><span style="color:#ea580c;font-weight:700">P2 Alt</span></td><td>Servei degradat / molts usuaris</td><td>&lt; 1 hora</td><td>Email no envia, share de xarxa inabastable</td></tr>
+              <tr><td><span style="color:#d97706;font-weight:700">P3 Mig</span></td><td>Usuari individual bloquejat</td><td>&lt; 4 hores</td><td>Conta bloquejada, impressora no funciona</td></tr>
+              <tr><td><span style="color:#059669;font-weight:700">P4 Baix</span></td><td>Petita molèstia</td><td>&lt; 1 dia hàbil</td><td>Actualitzar software, canviar contrasenya</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card bl-amber">
+        <h3>📋 Exemple de tiquet d'incidència (template)</h3>
+        <div class="doc-template" style="padding:1.25rem">
+          <div class="doc-header">
+            <div>
+              <div class="doc-title">Tiquet INC-2024-0847</div>
+              <div style="font-size:.8rem;color:var(--muted)">Tipus: Incidència · Prioritat: <span style="color:#ea580c;font-weight:600">P2 Alt</span></div>
+            </div>
+            <div class="doc-meta"><span class="status-chip status-progress">En Progrés</span></div>
+          </div>
+          <div class="doc-section">
+            <h4>Descripció</h4>
+            <p>Els usuaris del departament de Vendes (Barcelona) no poden accedir a la carpeta compartida <code>\\SRV-FILE-01\Vendes</code> des de les 09:15h. Missatge d'error: "Error de xarxa: no s'ha pogut accedir".</p>
+          </div>
+          <div class="doc-section">
+            <table>
+              <tr><th>Reportat per</th><td>Joan Garcia (Vendes)</td></tr>
+              <tr><th>Data/hora</th><td>10/12/2024 09:22h</td></tr>
+              <tr><th>Assignat a</th><td>Pere Martínez (IT L2)</td></tr>
+              <tr><th>Equips afectats</th><td>15 usuaris de Vendes BCN</td></tr>
+              <tr><th>SLA</th><td>Resolució &lt; 1h (expira 10:22h)</td></tr>
+            </table>
+          </div>
+          <div class="doc-section">
+            <h4>Notes de diagnosi</h4>
+            <p>09:35h - Comprovat que el servidor SRV-FILE-01 respon a ping. 09:40h - Detectat que el servei SMB (Server) estava parat per una actualització de Windows pendent de reinici...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr>
+    <div class="section-tag tag-amber fi" id="protocols">Tema 8 — Protocols d'actuació</div>
+    <h2 class="fi">Protocols d'actuació davant incidents habituals</h2>
+    <p class="lead fi">Un protocol d'actuació és un procediment estandarditzat per respondre a un tipus d'incident concret. Tenir-los predefinits redueix el temps de resolució i garanteix que tots els tècnics actuïn de manera consistent.</p>
+
+    <div class="grid g3 fi">
+      <div class="card bl-amber">
+        <h3>🔐 Protocol: Compte bloquejada</h3>
+        <ol class="steps" style="margin-top:.5rem">
+          <li><p><strong>Verificar</strong> que és un bloqueig legítim (no un atac). Revisar EID 4740 al DC.</p></li>
+          <li><p><strong>Identificar</strong> l'equip origen del bloqueig. Comprovar si és el propi PC de l'usuari o un altre equip/servei.</p></li>
+          <li><p>Si és l'equip de l'usuari: <strong>comprovar si hi ha credencials antigues guardades</strong> (Control Panel → Credential Manager).</p></li>
+          <li><p><strong>Desbloquejar</strong> el compte (<code>Unlock-ADAccount</code>) i demanar al usuari que canviï la contrasenya.</p></li>
+          <li><p><strong>Documentar</strong> al tiquet: causa, PC origen, hora, resolució.</p></li>
+        </ol>
+      </div>
+      <div class="card bl-amber">
+        <h3>💾 Protocol: Servidor sense espai en disc</h3>
+        <ol class="steps" style="margin-top:.5rem">
+          <li><p><strong>Identificar</strong> la partició afectada i quin directori ocupa més espai (<code>du -sh /*</code> / <code>Get-ChildItem</code>).</p></li>
+          <li><p><strong>Netejar</strong> logs antics (<code>/var/log/</code>), fitxers temporals (<code>/tmp/</code>) i backups locals antics.</p></li>
+          <li><p>Si el log és el problema: <strong>rotar logs</strong> manualment (<code>logrotate -f</code>) o archivar-los.</p></li>
+          <li><p><strong>Ampliar disc</strong> si és necessari (LVM extend, Storage Spaces en Windows).</p></li>
+          <li><p>Crear una <strong>alerta de monitoratge</strong> per avisar quan l'espai superi el 80% en el futur.</p></li>
+        </ol>
+      </div>
+      <div class="card bl-amber">
+        <h3>🔁 Protocol: Servei caigut en servidor</h3>
+        <ol class="steps" style="margin-top:.5rem">
+          <li><p><strong>Comprovar l'estat</strong> del servei (<code>systemctl status nginx</code> / <code>Get-Service</code>). Llegir el missatge d'error.</p></li>
+          <li><p><strong>Revisar els logs</strong> del servei i del sistema per identificar la causa (<code>journalctl -u nginx -b</code>).</p></li>
+          <li><p><strong>Intentar reiniciar</strong> el servei (<code>systemctl restart nginx</code>). Si falla, revisar la configuració.</p></li>
+          <li><p>Si la configuració ha canviat recentment: <strong>revertir el canvi</strong> (git revert si hi ha control de versions) o restaurar la config de backup.</p></li>
+          <li><p><strong>Verificar</strong> que el servei funciona correctament i <strong>comunicar</strong> la resolució als usuaris afectats.</p></li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- PRÀCTICA 5 -->
+    <div class="lab-card fi">
+      <div class="lab-header">
+        <div class="lab-icon">🔬</div>
+        <div class="lab-tb">
+          <h4>Pràctica 8.5 — Gestió d'incidències amb GLPI</h4>
+          <p>Instal·lar GLPI i simular el cicle de vida complet d'una incidència</p>
+        </div>
+        <div class="lab-os-tags"><span class="os-tag os-ubuntu">🐧 Ubuntu + Web</span></div>
+      </div>
+      <div class="lab-body">
+        <p>GLPI és el sistema de ticketing i gestió d'actius open-source més usat en entorns de pimes i administracions públiques espanyoles.</p>
+        <h5>🐧 Ubuntu — Instal·lar GLPI (IT Service Management)</h5>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">Terminal — Servidor GLPI</span><span class="term-os term-os-ubuntu">Ubuntu</span></div>
+          <div class="term-body pb">
+            <span class="comment"># Instal·lar pila LAMP (Apache + MariaDB + PHP)</span><br>
+            <span class="prompt-ub">root@srv:~#</span> <span class="cmd">apt install -y apache2 mariadb-server php php-{mysql,xml,curl,gd,mbstring,zip,intl,ldap,apcu}</span><br><br>
+            <span class="comment"># Crear base de dades per a GLPI</span><br>
+            <span class="prompt-ub">root@srv:~#</span> <span class="cmd">mysql -u root -e "CREATE DATABASE glpidb CHARACTER SET utf8mb4;"</span><br>
+            <span class="prompt-ub">root@srv:~#</span> <span class="cmd">mysql -u root -e "CREATE USER 'glpiuser'@'localhost' IDENTIFIED BY 'GlpiPass@2024';"</span><br>
+            <span class="prompt-ub">root@srv:~#</span> <span class="cmd">mysql -u root -e "GRANT ALL ON glpidb.* TO 'glpiuser'@'localhost';"</span><br><br>
+            <span class="comment"># Descarregar i instal·lar GLPI</span><br>
+            <span class="prompt-ub">root@srv:~#</span> <span class="cmd">wget https://github.com/glpi-project/glpi/releases/download/10.0.17/glpi-10.0.17.tgz</span><br>
+            <span class="prompt-ub">root@srv:~#</span> <span class="cmd">tar -xzf glpi-10.0.17.tgz -C /var/www/html/</span><br>
+            <span class="prompt-ub">root@srv:~#</span> <span class="cmd">chown -R www-data:www-data /var/www/html/glpi</span><br>
+            <span class="prompt-ub">root@srv:~#</span> <span class="cmd">chmod -R 755 /var/www/html/glpi</span><br><br>
+            <span class="comment"># Configurar VirtualHost d'Apache per a GLPI</span><br>
+            <span class="prompt-ub">root@srv:~#</span> <span class="cmd">cat > /etc/apache2/sites-available/glpi.conf &lt;&lt; 'EOF'</span><br>
+            <span class="out">&lt;VirtualHost *:80&gt;</span><br>
+            <span class="out">  ServerName glpi.asix.local</span><br>
+            <span class="out">  DocumentRoot /var/www/html/glpi/public</span><br>
+            <span class="out">  &lt;Directory /var/www/html/glpi/public&gt;</span><br>
+            <span class="out">    Require all granted</span><br>
+            <span class="out">    RewriteEngine On</span><br>
+            <span class="out">    RewriteRule ^(.*)$ index.php [QSA,L]</span><br>
+            <span class="out">  &lt;/Directory&gt;</span><br>
+            <span class="out">&lt;/VirtualHost&gt;</span><br>
+            <span class="out">EOF</span><br>
+            <span class="prompt-ub">root@srv:~#</span> <span class="cmd">a2ensite glpi.conf && a2enmod rewrite && systemctl reload apache2</span><br><br>
+            <span class="comment"># Accedir a http://IP_SERVIDOR/glpi per completar la instal·lació web</span><br>
+            <span class="comment"># Credencials per defecte: glpi / glpi</span>
+          </div>
+        </div>
+        <h5>📋 Simulació del cicle de vida d'una incidència</h5>
+        <ul class="lab-steps">
+          <li><p>Accedeix a GLPI com a <strong>usuari normal</strong> (<code>post-only / postonly</code>) i crea una nova incidència: "No puc imprimir des del meu PC al departament de Vendes".</p></li>
+          <li><p>Fes login com a <strong>tècnic</strong> (<code>tech / tech</code>), assigna't la incidència, canvia la prioritat a P2 (Alta) i afegeix una nota: "Comprovat que la impressora respon a ping".</p></li>
+          <li><p>Crea una <strong>tasca</strong> dins la incidència: "Reinstal·lar el driver d'impressora en el PC de l'usuari".</p></li>
+          <li><p>Marca la tasca com a completada i <strong>resol</strong> la incidència amb la solució documentada.</p></li>
+          <li><p>Verifica que l'usuari ha rebut la <strong>notificació per email</strong> de la resolució (si hi ha un servidor de correu configurat).</p></li>
+        </ul>
+        <div class="lab-entrega"><strong>📋 Lliurament:</strong> (1) Captura de GLPI mostrant la incidència creada amb tots els camps omplerts. (2) Captura de la incidència resolta amb el registre complet d'actuació (notes, tasques, solució). (3) Exporta la incidència a PDF des de GLPI. (4) Crea 2 incidències addicionals simulades (una P1 i una P4) i documenta-les seguint el protocol d'actuació corresponent.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- T9 — ADMINISTRACIÓ REMOTA -->
+<section id="remot" class="s-purple">
+  <div class="container">
+    <div class="ra-banner ra-purple fi">
+      <div class="ra-num">9</div>
+      <div><h2>Administració remota</h2>
+        <p>SSH (claus, tunnels, SSHFS), RDP, WinRM/PowerShell Remoting, VNC i Ansible per a gestió de configuració a escala.</p></div>
+    </div>
+
+    <div class="section-tag tag-purple fi">Protocols d'accés remot</div>
+    <h2 class="fi">Comparativa dels protocols d'administració remota</h2>
+    <div style="overflow-x:auto" class="fi">
+      <table class="ptable">
+        <thead><tr><th>Protocol/Eina</th><th>Plataforma</th><th>Port</th><th>Xifrat</th><th>Ús principal</th><th>Quan usar-lo</th></tr></thead>
+        <tbody>
+          <tr><td><strong>SSH (OpenSSH)</strong></td><td><span class="badge b-ubuntu">Linux/Unix</span></td><td>22/tcp</td><td>✅ Sí (sempre)</td><td>Consola remota segura, SFTP, tunnels</td><td>Administració de servidors Linux. L'estàndard de facto.</td></tr>
+          <tr><td><strong>RDP (Remote Desktop)</strong></td><td><span class="badge b-win">Windows</span></td><td>3389/tcp</td><td>✅ Sí (TLS)</td><td>Escriptori gràfic remot</td><td>Suport a usuaris finals, administrar servidors Windows amb GUI.</td></tr>
+          <tr><td><strong>WinRM / PS Remoting</strong></td><td><span class="badge b-win">Windows</span></td><td>5985/5986</td><td>✅ (HTTPS)</td><td>PowerShell remot, scripts a escala</td><td>Administrar molts servidors Windows simultàniament amb scripts.</td></tr>
+          <tr><td><strong>VNC</strong></td><td>Tots</td><td>5900/tcp</td><td>⚠️ Depèn</td><td>Escriptori gràfic remot</td><td>Accés GUI a Linux sense RDP. Usar sobre SSH tunnel per xifrar.</td></tr>
+          <tr><td><strong>Ansible</strong></td><td>Linux/Windows</td><td>22 (SSH)</td><td>✅ (via SSH)</td><td>Automatització i gestió de config</td><td>Desplegar configuració en molts servidors alhora (IaC).</td></tr>
+          <tr><td><strong>Telnet / rlogin</strong></td><td>Obsolets</td><td>23/tcp</td><td>❌ Mai</td><td>—</td><td>Prohibit en producció. Tot en text pla. Substituïts per SSH.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="grid g2 fi" style="margin-top:1.5rem">
+      <div class="card bl-ubuntu">
+        <h3>🐧 SSH avançat — Claus, túnels i SSHFS</h3>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">SSH — Claus i configuració avançada</span><span class="term-os term-os-ubuntu">Ubuntu</span></div>
+          <div class="term-body pb">
+            <span class="comment"># Generar parell de claus SSH (ed25519, molt més segur que RSA)</span><br>
+            <span class="prompt-ub">user@client:~$</span> <span class="cmd">ssh-keygen -t ed25519 -C "admin@empresa.local" -f ~/.ssh/id_ed25519</span><br><br>
+            <span class="comment"># Copiar la clau pública al servidor</span><br>
+            <span class="prompt-ub">user@client:~$</span> <span class="cmd">ssh-copy-id -i ~/.ssh/id_ed25519.pub admin@10.0.0.1</span><br><br>
+            <span class="comment"># Configuració ~/.ssh/config per a múltiples servidors</span><br>
+            <span class="prompt-ub">user@client:~$</span> <span class="cmd">cat ~/.ssh/config</span><br>
+            <span class="out">Host srv-web</span><br>
+            <span class="out">    HostName 10.0.0.10</span><br>
+            <span class="out">    User admin</span><br>
+            <span class="out">    IdentityFile ~/.ssh/id_ed25519</span><br>
+            <span class="out">    Port 22</span><br><br>
+            <span class="comment"># Tunnel SSH local (accedir a servei intern via SSH)</span><br>
+            <span class="comment"># Accedir a MariaDB interna (3306) via localhost:3307</span><br>
+            <span class="prompt-ub">user@client:~$</span> <span class="cmd">ssh -L 3307:localhost:3306 admin@10.0.0.10 -N -f</span><br><br>
+            <span class="comment"># Muntar directori remot com si fos local (SSHFS)</span><br>
+            <span class="prompt-ub">root@client:~#</span> <span class="cmd">apt install sshfs</span><br>
+            <span class="prompt-ub">user@client:~$</span> <span class="cmd">sshfs admin@10.0.0.10:/var/www/html /mnt/servidor-web</span><br><br>
+            <span class="comment"># Enfortir SSH al servidor: /etc/ssh/sshd_config</span><br>
+            <span class="comment"># PermitRootLogin no</span><br>
+            <span class="comment"># PasswordAuthentication no   ← OBLIGATORI si hi ha claus</span><br>
+            <span class="comment"># MaxAuthTries 3</span><br>
+            <span class="comment"># AllowUsers admin sysadmin</span><br>
+            <span class="prompt-ub">root@srv:~#</span> <span class="cmd">systemctl reload sshd</span>
+          </div>
+        </div>
+      </div>
+      <div class="card bl-win">
+        <h3>🪟 WinRM i PowerShell Remoting</h3>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">PowerShell — WinRM Remoting</span><span class="term-os term-os-ps">PowerShell</span></div>
+          <div class="term-body pb">
+            <span class="comment"># Activar WinRM al servidor de destí</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">Enable-PSRemoting -Force</span><br>
+            <span class="ok">WinRM has been updated to receive requests.</span><br><br>
+            <span class="comment"># Connectar-se a un servidor remot (sessió interactiva)</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">Enter-PSSession -ComputerName SRV-DC01 -Credential (Get-Credential)</span><br>
+            <span class="out">[SRV-DC01]: PS C:\&gt;</span>   <span class="comment"># Ara estem en el servidor remot</span><br><br>
+            <span class="comment"># Executar un comando en múltiples servidors alhora (fan-out)</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">$servidors = @("SRV-DC01","SRV-FILE-01","SRV-WEB-01")</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">Invoke-Command</span> <span class="flag">-ComputerName</span> <span class="cmd">$servidors</span> <span class="flag">-ScriptBlock</span> <span class="cmd">{</span><br>
+            <span class="cmd">    Get-Service -Name Spooler | Select-Object Name,Status,MachineName</span><br>
+            <span class="cmd">}</span><br><br>
+            <span class="comment"># Executar script remot des d'un fitxer local</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">Invoke-Command</span> <span class="flag">-ComputerName</span> <span class="str">"SRV-DC01"</span> <span class="flag">-FilePath</span> <span class="str">"C:\scripts\update-check.ps1"</span><br><br>
+            <span class="comment"># Habilitar WinRM via GPO en tots els equips del domini</span><br>
+            <span class="comment"># Computer Config → Windows Settings → Scripts → Startup</span><br>
+            <span class="comment"># Script: winrm quickconfig -quiet</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr>
+    <div class="section-tag tag-purple fi">Ansible — Automatització a escala</div>
+    <h2 class="fi">Ansible: gestió de configuració per a entorns multi-servidor</h2>
+    <p class="lead fi"><strong>Ansible</strong> és l'eina d'automatització open-source més popular per a la gestió de configuració. Permet definir l'estat desitjat dels servidors en fitxers YAML (playbooks) i aplicar-los simultàniament a desenes o centenars de servidors via SSH (sense agents).</p>
+
+    <!-- PRÀCTICA 6 -->
+    <div class="lab-card fi">
+      <div class="lab-header">
+        <div class="lab-icon">🔬</div>
+        <div class="lab-tb">
+          <h4>Pràctica 8.6 — SSH avançat, WinRM i introducció a Ansible</h4>
+          <p>Configurar accés remot segur i automatitzar tasques amb Ansible</p>
+        </div>
+        <div class="lab-os-tags"><span class="os-tag os-both">🔀 Windows + Ubuntu</span></div>
+      </div>
+      <div class="lab-body">
+        <h5>🐧 Ubuntu — Configurar SSH amb claus i enfortir el servidor</h5>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">SSH Setup complet</span><span class="term-os term-os-ubuntu">Ubuntu</span></div>
+          <div class="term-body pb">
+            <span class="comment"># 1. Generar clau SSH al client</span><br>
+            <span class="prompt-ub">user@client:~$</span> <span class="cmd">ssh-keygen -t ed25519 -C "asix-lab" -f ~/.ssh/id_lab -N ""</span><br><br>
+            <span class="comment"># 2. Copiar al servidor</span><br>
+            <span class="prompt-ub">user@client:~$</span> <span class="cmd">ssh-copy-id -i ~/.ssh/id_lab.pub admin@10.0.0.10</span><br><br>
+            <span class="comment"># 3. Enfortir /etc/ssh/sshd_config al servidor</span><br>
+            <span class="prompt-ub">root@srv:~#</span> <span class="cmd">cat >> /etc/ssh/sshd_config &lt;&lt; 'EOF'</span><br>
+            <span class="out">PermitRootLogin no</span><br>
+            <span class="out">PasswordAuthentication no</span><br>
+            <span class="out">PubkeyAuthentication yes</span><br>
+            <span class="out">MaxAuthTries 3</span><br>
+            <span class="out">LoginGraceTime 20</span><br>
+            <span class="out">AllowUsers admin sysadmin</span><br>
+            <span class="out">X11Forwarding no</span><br>
+            <span class="out">EOF</span><br>
+            <span class="prompt-ub">root@srv:~#</span> <span class="cmd">systemctl reload sshd</span><br><br>
+            <span class="comment"># 4. Primer playbook Ansible: configurar 3 servidors alhora</span><br>
+            <span class="prompt-ub">user@client:~$</span> <span class="cmd">pip install ansible</span><br><br>
+            <span class="comment"># Fitxer: inventory.ini</span><br>
+            <span class="out">[servidors_web]</span><br>
+            <span class="out">10.0.0.10 ansible_user=admin ansible_ssh_private_key_file=~/.ssh/id_lab</span><br>
+            <span class="out">10.0.0.11 ansible_user=admin ansible_ssh_private_key_file=~/.ssh/id_lab</span><br><br>
+            <span class="comment"># Fitxer: playbook-web.yml</span><br>
+            <span class="out">---</span><br>
+            <span class="out">- name: Configurar servidors web</span><br>
+            <span class="out">  hosts: servidors_web</span><br>
+            <span class="out">  become: yes</span><br>
+            <span class="out">  tasks:</span><br>
+            <span class="out">    - name: Actualitzar apt cache</span><br>
+            <span class="out">      apt: update_cache=yes</span><br>
+            <span class="out">    - name: Instal·lar nginx</span><br>
+            <span class="out">      apt: name=nginx state=present</span><br>
+            <span class="out">    - name: Iniciar i habilitar nginx</span><br>
+            <span class="out">      systemd: name=nginx state=started enabled=yes</span><br><br>
+            <span class="comment"># Executar el playbook</span><br>
+            <span class="prompt-ub">user@client:~$</span> <span class="cmd">ansible-playbook -i inventory.ini playbook-web.yml</span><br>
+            <span class="ok">PLAY RECAP ****</span><br>
+            <span class="ok">10.0.0.10: ok=3  changed=2  unreachable=0  failed=0</span><br>
+            <span class="ok">10.0.0.11: ok=3  changed=2  unreachable=0  failed=0</span>
+          </div>
+        </div>
+        <h5>🪟 Windows — Habilitar RDP segur i WinRM</h5>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">PowerShell — Administrador</span><span class="term-os term-os-ps">PowerShell</span></div>
+          <div class="term-body pb">
+            <span class="comment"># Habilitar RDP i configurar-lo de forma segura</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">Set-ItemProperty</span> <span class="path">"HKLM:\System\CurrentControlSet\Control\Terminal Server"</span> <span class="flag">-Name fDenyTSConnections -Value 0</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">Enable-NetFirewallRule -DisplayGroup "Remote Desktop"</span><br><br>
+            <span class="comment"># Forçar Network Level Authentication (NLA) — MÉS SEGUR</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">Set-ItemProperty</span> <span class="path">"HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp"</span> <span class="flag">-Name UserAuthentication -Value 1</span><br><br>
+            <span class="comment"># Limitar qui pot connectar per RDP (millor pràctica: grup específic)</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">Add-LocalGroupMember -Group "Remote Desktop Users" -Member "ASIX\IT_Admins_GG"</span><br><br>
+            <span class="comment"># Habilitar WinRM per a PowerShell Remoting</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">Enable-PSRemoting -Force -SkipNetworkProfileCheck</span><br><br>
+            <span class="comment"># Provar connexió remota des d'un altre PC</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">Test-WSMan -ComputerName SRV-DC01</span><br>
+            <span class="comment"># Executar comanda remota de verificació</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">Invoke-Command -ComputerName SRV-DC01 -ScriptBlock { Get-Date; hostname }</span>
+          </div>
+        </div>
+        <div class="lab-entrega"><strong>📋 Lliurament:</strong> (1) Captura de la connexió SSH funcionant amb clau (sense contrasenya). (2) Captura del playbook Ansible executat exitosament mostrant el PLAY RECAP. (3) Captura de <code>Invoke-Command</code> executant un comand en el servidor Windows remot. (4) Per quin motiu és imprescindible desactivar <code>PasswordAuthentication</code> a SSH en un servidor accessible des d'Internet? Quants intents de brute-force rep un servidor SSH exposat a Internet en 24h? Consulta les estadístiques al <code>/var/log/auth.log</code> o fail2ban.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PREGUNTES TEÒRIQUES -->
+<section id="preguntes" style="background:#fffbf0;padding:6rem 2rem">
+  <div class="container">
+    <div class="ra-banner ra-preguntes fi">
+      <div class="ra-num">?</div>
+      <div><h2>10 Preguntes teòriques — RA8</h2>
+        <p>Nivell CFGS. Anàlisi de casos, disseny d'implantació i presa de decisions en entorns de producció.</p></div>
+    </div>
+    <div class="grid fi" style="gap:.9rem">
+
+      <div class="q-card">
+        <div class="q-num">1</div>
+        <div class="q-body">
+          <h4>L'empresa TechCorp SL vol desplegar 60 equips Windows 11 Pro nous en 3 dies. El tècnic proposa usar instal·lació manual en cadascun; el responsable de TI prefereix una solució de desplegament automatitzat. Compara els dos enfocaments en termes de: temps total, cost laboral, consistència de la configuració, facilitat de manteniment posterior i riscos. Quina solució triaries? Descriu l'arquitectura tècnica completa de la solució de desplegament automatitzat (WDS, MDT o Autopilot).</h4>
+          <p>Quina informació hauria d'incloure l'autounattend.xml per garantir que tots els equips tinguin exactament la mateixa configuració base (hostname, zona horària, actualitzacions, compte local admin)?</p>
+          <span class="q-tag qt-auto">Desatesa</span><span class="q-tag qt-win">WDS/MDT</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">2</div>
+        <div class="q-body">
+          <h4>La documentació tècnica d'un servidor crític de l'empresa (el servidor de base de dades MySQL que conté les dades de facturació) consisteix en un fitxer Word al PC del tècnic que el va configurar fa 3 anys i que ha deixat l'empresa. Analitza tots els problemes que suposa aquesta situació i proposa una política de documentació tècnica per evitar-la en el futur. Quins elements mínims hauria de documentar el tècnic responsable de cada servidor i on s'hauria de guardar aquesta documentació?</h4>
+          <p>Com implantaries un sistema de documentació versionada amb Git per garantir que la documentació mai queda obsoleta i que tots els canvis queden registrats?</p>
+          <span class="q-tag qt-doc">Documentació</span><span class="q-tag qt-inc">Gestió</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">3</div>
+        <div class="q-body">
+          <h4>L'empresa vol instal·lar Microsoft Exchange Server 2019 en un servidor amb Windows Server 2022 Datacenter per a 200 usuaris. A part de les llicències de servidor, quines llicències CAL cal comprar? Quina és la diferència entre una Exchange Standard CAL i una Exchange Enterprise CAL? Si 20 d'aquells 200 usuaris accedeixen al correu des de dispositius mòbils personals (no gestionats per l'empresa), cal alguna llicència addicional?</h4>
+          <p>Compara el cost total de propietat (TCO a 3 anys) de Exchange Server on-premise vs Microsoft 365 Business Premium per a 200 usuaris. Quins factors a part del preu influencien la decisió?</p>
+          <span class="q-tag qt-lic">Llicències</span><span class="q-tag qt-win">Exchange/M365</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">4</div>
+        <div class="q-body">
+          <h4>L'empresa té un servidor WSUS que porta 6 mesos sense sincronitzar-se amb Microsoft. En aquest temps, han aparegut 3 vulnerabilitats crítiques (CVSS 9.8) explotades activament que afecten Windows Server. Descriu el pla d'acció immediat: (a) com avalues l'impacte actual, (b) com sincronitzes i aproves les actualitzacions crítiques de manera urgenta, (c) com garanteixes que tots els equips les instal·lin en les pròximes 24 hores i (d) quins controls implantes per evitar que torni a passar.</h4>
+          <p>Quins Event IDs de Windows Update indicarien que les actualitzacions s'han instal·lat correctament en un client? Com automatitzaries un informe d'estat de patches de tots els equips del domini?</p>
+          <span class="q-tag qt-auto">WSUS</span><span class="q-tag qt-win">Patching</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">5</div>
+        <div class="q-body">
+          <h4>Un tècnic configura l'accés SSH a un servidor Ubuntu de producció amb <code>PasswordAuthentication yes</code> i l'exposa al port 22 en la IP pública. Al cap de 2 hores, el servidor envia 10.000 peticions de correu de spam i el proveïdor de cloud l'ha suspès. Analitza exactament com ha passat l'incident (cadena d'atac), quins logs ho demostren, com hauria d'haver configurat SSH des del principi i quines mesures implantaries per recuperar el servei i evitar la reincidència.</h4>
+          <p>Quin és l'impacte de tenir <code>PermitRootLogin yes</code> + <code>PasswordAuthentication yes</code> en SSH? Compara la seguretat de RSA-2048 vs ed25519 per a claus SSH i per quin motiu es recomana migrar a ed25519.</p>
+          <span class="q-tag qt-remote">SSH</span><span class="q-tag qt-ubuntu">Seguretat</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">6</div>
+        <div class="q-body">
+          <h4>L'empresa rep una trucada a les 2:15 AM d'un usuari que informa que el servidor web de l'e-commerce no respon (P1 crític). Com a tècnic de guàrdia, descriu els passos exactes que seguiries (protocol d'actuació P1) des de la recepció de l'alerta fins a la restauració del servei i el tancament de la incidència. Quines eines d'administració remota usaries i en quin ordre? Com documentaries la incidència mentre treballes per resoldre-la?</h4>
+          <p>Quin és el contingut mínim que ha de tenir un "runbook" per a la recuperació del servidor web en cas de caiguda? Com garantiries que qualsevol tècnic de l'equip pugui seguir-lo a les 3 AM sense haver-lo vist mai?</p>
+          <span class="q-tag qt-inc">Incident P1</span><span class="q-tag qt-remote">Remot</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">7</div>
+        <div class="q-body">
+          <h4>L'empresa vol desplegar 20 servidors Ubuntu idèntics en un cloud privat (OpenStack) per a un nou entorn de microserveis. Compara tres aproximacions: (a) instal·lació manual de cadascun; (b) cloud-init amb fitxer user-data.yaml; (c) Ansible amb un playbook de configuració. Per a quin cas d'ús és millor cadascuna? Proposa l'arquitectura de desplegament que combinaria les tres per aconseguir el màxim nivell d'automatització.</h4>
+          <p>Escriu un exemple de playbook Ansible que configuri un servidor Ubuntu com a servidor web Nginx amb: virtual host personalitzat, certificat SSL autosignat, usuari www-data amb permisos correctes i un fitxer index.html personalitzat.</p>
+          <span class="q-tag qt-ubuntu">Ansible</span><span class="q-tag qt-auto">cloud-init</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">8</div>
+        <div class="q-body">
+          <h4>El departament de RRHH rep 30 nous empleats que han de tenir el seu PC configurat i operatiu el dia 1 (dilluns). El departament TI té divendres a la tarda per preparar-ho. Dissenyar el procés complet: (a) creació en massa dels comptes AD (des d'un CSV), (b) desplegament automatitzat del SO als 30 PCs (autounattend.xml + WDS o Autopilot), (c) unió automàtica al domini i (d) instal·lació del software corporatiu via GPO (un .msi) o Intune. Quantes hores requereix cada fase?</h4>
+          <p>Quin és el rol de sysprep en el procés de clonació d'imatges de Windows? Per quin motiu cal executar sysprep /generalize abans de capturar una imatge mestra?</p>
+          <span class="q-tag qt-win">Desplegament</span><span class="q-tag qt-auto">Automatització</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">9</div>
+        <div class="q-body">
+          <h4>Compara WinRM (Windows Remote Management) amb SSH per a l'administració remota de servidors Windows des d'un entorn Linux. Quines avantatges i limitacions té cada opció? Amb PowerShell Core (pwsh) instal·lat a Linux, es pot usar <code>Invoke-Command</code> via SSH per gestionar servidors Windows? Descriu la configuració necessària en ambdós extrems per fer-ho funcionar.</h4>
+          <p>En un escenari en el qual necessites executar el mateix script PowerShell en 50 servidors Windows alhora des d'un sistema de CI/CD Linux (GitHub Actions), quina seria la solució més eficient? Descriu els passos de configuració necessaris per a una connexió WinRM segura (HTTPS, port 5986) des d'un runner Linux.</p>
+          <span class="q-tag qt-remote">WinRM/SSH</span><span class="q-tag qt-win">PowerShell</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">10</div>
+        <div class="q-body">
+          <h4>L'empresa vol implementar un sistema de gestió d'incidències (ITSM) que compleixi amb ITIL v4. Compara tres opcions: GLPI (open-source), Jira Service Management (SaaS, de pagament) i Zammad (open-source). Per a una empresa de 5 tècnics TI i 200 usuaris finals, quina triaries i per quin motiu? Quins processos ITIL consideraries imprescindibles implementar en una PIME (gestió d'incidents, problemes, canvis, actius)?</h4>
+          <p>Dissenya un SLA (Service Level Agreement) intern per a una empresa de 200 usuaris: defineix categories d'incidències (P1-P4), temps de resposta, temps de resolució, hores de cobertura i les penalitzacions per incompliment. Quin indicador KPI usaries per mesurar el rendiment del departament TI?</p>
+          <span class="q-tag qt-inc">ITIL/ITSM</span><span class="q-tag qt-doc">SLA</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- RESUM FINAL -->
+<section class="s-cream">
+  <div class="container fi">
+    <div class="section-tag tag-asix">Resum del RA8</div>
+    <h2>El que heu après</h2>
+    <p class="lead">Els 9 continguts del RA8 i les seves aplicacions pràctiques com a tècnics ASIX implantant solucions client/servidor professionals.</p>
+    <div class="grid g4 fi">
+      <div class="card bl-asix">
+        <div class="card-icon" style="background:#f0f9ff">📝</div>
+        <h3>Documentació (T1)</h3>
+        <p>Tipus (diagrames, CMDB, runbooks, changelogs). Man pages, RFC, KB. Eines (Confluence, draw.io, Git). Scripts de documentació automàtica. <strong>doc-sistema.sh, Get-ComputerInfo.</strong></p>
+      </div>
+      <div class="card bl-teal">
+        <div class="card-icon" style="background:#f0fdfa">📖</div>
+        <h3>Manuals (T2)</h3>
+        <p>Estructura: objectiu, prerequisits, procediment, verificació, troubleshooting, rollback. Bones pràctiques: veu activa, blocs de codi, marcar riscos, variables. Provar el manual des de zero.</p>
+      </div>
+      <div class="card bl-green">
+        <div class="card-icon" style="background:#f0fdf4">⚖️</div>
+        <h3>Llicències (T3)</h3>
+        <p>CAL User/Device/RDS/External. Windows Server per core (Standard/Datacenter). OEM no transferible. Volume Licensing EA/CSP. SPLA per a MSPs. Ubuntu Pro vs RHEL. <strong>slmgr /dlv.</strong></p>
+      </div>
+      <div class="card bl-teal">
+        <div class="card-icon" style="background:#f0fdfa">🤖</div>
+        <h3>Desatesa (T4–T5)</h3>
+        <p>autounattend.xml (7 passes). cloud-init (user-data YAML): packages, runcmd, users, write_files. Preseed (Debian), Kickstart (RHEL), Autoinstall (Ubuntu 20.04+). <strong>multipass launch --cloud-init.</strong></p>
+      </div>
+      <div class="card bl-win">
+        <div class="card-icon" style="background:#f0f7ff">🔄</div>
+        <h3>Actualitzacions (T6)</h3>
+        <p>WSUS: sincronització, aprovació, reporting, GPO per clients. apt-cacher-ng (proxy caché) vs apt-mirror (mirall complet). Estalvi d'ample de banda. <strong>wsusutil.exe, apt.conf.d/01proxy.</strong></p>
+      </div>
+      <div class="card bl-amber">
+        <div class="card-icon" style="background:#fffbeb">🎫</div>
+        <h3>Incidències (T7)</h3>
+        <p>ITIL v4: detecció → registre → classificació → diagnosi → resolució → tancament. Prioritats P1-P4 i SLA. GLPI (instal·lació LAMP + tiquet complet). Protocols per compte bloquejada, disc ple, servei caigut.</p>
+      </div>
+      <div class="card bl-amber">
+        <div class="card-icon" style="background:#fffbeb">📋</div>
+        <h3>Protocols (T8)</h3>
+        <p>SOP estandarditzats per incident. Documentació durant la resolució. Comunicació als usuaris. Postmortem (RCA). Actualització de la base de coneixement (KB) per incidents recurrents.</p>
+      </div>
+      <div class="card bl-purple">
+        <div class="card-icon" style="background:#faf5ff">🖥️</div>
+        <h3>Adm. Remota (T9)</h3>
+        <p>SSH: ed25519, ~/.ssh/config, tunnels, SSHFS, PasswordAuthentication no. WinRM/Enter-PSSession/Invoke-Command. RDP + NLA. Ansible (inventory + playbook). fail2ban per SSH. <strong>ssh-keygen -t ed25519.</strong></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p><strong>RA8 — Implantació de Programari Client/Servidor · ASIX · MP0369 · Implantació de Sistemes Operatius</strong></p>
+  <p style="margin-top:.4rem">Documentació · Llicències CAL · Instal·lació Desatesa · cloud-init · WSUS · apt-cacher-ng · ITIL · GLPI · SSH · WinRM · Ansible</p>
+  <p style="margin-top:.4rem">Departament d'Informàtica · Administració de Sistemes Informàtics en Xarxa (ASIX)</p>
+</footer>
+
+<script>
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('in'); });
+  }, { threshold: 0.06, rootMargin: '0px 0px -30px 0px' });
+  document.querySelectorAll('.fi').forEach(el => io.observe(el));
+</script>
+</body>
+</html>

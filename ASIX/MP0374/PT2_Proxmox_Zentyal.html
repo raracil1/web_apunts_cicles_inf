@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PT2 — Proxmox VE + Zentyal · M0374</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink:#0d0f1a;--paper:#f4f2ed;--cream:#eceae3;--navy:#1a1f4e;
+    --cobalt:#2d3bb5;--sky:#4a6cf7;--accent:#e65100;--accentd:#b23c00;
+    --green:#0ea472;--red:#dc2626;--purple:#7c3aed;--teal:#0891b2;
+    --muted:#6b6f85;--border:#d6d2c9;--card:#ffffff;--terminal:#0d1117;
+    --radius:16px;--radius-sm:8px;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);font-size:16px;line-height:1.7;overflow-x:hidden;}
+
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(244,242,237,0.95);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:62px;}
+  .nav-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;color:var(--navy);letter-spacing:-0.02em;}
+  .nav-logo span{color:var(--accent);}
+  .nav-pills{display:flex;gap:.5rem;list-style:none;flex-wrap:wrap;}
+  .nav-pills a{text-decoration:none;font-size:0.78rem;font-weight:600;padding:.3rem .85rem;border-radius:100px;color:var(--muted);transition:all .2s;border:1px solid transparent;}
+  .nav-pills a:hover{color:var(--accent);border-color:var(--accent);background:rgba(230,81,0,0.07);}
+
+  .hero{min-height:100vh;display:grid;place-items:center;background:var(--navy);color:white;position:relative;overflow:hidden;padding:8rem 2rem 5rem;}
+  .hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 55% 45% at 85% 25%,rgba(230,81,0,0.32) 0%,transparent 65%),radial-gradient(ellipse 50% 40% at 15% 75%,rgba(8,145,178,0.22) 0%,transparent 65%),radial-gradient(ellipse 40% 35% at 55% 95%,rgba(74,108,247,0.15) 0%,transparent 60%);}
+  .hero-dots{position:absolute;inset:0;opacity:0.06;background-image:radial-gradient(rgba(255,255,255,.7) 1px,transparent 1px);background-size:28px 28px;}
+  .hero-content{position:relative;z-index:1;text-align:center;max-width:860px;}
+  .pt-badge{display:inline-flex;align-items:center;gap:.75rem;background:rgba(230,81,0,0.15);border:1px solid rgba(230,81,0,0.35);color:#ffb74d;font-family:'JetBrains Mono',monospace;font-size:0.78rem;font-weight:700;letter-spacing:0.1em;padding:.45rem 1.2rem;border-radius:100px;margin-bottom:1.5rem;}
+  .pt-badge .dot{width:8px;height:8px;border-radius:50%;background:#ffb74d;animation:blink 1.4s ease-in-out infinite;}
+  @keyframes blink{0%,100%{opacity:.3}50%{opacity:1}}
+  .hero h1{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(2.5rem,6vw,4.8rem);line-height:1.05;letter-spacing:-0.03em;margin-bottom:1.25rem;}
+  .hero h1 .hi{color:#ffb74d;}
+  .hero h1 .lo{color:rgba(255,255,255,.45);font-size:0.65em;display:block;font-weight:600;margin-top:.3rem;letter-spacing:-.01em;}
+  .hero-sub{font-size:1.05rem;color:rgba(255,255,255,0.55);max-width:580px;margin:0 auto 2rem;}
+  .ra-pills{display:flex;justify-content:center;gap:.75rem;flex-wrap:wrap;margin-bottom:2.5rem;}
+  .ra-pill{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);padding:.35rem 1rem;border-radius:100px;font-size:0.78rem;font-weight:600;color:rgba(255,255,255,.75);font-family:'JetBrains Mono',monospace;}
+  .ra-pill.active{background:rgba(230,81,0,0.2);border-color:rgba(230,81,0,0.5);color:#ffb74d;}
+  .hero-meta{display:flex;justify-content:center;gap:2rem;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,0.1);padding-top:2rem;margin-top:2rem;}
+  .meta-item .label{font-size:0.68rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:.2rem;}
+  .meta-item .value{font-size:0.95rem;font-weight:600;color:rgba(255,255,255,0.85);}
+  .scroll-hint{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.4rem;color:rgba(255,255,255,0.25);font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;}
+  .scroll-hint::after{content:'';display:block;width:1px;height:38px;background:linear-gradient(to bottom,rgba(255,255,255,.3),transparent);animation:pulse 2s ease-in-out infinite;}
+  @keyframes pulse{0%,100%{opacity:.2}50%{opacity:.9}}
+
+  section{padding:5.5rem 2rem;}
+  .container{max-width:1060px;margin:0 auto;}
+  .section-tag{font-size:0.7rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;display:flex;align-items:center;gap:.5rem;margin-bottom:.85rem;}
+  .section-tag::before{content:'';display:block;width:20px;height:2px;}
+  .tag-orange{color:var(--accent);}.tag-orange::before{background:var(--accent);}
+  .tag-blue{color:var(--cobalt);}.tag-blue::before{background:var(--cobalt);}
+  .tag-green{color:var(--green);}.tag-green::before{background:var(--green);}
+  .tag-purple{color:var(--purple);}.tag-purple::before{background:var(--purple);}
+  .tag-teal{color:var(--teal);}.tag-teal::before{background:var(--teal);}
+
+  h2{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(1.65rem,3.5vw,2.5rem);line-height:1.1;letter-spacing:-0.025em;color:var(--navy);margin-bottom:.85rem;}
+  h3{font-family:'Syne',sans-serif;font-weight:700;font-size:1.12rem;color:var(--navy);margin-bottom:.6rem;}
+  h4{font-family:'Syne',sans-serif;font-weight:700;font-size:0.95rem;color:var(--navy);margin-bottom:.4rem;}
+  .lead{font-size:1.02rem;color:var(--muted);max-width:700px;margin-bottom:2.8rem;line-height:1.75;}
+
+  .grid{display:grid;gap:1.2rem;}
+  .g2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr));}
+  .g3{grid-template-columns:repeat(auto-fit,minmax(230px,1fr));}
+  .g4{grid-template-columns:repeat(auto-fit,minmax(190px,1fr));}
+
+  .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.65rem;transition:transform .2s,box-shadow .2s;}
+  .card:hover{transform:translateY(-3px);box-shadow:0 12px 32px rgba(26,31,78,0.09);}
+  .card p{color:var(--muted);font-size:0.91rem;}
+  .card-icon{width:42px;height:42px;border-radius:10px;display:grid;place-items:center;font-size:1.25rem;margin-bottom:.85rem;}
+  .bl-orange{border-left:3px solid var(--accent);}
+  .bl-blue{border-left:3px solid var(--cobalt);}
+  .bl-green{border-left:3px solid var(--green);}
+  .bl-teal{border-left:3px solid var(--teal);}
+  .bl-purple{border-left:3px solid var(--purple);}
+
+  .terminal{background:var(--terminal);border-radius:var(--radius);overflow:hidden;margin:1.25rem 0;border:1px solid rgba(255,255,255,0.06);box-shadow:0 8px 32px rgba(0,0,0,0.35);}
+  .terminal-bar{background:#1c2128;padding:.65rem 1rem;display:flex;align-items:center;gap:.5rem;border-bottom:1px solid rgba(255,255,255,0.06);}
+  .t-dot{width:12px;height:12px;border-radius:50%;}
+  .t-red{background:#ff5f57;}.t-yellow{background:#febc2e;}.t-green-d{background:#28c840;}
+  .terminal-label{margin-left:.5rem;font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:rgba(255,255,255,.3);}
+  .terminal-body{padding:1.25rem 1.5rem;font-family:'JetBrains Mono',monospace;font-size:0.8rem;line-height:1.75;color:#c9d1d9;}
+  .t-prompt{color:#3fb950;}.t-cmd{color:#79c0ff;}.t-arg{color:#ffa657;}.t-cmt{color:#6e7681;}.t-out{color:#c9d1d9;}.t-url{color:#57e3b0;}
+
+  .callout{border-radius:var(--radius);padding:1.75rem 2rem;margin:1.25rem 0;display:flex;gap:1rem;align-items:flex-start;}
+  .callout-icon{font-size:1.35rem;flex-shrink:0;margin-top:.05rem;}
+  .callout p,.callout li{font-size:0.91rem;}
+  .callout ul{padding-left:1.2rem;}
+  .callout li{margin-bottom:.25rem;}
+  .cl-blue{background:rgba(74,108,247,0.08);border:1px solid rgba(74,108,247,0.2);}
+  .cl-orange{background:rgba(230,81,0,0.08);border:1px solid rgba(230,81,0,0.25);}
+  .cl-green{background:rgba(14,164,114,0.07);border:1px solid rgba(14,164,114,0.2);}
+  .cl-amber{background:rgba(251,188,4,0.08);border:1px solid rgba(251,188,4,0.28);}
+  .cl-red{background:rgba(220,38,38,0.07);border:1px solid rgba(220,38,38,0.2);}
+  .cl-teal{background:rgba(8,145,178,0.07);border:1px solid rgba(8,145,178,0.2);}
+
+  .ex{background:var(--cream);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.9rem 1.15rem;margin:.6rem 0;}
+  .ex-lbl{font-size:0.67rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.28rem;color:var(--accent);}
+  .ex-lbl-blue{color:var(--cobalt);}
+  .ex-lbl-teal{color:var(--teal);}
+  .ex p{font-size:0.86rem;color:var(--ink);}
+
+  .badge{display:inline-block;padding:.15rem .55rem;border-radius:100px;font-size:0.7rem;font-weight:700;font-family:'Syne',sans-serif;}
+  .b-orange{background:rgba(230,81,0,0.12);color:var(--accentd);}
+  .b-blue{background:rgba(74,108,247,0.12);color:var(--cobalt);}
+  .b-green{background:rgba(14,164,114,0.12);color:#077a52;}
+  .b-red{background:rgba(220,38,38,0.12);color:#991b1b;}
+  .b-purple{background:rgba(124,58,237,0.12);color:var(--purple);}
+  .b-teal{background:rgba(8,145,178,0.12);color:#065f79;}
+  .b-amber{background:rgba(251,188,4,0.15);color:#8a6500;}
+
+  .s-dark{background:var(--navy);color:white;}
+  .s-dark h2,.s-dark h3,.s-dark h4{color:white;}
+  .s-dark .lead{color:rgba(255,255,255,.55);}
+  .s-dark .card{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.1);}
+  .s-dark .card h3,.s-dark .card h4{color:white;}
+  .s-dark .card p{color:rgba(255,255,255,.6);}
+  .s-dark .ex{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.1);}
+  .s-dark .ex p{color:rgba(255,255,255,.75);}
+  .s-cream{background:var(--cream);}
+  .s-orange{background:#fff5f0;}
+
+  .ptable{width:100%;border-collapse:collapse;font-size:0.87rem;}
+  .ptable th,.ptable td{padding:.8rem 1rem;text-align:left;border-bottom:1px solid var(--border);}
+  .ptable th{background:var(--navy);color:white;font-family:'Syne',sans-serif;font-weight:700;font-size:0.82rem;}
+  .ptable th:first-child{border-radius:8px 0 0 0;}.ptable th:last-child{border-radius:0 8px 0 0;}
+  .ptable tr:hover td{background:var(--cream);}
+
+  .task-list{display:flex;flex-direction:column;gap:1.1rem;}
+  .task{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem 1.75rem;display:flex;gap:1.25rem;align-items:flex-start;transition:box-shadow .2s;}
+  .task:hover{box-shadow:0 6px 24px rgba(26,31,78,0.08);}
+  .task-num{flex-shrink:0;width:36px;height:36px;border-radius:50%;background:var(--navy);color:white;display:grid;place-items:center;font-family:'Syne',sans-serif;font-weight:800;font-size:0.85rem;}
+  .task-num.amp{background:linear-gradient(135deg,#5b21b6,#7c3aed);}
+  .task-body h4{margin-bottom:.4rem;}
+  .task-body p{color:var(--muted);font-size:0.91rem;}
+  .task-tags{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.6rem;}
+
+  .rubric-table{width:100%;border-collapse:collapse;font-size:0.84rem;}
+  .rubric-table th,.rubric-table td{padding:.75rem .9rem;border:1px solid var(--border);vertical-align:top;}
+  .rubric-table th{background:var(--navy);color:white;font-family:'Syne',sans-serif;font-weight:700;font-size:0.8rem;text-align:center;}
+  .rubric-table td:first-child{font-weight:600;color:var(--navy);background:var(--cream);}
+  .col-ex{background:rgba(14,164,114,0.05);}.col-be{background:rgba(74,108,247,0.04);}.col-ok{background:rgba(251,188,4,0.05);}.col-no{background:rgba(220,38,38,0.04);}
+
+  .q-list{display:flex;flex-direction:column;gap:.85rem;}
+  .q-item{display:flex;gap:1rem;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem 1.5rem;align-items:flex-start;}
+  .q-num{font-family:'Syne',sans-serif;font-weight:800;font-size:1.5rem;color:var(--border);line-height:1;flex-shrink:0;padding-top:.1rem;}
+  .q-item p{color:var(--ink);font-size:0.92rem;}
+  .q-item .hint{color:var(--muted);font-size:0.83rem;margin-top:.4rem;}
+
+  /* Infra diagram */
+  .infra{display:flex;gap:0;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;flex-wrap:wrap;margin:1.5rem 0;}
+  .infra-node{flex:1;padding:1.5rem 1rem;text-align:center;min-width:130px;}
+  .infra-node .icon{font-size:2rem;margin-bottom:.5rem;}
+  .infra-node .lbl{font-family:'Syne',sans-serif;font-weight:700;font-size:0.85rem;color:var(--navy);}
+  .infra-node .sub{color:var(--muted);font-size:0.75rem;margin-top:.2rem;}
+  .infra-arrow{display:flex;align-items:center;padding:0 .3rem;color:var(--muted);font-size:1.3rem;flex-shrink:0;}
+  .fn-a{background:rgba(230,81,0,0.06);}
+  .fn-b{background:rgba(8,145,178,0.06);}
+  .fn-c{background:rgba(14,164,114,0.06);}
+  .fn-d{background:rgba(74,108,247,0.06);}
+
+  .fi{opacity:0;transform:translateY(20px);transition:opacity .5s ease,transform .5s ease;}
+  .fi.in{opacity:1;transform:translateY(0);}
+  footer{background:var(--ink);color:rgba(255,255,255,.4);text-align:center;padding:2.5rem 2rem;font-size:0.82rem;}
+  footer strong{color:rgba(255,255,255,.7);}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">M0374 · ASIX <span>PT2</span></div>
+  <ul class="nav-pills">
+    <li><a href="#context">Context</a></li>
+    <li><a href="#teoria">Teoria</a></li>
+    <li><a href="#tasques">Tasques</a></li>
+    <li><a href="#ampliacio">Ampliació</a></li>
+    <li><a href="#rubrica">Rúbrica</a></li>
+    <li><a href="#reflexio">Reflexió</a></li>
+  </ul>
+</nav>
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-dots"></div>
+  <div class="hero-content">
+    <div class="pt-badge"><span class="dot"></span>Pràctica PT2 · M0374</div>
+    <h1>
+      <span class="hi">Proxmox VE</span>
+      <span class="lo">Hipervisor Bare-Metal · Zentyal · Serveis de Xarxa</span>
+    </h1>
+    <p class="hero-sub">Desplega un hipervisor tipus 1 sobre maquinari real, gestiona virtualització des de la interfície web i implanta un servidor de serveis de xarxa sobre la infraestructura virtual.</p>
+    <div class="ra-pills">
+      <div class="ra-pill active">RA4 · Virtualització</div>
+      <div class="ra-pill active">RA5 · Serveis de Xarxa</div>
+      <div class="ra-pill">Proxmox VE</div>
+      <div class="ra-pill">Zentyal</div>
+      <div class="ra-pill">Hipervisor tipus 1</div>
+      <div class="ra-pill">DNS · DHCP</div>
+    </div>
+    <div class="hero-meta">
+      <div class="meta-item"><div class="label">Mòdul</div><div class="value">M0374 · Sistemes Operatius</div></div>
+      <div class="meta-item"><div class="label">Curs</div><div class="value">ASIX · 1r</div></div>
+      <div class="meta-item"><div class="label">Durada estimada</div><div class="value">4–5 hores</div></div>
+      <div class="meta-item"><div class="label">Format</div><div class="value">Per grup · PC físic del taller</div></div>
+    </div>
+  </div>
+  <div class="scroll-hint">Desplaça</div>
+</section>
+
+<!-- CONTEXT -->
+<section id="context">
+  <div class="container">
+    <div class="section-tag tag-orange fi">Context de la pràctica</div>
+    <h2 class="fi">Per a quin motiu és rellevant aquesta pràctica?</h2>
+    <p class="lead fi">En el món professional, és molt poc habitual que un servidor físic executi directament un sol sistema operatiu. La norma és virtualitzar: un únic servidor físic allotja diverses màquines virtuals que ofereixen serveis independents. Proxmox VE és un dels hipervisors de codi obert més usats en empreses i centres de dades.</p>
+
+    <div class="infra fi">
+      <div class="infra-node fn-a"><div class="icon">🖥️</div><div class="lbl">PC Físic (Host)</div><div class="sub">Maquinari del taller</div></div>
+      <div class="infra-arrow">→</div>
+      <div class="infra-node fn-b"><div class="icon">⚙️</div><div class="lbl">Proxmox VE</div><div class="sub">Hipervisor tipus 1</div></div>
+      <div class="infra-arrow">→</div>
+      <div class="infra-node fn-c"><div class="icon">🛡️</div><div class="lbl">VM Zentyal</div><div class="sub">Servidor de serveis</div></div>
+      <div class="infra-arrow">→</div>
+      <div class="infra-node fn-d"><div class="icon">💻</div><div class="lbl">VM Client Linux</div><div class="sub">Rebrà IP de Zentyal</div></div>
+    </div>
+
+    <div class="grid g3 fi">
+      <div class="card bl-orange">
+        <div class="card-icon" style="background:#fff5f0">🏗️</div>
+        <h3>Maquinari real</h3>
+        <p>A diferència de pràctiques anteriors, aquí instal·les directament sobre el PC físic del taller. Proxmox VE substitueix qualsevol SO preexistent i pren el control complet del maquinari.</p>
+      </div>
+      <div class="card bl-orange">
+        <div class="card-icon" style="background:#fff5f0">🌐</div>
+        <h3>Gestió web</h3>
+        <p>Proxmox VE ofereix una interfície web per gestionar totes les VMs des de qualsevol navegador a la mateixa xarxa. No cal cap client especial: és el paradigma dels centres de dades moderns.</p>
+      </div>
+      <div class="card bl-orange">
+        <div class="card-icon" style="background:#fff5f0">🔧</div>
+        <h3>Infraestructura completa</h3>
+        <p>Al final de la pràctica, el grup tindrà una infraestructura funcional: un hipervisor amb un servidor de serveis (DNS, DHCP) i un client que valida que els serveis funcionen correctament.</p>
+      </div>
+    </div>
+
+    <div class="callout cl-orange fi" style="margin-top:2rem">
+      <span class="callout-icon">🎯</span>
+      <div>
+        <h4>Objectiu de la pràctica</h4>
+        <p>Preparar el maquinari físic del taller, instal·lar i configurar Proxmox VE com a hipervisor tipus 1, desplegar una VM amb Zentyal que ofereixi serveis DNS i DHCP, i verificar-los amb una VM client Linux lleugera que ha de rebre IP exclusivament de Zentyal (no de la xarxa del centre).</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TEORIA -->
+<section id="teoria" class="s-dark">
+  <div class="container">
+    <div class="section-tag tag-orange fi" style="color:rgba(255,183,77,.9)">Conceptes teòrics previs</div>
+    <h2 class="fi">El que has de comprendre abans de començar</h2>
+    <p class="lead fi">Entendre l'arquitectura de virtualització és clau per diagnosticar problemes i prendre decisions durant la configuració. No és suficient seguir passos: has de saber per a quin motiu fas cada cosa.</p>
+
+    <div class="section-tag" style="color:rgba(255,183,77,.7);margin-top:0" class="fi"><span style="display:block;width:20px;height:2px;background:rgba(255,183,77,.7);"></span>Tipus d'hipervisors</div>
+    <h3 class="fi" style="color:white;margin-bottom:1rem;margin-top:.5rem">Tipus 1 vs. Tipus 2: una diferència fonamental</h3>
+    <div class="grid g2 fi">
+      <div class="card">
+        <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.75rem"><span class="badge b-orange">Tipus 1</span><h4 style="margin:0">Bare-Metal (Proxmox, ESXi, Hyper-V)</h4></div>
+        <p>S'instal·la directament sobre el maquinari físic, <strong>sense cap SO intermig</strong>. Té accés directe als recursos (CPU, RAM, discs, xarxa). Més rendiment, més eficient, usat en producció. El maquinari és dedicat exclusivament a la virtualització.</p>
+        <div class="ex" style="background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.1);margin-top:.75rem">
+          <div class="ex-lbl">Exemples de producció</div>
+          <p style="color:rgba(255,255,255,.75)">VMware ESXi, Microsoft Hyper-V Server, Proxmox VE, Xen. Tots gestionen des de centenars fins a milers de VMs.</p>
+        </div>
+      </div>
+      <div class="card">
+        <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.75rem"><span class="badge b-teal">Tipus 2</span><h4 style="margin:0">Hosted (VirtualBox, VMware Workstation)</h4></div>
+        <p>S'executa <strong>sobre un SO hoste</strong> (Windows, Linux, macOS). Les VMs competeixen per recursos amb el SO base i les seves aplicacions. Rendiment menor, però molt més còmode per a ús personal i proves. El que has usat fins ara.</p>
+        <div class="ex" style="background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.1);margin-top:.75rem">
+          <div class="ex-lbl">Analogia</div>
+          <p style="color:rgba(255,255,255,.75)">Tipus 1 és el propietari de l'edifici. Tipus 2 és un llogater que subarrega habitacions als seus convidats.</p>
+        </div>
+      </div>
+    </div>
+
+    <div style="height:2.5rem"></div>
+    <h3 class="fi" style="color:white;margin-bottom:1rem">Proxmox VE: arquitectura interna</h3>
+    <div class="grid g3 fi">
+      <div class="card">
+        <h4>Base Debian Linux</h4>
+        <p>Proxmox VE és un sistema complet basat en Debian amb el kernel de Linux modificat per optimitzar la virtualització. La interfície web és una capa per sobre d'un sistema Linux completament funcional al qual pots accedir per SSH.</p>
+      </div>
+      <div class="card">
+        <h4>KVM + LXC</h4>
+        <p>Proxmox suporta dues tecnologies: <strong>KVM</strong> (Kernel-based Virtual Machine) per a VMs completes amb SO independent, i <strong>LXC</strong> (Linux Containers) per a contenidors que comparteixen el kernel del host. En aquesta pràctica usem KVM.</p>
+      </div>
+      <div class="card">
+        <h4>Bridge de xarxa (vmbr0)</h4>
+        <p>Proxmox crea un switch virtual (<strong>vmbr0</strong>) que connecta les VMs entre elles i cap a la xarxa física. Les VMs usen aquest bridge com si fos un cable de xarxa virtual. És essencial configurar-lo correctament perquè les VMs tinguin connectivitat.</p>
+      </div>
+      <div class="card">
+        <h4>Repositoris: Enterprise vs. No-Subscription</h4>
+        <p>Per defecte, Proxmox configura el repositori Enterprise (requereix subscripció de pagament). Sense subscripció, cal afegir el repositori <strong>No-Subscription</strong> per poder actualitzar i instal·lar paquets. Sense fer-ho, les actualitzacions fallaran.</p>
+      </div>
+      <div class="card">
+        <h4>Emmagatzematge (Storage)</h4>
+        <p>Proxmox gestiona l'emmagatzematge en "pools". Per defecte, crea un pool local on es guarden les ISOs i les imatges de disc de les VMs. En aquesta pràctica, l'emmagatzematge local és suficient.</p>
+      </div>
+      <div class="card">
+        <h4>Certificat autosignat</h4>
+        <p>La interfície web de Proxmox (port 8006) usa HTTPS amb un certificat autosignat. El navegador mostrarà un avís de seguretat. Pots ignorar-lo per accedir (Avançat → Continua): en un entorn de producció real, s'usaria un certificat vàlid.</p>
+      </div>
+    </div>
+
+    <div style="height:2.5rem"></div>
+    <h3 class="fi" style="color:white;margin-bottom:1rem">Zentyal i els serveis DNS/DHCP</h3>
+    <div class="grid g2 fi">
+      <div class="card">
+        <h4>Zentyal: servidor de serveis per a PIMES</h4>
+        <p>Zentyal és una distribució Linux (basada en Ubuntu) dissenyada per ser un servidor de xarxa complet per a petites i mitjanes empreses. Ofereix una interfície web amigable per gestionar: DHCP, DNS, Firewall, Samba (Active Directory), Correu, VPN. En aquesta pràctica el fem servir per DNS i DHCP.</p>
+      </div>
+      <div class="card">
+        <h4>DNS i DHCP: per a quin motiu són claus?</h4>
+        <p><strong>DHCP</strong> assigna automàticament adreces IP als dispositius de la xarxa. Sense ell, cada dispositiu necessita configuració manual. <strong>DNS</strong> tradueix noms de domini (servidor.empresa.local) en adreces IP. Sense ell, els usuaris haurien de recordar IPs. Junts, formen la base de qualsevol xarxa corporativa.</p>
+      </div>
+    </div>
+
+    <div class="callout cl-amber fi" style="margin-top:2rem">
+      <span class="callout-icon">⚠️</span>
+      <div>
+        <h4>Atenció: IP estàtica per al servidor</h4>
+        <p>Un servidor mai ha de tenir IP dinàmica (DHCP): si la IP canvia, els clients que apunten a ell deixen de funcionar. Proxmox s'ha de configurar amb <strong>IP estàtica</strong> durant la instal·lació. Consulta al professor quina IP estàtica lliure pots usar dins del rang del taller.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TASQUES -->
+<section id="tasques" class="s-orange">
+  <div class="container">
+    <div class="section-tag tag-orange fi">Enunciat · Tasques principals</div>
+    <h2 class="fi">Tasques a realitzar</h2>
+    <p class="lead fi">Treballa en grup seguint l'ordre de les fases. Cada fase depèn de l'anterior. Documenta cada pas amb captures de pantalla: sense proves visuals, no es pot avaluar el treball realitzat.</p>
+
+    <h3 class="fi" style="margin-bottom:1rem">📋 Fase 1 — Preparació del host físic</h3>
+    <div class="task-list fi">
+      <div class="task">
+        <div class="task-num">1</div>
+        <div class="task-body">
+          <h4>Configuració de la BIOS/UEFI</h4>
+          <p>Entra a la BIOS del PC físic del taller i realitza dues configuracions imprescindibles: activa la tecnologia de virtualització del processador (Intel VT-x o AMD-V, depenent del maquinari) i configura l'ordre d'arrencada perquè l'USB sigui el primer dispositiu. Documenta el model del PC i quin tipus de virtualització suporta. Per a quin motiu la virtualització del processador ha d'estar activada a la BIOS?</p>
+          <div class="task-tags"><span class="badge b-orange">BIOS/UEFI</span><span class="badge b-teal">Intel VT-x / AMD-V</span></div>
+        </div>
+      </div>
+      <div class="task">
+        <div class="task-num">2</div>
+        <div class="task-body">
+          <h4>Creació del medi d'instal·lació de Proxmox</h4>
+          <p>Utilitza BalenaEtcher (des del portàtil de control) per "cremar" la ISO de Proxmox VE en un pendrive. BalenaEtcher sobreescriurà completament el contingut del pendrive: assegura't d'usar el pendrive correcte. Un cop llest, connecta l'USB al PC físic i arrenca des d'ell.</p>
+          <div class="task-tags"><span class="badge b-orange">BalenaEtcher</span><span class="badge b-blue">ISO Proxmox</span></div>
+        </div>
+      </div>
+      <div class="task">
+        <div class="task-num">3</div>
+        <div class="task-body">
+          <h4>Instal·lació de Proxmox VE amb IP estàtica</h4>
+          <p>Segueix l'assistent d'instal·lació de Proxmox. El pas crític és la configuració de xarxa: assigna una <strong>IP estàtica</strong> al servidor (demana al professor quina és disponible), configura la màscara de subxarxa, la passarel·la i el servidor DNS del taller. No usis DHCP. Un cop finalitzada la instal·lació, el PC mostrarà la URL de la interfície web (format: <code>https://IP:8006</code>). Documenta la URL obtinguda.</p>
+          <div class="task-tags"><span class="badge b-orange">IP estàtica</span><span class="badge b-blue">Port 8006</span></div>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="fi" style="margin:2.5rem 0 1rem">🌐 Fase 2 — Gestió remota i post-instal·lació</h3>
+    <div class="task-list fi">
+      <div class="task">
+        <div class="task-num">4</div>
+        <div class="task-body">
+          <h4>Accés a la interfície web de Proxmox</h4>
+          <p>Des del portàtil de control, connecta't a la mateixa xarxa que el servidor Proxmox i obre la URL de gestió al navegador. Accepta el certificat autosignat (Avançat → Continua o similar) i inicia sessió amb les credencials de root configurades durant la instal·lació. Documenta l'aspecte del dashboard i identifica els seus elements principals: nodes, emmagatzematge, xarxa, VM list.</p>
+          <div class="task-tags"><span class="badge b-teal">Dashboard web</span><span class="badge b-blue">HTTPS</span></div>
+        </div>
+      </div>
+      <div class="task">
+        <div class="task-num">5</div>
+        <div class="task-body">
+          <h4>Configuració de repositoris (No-Subscription)</h4>
+          <p>Proxmox ve configurat per defecte amb el repositori Enterprise, que requereix subscripció de pagament. Has de: (a) desactivar el repositori Enterprise des de Node → Repositories, (b) afegir el repositori No-Subscription per poder actualitzar. Un cop configurat, actualitza el sistema des de la interfície web. Per a quin motiu és important mantenir Proxmox actualitzat fins i tot en un entorn de laboratori?</p>
+          <div class="task-tags"><span class="badge b-orange">Repositoris</span><span class="badge b-amber">No-Subscription</span></div>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="fi" style="margin:2.5rem 0 1rem">🛡️ Fase 3 — Desplegament de Zentyal</h3>
+    <div class="task-list fi">
+      <div class="task">
+        <div class="task-num">6</div>
+        <div class="task-body">
+          <h4>Pujada de la ISO de Zentyal a Proxmox</h4>
+          <p>Dins de la interfície web de Proxmox, navega fins a l'emmagatzematge local (PVE → ISO Images) i puja la ISO de Zentyal Development Edition des del portàtil de control. Proxmox la desarà a la seva biblioteca d'ISOs disponibles per crear VMs. Documenta la mida de la ISO i el temps de pujada.</p>
+          <div class="task-tags"><span class="badge b-orange">ISO Zentyal</span><span class="badge b-blue">Storage</span></div>
+        </div>
+      </div>
+      <div class="task">
+        <div class="task-num">7</div>
+        <div class="task-body">
+          <h4>Creació de la VM de Zentyal amb els paràmetres correctes</h4>
+          <p>Crea una nova VM amb els paràmetres mínims especificats: SO basat en la ISO de Zentyal, disc de <strong>40 GB SCSI</strong>, <strong>2 cores de CPU tipus host</strong>, <strong>4 GB de RAM</strong> (mínim 2 GB), xarxa en bridge <strong>vmbr0</strong>. Justifica a la memòria per a quin motiu s'usa el tipus de CPU "host" (pista: rendiment i compatibilitat d'instruccions).</p>
+          <div class="task-tags"><span class="badge b-orange">VM Zentyal</span><span class="badge b-teal">CPU host</span><span class="badge b-blue">vmbr0</span></div>
+        </div>
+      </div>
+      <div class="task">
+        <div class="task-num">8</div>
+        <div class="task-body">
+          <h4>Instal·lació i configuració inicial de Zentyal</h4>
+          <p>Inicia la VM de Zentyal des de la consola de Proxmox i segueix el procés d'instal·lació. Un cop instal·lat, accedeix a la interfície web de Zentyal (<code>https://IP_ZENTYAL:8443</code>) i activa els mòduls de <strong>DNS</strong> i <strong>DHCP</strong>. Configura el servidor DHCP perquè assigni IPs en un rang que <strong>no col·lideixi</strong> amb el rang del taller (consulta el professor). Documenta el rang DHCP configurat i justifica per a quin motiu és important que no col·lideixi.</p>
+          <div class="task-tags"><span class="badge b-orange">Zentyal</span><span class="badge b-green">DNS</span><span class="badge b-teal">DHCP</span></div>
+        </div>
+      </div>
+      <div class="task">
+        <div class="task-num">9</div>
+        <div class="task-body">
+          <h4>Creació d'una VM client Linux lleugera i verificació</h4>
+          <p>Crea una segona VM petita (usa una distribució Linux lleugera: Debian netinstall, Alpine Linux, o similar) i connecta-la també a <strong>vmbr0</strong>. Configura-la perquè obtingui IP per DHCP i verifica que: (a) rep una IP dins del rang configurat a Zentyal, (b) la IP <strong>no prové</strong> de la xarxa del taller sinó exclusivament de Zentyal. Documenta les IPs obtingudes i el procés de verificació.</p>
+          <div class="task-tags"><span class="badge b-green">VM Client</span><span class="badge b-teal">Verificació DHCP</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AMPLIACIÓ -->
+<section id="ampliacio">
+  <div class="container">
+    <div class="section-tag tag-purple fi">Tasques d'ampliació</div>
+    <h2 class="fi">Reptes addicionals</h2>
+    <p class="lead fi">Tasques opcionals que amplien la infraestructura desplegada i demostren un major domini de la plataforma Proxmox.</p>
+    <div class="task-list fi">
+      <div class="task">
+        <div class="task-num amp">A1</div>
+        <div class="task-body">
+          <h4>Snapshot de la VM de Zentyal</h4>
+          <p>Un dels avantatges de la virtualització és poder fer "instantànies" (snapshots) de l'estat d'una VM en un moment concret. Fes un snapshot de la VM de Zentyal quan estigui en funcionament. Posteriorment, fes un canvi de configuració qualsevol a Zentyal i verifica que pots revertir al snapshot anterior. Documenta el procés i reflexiona: quina utilitat té això en un entorn de producció? Quina és la diferència entre un snapshot i una còpia de seguretat?</p>
+          <div class="task-tags"><span class="badge b-purple">Snapshot</span><span class="badge b-blue">Proxmox</span></div>
+        </div>
+      </div>
+      <div class="task">
+        <div class="task-num amp">A2</div>
+        <div class="task-body">
+          <h4>Accés SSH a Proxmox i gestió per línia de comandes</h4>
+          <p>Proxmox és un sistema Linux complet accessible per SSH. Des del portàtil de control, connecta't per SSH al node Proxmox (<code>ssh root@IP_PROXMOX</code>) i explora les eines de gestió per línia de comandes: <code>pvesh</code> (API de Proxmox), <code>qm list</code> (llistar VMs), <code>qm status &lt;vmid&gt;</code> (estat d'una VM). Documenta 3 comandes útils que hagis descobert i explica per a quin motiu pot ser útil gestionar Proxmox per CLI en comptes d'usar la interfície web.</p>
+          <div class="task-tags"><span class="badge b-purple">SSH</span><span class="badge b-orange">CLI Proxmox</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RÚBRICA -->
+<section id="rubrica" class="s-cream">
+  <div class="container">
+    <div class="section-tag tag-green fi">Criteris d'avaluació</div>
+    <h2 class="fi">Rúbrica de la pràctica PT2</h2>
+    <p class="lead fi">Avaluació per grup. Cada membre ha de poder explicar qualsevol dels punts avaluats individualment si el professor ho demana.</p>
+    <div style="overflow-x:auto" class="fi">
+      <table class="rubric-table">
+        <thead>
+          <tr>
+            <th style="width:22%">Criteri</th><th style="width:8%">Pes</th>
+            <th class="col-ex" style="width:17%">🟢 Excel·lent (10)</th>
+            <th class="col-be" style="width:17%">🔵 Bé (7)</th>
+            <th class="col-ok" style="width:17%">🟡 Suficient (5)</th>
+            <th class="col-no" style="width:19%">🔴 Insuficient (0–3)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>BIOS i medi d'instal·lació</td><td style="text-align:center;font-weight:700">10%</td><td class="col-ex">VT-x/AMD-V activat, boot order correcte, justificació documentada.</td><td class="col-be">Correcte però sense justificació escrita.</td><td class="col-ok">Instal·lació completada sense documentar la configuració de BIOS.</td><td class="col-no">No documentat o configuració incorrecta.</td></tr>
+          <tr><td>Proxmox instal·lat amb IP estàtica</td><td style="text-align:center;font-weight:700">20%</td><td class="col-ex">IP estàtica correcta, URL web accessible, repositoris configurats i sistema actualitzat.</td><td class="col-be">Proxmox funcional però sense actualitzar o repositoris no configurats.</td><td class="col-ok">Proxmox instal·lat però amb IP dinàmica o interfície web no accessible.</td><td class="col-no">Proxmox no instal·lat o no funcional.</td></tr>
+          <tr><td>VM Zentyal desplegada</td><td style="text-align:center;font-weight:700">25%</td><td class="col-ex">VM creada amb tots els paràmetres correctes, Zentyal accessible, CPU host justificada.</td><td class="col-be">VM creada i funcional, paràmetres correctes però sense justificació.</td><td class="col-ok">VM creada però amb paràmetres incorrectes (CPU, RAM o disc).</td><td class="col-no">VM no creada o Zentyal no instal·lat.</td></tr>
+          <tr><td>DNS i DHCP funcionals</td><td style="text-align:center;font-weight:700">25%</td><td class="col-ex">Mòduls actius, rang DHCP configurat correctament, client obté IP de Zentyal (verificat i documentat).</td><td class="col-be">DHCP funcional però DNS no configurat o no verificat.</td><td class="col-ok">Mòduls activats però client no obté IP de Zentyal.</td><td class="col-no">Mòduls no activats o configuració incorrecta.</td></tr>
+          <tr><td>Qualitat de la memòria</td><td style="text-align:center;font-weight:700">10%</td><td class="col-ex">Captures de tots els passos, justificacions de decisions tècniques, errors documentats.</td><td class="col-be">Captures dels resultats principals, poques justificacions.</td><td class="col-ok">Memòria incompleta, captures insuficients.</td><td class="col-no">Sense memòria o captures.</td></tr>
+          <tr><td>Ampliació</td><td style="text-align:center;font-weight:700">10%</td><td class="col-ex">Totes dues ampliacions, documentades i reflexionades.</td><td class="col-be">Una ampliació completada.</td><td class="col-ok">Ampliació intentada però no completada.</td><td class="col-no">No abordades.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout cl-blue fi" style="margin-top:2rem">
+      <span class="callout-icon">📦</span>
+      <div><h4>Lliurament</h4><p>Un únic ZIP per grup: <strong>PT2_grup_N.zip</strong> amb la memòria en PDF i totes les captures organitzades per fase. Data límit: indicada a l'aula virtual.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- REFLEXIÓ -->
+<section id="reflexio">
+  <div class="container">
+    <div class="section-tag tag-blue fi">Preguntes de reflexió</div>
+    <h2 class="fi">Demostra la teva comprensió</h2>
+    <p class="lead fi">Respon a la memòria. S'avalua el raonament, no la memorització.</p>
+    <div class="q-list fi">
+      <div class="q-item"><div class="q-num">1</div><div><p>Quina diferència pràctica vas notar entre usar un hipervisor tipus 2 (VirtualBox) i un tipus 1 (Proxmox) en termes de rendiment, gestió i casos d'ús? Quina situació professional justificaria usar cadascun?</p><p class="hint">Pensa en termes de recursos compartits, temps d'inici, accés remot i propòsit.</p></div></div>
+      <div class="q-item"><div class="q-num">2</div><div><p>Per a quin motiu Proxmox VE desactiva el repositori Enterprise per defecte quan no hi ha subscripció? Quina és la diferència entre el repositori Enterprise i el No-Subscription en termes de suport i estabilitat?</p><p class="hint">Reflexiona sobre el model de negoci de Proxmox i el que implica "suport empresarial".</p></div></div>
+      <div class="q-item"><div class="q-num">3</div><div><p>Si el client Linux obté una IP de la xarxa del taller en lloc d'obtenir-la de Zentyal, quines poden ser les causes? Explica com investigaries el problema pas a pas.</p><p class="hint">Pensa en la configuració de xarxa del bridge vmbr0 i en quins dispositius poden estar servint DHCP a la mateixa xarxa.</p></div></div>
+      <div class="q-item"><div class="q-num">4</div><div><p>En un centre de dades real amb 50 servidors físics i 500 VMs, quines avantatges ofereix tenir tots els servidors gestionats amb Proxmox VE en comparació a tenir 50 servidors amb VMs independents no gestionades de forma centralitzada?</p><p class="hint">Pensa en migració de VMs, alta disponibilitat, còpies de seguretat centralitzades i monitoratge.</p></div></div>
+      <div class="q-item"><div class="q-num">5</div><div><p>El tipus de CPU "host" en una VM de Proxmox exposa les instruccions reals del processador físic a la VM. Quina és la diferència respecte al tipus "Default (kvm64)"? En quin cas podria ser problemàtic usar el tipus "host"?</p><p class="hint">Pensa en migrar una VM entre dos servidors Proxmox amb processadors de fabricants o generacions diferents.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p><strong>PT2 — Proxmox VE + Zentyal · M0374 Sistemes Operatius</strong></p>
+  <p style="margin-top:.4rem">Proxmox VE · Zentyal · KVM · DHCP · DNS · Hipervisor Tipus 1 · vmbr0</p>
+  <p style="margin-top:.4rem">Departament d'Informàtica · ASIX</p>
+</footer>
+
+<script>
+  const io=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in');});},{threshold:0.06,rootMargin:'0px 0px -40px 0px'});
+  document.querySelectorAll('.fi').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>

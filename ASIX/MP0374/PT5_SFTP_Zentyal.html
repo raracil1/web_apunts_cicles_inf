@@ -1,0 +1,1242 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PT5_0374 — Protocol SFTP sobre Zentyal · ASIX</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:      #0d0f1a;
+  --paper:    #f4f2ed;
+  --cream:    #eceae3;
+  --navy:     #1a1f4e;
+  --asix:     #0f4c81;
+  --asix-l:   #1a6bb5;
+  --asix-d:   #0a3259;
+  --ssh:      #059669;
+  --ssh-d:    #065f46;
+  --sftp:     #0891b2;
+  --sftp-d:   #0e7490;
+  --win:      #0078d4;
+  --ubuntu:   #e95420;
+  --amber:    #d97706;
+  --red:      #dc2626;
+  --violet:   #7c3aed;
+  --muted:    #6b6f85;
+  --border:   #d6d2c9;
+  --card:     #ffffff;
+  --term:     #0f111a;
+  --term2:    #161b2e;
+  --radius:   16px;
+  --radius-sm:8px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: 'DM Sans', sans-serif; background: var(--paper); color: var(--ink); font-size: 16px; line-height: 1.7; overflow-x: hidden; }
+
+/* NAV */
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(244,242,237,0.95); backdrop-filter: blur(14px); border-bottom: 1px solid var(--border); padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 62px; }
+.nav-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1rem; color: var(--navy); letter-spacing: -0.02em; }
+.nav-logo span { color: var(--sftp); }
+.nav-pills { display: flex; gap: .5rem; list-style: none; flex-wrap: wrap; }
+.nav-pills a { text-decoration: none; font-size: 0.78rem; font-weight: 600; padding: .3rem .85rem; border-radius: 100px; color: var(--muted); transition: all .2s; border: 1px solid transparent; }
+.nav-pills a:hover, .nav-pills a.act { color: var(--sftp); border-color: var(--sftp); background: rgba(8,145,178,0.07); }
+
+/* HERO */
+.hero{min-height:100vh;display:grid;place-items:center;background:var(--navy);color:white;position:relative;overflow:hidden;padding:8rem 2rem 5rem;}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 55% 45% at 80% 20%,rgba(8,145,178,0.38) 0%,transparent 65%),radial-gradient(ellipse 50% 40% at 15% 75%,rgba(5,150,105,0.2) 0%,transparent 65%),radial-gradient(ellipse 40% 35% at 55% 95%,rgba(124,58,237,0.12) 0%,transparent 60%);}
+.hero-dots{position:absolute;inset:0;opacity:0.06;background-image:radial-gradient(rgba(255,255,255,.7) 1px,transparent 1px);background-size:28px 28px;}
+.hero-content{position:relative;z-index:1;text-align:center;max-width:860px;}
+.pt-badge{display:inline-flex;align-items:center;gap:.75rem;background:rgba(8,145,178,0.18);border:1px solid rgba(8,145,178,0.4);color:#67e8f9;font-family:'JetBrains Mono',monospace;font-size:0.78rem;font-weight:700;letter-spacing:0.1em;padding:.45rem 1.2rem;border-radius:100px;margin-bottom:1.5rem;}
+.pt-badge .dot{width:8px;height:8px;border-radius:50%;background:#67e8f9;animation:blink 1.4s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:.3}50%{opacity:1}}
+.hero h1{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(2.4rem,6vw,4.6rem);line-height:1.05;letter-spacing:-0.03em;margin-bottom:1.25rem;}
+.hero h1 .hi{color:#67e8f9;}
+.hero h1 .lo{color:rgba(255,255,255,.45);font-size:0.65em;display:block;font-weight:600;margin-top:.3rem;letter-spacing:-.01em;}
+.hero-sub{font-size:1.05rem;color:rgba(255,255,255,0.55);max-width:600px;margin:0 auto 2rem;}
+.ra-pills{display:flex;justify-content:center;gap:.75rem;flex-wrap:wrap;margin-bottom:2.5rem;}
+.ra-pill{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);padding:.35rem 1rem;border-radius:100px;font-size:0.78rem;font-weight:600;color:rgba(255,255,255,.75);font-family:'JetBrains Mono',monospace;}
+.ra-pill.active{background:rgba(8,145,178,0.22);border-color:rgba(8,145,178,0.5);color:#67e8f9;}
+.hero-meta{display:flex;justify-content:center;gap:2rem;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,0.1);padding-top:2rem;margin-top:2rem;}
+.meta-item .label{font-size:0.68rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:.2rem;}
+.meta-item .value{font-size:0.95rem;font-weight:600;color:rgba(255,255,255,0.85);}
+.scroll-hint{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.4rem;color:rgba(255,255,255,0.25);font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;}
+.scroll-hint::after{content:'';display:block;width:1px;height:38px;background:linear-gradient(to bottom,rgba(255,255,255,.3),transparent);animation:pulse 2s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:.2}50%{opacity:.9}}
+
+/* SECTIONS */
+section { padding: 5.5rem 2rem; }
+.container { max-width: 1080px; margin: 0 auto; }
+.section-tag { font-size: .72rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; display: flex; align-items: center; gap: .5rem; margin-bottom: .9rem; }
+.section-tag::before { content: ''; display: block; width: 20px; height: 2px; }
+.tag-sftp  { color: var(--sftp);  } .tag-sftp::before  { background: var(--sftp); }
+.tag-ssh   { color: var(--ssh);   } .tag-ssh::before   { background: var(--ssh); }
+.tag-win   { color: var(--win);   } .tag-win::before   { background: var(--win); }
+.tag-ubuntu{ color: var(--ubuntu);} .tag-ubuntu::before{ background: var(--ubuntu); }
+.tag-amber { color: var(--amber); } .tag-amber::before { background: var(--amber); }
+.tag-violet{ color: var(--violet);} .tag-violet::before{ background: var(--violet); }
+.tag-task  { color: #92400e;      } .tag-task::before  { background: #92400e; }
+.tag-red   { color: var(--red);   } .tag-red::before   { background: var(--red); }
+
+h2 { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(1.65rem, 3.5vw, 2.5rem); line-height: 1.1; letter-spacing: -.025em; color: var(--navy); margin-bottom: .9rem; }
+h3 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.1rem; color: var(--navy); margin-bottom: .6rem; }
+h4 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: .92rem; color: var(--navy); margin-bottom: .4rem; }
+.lead { font-size: 1.02rem; color: var(--muted); max-width: 740px; margin-bottom: 2.5rem; line-height: 1.75; }
+
+/* GRID */
+.grid { display: grid; gap: 1.2rem; }
+.g2 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+.g3 { grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
+
+/* CARDS */
+.card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.65rem; transition: transform .2s, box-shadow .2s; }
+.card:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(26,31,78,.1); }
+.card p { color: var(--muted); font-size: .91rem; }
+.card-icon { width: 42px; height: 42px; border-radius: 10px; display: grid; place-items: center; font-size: 1.25rem; margin-bottom: .85rem; }
+.bl-sftp   { border-left: 3px solid var(--sftp); }
+.bl-ssh    { border-left: 3px solid var(--ssh); }
+.bl-win    { border-left: 3px solid var(--win); }
+.bl-ubuntu { border-left: 3px solid var(--ubuntu); }
+.bl-amber  { border-left: 3px solid var(--amber); }
+.bl-violet { border-left: 3px solid var(--violet); }
+.bl-red    { border-left: 3px solid var(--red); }
+
+/* BANNERS */
+.ra-banner { border-radius: var(--radius); padding: 1.4rem 2rem; display: flex; align-items: center; gap: 1.2rem; margin-bottom: 2.5rem; color: white; }
+.ra-num { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 2.2rem; opacity: .22; flex-shrink: 0; line-height: 1; }
+.ra-banner h2 { color: white; font-size: 1.3rem; margin-bottom: .15rem; }
+.ra-banner p  { color: rgba(255,255,255,.68); font-size: .86rem; }
+.ra-sftp  { background: linear-gradient(135deg, var(--sftp-d), var(--sftp)); }
+.ra-ssh   { background: linear-gradient(135deg, var(--ssh-d), var(--ssh)); }
+.ra-task  { background: linear-gradient(135deg, #7f2b0e, #d97706); }
+.ra-alert { background: linear-gradient(135deg, #7f1d1d, var(--red)); }
+.ra-both  { background: linear-gradient(135deg, var(--asix-d), var(--asix-l)); }
+.ra-eval  { background: linear-gradient(135deg, #064e3b, var(--ssh)); }
+
+/* CALLOUTS */
+.callout { border-radius: var(--radius); padding: 1.4rem 1.65rem; margin: 1.4rem 0; display: flex; gap: .9rem; align-items: flex-start; }
+.callout-icon { font-size: 1.35rem; flex-shrink: 0; margin-top: .1rem; }
+.callout p, .callout li { font-size: .91rem; }
+.callout ul { padding-left: 1.15rem; } .callout li { margin-bottom: .22rem; }
+.cl-sftp   { background: rgba(8,145,178,.07);  border: 1px solid rgba(8,145,178,.22); }
+.cl-ssh    { background: rgba(5,150,105,.07);  border: 1px solid rgba(5,150,105,.22); }
+.cl-amber  { background: rgba(251,188,4,.1);   border: 1px solid rgba(251,188,4,.3); }
+.cl-red    { background: rgba(220,38,38,.07);  border: 1px solid rgba(220,38,38,.22); }
+.cl-violet { background: rgba(124,58,237,.07); border: 1px solid rgba(124,58,237,.22); }
+.cl-win    { background: rgba(0,120,212,.07);  border: 1px solid rgba(0,120,212,.22); }
+
+/* TERMINAL */
+.terminal { background: var(--term); border-radius: var(--radius-sm); overflow: hidden; margin: .75rem 0; font-family: 'JetBrains Mono', monospace; font-size: .79rem; }
+.term-bar { background: var(--term2); padding: .5rem 1rem; display: flex; align-items: center; gap: .5rem; border-bottom: 1px solid rgba(255,255,255,.06); }
+.term-dot { width: 11px; height: 11px; border-radius: 50%; }
+.term-title { color: rgba(255,255,255,.4); font-size: .7rem; letter-spacing: .05em; margin-left: .25rem; flex: 1; }
+.term-os { font-size: .67rem; font-weight: 600; padding: .1rem .45rem; border-radius: 4px; }
+.term-os-ssh    { background: rgba(5,150,105,.25);  color: #6ee7b7; }
+.term-os-ubuntu { background: rgba(233,84,32,.25);  color: #f4956a; }
+.term-os-win    { background: rgba(0,120,212,.25);  color: #60adf0; }
+.term-os-both   { background: rgba(8,145,178,.25);  color: #67e8f9; }
+.term-body { padding: .9rem 1.2rem; line-height: 1.8; }
+.prompt-ub  { color: #f4956a; } .prompt-win { color: #60adf0; }
+.cmd { color: #e2e8f0; } .out { color: #94a3b8; }
+.comment { color: #475569; } .ok { color: #6ee7b7; }
+.val { color: #86efac; } .hi { color: #f0abfc; } .warn { color: #fbbf24; }
+
+/* TASK CARD (enunciat) */
+.task-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-bottom: 1.5rem; }
+.task-header { padding: 1.1rem 1.75rem; display: flex; align-items: center; gap: 1rem; color: white; }
+.task-num { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 2rem; opacity: .3; flex-shrink: 0; line-height: 1; }
+.task-header h3 { color: white; margin: 0; font-size: 1.05rem; }
+.task-header p  { color: rgba(255,255,255,.65); font-size: .8rem; margin: .15rem 0 0; }
+.task-body { padding: 1.75rem; }
+.task-body p { color: var(--muted); font-size: .92rem; margin-bottom: .75rem; }
+.task-body h4 { color: var(--navy); margin: 1rem 0 .4rem; }
+.th-sftp   { background: linear-gradient(135deg, var(--sftp-d), var(--sftp)); }
+.th-ssh    { background: linear-gradient(135deg, var(--ssh-d), var(--ssh)); }
+.th-win    { background: linear-gradient(135deg, #005a9e, var(--win)); }
+.th-ubuntu { background: linear-gradient(135deg, var(--ubuntu), #f97316); }
+.th-amber  { background: linear-gradient(135deg, #92400e, var(--amber)); }
+.th-violet { background: linear-gradient(135deg, #4c1d95, var(--violet)); }
+
+/* TASK REQ LIST */
+.req-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: .5rem; margin: .75rem 0; }
+.req-list li { display: flex; gap: .75rem; align-items: flex-start; padding: .75rem 1rem; background: var(--cream); border-radius: var(--radius-sm); font-size: .88rem; color: var(--ink); }
+.req-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: .05rem; }
+.req-list li strong { color: var(--navy); }
+
+/* WARNING BOX */
+.no-sol { background: linear-gradient(135deg, rgba(220,38,38,.06), rgba(220,38,38,.02)); border: 1.5px dashed rgba(220,38,38,.35); border-radius: var(--radius); padding: 1.25rem 1.5rem; display: flex; gap: .85rem; align-items: flex-start; margin: 2rem 0; }
+.no-sol-icon { font-size: 1.5rem; flex-shrink: 0; }
+.no-sol p { font-size: .9rem; color: var(--red); margin: 0; }
+.no-sol strong { color: var(--red); }
+
+/* CONCEPT DIAGRAM */
+.proto-compare { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border-radius: var(--radius); overflow: hidden; margin: 1.5rem 0; }
+.proto-col { background: var(--card); padding: 1.1rem 1.25rem; }
+.proto-col:first-child { background: #fff5f5; }
+.proto-col:nth-child(2) { background: #f0fdf4; }
+.proto-col:last-child { background: #ecfeff; }
+.proto-name { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1rem; margin-bottom: .5rem; }
+.proto-name.ftp  { color: var(--red); }
+.proto-name.ftps { color: var(--amber); }
+.proto-name.sftp { color: var(--sftp); }
+.proto-row { font-size: .83rem; color: var(--muted); padding: .2rem 0; border-bottom: 1px solid var(--border); display: flex; gap: .4rem; align-items: baseline; }
+.proto-row:last-child { border: none; }
+.proto-row .label { font-weight: 600; color: var(--ink); min-width: 80px; flex-shrink: 0; }
+
+/* PERMS DIAGRAM */
+.perm-diagram { border-radius: var(--radius); overflow: hidden; margin: 1.5rem 0; border: 1px solid var(--border); }
+.perm-header { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; background: var(--navy); color: white; font-family: 'Syne', sans-serif; font-weight: 700; font-size: .78rem; padding: .6rem 1rem; gap: .5rem; }
+.perm-row { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; padding: .7rem 1rem; gap: .5rem; border-bottom: 1px solid var(--border); font-size: .85rem; align-items: center; }
+.perm-row:last-child { border: none; }
+.perm-row:hover { background: var(--cream); }
+.perm-cell { font-size: .83rem; }
+.perm-yes  { color: var(--ssh);  font-weight: 700; }
+.perm-no   { color: var(--red);  font-weight: 700; }
+.perm-fold { font-family: 'JetBrains Mono', monospace; font-size: .78rem; color: var(--asix-l); }
+
+/* SSH FLOW */
+.ssh-flow { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; margin: 1.5rem 0; justify-content: center; }
+.ssh-node { background: var(--term2); border: 1px solid rgba(255,255,255,.1); border-radius: var(--radius-sm); padding: .6rem 1.1rem; text-align: center; color: white; font-family: 'Syne', sans-serif; font-weight: 700; font-size: .8rem; min-width: 80px; }
+.ssh-node .sub { font-family: 'JetBrains Mono', monospace; font-size: .68rem; color: rgba(255,255,255,.45); font-weight: 400; margin-top: .15rem; }
+.ssh-arrow { color: var(--sftp); font-size: 1.3rem; flex-shrink: 0; }
+.ssh-label { font-family: 'JetBrains Mono', monospace; font-size: .7rem; color: var(--sftp); background: rgba(8,145,178,.12); border: 1px solid rgba(8,145,178,.25); border-radius: 4px; padding: .2rem .55rem; flex-shrink: 0; }
+
+/* SSHD CONCEPT BLOCKS */
+.cfg-block { background: var(--term); border-radius: var(--radius-sm); padding: 1rem 1.25rem; margin: .75rem 0; font-family: 'JetBrains Mono', monospace; font-size: .79rem; line-height: 1.9; }
+.cfg-key   { color: #60adf0; }
+.cfg-val   { color: #6ee7b7; }
+.cfg-comment { color: #475569; }
+.cfg-section { color: #f0abfc; font-weight: 700; }
+
+/* EVAL TABLE */
+.ptable { width: 100%; border-collapse: collapse; font-size: .86rem; }
+.ptable th, .ptable td { padding: .78rem .95rem; text-align: left; border-bottom: 1px solid var(--border); }
+.ptable th { background: var(--navy); color: white; font-family: 'Syne', sans-serif; font-weight: 700; }
+.ptable th:first-child { border-radius: 8px 0 0 0; } .ptable th:last-child { border-radius: 0 8px 0 0; }
+.ptable tr:hover td { background: var(--cream); }
+.badge { display: inline-block; padding: .13rem .5rem; border-radius: 100px; font-size: .71rem; font-weight: 700; font-family: 'Syne', sans-serif; }
+.b-sftp   { background: rgba(8,145,178,.12);  color: var(--sftp-d); }
+.b-ssh    { background: rgba(5,150,105,.12);  color: var(--ssh-d); }
+.b-amber  { background: rgba(217,119,6,.15);  color: #78350f; }
+.b-red    { background: rgba(220,38,38,.1);   color: var(--red); }
+.b-violet { background: rgba(124,58,237,.12); color: #5b21b6; }
+
+/* Q CARDS */
+.q-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.35rem 1.75rem; display: flex; gap: 1.1rem; align-items: flex-start; transition: transform .2s, box-shadow .2s; }
+.q-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.08); }
+.q-num { flex-shrink: 0; width: 33px; height: 33px; border-radius: 50%; background: var(--cream); border: 2px solid var(--border); display: grid; place-items: center; font-family: 'Syne', sans-serif; font-weight: 800; font-size: .85rem; color: var(--sftp); }
+.q-body h4 { margin-bottom: .3rem; color: var(--navy); font-size: .92rem; }
+.q-body p  { color: var(--muted); font-size: .84rem; font-style: italic; }
+.q-tag { display: inline-block; padding: .12rem .55rem; border-radius: 100px; font-size: .69rem; font-weight: 700; margin-top: .4rem; margin-right: .25rem; }
+.qt-sftp   { background: rgba(8,145,178,.1);  color: var(--sftp-d); }
+.qt-ssh    { background: rgba(5,150,105,.1);  color: var(--ssh-d); }
+.qt-win    { background: rgba(0,120,212,.1);  color: var(--win); }
+.qt-ubuntu { background: rgba(233,84,32,.1);  color: var(--ubuntu); }
+.qt-perm   { background: rgba(124,58,237,.1); color: #5b21b6; }
+.qt-both   { background: rgba(8,145,178,.1);  color: var(--sftp-d); }
+
+/* SECTIONS COLORS */
+.s-cream   { background: var(--cream); }
+.s-sftp    { background: #ecfeff; }
+.s-ssh     { background: #f0fdf4; }
+.s-dark    { background: var(--navy); color: white; }
+.s-dark h2, .s-dark h3, .s-dark h4 { color: white; }
+.s-dark .lead { color: rgba(255,255,255,.6); }
+.s-dark .card { background: rgba(255,255,255,.05); border-color: rgba(255,255,255,.1); }
+.s-dark .card h3, .s-dark .card h4 { color: white; }
+.s-dark .card p { color: rgba(255,255,255,.6); }
+.s-win     { background: #f0f7ff; }
+.s-ubuntu  { background: #fff5f1; }
+.s-amber   { background: #fffbeb; }
+
+/* EX BOX */
+.ex { background: var(--cream); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: .9rem 1.15rem; margin: .6rem 0; }
+.ex .ex-lbl { font-size: .67rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; margin-bottom: .28rem; }
+.ex p { font-size: .86rem; color: var(--ink); }
+.ex-sftp .ex-lbl   { color: var(--sftp); }
+.ex-ssh .ex-lbl    { color: var(--ssh); }
+.ex-amber .ex-lbl  { color: var(--amber); }
+.ex-red .ex-lbl    { color: var(--red); }
+.ex-violet .ex-lbl { color: var(--violet); }
+
+.pills { display: flex; flex-wrap: wrap; gap: .38rem; margin: .6rem 0; }
+.pill { padding: .2rem .7rem; border-radius: 100px; font-size: .77rem; border: 1px solid var(--border); background: var(--cream); color: var(--ink); }
+.pill-sftp { background: rgba(8,145,178,.1);  border-color: rgba(8,145,178,.3);  color: var(--sftp-d); }
+.pill-ssh  { background: rgba(5,150,105,.1);  border-color: rgba(5,150,105,.3);  color: var(--ssh-d); }
+.pill-win  { background: rgba(0,120,212,.1);  border-color: rgba(0,120,212,.3);  color: var(--win); }
+.pill-ub   { background: rgba(233,84,32,.1);  border-color: rgba(233,84,32,.3);  color: var(--ubuntu); }
+.pill-v    { background: rgba(124,58,237,.1); border-color: rgba(124,58,237,.3); color: #5b21b6; }
+
+hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
+footer { background: var(--ink); color: rgba(255,255,255,.4); padding: 3rem 2rem; text-align: center; font-size: .84rem; }
+footer strong { color: white; }
+.fi { opacity: 0; transform: translateY(18px); transition: opacity .55s ease, transform .55s ease; }
+.fi.in { opacity: 1; transform: none; }
+@media(max-width: 640px) { .nav-pills { display: none; } .proto-compare { grid-template-columns: 1fr; } .perm-header, .perm-row { grid-template-columns: 1fr 1fr; } }
+</style>
+</head>
+<body>
+
+
+  
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">M0374 · ASIX <span>PT5</span></div>
+  <ul class="nav-pills">
+    <li><a href="#objectiu">Objectiu</a></li>
+    <li><a href="#conceptes">Conceptes</a></li>
+    <li><a href="#ssh-config">SSH/SFTP</a></li>
+    <li><a href="#permisos">Permisos</a></li>
+    <li><a href="#tasques">Tasques</a></li>
+    <li><a href="#clients">Clients</a></li>
+    <li><a href="#avaluacio" class="act">Avaluació</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="top">
+  <div class="hero-bg"></div>
+  <div class="hero-dots"></div>
+  <div class="hero-content">
+    <div class="pt-badge"><span class="dot"></span>Pràctica PT5 · M0374</div>
+    <h1>
+      <span class="hi">Protocol SFTP sobre Zentyal</span>
+      <span class="lo">SSH · ChrootDirectory · Permisos POSIX · Xarxes Heterogènies</span>
+    </h1>
+    <p class="hero-sub">Posa en marxa un servidor de transferència segura de fitxers sobre la infraestructura Zentyal existent, amb control d'accés per grups, permisos POSIX i verificació des de clients Windows i Ubuntu.</p>
+    <div class="ra-pills">
+      <div class="ra-pill active">RA4 · Administració remota</div>
+      <div class="ra-pill active">RA6 · Integració de sistemes</div>
+      <div class="ra-pill">SFTP / SSH</div>
+      <div class="ra-pill">ChrootDirectory</div>
+      <div class="ra-pill">Permisos POSIX</div>
+      <div class="ra-pill">Zentyal</div>
+    </div>
+    <div class="hero-meta">
+      <div class="meta-item"><div class="label">Mòdul</div><div class="value">M0374 · Sistemes Operatius</div></div>
+      <div class="meta-item"><div class="label">Curs</div><div class="value">ASIX · 1r</div></div>
+      <div class="meta-item"><div class="label">Durada estimada</div><div class="value">3–4 hores</div></div>
+      <div class="meta-item"><div class="label">Format</div><div class="value">Per grup</div></div>
+    </div>
+  </div>
+  <div class="scroll-hint">Desplaça</div>
+</section>
+
+<!-- OBJECTIU I CONTEXT -->
+<section id="objectiu" class="s-cream">
+  <div class="container fi">
+    <div class="section-tag tag-sftp">PT5_0374 · Objectiu i context</div>
+    <h2>Objectiu de la pràctica</h2>
+    <p class="lead">Posar en marxa un servidor SFTP al servidor Zentyal tenint en compte la visibilitat i els permisos d'accés sobre els directoris de treball, i verificar el funcionament des de clients Windows i Ubuntu.</p>
+
+    <div class="grid g3 fi">
+      <div class="card bl-sftp">
+        <div class="card-icon" style="background:#ecfeff">🔒</div>
+        <h3>RA4 — Administració remota</h3>
+        <p>Configuraràs SSH (que és la base de SFTP) al servidor Zentyal i verificaràs l'accés remot segur des de clients externs usant tant terminal com eines gràfiques.</p>
+        <div class="pills" style="margin-top:.75rem">
+          <span class="pill pill-sftp">SSH</span>
+          <span class="pill pill-sftp">sshd_config</span>
+          <span class="pill pill-sftp">Port 22</span>
+          <span class="pill pill-sftp">Xifratge</span>
+        </div>
+      </div>
+      <div class="card bl-ssh">
+        <div class="card-icon" style="background:#f0fdf4">🌐</div>
+        <h3>RA6 — Integració de sistemes</h3>
+        <p>El servidor SFTP ha de ser accessible des de Windows (amb FileZilla o WinSCP) i des d'Ubuntu (amb la comanda <code>sftp</code> al terminal). Integres dos sistemes operatius clients amb un servidor Linux.</p>
+        <div class="pills" style="margin-top:.75rem">
+          <span class="pill pill-win">FileZilla</span>
+          <span class="pill pill-win">Windows</span>
+          <span class="pill pill-ub">sftp CLI</span>
+          <span class="pill pill-ub">Ubuntu</span>
+        </div>
+      </div>
+      <div class="card bl-amber">
+        <div class="card-icon" style="background:#fffbeb">🏗️</div>
+        <h3>Infraestructura necessària</h3>
+        <p>Parteixes de l'entorn Zentyal ja configurat a pràctiques anteriors. Cal que tinguis actiu el servidor Zentyal i que els clients Windows i Ubuntu puguin comunicar-se amb ell per xarxa.</p>
+        <div class="pills" style="margin-top:.75rem">
+          <span class="pill">Zentyal</span>
+          <span class="pill pill-win">Client Windows</span>
+          <span class="pill pill-ub">Client Ubuntu</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="no-sol fi">
+      <div class="no-sol-icon">🚫</div>
+      <div>
+        <strong>Nota important:</strong>
+        <p style="margin-top:.3rem">Aquest document explica els conceptes i descriu el que has de fer, però <strong>no conté les solucions ni les comandes resoltes</strong>. Has d'investigar, provar i documentar el procés tu mateix/a. Això és el que s'avalua.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONCEPTES: FTP vs FTPS vs SFTP -->
+<section id="conceptes" class="s-sftp">
+  <div class="container">
+    <div class="ra-banner ra-sftp fi">
+      <div class="ra-num">1</div>
+      <div>
+        <h2>Conceptes previs: FTP, FTPS i SFTP</h2>
+        <p>Entendre les diferències entre els protocols de transferència de fitxers és imprescindible per justificar per quin motiu usem SFTP.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-sftp fi">Comparativa de protocols</div>
+    <h2 class="fi">Tres protocols, tres nivells de seguretat</h2>
+    <p class="lead fi">Existeixen tres protocols principals per transferir fitxers per xarxa. Cadascun té un model de seguretat diferent. Saber-los diferenciar és fonamental per a qualsevol administrador de sistemes.</p>
+
+    <div class="proto-compare fi">
+      <div class="proto-col">
+        <div class="proto-name ftp">FTP</div>
+        <div class="proto-row"><span class="label">Seguretat</span> ❌ Cap xifrat</div>
+        <div class="proto-row"><span class="label">Port(s)</span> 21 (control) + dinàmics (dades)</div>
+        <div class="proto-row"><span class="label">Credencials</span> Text pla (interceptables)</div>
+        <div class="proto-row"><span class="label">Base</span> Protocol propi (1971)</div>
+        <div class="proto-row"><span class="label">Ús avui</span> Obsolet. Evitar sempre</div>
+      </div>
+      <div class="proto-col">
+        <div class="proto-name ftps">FTPS</div>
+        <div class="proto-row"><span class="label">Seguretat</span> ✅ SSL/TLS per sobre de FTP</div>
+        <div class="proto-row"><span class="label">Port(s)</span> 21 implícit / 990 explícit + dinàmics</div>
+        <div class="proto-row"><span class="label">Credencials</span> Xifrades per TLS</div>
+        <div class="proto-row"><span class="label">Base</span> FTP + SSL/TLS (dos protocols)</div>
+        <div class="proto-row"><span class="label">Ús avui</span> Possible, però complex (firewall)</div>
+      </div>
+      <div class="proto-col">
+        <div class="proto-name sftp">SFTP</div>
+        <div class="proto-row"><span class="label">Seguretat</span> ✅ SSH xifra tot</div>
+        <div class="proto-row"><span class="label">Port(s)</span> <strong>22 (un sol port)</strong></div>
+        <div class="proto-row"><span class="label">Credencials</span> Xifrades per SSH</div>
+        <div class="proto-row"><span class="label">Base</span> Subsistema SSH (no té res a veure amb FTP)</div>
+        <div class="proto-row"><span class="label">Ús avui</span> ✅ Estàndard actual recomanat</div>
+      </div>
+    </div>
+
+    <div class="callout cl-amber fi">
+      <span class="callout-icon">⚠️</span>
+      <div>
+        <strong>Error freqüent:</strong>
+        <p style="margin-top:.3rem">SFTP no és "FTP segur". Malgrat el nom semblant, SFTP és un <strong>protocol completament diferent</strong> que funciona com a subsistema del servei SSH. Per tant, per activar SFTP al teu servidor <strong>no cal instal·lar cap servidor FTP</strong> (ni vsftpd, ni proftpd, ni res semblant). Si SSH està actiu, SFTP ja és accessible per defecte.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-sftp fi" style="margin-top:3.5rem">Com funciona SFTP internament</div>
+    <h2 class="fi">SFTP: un subsistema d'SSH</h2>
+    <p class="lead fi">Quan un client SFTP es connecta, en realitat estableix una connexió SSH normal i llavors negocia l'ús del subsistema SFTP dins d'aquella sessió xifrada. Tot el tràfic de fitxers viatja encapsulat dins del túnel SSH.</p>
+
+    <div class="s-dark" style="border-radius:var(--radius);padding:2rem;margin:1.5rem 0" class="fi">
+      <div class="ssh-flow">
+        <div class="ssh-node">Client<div class="sub">FileZilla / sftp</div></div>
+        <span class="ssh-arrow">→</span>
+        <div class="ssh-label">TCP :22</div>
+        <span class="ssh-arrow">→</span>
+        <div class="ssh-node">Negociació<br>SSH<div class="sub">Handshake + xifrat</div></div>
+        <span class="ssh-arrow">→</span>
+        <div class="ssh-node">Autenticació<div class="sub">user+pass o clau</div></div>
+        <span class="ssh-arrow">→</span>
+        <div class="ssh-node">Subsistema<br>SFTP<div class="sub">sftp-server binary</div></div>
+        <span class="ssh-arrow">→</span>
+        <div class="ssh-node">Sistema<br>de fitxers<div class="sub">/srv/sftp/...</div></div>
+      </div>
+    </div>
+
+    <div class="grid g2 fi" style="margin-top:2rem">
+      <div class="card bl-sftp">
+        <div class="card-icon" style="background:#ecfeff">🔑</div>
+        <h3>Autenticació: contrasenya vs clau pública</h3>
+        <p style="margin-bottom:.75rem">SSH admet dos mètodes principals d'autenticació:</p>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.35rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">🔐 <strong style="color:var(--ink)">Contrasenya (password):</strong> l'usuari proporciona la seva contrasenya del sistema. Més senzill però menys segur si l'usuari té contrasenya feble.</li>
+          <li style="padding:.35rem 0;font-size:.88rem;color:var(--muted)">🗝️ <strong style="color:var(--ink)">Clau pública/privada:</strong> el client genera un parell de claus. La clau pública s'instal·la al servidor. L'autenticació es fa per criptografia asimètrica. Molt més segur.</li>
+        </ul>
+        <div class="ex ex-sftp" style="margin-top:.75rem">
+          <div class="ex-lbl">En aquesta pràctica</div>
+          <p>Usaràs autenticació per contrasenya (la dels usuaris del sistema Zentyal). Això és suficient per a l'àmbit d'aquesta pràctica.</p>
+        </div>
+      </div>
+      <div class="card bl-ssh">
+        <div class="card-icon" style="background:#f0fdf4">🌍</div>
+        <h3>Avantatges de SFTP vs FTP en producció</h3>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">🛡️ <strong style="color:var(--ink)">Un sol port (22):</strong> molt més fàcil de gestionar als firewalls que FTP (que necessita ports dinàmics).</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">🔄 <strong style="color:var(--ink)">Reprendre transferències:</strong> si es talla la connexió, es pot continuar des d'on s'havia quedat.</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">📂 <strong style="color:var(--ink)">Gestió de fitxers:</strong> SFTP permet reanomenar, esborrar, crear directoris... no sols pujar/baixar.</li>
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted)">🔒 <strong style="color:var(--ink)">Tot xifrat:</strong> ni les credencials ni les dades viatgen mai en text pla.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SSH I SSHD_CONFIG -->
+<section id="ssh-config" class="s-ssh">
+  <div class="container">
+    <div class="ra-banner ra-ssh fi">
+      <div class="ra-num">2</div>
+      <div>
+        <h2>El servei SSH i el fitxer sshd_config</h2>
+        <p>Comprèn la configuració del servidor SSH, que és el que habilita SFTP. El fitxer <code>/etc/ssh/sshd_config</code> és la clau de tota la configuració.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-ssh fi">El fitxer /etc/ssh/sshd_config</div>
+    <h2 class="fi">Paràmetres clau que hauràs de conèixer</h2>
+    <p class="lead fi">El fitxer <code>/etc/ssh/sshd_config</code> controla el comportament del dimoni SSH del servidor. Hauràs d'entendre i possiblement modificar alguns dels seus paràmetres per configurar SFTP amb les restriccions demanades.</p>
+
+    <div class="grid g2 fi">
+      <div>
+        <h3>Estructura general del fitxer</h3>
+        <div class="cfg-block fi">
+          <div><span class="cfg-comment"># Paràmetres globals (afecten tots els usuaris)</span></div>
+          <div><span class="cfg-key">Port</span>                    <span class="cfg-val">22</span></div>
+          <div><span class="cfg-key">PermitRootLogin</span>         <span class="cfg-val">no</span></div>
+          <div><span class="cfg-key">PasswordAuthentication</span>  <span class="cfg-val">yes</span></div>
+          <div><span class="cfg-key">Subsystem sftp</span>          <span class="cfg-val">/usr/lib/openssh/sftp-server</span></div>
+          <div>&nbsp;</div>
+          <div><span class="cfg-comment"># Bloc Match: regles per a un grup/usuari concret</span></div>
+          <div><span class="cfg-section">Match Group</span>         <span class="cfg-val">nomgrup</span></div>
+          <div>  <span class="cfg-key">ChrootDirectory</span>       <span class="cfg-val">/ruta/del/jail</span></div>
+          <div>  <span class="cfg-key">ForceCommand</span>           <span class="cfg-val">internal-sftp</span></div>
+          <div>  <span class="cfg-key">AllowTcpForwarding</span>    <span class="cfg-val">no</span></div>
+          <div>  <span class="cfg-key">X11Forwarding</span>          <span class="cfg-val">no</span></div>
+        </div>
+      </div>
+      <div>
+        <div class="card bl-ssh fi">
+          <div class="card-icon" style="background:#f0fdf4">🔍</div>
+          <h3>Paràmetres que hauràs d'entendre</h3>
+          <ul style="list-style:none;padding:0">
+            <li style="padding:.35rem 0;border-bottom:1px solid var(--border);font-size:.87rem;color:var(--muted)">
+              <code style="color:var(--ink)">Subsystem sftp</code> — Activa el subsistema SFTP i indica el binari que el gestiona. Sense aquesta línia, SFTP no funciona.
+            </li>
+            <li style="padding:.35rem 0;border-bottom:1px solid var(--border);font-size:.87rem;color:var(--muted)">
+              <code style="color:var(--ink)">Match Group / Match User</code> — Blocs condicionals. Les directives dins d'un bloc <code>Match</code> sols s'apliquen als usuaris o grups que compleixen la condició.
+            </li>
+            <li style="padding:.35rem 0;border-bottom:1px solid var(--border);font-size:.87rem;color:var(--muted)">
+              <code style="color:var(--ink)">ChrootDirectory</code> — Limita l'arrel del sistema de fitxers que veu l'usuari SFTP. <strong>Important:</strong> el directori de chroot ha de ser propietat de <code>root</code> i no pot ser modificable per cap altre usuari.
+            </li>
+            <li style="padding:.35rem 0;border-bottom:1px solid var(--border);font-size:.87rem;color:var(--muted)">
+              <code style="color:var(--ink)">ForceCommand internal-sftp</code> — Força que l'usuari sols pugui usar SFTP (no podrà obrir una shell SSH normal).
+            </li>
+            <li style="padding:.35rem 0;font-size:.87rem;color:var(--muted)">
+              <code style="color:var(--ink)">PasswordAuthentication</code> — Permet o denega l'autenticació per contrasenya.
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout cl-sftp fi">
+      <span class="callout-icon">💡</span>
+      <div>
+        <strong>Sobre el Chroot Jail:</strong>
+        <p style="margin-top:.3rem">La directiva <code>ChrootDirectory</code> crea un "presó" (jail) per als usuaris SFTP: quan es connecten, no veuen res fora d'aquella carpeta. Això és important per seguretat, però té un requisit molt específic quant als permisos del directori arrel del chroot que has d'investigar i entendre bé.</p>
+      </div>
+    </div>
+
+    <div class="callout cl-amber fi">
+      <span class="callout-icon">⚠️</span>
+      <div>
+        <strong>Recorda: cal reiniciar el servei SSH després de modificar sshd_config</strong>
+        <p style="margin-top:.3rem">Qualsevol canvi a <code>/etc/ssh/sshd_config</code> no s'aplica fins que es reinicia el servei SSH. A més, és molt recomanable verificar que la sintaxi del fitxer és correcta <strong>abans</strong> de reiniciar, per evitar quedar-te sense accés al servidor.</p>
+      </div>
+    </div>
+
+    <!-- Zentyal i SSH -->
+    <div class="section-tag tag-ssh fi" style="margin-top:3.5rem">Zentyal i SSH</div>
+    <h2 class="fi">Consideració especial: SSH a Zentyal</h2>
+    <p class="lead fi">Zentyal és una distribució basada en Ubuntu que afegeix la seva pròpia capa de gestió. Això té implicacions importants quan modifiquem configuracions de serveis que Zentyal pot gestionar.</p>
+
+    <div class="grid g2 fi">
+      <div class="card bl-amber">
+        <div class="card-icon" style="background:#fffbeb">⚠️</div>
+        <h3>Zentyal pot sobreescriure configuracions</h3>
+        <p style="margin-bottom:.75rem">Zentyal gestiona alguns serveis de forma centralitzada. Quan reinicia o reconfigura un servei, pot sobreescriure els fitxers de configuració que has editat manualment.</p>
+        <p>Has d'investigar com Zentyal gestiona el servei SSH i si cal activar-lo des del panell web de Zentyal o si es pot configurar directament al fitxer.</p>
+        <div class="ex ex-amber" style="margin-top:.75rem">
+          <div class="ex-lbl">Punt de partida</div>
+          <p>Comprova a la interfície web de Zentyal si hi ha algun mòdul o opció relacionada amb SSH. Investiga si SSH ja està actiu per defecte o cal activar-lo explícitament.</p>
+        </div>
+      </div>
+      <div class="card bl-sftp">
+        <div class="card-icon" style="background:#ecfeff">🔒</div>
+        <h3>SSH i el firewall de Zentyal</h3>
+        <p style="margin-bottom:.75rem">Zentyal incorpora un firewall (iptables/nftables). Per poder connectar-se per SFTP (port 22) des dels clients, cal que el firewall permeti el tràfic entrant al port 22.</p>
+        <p>Verifica que el port 22 és accessible des dels clients. Si la connexió és refusada o no hi ha resposta, és possible que el firewall l'estigui bloquejant.</p>
+        <div class="ex ex-sftp" style="margin-top:.75rem">
+          <div class="ex-lbl">Eina de diagnosi</div>
+          <p>Des d'un client, pots provar si el port és accessible: <code>telnet IP_ZENTYAL 22</code> o <code>nc -zv IP_ZENTYAL 22</code>. Si veus la cadena d'SSH, el port és obert.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PERMISOS I ESTRUCTURA -->
+<section id="permisos" class="s-win">
+  <div class="container">
+    <div class="ra-banner ra-both fi">
+      <div class="ra-num">3</div>
+      <div>
+        <h2>Estructura de directoris i permisos POSIX</h2>
+        <p>La configuració de permisos és la part més crítica d'aquesta pràctica. Has d'entendre com funcionen els permisos POSIX i com s'apliquen als directoris de l'SFTP.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-violet fi">Estructura requerida</div>
+    <h2 class="fi">L'estructura de directoris que cal crear</h2>
+    <p class="lead fi">Els recursos del servidor SFTP s'ubiquen a <code>/srv/sftp/</code>. Dins hi ha dues carpetes amb requisits de visibilitat i permisos molt específics per als grups <strong>Alumnes</strong> i <strong>Professors</strong>.</p>
+
+    <div class="perm-diagram fi">
+      <div class="perm-header">
+        <span>Directori</span>
+        <span>Grup Alumnes</span>
+        <span>Grup Professors</span>
+        <span>Ruta</span>
+      </div>
+      <div class="perm-row">
+        <span style="font-weight:700">📁 Recursos</span>
+        <span class="perm-cell">👁️ Visible<br><span class="perm-yes">✅ Download</span><br><span class="perm-no">❌ Upload</span></span>
+        <span class="perm-cell">👁️ Visible<br><span class="perm-yes">✅ Download</span><br><span class="perm-yes">✅ Upload</span></span>
+        <span class="perm-fold">/srv/sftp/Recursos</span>
+      </div>
+      <div class="perm-row">
+        <span style="font-weight:700">📁 Privada</span>
+        <span class="perm-cell"><span class="perm-no">❌ No visible</span><br><span class="perm-no">❌ Cap accés</span></span>
+        <span class="perm-cell">👁️ Visible<br><span class="perm-yes">✅ Download</span><br><span class="perm-yes">✅ Upload</span></span>
+        <span class="perm-fold">/srv/sftp/Privada</span>
+      </div>
+    </div>
+
+    <div class="callout cl-violet fi">
+      <span class="callout-icon">🧠</span>
+      <div>
+        <strong>Traducció de "Download/Upload" a permisos POSIX:</strong>
+        <ul style="margin-top:.5rem">
+          <li><strong>Download</strong> = llegir fitxers i llistar el contingut del directori → permisos <code>r</code> (read) i <code>x</code> (execute al directori)</li>
+          <li><strong>Upload</strong> = crear fitxers al directori → permís <code>w</code> (write al directori)</li>
+          <li><strong>No visible / cap accés</strong> = cap permís, ni de lectura ni d'execució</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section-tag tag-violet fi" style="margin-top:3.5rem">Permisos POSIX</div>
+    <h2 class="fi">Com funcionen els permisos POSIX a Linux</h2>
+    <p class="lead fi">A Linux, cada fitxer i directori té permisos per a tres entitats: el propietari (u), el grup (g) i la resta (o). Cada entitat pot tenir permís de lectura (r=4), escriptura (w=2) i execució/accés (x=1).</p>
+
+    <div class="grid g2 fi">
+      <div class="card bl-violet">
+        <div class="card-icon" style="background:#f5f3ff">🔢</div>
+        <h3>Notació octal i simbòlica</h3>
+        <p style="margin-bottom:.75rem">Els permisos es poden expressar en dos formats equivalents:</p>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)"><code style="color:var(--ink)">755</code> = <code>rwxr-xr-x</code> — Propietari tot; grup i altres: llegir i executar (entrar)</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)"><code style="color:var(--ink)">750</code> = <code>rwxr-x---</code> — Propietari tot; grup: llegir i entrar; altres: res</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)"><code style="color:var(--ink)">770</code> = <code>rwxrwx---</code> — Propietari i grup: tot; altres: res</li>
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted)"><code style="color:var(--ink)">700</code> = <code>rwx------</code> — Sols el propietari pot fer res</li>
+        </ul>
+        <div class="ex ex-violet" style="margin-top:.75rem">
+          <div class="ex-lbl">Per a directoris, "x" = entrar</div>
+          <p>En un directori, el permís <code>x</code> no és "executar" sinó "poder entrar" (cd) i accedir als fitxers que conté. Sense <code>x</code> en un directori, no pots accedir-hi encara que tinguis <code>r</code>.</p>
+        </div>
+      </div>
+      <div class="card bl-violet">
+        <div class="card-icon" style="background:#f5f3ff">👥</div>
+        <h3>Propietari i grup d'un fitxer</h3>
+        <p style="margin-bottom:.75rem">Cada fitxer/directori té un <strong>propietari</strong> (usuari) i un <strong>grup</strong> assignat. Els permisos s'apliquen en aquest ordre:</p>
+        <ol style="padding-left:1.2rem;font-size:.88rem;color:var(--muted)">
+          <li style="margin-bottom:.4rem">Si l'usuari és el <strong>propietari</strong> → s'apliquen els permisos de propietari (u)</li>
+          <li style="margin-bottom:.4rem">Si l'usuari pertany al <strong>grup</strong> del fitxer → s'apliquen els permisos de grup (g)</li>
+          <li>Si cap de les anteriors → s'apliquen els permisos d'altres (o)</li>
+        </ol>
+        <div class="ex ex-violet" style="margin-top:.75rem">
+          <div class="ex-lbl">Exemple concret</div>
+          <p>Un directori amb <code>chown root:professors</code> i permisos <code>750</code>: sols el grup <em>professors</em> pot entrar (rx). El grup <em>alumnes</em> queda exclòs (cau a "altres" = 0 = cap permís).</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-tag tag-violet fi" style="margin-top:3.5rem">Propietari del chroot</div>
+    <h2 class="fi">Requisit especial: propietari del directori chroot</h2>
+
+    <div class="callout cl-red fi">
+      <span class="callout-icon">🔴</span>
+      <div>
+        <strong>Requisit crític del ChrootDirectory!</strong>
+        <p style="margin-top:.4rem">SSH imposa una regla molt estricta per als directoris usats com a <code>ChrootDirectory</code>: el directori ha de ser <strong>propietat de root</strong> i <strong>no pot ser modificable per cap altre usuari o grup</strong> (els bits de write del grup i d'altres han de ser 0). Si no es compleix aquest requisit, la connexió SFTP fallarà amb un error de permís, fins i tot si tots els altres permisos semblen correctes.</p>
+        <p style="margin-top:.5rem">Això afecta el directori <code>/srv/sftp/</code> directament. Les <em>subcarpetes</em> (Recursos, Privada) dins del chroot sí que poden tenir altres propietaris i permisos.</p>
+      </div>
+    </div>
+
+    <div class="grid g2 fi">
+      <div class="card bl-red">
+        <div class="card-icon" style="background:#fff5f5">❌</div>
+        <h3>Configuració incorrecta del chroot</h3>
+        <div class="terminal" style="margin-top:.5rem">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-title">Permís incorrecte — connexió fallarà</span><span class="term-os term-os-ssh">🔐 SSH</span></div>
+          <div class="term-body" style="font-size:.76rem">
+            <div><span class="out">drwxrwxr-x  root  root    /srv/sftp</span></div>
+            <div><span class="comment">#            ↑ el grup té permís write (w)</span></div>
+            <div><span class="comment">#            → SSH rebutja el chroot!</span></div>
+            <div style="margin-top:.4rem"><span class="out">fatal: bad ownership or modes for chroot</span></div>
+            <div><span class="out">directory component "/srv/sftp/"</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="card bl-ssh">
+        <div class="card-icon" style="background:#f0fdf4">✅</div>
+        <h3>Configuració correcta del chroot</h3>
+        <div class="terminal" style="margin-top:.5rem">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-title">Permís correcte — connexió funciona</span><span class="term-os term-os-ssh">🔐 SSH</span></div>
+          <div class="term-body" style="font-size:.76rem">
+            <div><span class="ok">drwxr-xr-x  root  root    /srv/sftp</span></div>
+            <div><span class="comment">#            ↑ root és propietari</span></div>
+            <div><span class="comment">#            ↑ ni grup ni altres tenen write</span></div>
+            <div><span class="comment">#            → SSH accepta el chroot ✓</span></div>
+            <div style="margin-top:.4rem"><span class="ok">drwxrwx---  root  professors  /srv/sftp/Privada</span></div>
+            <div><span class="ok">drwxr-x---  root  professors  /srv/sftp/Recursos</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TASQUES -->
+<section id="tasques" class="s-amber">
+  <div class="container">
+    <div class="ra-banner ra-task fi">
+      <div class="ra-num">4</div>
+      <div>
+        <h2>Tasques de la pràctica</h2>
+        <p>El que has de fer, pas a pas. Sense la solució — has d'investigar i implementar tu mateix/a.</p>
+      </div>
+    </div>
+
+    <div class="no-sol fi">
+      <div class="no-sol-icon">🚫</div>
+      <div>
+        <strong>Recorda:</strong>
+        <p style="margin-top:.3rem">Les tasques indiquen <em>el que cal aconseguir</em>, però <strong>no com fer-ho</strong>. Documenta cada pas amb captures de pantalla i explica les decisions que prens i per quin motiu.</p>
+      </div>
+    </div>
+
+    <!-- TASK 1 -->
+    <div class="task-card fi">
+      <div class="task-header th-sftp">
+        <div class="task-num">1</div>
+        <div>
+          <h3>Verificar i activar SSH a Zentyal</h3>
+          <p>Comprova que el servei SSH és actiu i accessible des dels clients</p>
+        </div>
+      </div>
+      <div class="task-body">
+        <p>Abans de configurar res, has de comprovar l'estat actual del servei SSH al servidor Zentyal. SFTP depèn completament de SSH — si SSH no funciona, SFTP tampoc.</p>
+
+        <h4>📋 Requisits a complir:</h4>
+        <ul class="req-list">
+          <li><span class="req-icon">✅</span><div><strong>SSH actiu al Zentyal:</strong> el servei <code>sshd</code> ha d'estar en execució.</div></li>
+          <li><span class="req-icon">✅</span><div><strong>Port 22 accessible:</strong> el firewall de Zentyal ha de permetre connexions entrants al port 22.</div></li>
+          <li><span class="req-icon">✅</span><div><strong>Verificació des del client:</strong> des d'un client Windows o Ubuntu, comprova que pots connectar-te per SSH (no SFTP, per ara) al servidor Zentyal.</div></li>
+        </ul>
+
+        <div class="callout cl-sftp" style="margin-top:1rem">
+          <span class="callout-icon">💡</span>
+          <div>
+            <strong>Pista de diagnosi:</strong> si el port 22 no respon, investiga la configuració del firewall a la interfície web de Zentyal. Busca al mòdul de firewall les regles per a la xarxa interna.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TASK 2 -->
+    <div class="task-card fi">
+      <div class="task-header th-ssh">
+        <div class="task-num">2</div>
+        <div>
+          <h3>Crear usuaris i grups al Zentyal</h3>
+          <p>Configura els comptes d'usuari i els grups necessaris per a la pràctica</p>
+        </div>
+      </div>
+      <div class="task-body">
+        <p>Necessites tenir al Zentyal almenys dos grups (<strong>Alumnes</strong> i <strong>Professors</strong>) amb usuaris membres de cadascun. Pots crear-los des de la interfície web de Zentyal o des de la línia de comandes.</p>
+
+        <h4>📋 Requisits a complir:</h4>
+        <ul class="req-list">
+          <li><span class="req-icon">👥</span><div><strong>Grup Alumnes:</strong> creat al sistema, amb almenys 1 usuari membre.</div></li>
+          <li><span class="req-icon">👥</span><div><strong>Grup Professors:</strong> creat al sistema, amb almenys 1 usuari membre.</div></li>
+          <li><span class="req-icon">🔍</span><div><strong>Verificació:</strong> comprova que els grups i membres existeixen al fitxer <code>/etc/group</code> i que els usuaris tenen contrassenyes vàlides.</div></li>
+        </ul>
+
+        <div class="callout cl-amber" style="margin-top:1rem">
+          <span class="callout-icon">⚠️</span>
+          <div>
+            <strong>Zentyal i els usuaris de domini:</strong> si Zentyal té el mòdul d'usuaris i grups actiu, els usuaris es gestionen a través de la interfície web. Comprova si els usuaris creats des de Zentyal es reflecteixen al sistema Linux (<code>/etc/passwd</code> o LDAP). Investiga com Zentyal emmagatzema els comptes d'usuari.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TASK 3 -->
+    <div class="task-card fi">
+      <div class="task-header th-violet" style="background:linear-gradient(135deg,#4c1d95,#7c3aed)">
+        <div class="task-num">3</div>
+        <div>
+          <h3>Crear l'estructura de directoris i configurar permisos</h3>
+          <p>Crea les carpetes /srv/sftp/Recursos i /srv/sftp/Privada amb els permisos correctes</p>
+        </div>
+      </div>
+      <div class="task-body">
+        <p>Aquesta és la tasca central de la pràctica. Has de crear l'estructura de directoris i configurar els permisos POSIX de manera que es compleixin exactament els requisits de la taula de visibilitat i accés.</p>
+
+        <h4>📋 Requisits a complir:</h4>
+        <ul class="req-list">
+          <li><span class="req-icon">📁</span><div><strong>Directori /srv/sftp:</strong> creat, propietat de root, permisos adequats per funcionar com a ChrootDirectory (recorda el requisit crític!).</div></li>
+          <li><span class="req-icon">📂</span><div><strong>Carpeta Recursos:</strong> visible i accessible (Download) per a Alumnes i Professors; Upload només per a Professors. Reflectit en els permisos POSIX (propietari:grup + rwx).</div></li>
+          <li><span class="req-icon">📂</span><div><strong>Carpeta Privada:</strong> invisible i inaccessible per a Alumnes; Download i Upload per a Professors. Reflectit en els permisos POSIX.</div></li>
+          <li><span class="req-icon">🔍</span><div><strong>Verificació:</strong> comprova amb <code>ls -la /srv/sftp/</code> que els permisos i propietaris són els correctes.</div></li>
+        </ul>
+
+        <div class="callout cl-violet" style="margin-top:1rem">
+          <span class="callout-icon">🧠</span>
+          <div>
+            <strong>Reflexió sobre el disseny:</strong> per aconseguir que Alumnes puguin fer Download a Recursos però NO Upload, i que no vegin Privada, pensa: quin ha de ser el propietari i grup de cada carpeta? Quins permisos exactes en notació octal compleixen els requisits?
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TASK 4 -->
+    <div class="task-card fi">
+      <div class="task-header th-ssh">
+        <div class="task-num">4</div>
+        <div>
+          <h3>Configurar sshd_config per a SFTP amb restriccions</h3>
+          <p>Modifica el fitxer de configuració SSH per activar SFTP amb chroot i restriccions per grup</p>
+        </div>
+      </div>
+      <div class="task-body">
+        <p>Ara cal configurar el servei SSH perquè els usuaris dels grups <strong>Alumnes</strong> i <strong>Professors</strong> puguin connectar-se per SFTP i ser confinats a <code>/srv/sftp</code>. Han de poder veure les carpetes als quals tenen permís però no accedir al sistema de fitxers general.</p>
+
+        <h4>📋 Requisits a complir:</h4>
+        <ul class="req-list">
+          <li><span class="req-icon">🔒</span><div><strong>Subsistema SFTP actiu:</strong> la línia <code>Subsystem sftp</code> ha d'estar present al sshd_config.</div></li>
+          <li><span class="req-icon">🏠</span><div><strong>ChrootDirectory configurat:</strong> els usuaris dels grups Alumnes i Professors han de tenir el chroot a <code>/srv/sftp</code> o similar.</div></li>
+          <li><span class="req-icon">🚫</span><div><strong>Shell restringida:</strong> els usuaris SFTP no han de poder obrir una sessió SSH interactiva normal (shell). Usa <code>ForceCommand internal-sftp</code>.</div></li>
+          <li><span class="req-icon">✅</span><div><strong>Validació sintàctica:</strong> comprova que el fitxer no té errors de sintaxi abans de reiniciar el servei.</div></li>
+          <li><span class="req-icon">🔄</span><div><strong>Servei reiniciat:</strong> aplica els canvis reiniciant el servei SSH.</div></li>
+        </ul>
+
+        <div class="callout cl-sftp" style="margin-top:1rem">
+          <span class="callout-icon">💡</span>
+          <div>
+            <strong>Pista sobre els blocs Match:</strong> pots crear un o dos blocs <code>Match Group</code> al final del sshd_config: un per al grup Alumnes i un altre per a Professors (o un sol bloc si els dos grups comparteixen la mateixa configuració). Recorda que els blocs <code>Match</code> sempre van al <strong>final</strong> del fitxer.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TASK 5 -->
+    <div class="task-card fi">
+      <div class="task-header th-win">
+        <div class="task-num">5</div>
+        <div>
+          <h3>Verificació des del client Windows (FileZilla)</h3>
+          <p>Comprova el funcionament des de Windows usant FileZilla o WinSCP</p>
+        </div>
+      </div>
+      <div class="task-body">
+        <p>La verificació és una part essencial de qualsevol configuració. Has de demostrar que el sistema funciona exactament com s'ha dissenyat, provant amb usuaris de cada grup i intentant accions permeses i no permeses.</p>
+
+        <h4>📋 Requisits a complir i verificar:</h4>
+        <ul class="req-list">
+          <li><span class="req-icon">🪟</span><div><strong>Connexió reeixida:</strong> un usuari d'Alumnes i un de Professors es connecten correctament per SFTP des de Windows.</div></li>
+          <li><span class="req-icon">👁️</span><div><strong>Visibilitat correcta d'Alumnes:</strong> l'alumne veu la carpeta Recursos però NO veu la carpeta Privada.</div></li>
+          <li><span class="req-icon">⬇️</span><div><strong>Download per Alumnes a Recursos:</strong> un alumne pot descarregar fitxers de la carpeta Recursos.</div></li>
+          <li><span class="req-icon">🚫</span><div><strong>Upload denegat per Alumnes a Recursos:</strong> un alumne NO pot pujar fitxers a la carpeta Recursos (ha de donar error).</div></li>
+          <li><span class="req-icon">👨‍🏫</span><div><strong>Accés complet per Professors:</strong> un professor pot accedir a ambdues carpetes i fer Upload i Download a les dues.</div></li>
+        </ul>
+
+        <div class="callout cl-win" style="margin-top:1rem">
+          <span class="callout-icon">🪟</span>
+          <div>
+            <strong>Configuració de FileZilla per a SFTP:</strong>
+            <ul style="margin-top:.4rem">
+              <li>A FileZilla, crea un nou lloc amb: Protocol = <strong>SFTP - SSH File Transfer Protocol</strong>, Host = IP del Zentyal, Port = 22, Tipus d'inici de sessió = Normal, Usuari i contrasenya.</li>
+              <li><strong>No confonguis SFTP amb FTP</strong> al selector de protocol de FileZilla!</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TASK 6 -->
+    <div class="task-card fi">
+      <div class="task-header th-ubuntu">
+        <div class="task-num">6</div>
+        <div>
+          <h3>Verificació des del client Ubuntu (terminal)</h3>
+          <p>Comprova el funcionament des d'Ubuntu usant la comanda sftp al terminal</p>
+        </div>
+      </div>
+      <div class="task-body">
+        <p>Repeteix les mateixes verificacions que a la tasca anterior, però des del client Ubuntu usant el client SFTP de terminal. Documenta les comandes usades i els resultats.</p>
+
+        <h4>📋 Requisits a complir i verificar:</h4>
+        <ul class="req-list">
+          <li><span class="req-icon">🐧</span><div><strong>Connexió per terminal:</strong> connecta't usant la sintaxi <code>sftp usuari@ip_zentyal</code> des del client Ubuntu.</div></li>
+          <li><span class="req-icon">📋</span><div><strong>Llistat de directoris:</strong> verifica quines carpetes es mostren per a cada tipus d'usuari (Alumne vs Professor).</div></li>
+          <li><span class="req-icon">⬇️</span><div><strong>Prova de descàrrega (get):</strong> descarrega un fitxer des de la carpeta Recursos com a alumne.</div></li>
+          <li><span class="req-icon">⬆️</span><div><strong>Prova de pujada (put) denegada:</strong> intenta pujar un fitxer a Recursos com a alumne → ha de donar error.</div></li>
+          <li><span class="req-icon">👨‍🏫</span><div><strong>Prova completa com a professor:</strong> verifica Upload i Download a ambdues carpetes.</div></li>
+        </ul>
+
+        <div class="callout cl-ubuntu" style="margin-top:1rem;background:rgba(233,84,32,.07);border:1px solid rgba(233,84,32,.2)">
+          <span class="callout-icon">🐧</span>
+          <div>
+            <strong>Comandes bàsiques del client sftp interactiu:</strong>
+            <p style="margin-top:.4rem">Un cop connectat, ets dins d'una sessió sftp interactiva. Les comandes principals que usaràs per verificar: <code>ls</code> (llistar), <code>cd</code> (canviar directori), <code>get fitxer</code> (descarregar), <code>put fitxer</code> (pujar), <code>exit</code> (sortir). Totes les comandes que afecten el sistema local (on es desen les descàrregues) van precedides de <code>l</code>: <code>lls</code>, <code>lcd</code>.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CLIENTS SFTP -->
+<section id="clients" class="s-sftp">
+  <div class="container">
+    <div class="ra-banner ra-sftp fi">
+      <div class="ra-num">5</div>
+      <div>
+        <h2>Eines client SFTP</h2>
+        <p>FileZilla, WinSCP i el client de terminal sftp. Configuració i ús per a les verificacions.</p>
+      </div>
+    </div>
+
+    <div class="grid g3 fi">
+      <div class="tool-card" style="background:white;border:2px solid var(--border);border-radius:var(--radius);padding:1.5rem;transition:all .2s">
+        <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem">
+          <div style="width:40px;height:40px;border-radius:10px;background:#f0f7ff;display:grid;place-items:center;font-size:1.3rem;flex-shrink:0">🪟</div>
+          <div>
+            <div style="font-family:'Syne',sans-serif;font-weight:700;color:var(--navy)">FileZilla</div>
+            <div style="font-size:.7rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--win)">Windows · Gratuït</div>
+          </div>
+        </div>
+        <p style="font-size:.88rem;color:var(--muted);margin-bottom:.75rem">Client FTP/SFTP/FTPS amb interfície gràfica. Molt usat i ben documentat. Ideal per a la verificació visual dels directoris i permisos.</p>
+        <div class="ex ex-sftp">
+          <div class="ex-lbl">Connexió SFTP</div>
+          <p>Ves a <em>Arxiu → Gestor de llocs</em>. Protocol: <strong>SFTP - SSH File Transfer Protocol</strong>. Host: IP Zentyal. Port: 22. Autenticació: Normal.</p>
+        </div>
+      </div>
+      <div class="tool-card" style="background:white;border:2px solid var(--border);border-radius:var(--radius);padding:1.5rem;transition:all .2s">
+        <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem">
+          <div style="width:40px;height:40px;border-radius:10px;background:#f0f7ff;display:grid;place-items:center;font-size:1.3rem;flex-shrink:0">💾</div>
+          <div>
+            <div style="font-family:'Syne',sans-serif;font-weight:700;color:var(--navy)">WinSCP</div>
+            <div style="font-size:.7rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--win)">Windows · Gratuït</div>
+          </div>
+        </div>
+        <p style="font-size:.88rem;color:var(--muted);margin-bottom:.75rem">Client SFTP/SCP especialitzat per a Windows. Interfície d'explorador de fitxers dual (local i remot). Alternativa a FileZilla.</p>
+        <div class="ex ex-sftp">
+          <div class="ex-lbl">Connexió SFTP</div>
+          <p>Protocol: SFTP. Host: IP Zentyal. Port: 22. Usuari i contrasenya. Accepta la clau host en el primer accés.</p>
+        </div>
+      </div>
+      <div class="tool-card" style="background:white;border:2px solid var(--border);border-radius:var(--radius);padding:1.5rem;transition:all .2s">
+        <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem">
+          <div style="width:40px;height:40px;border-radius:10px;background:#f0fdf4;display:grid;place-items:center;font-size:1.3rem;flex-shrink:0">🐧</div>
+          <div>
+            <div style="font-family:'Syne',sans-serif;font-weight:700;color:var(--navy)">sftp (terminal)</div>
+            <div style="font-size:.7rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ubuntu)">Linux · Natiu</div>
+          </div>
+        </div>
+        <p style="font-size:.88rem;color:var(--muted);margin-bottom:.75rem">Client SFTP de línia de comandes inclòs al paquet <code>openssh-client</code>. Disponible per defecte a Ubuntu. Ús interactiu o per scripts.</p>
+        <div class="terminal" style="margin-top:.5rem">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-title">sftp interactiu</span><span class="term-os term-os-ubuntu">🐧</span></div>
+          <div class="term-body" style="font-size:.74rem">
+            <div><span class="prompt-ub">$</span> <span class="cmd">sftp alumne1@IP_ZENTYAL</span></div>
+            <div><span class="out">sftp> ls</span></div>
+            <div><span class="out">sftp> cd Recursos</span></div>
+            <div><span class="out">sftp> get fitxer.pdf</span></div>
+            <div><span class="out">sftp> put local.txt</span> <span class="comment"># ← intentar</span></div>
+            <div><span class="out">sftp> exit</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Errors comuns -->
+    <div class="section-tag tag-red fi" style="margin-top:3.5rem">Errors freqüents</div>
+    <h2 class="fi">Errors habituals i com interpretar-los</h2>
+    <p class="lead fi">Quan configures SFTP amb chroot per primera vegada, és molt probable que trobis algun d'aquests errors. Saber llegir i interpretar els missatges d'error és una competència clau d'un administrador.</p>
+
+    <div class="grid g2 fi">
+      <div class="card bl-red">
+        <div class="card-icon" style="background:#fff5f5">❌</div>
+        <h3>"Permission denied" en connectar</h3>
+        <p style="margin-bottom:.6rem">El servidor rebutja la connexió SFTP tot i que les credencials són correctes.</p>
+        <p><strong>Possibles causes:</strong></p>
+        <ul style="list-style:none;padding:0;margin-top:.4rem">
+          <li style="font-size:.86rem;padding:.25rem 0;color:var(--muted)">→ El directori chroot no compleix el requisit de propietat de root</li>
+          <li style="font-size:.86rem;padding:.25rem 0;color:var(--muted)">→ L'usuari no pertany al grup indicat al bloc Match</li>
+          <li style="font-size:.86rem;padding:.25rem 0;color:var(--muted)">→ El servei SSH no s'ha reiniciat després del canvi</li>
+        </ul>
+        <div class="ex ex-red" style="margin-top:.75rem">
+          <div class="ex-lbl">On mirar</div>
+          <p>Revisa <code>journalctl -u ssh -n 50</code> o <code>/var/log/auth.log</code> per veure el missatge d'error exacte del servidor.</p>
+        </div>
+      </div>
+      <div class="card bl-amber">
+        <div class="card-icon" style="background:#fffbeb">⚠️</div>
+        <h3>"No such file or directory" en connectar</h3>
+        <p style="margin-bottom:.6rem">La connexió s'estableix però no es veu cap directori o hi ha errors en navegar.</p>
+        <p><strong>Possibles causes:</strong></p>
+        <ul style="list-style:none;padding:0;margin-top:.4rem">
+          <li style="font-size:.86rem;padding:.25rem 0;color:var(--muted)">→ El ChrootDirectory especificat no existeix</li>
+          <li style="font-size:.86rem;padding:.25rem 0;color:var(--muted)">→ Les subcarpetes no s'han creat dins del chroot</li>
+          <li style="font-size:.86rem;padding:.25rem 0;color:var(--muted)">→ L'usuari no té permís d'execució (x) al directori</li>
+        </ul>
+        <div class="ex ex-amber" style="margin-top:.75rem">
+          <div class="ex-lbl">Recorda</div>
+          <p>Dins del chroot, l'arrel per a l'usuari és <code>/srv/sftp</code>. Quan fa <code>ls</code>, veu el contingut de <code>/srv/sftp/</code>, no de <code>/</code>.</p>
+        </div>
+      </div>
+      <div class="card bl-sftp">
+        <div class="card-icon" style="background:#ecfeff">🔍</div>
+        <h3>"Connection refused" o no hi ha resposta</h3>
+        <p style="margin-bottom:.6rem">El client no pot establir la connexió TCP al port 22.</p>
+        <p><strong>Possibles causes:</strong></p>
+        <ul style="list-style:none;padding:0;margin-top:.4rem">
+          <li style="font-size:.86rem;padding:.25rem 0;color:var(--muted)">→ El servei SSH no està en execució al Zentyal</li>
+          <li style="font-size:.86rem;padding:.25rem 0;color:var(--muted)">→ El firewall de Zentyal bloqueja el port 22</li>
+          <li style="font-size:.86rem;padding:.25rem 0;color:var(--muted)">→ IP incorrecta al client</li>
+        </ul>
+        <div class="ex ex-sftp" style="margin-top:.75rem">
+          <div class="ex-lbl">Diagnosi ràpida</div>
+          <p>Des del client: <code>ping IP_ZENTYAL</code> (connectivitat bàsica) i <code>nc -zv IP_ZENTYAL 22</code> (port obert).</p>
+        </div>
+      </div>
+      <div class="card bl-ssh">
+        <div class="card-icon" style="background:#f0fdf4">🐛</div>
+        <h3>Upload falla però Download funciona</h3>
+        <p style="margin-bottom:.6rem">L'usuari pot baixar fitxers però no pot pujar-ne (error de permís en fer put).</p>
+        <p><strong>Possible causa (desitjada!):</strong></p>
+        <ul style="list-style:none;padding:0;margin-top:.4rem">
+          <li style="font-size:.86rem;padding:.25rem 0;color:var(--muted)">→ La carpeta no té el bit <code>w</code> per al grup de l'usuari</li>
+          <li style="font-size:.86rem;padding:.25rem 0;color:var(--muted)">→ Exactament el comportament correcte per als Alumnes a Recursos</li>
+        </ul>
+        <div class="ex ex-ssh" style="margin-top:.75rem">
+          <div class="ex-lbl">Acció recomanada</div>
+          <p>Verifica que aquest error apareix per als Alumnes a Recursos però NO per als Professors. Si és així, la configuració és correcta.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AVALUACIÓ -->
+<section id="avaluacio" class="s-cream">
+  <div class="container">
+    <div class="ra-banner ra-eval fi">
+      <div class="ra-num">6</div>
+      <div>
+        <h2>Criteris d'avaluació i lliurament</h2>
+        <p>Què s'avalua, com es puntua i quin format ha de tenir el lliurament.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-ssh fi">Rúbrica d'avaluació</div>
+    <h2 class="fi">Taula de criteris</h2>
+
+    <div style="overflow-x:auto" class="fi">
+      <table class="ptable">
+        <thead>
+          <tr><th>Criteri</th><th>Assolit (3)</th><th>Parcialment (2)</th><th>No assolit (1)</th><th>Pes</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>SSH actiu i accessible</strong><br><span style="font-size:.8rem;color:var(--muted)">RA4 — Administració remota</span></td>
+            <td>Port 22 obert, servei actiu, verificat des dels dos clients</td>
+            <td>Funciona des d'un sol client</td>
+            <td>SSH no accessible des dels clients</td>
+            <td><span class="badge b-sftp">15%</span></td>
+          </tr>
+          <tr>
+            <td><strong>Estructura de directoris</strong><br><span style="font-size:.8rem;color:var(--muted)">Permisos POSIX</span></td>
+            <td>Dirs creats, propietari:grup correctes, permisos octal exactes documentats</td>
+            <td>Dirs creats però permisos no del tot correctes</td>
+            <td>Estructura incompleta o permisos incorrectes</td>
+            <td><span class="badge b-violet">25%</span></td>
+          </tr>
+          <tr>
+            <td><strong>sshd_config configurat</strong><br><span style="font-size:.8rem;color:var(--muted)">ChrootDirectory + ForceCommand</span></td>
+            <td>Blocs Match correctes, chroot ben configurat, ForceCommand actiu</td>
+            <td>Configuració parcial (chroot sense ForceCommand o viceversa)</td>
+            <td>sshd_config sense modificar o amb errors de sintaxi</td>
+            <td><span class="badge b-sftp">20%</span></td>
+          </tr>
+          <tr>
+            <td><strong>Verificació Windows</strong><br><span style="font-size:.8rem;color:var(--muted)">RA6 — Integració</span></td>
+            <td>Tots els casos provats: visibilitat, download/upload per ambdós grups, errors correctes</td>
+            <td>Connexió funciona però no es verifiquen tots els casos</td>
+            <td>Connexió no funciona des de Windows</td>
+            <td><span class="badge b-win" style="color:var(--win)">20%</span></td>
+          </tr>
+          <tr>
+            <td><strong>Verificació Ubuntu (terminal)</strong><br><span style="font-size:.8rem;color:var(--muted)">RA6 — Integració</span></td>
+            <td>Tots els casos provats amb comandes sftp documentades i sortides capturades</td>
+            <td>Connexió funciona però no es documenten totes les proves</td>
+            <td>Connexió no funciona des d'Ubuntu</td>
+            <td><span class="badge b-ubuntu" style="color:var(--ubuntu)">15%</span></td>
+          </tr>
+          <tr>
+            <td><strong>Documentació</strong><br><span style="font-size:.8rem;color:var(--muted)">Qualitat de l'informe</span></td>
+            <td>Captures de totes les tasques, explicació de decisions, captures d'errors i resolució</td>
+            <td>Captures parcials o sense explicació de les decisions</td>
+            <td>Sense documentació o captures insuficients</td>
+            <td><span class="badge b-amber">5%</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section-tag tag-ssh fi" style="margin-top:3.5rem">Lliurament</div>
+    <h2 class="fi">Contingut de l'informe a lliurar</h2>
+
+    <div class="grid g2 fi">
+      <div class="card bl-ssh">
+        <div class="card-icon" style="background:#f0fdf4">📄</div>
+        <h3>Document de memòria (PDF)</h3>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.87rem;color:var(--muted)">📸 Captura de l'estat del servei SSH al Zentyal</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.87rem;color:var(--muted)">📸 Sortida de <code>ls -la /srv/sftp/</code> mostrant propietaris i permisos</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.87rem;color:var(--muted)">📄 Contingut rellevant del fitxer <code>/etc/ssh/sshd_config</code> (les modificacions)</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.87rem;color:var(--muted)">📸 Captures de FileZilla: connexió com a alumne (veure Recursos, NO veure Privada)</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.87rem;color:var(--muted)">📸 Captures de FileZilla: error en intentar Upload com a alumne</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.87rem;color:var(--muted)">📸 Captures de FileZilla: connexió com a professor (Recursos + Privada + Upload funciona)</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.87rem;color:var(--muted)">📸 Terminal Ubuntu: sortida de les comandes sftp per a cada cas de prova</li>
+          <li style="padding:.3rem 0;font-size:.87rem;color:var(--muted)">✏️ Explicació breu de cada decisió de configuració i per quin motiu es va prendre</li>
+        </ul>
+      </div>
+      <div>
+        <div class="callout cl-sftp fi">
+          <span class="callout-icon">📋</span>
+          <div>
+            <strong>Format recomanat de l'informe:</strong>
+            <ul style="margin-top:.4rem">
+              <li>Una secció per cada tasca de la pràctica</li>
+              <li>Cada secció amb: descripció del que s'ha fet, comandes o passos seguits (sense copiar-los d'aquí), captura de pantalla del resultat i observació/explicació del resultat obtingut</li>
+              <li>Secció final de conclusions: dificultats trobades i com s'han resolt</li>
+            </ul>
+          </div>
+        </div>
+        <div class="callout cl-amber fi" style="margin-top:1rem">
+          <span class="callout-icon">⭐</span>
+          <div>
+            <strong>Per obtenir la nota màxima:</strong>
+            <ul style="margin-top:.4rem">
+              <li>Documenta no sols que funciona, sinó <strong>per quin motiu funciona</strong></li>
+              <li>Inclou captures dels errors que has trobat i com els has resolt</li>
+              <li>Explica la relació entre els permisos POSIX i el comportament observat al client SFTP</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PREGUNTES DE REFLEXIÓ -->
+    <div class="section-tag tag-sftp fi" style="margin-top:3.5rem">Preguntes de reflexió</div>
+    <h2 class="fi">Preguntes per demostrar comprensió conceptual</h2>
+    <p class="lead fi">Aquestes preguntes no formen part obligatòria del lliurament, però respodre-les a l'informe demostra un nivell de comprensió superior. El professor pot formular preguntes orals basades en elles.</p>
+
+    <div class="grid fi" style="gap:.9rem">
+
+      <div class="q-card">
+        <div class="q-num">1</div>
+        <div class="q-body">
+          <h4>Per quin motiu SFTP és considerat superior a FTP en un entorn professional? Cita almenys tres raons tècniques concretes i explica per quin motiu no cal instal·lar cap servidor FTP per oferir SFTP.</h4>
+          <span class="q-tag qt-sftp">SFTP vs FTP</span><span class="q-tag qt-ssh">SSH</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">2</div>
+        <div class="q-body">
+          <h4>Explica el requisit de propietat del directori <code>ChrootDirectory</code>. Per quin motiu OpenSSH imposa que sigui de root i sense write per al grup? Quina vulnerabilitat de seguretat prevé aquest requisit?</h4>
+          <span class="q-tag qt-perm">ChrootDirectory</span><span class="q-tag qt-ssh">SSH</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">3</div>
+        <div class="q-body">
+          <h4>Descriu la notació octal de permisos que has aplicat a cada directori (<code>/srv/sftp</code>, <code>/srv/sftp/Recursos</code>, <code>/srv/sftp/Privada</code>) i explica per quin motiu cada valor compleix exactament els requisits de la pràctica. Quin hauria estat l'efecte d'assignar <code>777</code> a tots els directoris?</h4>
+          <span class="q-tag qt-perm">Permisos POSIX</span><span class="q-tag qt-both">Seguretat</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">4</div>
+        <div class="q-body">
+          <h4>Quin és el propòsit de <code>ForceCommand internal-sftp</code> al bloc Match del sshd_config? Quin risc existiria si s'ometés aquesta directiva, tot i tenir el ChrootDirectory configurat?</h4>
+          <span class="q-tag qt-ssh">ForceCommand</span><span class="q-tag qt-sftp">Seguretat</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">5</div>
+        <div class="q-body">
+          <h4>Compara el procés de verificació des de Windows (FileZilla) amb la verificació des d'Ubuntu (terminal sftp). Quines avantatges té cada mètode? En quin context professional usaries cadascun?</h4>
+          <span class="q-tag qt-win">FileZilla</span><span class="q-tag qt-ubuntu">Terminal</span><span class="q-tag qt-both">Integració</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESUM FINAL -->
+<section class="s-dark">
+  <div class="container fi">
+    <div class="section-tag tag-sftp">Resum de la pràctica</div>
+    <h2>El que has de demostrar</h2>
+    <p class="lead">Un cop completada la PT5, hauràs implementat un servei de transferència segura de fitxers en un entorn real, amb control d'accés basat en grups.</p>
+    <div class="grid g3 fi" style="margin-top:1.5rem">
+      <div class="card bl-sftp">
+        <div class="card-icon" style="background:rgba(8,145,178,.2)">🔒</div>
+        <h3>RA4 — Accés remot segur</h3>
+        <p>Has configurat SSH (base de SFTP) al Zentyal, gestionat el sshd_config i verificat l'accés des de clients externs. Comprens per quin motiu SFTP és segur i com el servei SSH el proporciona.</p>
+      </div>
+      <div class="card bl-ssh">
+        <div class="card-icon" style="background:rgba(5,150,105,.2)">🌐</div>
+        <h3>RA6 — Integració de sistemes</h3>
+        <p>Has demostrat que el servei és accessible des de Windows (FileZilla/WinSCP) i des d'Ubuntu (sftp terminal). Integres dos sistemes operatius clients amb un servidor Linux Zentyal.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:rgba(255,255,255,.1)">📐</div>
+        <h3>Permisos POSIX aplicats</h3>
+        <p>Has dissenyat i implementat una estructura de permisos que garanteix l'aïllament entre grups d'usuaris, aplicant correctament propietaris, grups i bits rwx a cada directori.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p><strong>PT5_0374 — Protocol SFTP sobre Zentyal · ASIX · Implantació de Sistemes Operatius</strong></p>
+  <p style="margin-top:.4rem">SSH · SFTP · sshd_config · ChrootDirectory · Permisos POSIX · FileZilla · Zentyal</p>
+  <p style="margin-top:.4rem">RA4 Administració remota · RA6 Integració de sistemes</p>
+</footer>
+
+<script>
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+}, { threshold: 0.05, rootMargin: '0px 0px -30px 0px' });
+document.querySelectorAll('.fi').forEach(el => io.observe(el));
+</script>
+</body>
+</html>

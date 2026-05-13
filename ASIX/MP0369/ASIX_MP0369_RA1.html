@@ -1,0 +1,1786 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RA1 — Instal·lació de Sistemes Operatius · ASIX · MP0369</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:     #0d0f1a;
+  --paper:   #f4f2ed;
+  --cream:   #eceae3;
+  --navy:    #1a1f4e;
+  --asix:    #6d28d9;
+  --asix-l:  #7c3aed;
+  --asix-d:  #4c1d95;
+  --win:     #0078d4;
+  --win-d:   #005a9e;
+  --ubuntu:  #e95420;
+  --ubuntu-d:#c2440e;
+  --linux:   #1a8c3e;
+  --term:    #0f111a;
+  --term2:   #161b2e;
+  --green:   #059669;
+  --amber:   #d97706;
+  --red:     #dc2626;
+  --muted:   #6b6f85;
+  --border:  #d6d2c9;
+  --card:    #ffffff;
+  --radius:  16px;
+  --radius-sm: 8px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);font-size:16px;line-height:1.7;overflow-x:hidden;}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(244,242,237,0.94);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:62px;}
+.nav-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:.95rem;color:var(--navy);letter-spacing:-.02em;}
+.nav-logo span{color:var(--asix-l);}
+.nav-pills{display:flex;gap:.3rem;list-style:none;flex-wrap:wrap;}
+.nav-pills a{text-decoration:none;font-size:0.72rem;font-weight:600;padding:.25rem .7rem;border-radius:100px;color:var(--muted);transition:all .2s;border:1px solid transparent;}
+.nav-pills a:hover{color:var(--asix-l);border-color:var(--asix-l);background:rgba(109,40,217,.07);}
+.nav-pills a.act{color:var(--asix-l);}
+
+/* ── HERO ── */
+.hero{min-height:100vh;display:grid;place-items:center;background:var(--navy);color:white;position:relative;overflow:hidden;padding:8rem 2rem 4rem;}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 70% 55% at 80% 20%,rgba(109,40,217,.4) 0%,transparent 60%),radial-gradient(ellipse 55% 45% at 15% 75%,rgba(0,120,212,.25) 0%,transparent 60%),radial-gradient(ellipse 45% 35% at 50% 95%,rgba(233,84,32,.15) 0%,transparent 55%);}
+.hero-dots{position:absolute;inset:0;opacity:.06;background-image:radial-gradient(rgba(255,255,255,.7) 1px,transparent 1px);background-size:28px 28px;}
+.hero-grid{position:absolute;inset:0;opacity:.04;background-image:linear-gradient(rgba(255,255,255,.4) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.4) 1px,transparent 1px);background-size:48px 48px;}
+.hero-content{position:relative;z-index:1;text-align:center;max-width:860px;}
+.hero-badge{display:inline-flex;align-items:center;gap:.5rem;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.85);font-size:.78rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:.35rem 1rem;border-radius:100px;margin-bottom:1.5rem;}
+.hero h1{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(2.6rem,6.5vw,5rem);line-height:1.05;letter-spacing:-.03em;margin-bottom:1.5rem;}
+.hero h1 .a{color:#c084fc;} .hero h1 .b{color:#818cf8;} .hero h1 .c{color:#6ee7b7;}
+.hero p{font-size:1.05rem;color:rgba(255,255,255,.6);max-width:580px;margin:0 auto 2.5rem;}
+.hero-pills-row{display:flex;justify-content:center;gap:.75rem;flex-wrap:wrap;margin-bottom:2rem;}
+.hero-pill{display:inline-flex;align-items:center;gap:.5rem;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);padding:.5rem 1.1rem;border-radius:10px;font-size:.83rem;font-weight:500;color:white;text-decoration:none;transition:all .25s;}
+.hero-pill:hover{background:rgba(255,255,255,.15);transform:translateY(-2px);}
+.hero-pill .dot{width:9px;height:9px;border-radius:50%;}
+.scroll-hint{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.4rem;color:rgba(255,255,255,.3);font-size:.72rem;letter-spacing:.1em;}
+.scroll-hint::after{content:'';display:block;width:1px;height:36px;background:linear-gradient(to bottom,rgba(255,255,255,.35),transparent);animation:pulse 2s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:.3}50%{opacity:1}}
+
+/* ── LAYOUT ── */
+section{padding:5.5rem 2rem;}
+.container{max-width:1080px;margin:0 auto;}
+.section-tag{font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;display:flex;align-items:center;gap:.5rem;margin-bottom:.9rem;}
+.section-tag::before{content:'';display:block;width:20px;height:2px;}
+.tag-asix{color:var(--asix-l);} .tag-asix::before{background:var(--asix-l);}
+.tag-win{color:var(--win);} .tag-win::before{background:var(--win);}
+.tag-ubuntu{color:var(--ubuntu);} .tag-ubuntu::before{background:var(--ubuntu);}
+.tag-green{color:var(--green);} .tag-green::before{background:var(--green);}
+.tag-amber{color:var(--amber);} .tag-amber::before{background:var(--amber);}
+.tag-pregs{color:#92400e;} .tag-pregs::before{background:#92400e;}
+
+h2{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(1.7rem,3.5vw,2.5rem);line-height:1.1;letter-spacing:-.025em;color:var(--navy);margin-bottom:.9rem;}
+h3{font-family:'Syne',sans-serif;font-weight:700;font-size:1.15rem;color:var(--navy);margin-bottom:.65rem;}
+h4{font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;color:var(--navy);margin-bottom:.4rem;}
+.lead{font-size:1.05rem;color:var(--muted);max-width:720px;margin-bottom:2.5rem;line-height:1.75;}
+
+/* ── CARDS ── */
+.grid{display:grid;gap:1.25rem;}
+.g2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr));}
+.g3{grid-template-columns:repeat(auto-fit,minmax(240px,1fr));}
+.g4{grid-template-columns:repeat(auto-fit,minmax(200px,1fr));}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.75rem;transition:transform .2s,box-shadow .2s;}
+.card:hover{transform:translateY(-3px);box-shadow:0 12px 32px rgba(26,31,78,.1);}
+.card p{color:var(--muted);font-size:.92rem;}
+.card-icon{width:44px;height:44px;border-radius:10px;display:grid;place-items:center;font-size:1.3rem;margin-bottom:.9rem;}
+.bl-asix{border-left:3px solid var(--asix-l);}
+.bl-win{border-left:3px solid var(--win);}
+.bl-ubuntu{border-left:3px solid var(--ubuntu);}
+.bl-green{border-left:3px solid var(--green);}
+.bl-amber{border-left:3px solid var(--amber);}
+
+/* ── RA BANNER ── */
+.ra-banner{border-radius:var(--radius);padding:1.5rem 2rem;display:flex;align-items:center;gap:1.25rem;margin-bottom:3rem;color:white;}
+.ra-num{font-family:'Syne',sans-serif;font-weight:800;font-size:2.4rem;opacity:.25;flex-shrink:0;line-height:1;}
+.ra-banner h2{color:white;font-size:1.35rem;margin-bottom:.2rem;}
+.ra-banner p{color:rgba(255,255,255,.7);font-size:.88rem;}
+.ra-asix{background:linear-gradient(135deg,var(--asix-d),var(--asix-l));}
+.ra-win{background:linear-gradient(135deg,var(--win-d),var(--win));}
+.ra-ubuntu{background:linear-gradient(135deg,var(--ubuntu-d),var(--ubuntu));}
+.ra-preguntes{background:linear-gradient(135deg,#92400e,#d97706);}
+.ra-resum{background:linear-gradient(135deg,#064e3b,#059669);}
+
+/* ── CALLOUTS ── */
+.callout{border-radius:var(--radius);padding:1.5rem 1.75rem;margin:1.5rem 0;display:flex;gap:1rem;align-items:flex-start;}
+.callout-icon{font-size:1.4rem;flex-shrink:0;margin-top:.1rem;}
+.callout p,.callout li{font-size:.92rem;}
+.callout ul{padding-left:1.2rem;} .callout li{margin-bottom:.25rem;}
+.cl-asix{background:rgba(109,40,217,.07);border:1px solid rgba(109,40,217,.2);}
+.cl-blue{background:rgba(0,120,212,.07);border:1px solid rgba(0,120,212,.2);}
+.cl-green{background:rgba(5,150,105,.07);border:1px solid rgba(5,150,105,.2);}
+.cl-amber{background:rgba(251,188,4,.1);border:1px solid rgba(251,188,4,.3);}
+.cl-red{background:rgba(220,38,38,.07);border:1px solid rgba(220,38,38,.2);}
+.cl-ubuntu{background:rgba(233,84,32,.07);border:1px solid rgba(233,84,32,.2);}
+
+/* ── TERMINAL / CODE ── */
+.terminal{background:var(--term);border-radius:var(--radius-sm);overflow:hidden;margin:.75rem 0;font-family:'JetBrains Mono',monospace;font-size:.8rem;}
+.term-bar{background:var(--term2);padding:.55rem 1rem;display:flex;align-items:center;gap:.5rem;border-bottom:1px solid rgba(255,255,255,.06);}
+.term-dot{width:11px;height:11px;border-radius:50%;}
+.term-title{color:rgba(255,255,255,.4);font-size:.72rem;letter-spacing:.05em;margin-left:.25rem;}
+.term-os{font-size:.68rem;font-weight:600;padding:.1rem .5rem;border-radius:4px;margin-left:auto;}
+.term-os-win{background:rgba(0,120,212,.25);color:#60adf0;}
+.term-os-ubuntu{background:rgba(233,84,32,.25);color:#f4956a;}
+.term-os-both{background:rgba(109,40,217,.25);color:#c084fc;}
+.term-body{padding:1rem 1.25rem;line-height:1.75;}
+.term-body .prompt-win{color:#60adf0;}
+.term-body .prompt-ub{color:#f4956a;}
+.term-body .cmd{color:#e2e8f0;}
+.term-body .out{color:#94a3b8;}
+.term-body .comment{color:#475569;}
+.term-body .ok{color:#6ee7b7;}
+.term-body .err{color:#fca5a5;}
+.term-body .path{color:#fbbf24;}
+.term-body .flag{color:#c084fc;}
+
+/* ── INLINE PRACTICE ── */
+.lab-card{background:linear-gradient(135deg,#0f111a,#161b2e);border:1px solid rgba(255,255,255,.08);border-radius:var(--radius);overflow:hidden;margin:2rem 0;}
+.lab-header{padding:1rem 1.5rem;display:flex;align-items:center;gap:1rem;border-bottom:1px solid rgba(255,255,255,.07);}
+.lab-icon{font-size:1.5rem;flex-shrink:0;}
+.lab-title-block h4{font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;color:white;margin:0 0 .1rem;}
+.lab-title-block p{font-size:.78rem;color:rgba(255,255,255,.5);margin:0;}
+.lab-os-tags{display:flex;gap:.4rem;margin-left:auto;}
+.os-tag{font-size:.68rem;font-weight:700;padding:.2rem .65rem;border-radius:100px;letter-spacing:.04em;white-space:nowrap;}
+.os-win{background:rgba(0,120,212,.3);color:#60adf0;border:1px solid rgba(0,120,212,.4);}
+.os-ubuntu{background:rgba(233,84,32,.3);color:#f4956a;border:1px solid rgba(233,84,32,.4);}
+.os-both{background:rgba(109,40,217,.3);color:#c084fc;border:1px solid rgba(109,40,217,.4);}
+.lab-body{padding:1.5rem;}
+.lab-body p{color:rgba(255,255,255,.7);font-size:.9rem;margin-bottom:.75rem;}
+.lab-body h5{font-family:'Syne',sans-serif;font-weight:700;font-size:.85rem;color:rgba(255,255,255,.9);margin:.75rem 0 .4rem;}
+.lab-steps{counter-reset:ls;list-style:none;padding:0;display:flex;flex-direction:column;gap:.5rem;}
+.lab-steps li{counter-increment:ls;display:flex;gap:.75rem;align-items:flex-start;font-size:.87rem;color:rgba(255,255,255,.65);}
+.lab-steps li::before{content:counter(ls);flex-shrink:0;width:24px;height:24px;border-radius:50%;background:rgba(109,40,217,.5);color:#c084fc;display:grid;place-items:center;font-family:'Syne',sans-serif;font-weight:700;font-size:.72rem;}
+.lab-steps li strong{color:rgba(255,255,255,.9);}
+.lab-entrega{background:rgba(109,40,217,.15);border:1px solid rgba(109,40,217,.3);border-radius:var(--radius-sm);padding:.85rem 1.1rem;margin-top:1rem;font-size:.83rem;color:rgba(255,255,255,.7);}
+.lab-entrega strong{color:#c084fc;}
+
+/* ── TABLE ── */
+.ptable{width:100%;border-collapse:collapse;font-size:.87rem;}
+.ptable th,.ptable td{padding:.8rem 1rem;text-align:left;border-bottom:1px solid var(--border);}
+.ptable th{background:var(--navy);color:white;font-family:'Syne',sans-serif;font-weight:700;}
+.ptable th:first-child{border-radius:8px 0 0 0;} .ptable th:last-child{border-radius:0 8px 0 0;}
+.ptable tr:hover td{background:var(--cream);}
+.badge{display:inline-block;padding:.15rem .55rem;border-radius:100px;font-size:.72rem;font-weight:700;font-family:'Syne',sans-serif;}
+.b-asix{background:rgba(109,40,217,.12);color:var(--asix-l);}
+.b-win{background:rgba(0,120,212,.12);color:var(--win);}
+.b-ubuntu{background:rgba(233,84,32,.12);color:var(--ubuntu);}
+.b-green{background:rgba(5,150,105,.12);color:var(--green);}
+.b-amber{background:rgba(217,119,6,.15);color:#92400e;}
+.b-red{background:rgba(220,38,38,.1);color:var(--red);}
+
+/* ── EX BOX ── */
+.ex{background:var(--cream);border:1px solid var(--border);border-radius:var(--radius-sm);padding:1rem 1.25rem;margin:.65rem 0;}
+.ex .ex-lbl{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.3rem;}
+.ex p{font-size:.87rem;color:var(--ink);}
+.ex-asix .ex-lbl{color:var(--asix-l);}
+.ex-win .ex-lbl{color:var(--win);}
+.ex-ubuntu .ex-lbl{color:var(--ubuntu);}
+
+/* ── PILLS ── */
+.pills{display:flex;flex-wrap:wrap;gap:.4rem;margin:.65rem 0;}
+.pill{padding:.22rem .75rem;border-radius:100px;font-size:.78rem;border:1px solid var(--border);background:var(--cream);color:var(--ink);}
+.pill-a{background:rgba(109,40,217,.1);border-color:rgba(109,40,217,.3);color:var(--asix-l);}
+.pill-w{background:rgba(0,120,212,.1);border-color:rgba(0,120,212,.3);color:var(--win);}
+.pill-u{background:rgba(233,84,32,.1);border-color:rgba(233,84,32,.3);color:var(--ubuntu);}
+.pill-g{background:rgba(5,150,105,.1);border-color:rgba(5,150,105,.3);color:var(--green);}
+
+/* ── SECTION THEMES ── */
+.s-cream{background:var(--cream);}
+.s-asix{background:#f5f3ff;}
+.s-win{background:#f0f7ff;}
+.s-ubuntu{background:#fff5f1;}
+.s-dark{background:var(--navy);color:white;}
+.s-dark h2,.s-dark h3,.s-dark h4{color:white;}
+.s-dark .lead{color:rgba(255,255,255,.6);}
+.s-dark .card{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.1);}
+.s-dark .card h3,.s-dark .card h4{color:white;}
+.s-dark .card p{color:rgba(255,255,255,.6);}
+.s-dark .ptable th{background:rgba(255,255,255,.1);}
+.s-dark .ptable td{border-color:rgba(255,255,255,.1);color:rgba(255,255,255,.8);}
+.s-dark .ptable tr:hover td{background:rgba(255,255,255,.05);}
+.s-dark .ex{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.1);}
+.s-dark .ex p{color:rgba(255,255,255,.75);}
+
+/* ── STEPS ── */
+.steps{counter-reset:st;list-style:none;display:flex;flex-direction:column;gap:.8rem;}
+.steps li{counter-increment:st;display:flex;gap:.9rem;align-items:flex-start;padding:.9rem 1.1rem;background:var(--cream);border-radius:var(--radius-sm);font-size:.9rem;}
+.steps li::before{content:counter(st);flex-shrink:0;width:28px;height:28px;border-radius:50%;background:var(--asix-l);color:white;display:grid;place-items:center;font-family:'Syne',sans-serif;font-weight:700;font-size:.8rem;}
+.steps li p{color:var(--ink);margin:0;} .steps li strong{color:var(--navy);}
+
+/* ── Q CARDS ── */
+.q-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem 2rem;display:flex;gap:1.25rem;align-items:flex-start;transition:transform .2s,box-shadow .2s;}
+.q-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.08);}
+.q-num{flex-shrink:0;width:36px;height:36px;border-radius:50%;background:var(--cream);border:2px solid var(--border);display:grid;place-items:center;font-family:'Syne',sans-serif;font-weight:800;font-size:.88rem;color:var(--asix-l);}
+.q-body h4{margin-bottom:.35rem;color:var(--navy);font-size:.95rem;}
+.q-body p{color:var(--muted);font-size:.85rem;font-style:italic;}
+.q-tag{display:inline-block;padding:.15rem .6rem;border-radius:100px;font-size:.7rem;font-weight:700;margin-top:.5rem;margin-right:.3rem;}
+.qt-asix{background:rgba(109,40,217,.1);color:var(--asix-l);}
+.qt-win{background:rgba(0,120,212,.1);color:var(--win);}
+.qt-ubuntu{background:rgba(233,84,32,.1);color:var(--ubuntu);}
+.qt-lic{background:rgba(5,150,105,.1);color:var(--green);}
+.qt-boot{background:rgba(217,119,6,.1);color:#92400e;}
+
+/* ── DIVIDER ── */
+hr{border:none;border-top:1px solid var(--border);margin:3rem 0;}
+
+/* ── DIAGRAM ── */
+.arch-diagram{display:flex;flex-direction:column;gap:.4rem;margin:1.5rem 0;}
+.arch-layer{border-radius:var(--radius-sm);padding:.9rem 1.5rem;text-align:center;font-family:'Syne',sans-serif;font-weight:700;font-size:.88rem;position:relative;}
+.arch-layer .layer-desc{font-family:'DM Sans',sans-serif;font-weight:400;font-size:.8rem;opacity:.85;margin-top:.2rem;}
+.al-app{background:rgba(109,40,217,.12);border:1px solid rgba(109,40,217,.25);color:var(--asix-l);}
+.al-shell{background:rgba(0,120,212,.1);border:1px solid rgba(0,120,212,.2);color:var(--win-d);}
+.al-api{background:rgba(5,150,105,.1);border:1px solid rgba(5,150,105,.2);color:#065f46;}
+.al-kernel{background:rgba(233,84,32,.1);border:1px solid rgba(233,84,32,.2);color:var(--ubuntu-d);}
+.al-hal{background:rgba(217,119,6,.1);border:1px solid rgba(217,119,6,.25);color:#78350f;}
+.al-hw{background:var(--navy);color:white;border:1px solid var(--navy);}
+
+/* ── FOOTER ── */
+footer{background:var(--ink);color:rgba(255,255,255,.4);padding:3rem 2rem;text-align:center;font-size:.85rem;}
+footer strong{color:white;}
+
+/* ── ANIM ── */
+.fi{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fi.in{opacity:1;transform:none;}
+
+@media(max-width:640px){
+  .nav-pills{display:none;}
+  .lab-os-tags{display:none;}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">ASIX · <span>MP0369 RA1</span> · Implantació SO</div>
+  <ul class="nav-pills">
+    <li><a href="#estructura">Estructura</a></li>
+    <li><a href="#arquitectura">Arquitectura</a></li>
+    <li><a href="#tipus">Tipus SO</a></li>
+    <li><a href="#llicencies">Llicències</a></li>
+    <li><a href="#arrencada">Arrencada</a></li>
+    <li><a href="#installacio">Instal·lació</a></li>
+    <li><a href="#aplicacions">Aplicacions</a></li>
+    <li><a href="#fitxers">Fitxers/Registre</a></li>
+    <li><a href="#controladors">Controladors</a></li>
+    <li><a href="#preguntes" class="act">Preguntes</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="top">
+  <div class="hero-bg"></div><div class="hero-dots"></div><div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-badge">⚙️ ASIX · Implantació de Sistemes Operatius · MP0369 · RA1</div>
+    <h1><span class="a">Instal·lació</span> de<br><span class="b">Sistemes</span> <span class="c">Operatius</span></h1>
+    <p>Anàlisi, instal·lació i manteniment de sistemes operatius lliures i propietaris.</p>
+    <div class="hero-pills-row">
+      <a href="#estructura" class="hero-pill"><span class="dot" style="background:#c084fc"></span>Estructura & Arquitectura</a>
+      <a href="#llicencies" class="hero-pill"><span class="dot" style="background:var(--green)"></span>Llicències</a>
+      <a href="#arrencada" class="hero-pill"><span class="dot" style="background:var(--amber)"></span>BIOS/UEFI & GRUB</a>
+      <a href="#installacio" class="hero-pill"><span class="dot" style="background:var(--win)"></span>Windows</a>
+      <a href="#installacio" class="hero-pill"><span class="dot" style="background:var(--ubuntu)"></span>Ubuntu/Linux</a>
+      <a href="#preguntes" class="hero-pill"><span class="dot" style="background:#f59e0b"></span>10 Preguntes</a>
+    </div>
+  </div>
+  <div class="scroll-hint">DESPLAÇA</div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     INTRO RA1
+═══════════════════════════════════════════ -->
+<section class="s-cream" id="intro">
+  <div class="container fi">
+    <div class="section-tag tag-asix">Resultat d'Aprenentatge 1 · MP0369</div>
+    <h2>Instal·la sistemes operatius</h2>
+    <p class="lead">Analitzant-ne les característiques i interpretant-ne la documentació tècnica. En aquest RA es treballen 14 continguts que van des dels fonaments teòrics fins a la instal·lació, configuració i manteniment de sistemes Windows i GNU/Linux.</p>
+    <div class="grid g4 fi">
+      <div class="card bl-asix">
+        <div class="card-icon" style="background:#f5f3ff">🏗️</div>
+        <h3>Fonaments</h3>
+        <p>Estructura d'un SI, arquitectura i funcions del SO, tipus de sistemes i aplicacions.</p>
+        <div class="pills" style="margin-top:.75rem"><span class="pill pill-a">Temes 1–5</span></div>
+      </div>
+      <div class="card bl-green">
+        <div class="card-icon" style="background:#f0fdf4">⚖️</div>
+        <h3>Llicències</h3>
+        <p>Programari lliure vs propietari. GPL, MIT, Apache, EULA i tipus de llicències comercials.</p>
+        <div class="pills" style="margin-top:.75rem"><span class="pill pill-g">Tema 6</span></div>
+      </div>
+      <div class="card bl-amber">
+        <div class="card-icon" style="background:#fffbeb">🔃</div>
+        <h3>Arrencada</h3>
+        <p>BIOS, UEFI, MBR, GPT, GRUB2, Windows Boot Manager. Seqüència d'arrencada completa.</p>
+        <div class="pills" style="margin-top:.75rem"><span class="pill pill-a" style="background:rgba(217,119,6,.1);border-color:rgba(217,119,6,.3);color:#92400e">Tema 7</span></div>
+      </div>
+      <div class="card" style="border-left:3px solid var(--win)">
+        <div class="card-icon" style="background:#f0f7ff">💿</div>
+        <h3>Instal·lació & Manteniment</h3>
+        <p>Instal·lació de SO i apps, actualitzacions, fitxers d'inici, registre i controladors.</p>
+        <div class="pills" style="margin-top:.75rem"><span class="pill pill-w">Temes 8–14</span></div>
+      </div>
+    </div>
+    <div class="callout cl-asix fi" style="margin-top:1.5rem">
+      <span class="callout-icon">🔬</span>
+      <div>
+        <strong>Llegenda dels exercicis pràctics incrustats:</strong>
+        <p style="margin-top:.3rem">Al llarg de la teoria trobareu caixes fosques amb exercicis pràctics. El color de l'etiqueta indica el sistema operatiu: <span style="color:var(--win);font-weight:600">🪟 Windows</span>, <span style="color:var(--ubuntu);font-weight:600">🐧 Ubuntu/Linux</span>, o <span style="color:var(--asix-l);font-weight:600">🔀 Ambdós</span>. Cada exercici inclou els comandos exactes a executar.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     T1 — ESTRUCTURA D'UN SISTEMA INFORMÀTIC
+═══════════════════════════════════════════ -->
+<section id="estructura" class="s-asix">
+  <div class="container">
+    <div class="ra-banner ra-asix fi">
+      <div class="ra-num">1</div>
+      <div>
+        <h2>Estructura d'un sistema informàtic</h2>
+        <p>Hardware, software, firmware i la seva interrelació. La base sobre la qual s'executa tot sistema operatiu.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-asix fi">Fonaments</div>
+    <h2 class="fi">Capes d'un sistema informàtic</h2>
+    <p class="lead fi">Un sistema informàtic és el conjunt format per <strong>hardware</strong> (components físics), <strong>firmware</strong> (capa intermèdia persistent) i <strong>software</strong> (programes). Entendre aquesta estructura en capes és imprescindible per comprendre com un SO actua com a intermediari entre el hardware i les aplicacions.</p>
+
+    <div class="grid g3 fi">
+      <div class="card bl-asix">
+        <div class="card-icon" style="background:#f5f3ff">🖥️</div>
+        <h3>Hardware (Maquinari)</h3>
+        <p style="margin-bottom:.75rem">Tots els components físics del sistema. Classifiquem en:</p>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">⚙️ <strong style="color:var(--ink)">Processador (CPU):</strong> executa instruccions. Arquitectures x86-64, ARM, RISC-V.</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">🧠 <strong style="color:var(--ink)">Memòria RAM:</strong> emmagatzematge volàtil. El SO hi carrega els processos actius.</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">💾 <strong style="color:var(--ink)">Emmagatzematge:</strong> HDD, SSD (SATA, NVMe). Persistent. Conté el SO i les dades.</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">🔌 <strong style="color:var(--ink)">Placa base:</strong> interconnecta tots els components. Conté el xip del firmware.</li>
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted)">📡 <strong style="color:var(--ink)">Perifèrics:</strong> d'entrada (teclat, ratolí), de sortida (monitor, impressora) i mixtos (NIC, USB).</li>
+        </ul>
+      </div>
+      <div class="card bl-amber">
+        <div class="card-icon" style="background:#fffbeb">⚡</div>
+        <h3>Firmware</h3>
+        <p style="margin-bottom:.75rem">Software de baix nivell emmagatzemat en memòria no volàtil (ROM, Flash EEPROM) integrada al hardware. <strong>No es perd en apagar l'equip.</strong></p>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">📟 <strong style="color:var(--ink)">BIOS/UEFI:</strong> firmware de la placa base. Primera cosa que s'executa en encendre l'equip.</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">🖨️ <strong style="color:var(--ink)">Firmware de perifèrics:</strong> discs durs, impressores, targetes de xarxa, routers.</li>
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted)">📱 <strong style="color:var(--ink)">Bootloader:</strong> programa petit que carrega el SO a la RAM (tècnicament és firmware del SO).</li>
+        </ul>
+        <div class="callout cl-amber" style="margin-top:.75rem;padding:.85rem 1rem">
+          <span class="callout-icon">⚠️</span>
+          <p>Actualitzar el firmware d'una placa base incorrectament pot <strong>inutilitzar (brick)</strong> l'equip permanentment. Cal molta precaució.</p>
+        </div>
+      </div>
+      <div class="card bl-green">
+        <div class="card-icon" style="background:#f0fdf4">💿</div>
+        <h3>Software (Programari)</h3>
+        <p style="margin-bottom:.75rem">Conjunt d'instruccions lògiques. Es classifica en tres grans capes:</p>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">🏗️ <strong style="color:var(--ink)">Software de sistema:</strong> el Sistema Operatiu i les seves eines (drivers, utilitats).</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">🔧 <strong style="color:var(--ink)">Software de suport (middleware):</strong> SGBD, servidors web, runtimes (JVM, .NET).</li>
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted)">📱 <strong style="color:var(--ink)">Software d'aplicació:</strong> programes que usa l'usuari final (ofimàtica, navegadors, jocs).</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout cl-asix fi">
+      <span class="callout-icon">🔑</span>
+      <div>
+        <strong>Relació entre capes — el SO com a intermediari:</strong>
+        <p style="margin-top:.4rem">El Sistema Operatiu actua com a <em>interfície</em> entre el hardware i el software d'aplicació. Cap aplicació accedeix directament al hardware: ho fa a través de les crides al sistema (system calls) que el SO exposa. Això garanteix seguretat, aïllament i portabilitat.</p>
+      </div>
+    </div>
+
+    <!-- PRÀCTICA 1 -->
+    <div class="lab-card fi">
+      <div class="lab-header">
+        <div class="lab-icon">🔬</div>
+        <div class="lab-title-block">
+          <h4>Pràctica 1.1 — Explorar la informació del sistema</h4>
+          <p>Identificar el hardware i la versió del SO instal·lats a la màquina</p>
+        </div>
+        <div class="lab-os-tags">
+          <span class="os-tag os-both">🔀 Windows + Ubuntu</span>
+        </div>
+      </div>
+      <div class="lab-body">
+        <p>L'objectiu és aprendre a obtenir informació detallada del hardware i del sistema operatiu des de la línia de comandos i des d'eines gràfiques.</p>
+        <h5>🪟 Windows — PowerShell / CMD</h5>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">PowerShell — Administrador</span><span class="term-os term-os-win">Windows</span></div>
+          <div class="term-body">
+            <span class="comment"># Informació completa del sistema</span><br>
+            <span class="prompt-win">PS C:\&gt;</span> <span class="cmd">msinfo32</span><br>
+            <span class="out">                 # Obre l'eina gràfica System Information</span><br><br>
+            <span class="comment"># Alternativa per línia de comandos:</span><br>
+            <span class="prompt-win">PS C:\&gt;</span> <span class="cmd">Get-ComputerInfo</span> <span class="flag">| Select-Object</span> <span class="cmd">CsName, OsName, OsVersion, CsProcessors, CsTotalPhysicalMemory</span><br><br>
+            <span class="comment"># Informació de la CPU</span><br>
+            <span class="prompt-win">PS C:\&gt;</span> <span class="cmd">Get-WmiObject</span> <span class="flag">-Class</span> <span class="cmd">Win32_Processor</span> <span class="flag">| Select-Object</span> <span class="cmd">Name, NumberOfCores, MaxClockSpeed</span><br><br>
+            <span class="comment"># Memòria RAM total i disponible</span><br>
+            <span class="prompt-win">PS C:\&gt;</span> <span class="cmd">Get-WmiObject</span> <span class="flag">-Class</span> <span class="cmd">Win32_OperatingSystem</span> <span class="flag">| Select-Object</span> <span class="cmd">TotalVisibleMemorySize, FreePhysicalMemory</span>
+          </div>
+        </div>
+        <h5>🐧 Ubuntu / Linux</h5>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">Terminal Bash</span><span class="term-os term-os-ubuntu">Ubuntu</span></div>
+          <div class="term-body">
+            <span class="comment"># Versió del kernel i arquitectura</span><br>
+            <span class="prompt-ub">user@host:~$</span> <span class="cmd">uname -a</span><br>
+            <span class="out">Linux hostname 6.8.0-51-generic #52-Ubuntu SMP x86_64 GNU/Linux</span><br><br>
+            <span class="comment"># Informació detallada de la CPU</span><br>
+            <span class="prompt-ub">user@host:~$</span> <span class="cmd">lscpu</span><br>
+            <span class="out">Architecture: x86_64 | CPU(s): 8 | Thread(s) per core: 2 | Model name: Intel Core i7...</span><br><br>
+            <span class="comment"># Memòria RAM</span><br>
+            <span class="prompt-ub">user@host:~$</span> <span class="cmd">free -h</span><br>
+            <span class="out">               total    used    free  shared  buff/cache  available</span><br>
+            <span class="out">Mem:           15Gi    4.2Gi   8.1Gi   512Mi      2.8Gi      10Gi</span><br><br>
+            <span class="comment"># Dispositius de blocs (discs)</span><br>
+            <span class="prompt-ub">user@host:~$</span> <span class="cmd">lsblk</span><br>
+            <span class="comment"># Informació PCI (targetes gràfiques, xarxa, etc.)</span><br>
+            <span class="prompt-ub">user@host:~$</span> <span class="cmd">lspci</span><br>
+            <span class="comment"># Resum complet del hardware</span><br>
+            <span class="prompt-ub">user@host:~$</span> <span class="cmd">sudo dmidecode -t system</span>
+          </div>
+        </div>
+        <div class="lab-entrega">
+          <strong>📋 Lliurament:</strong> Captura de pantalla de la sortida de <code>Get-ComputerInfo</code> (Windows) i <code>lscpu</code> + <code>free -h</code> (Ubuntu). Indica el model de CPU, la RAM total i la versió del SO de cadascun.
+        </div>
+      </div>
+    </div>
+
+    <hr>
+
+    <!-- T2 — ARQUITECTURA SO -->
+    <div class="section-tag tag-asix fi" id="arquitectura">Tema 2</div>
+    <h2 class="fi">Arquitectura d'un sistema operatiu</h2>
+    <p class="lead fi">L'arquitectura interna del SO defineix com estan organitzades les seves parts i com interaccionen. Conèixer-la és crucial per entendre el rendiment, la seguretat i la portabilitat de cada sistema.</p>
+
+    <!-- DIAGRAMA DE CAPES -->
+    <div class="arch-diagram fi">
+      <div class="arch-layer al-app">
+        <div>Aplicacions d'usuari</div>
+        <div class="layer-desc">Navegadors, editors, serveis, aplicacions de negoci…</div>
+      </div>
+      <div style="text-align:center;color:var(--muted);font-size:.8rem;padding:.2rem 0">↓ System Calls (crida al sistema) ↓</div>
+      <div class="arch-layer al-shell">
+        <div>Shell / Interfície d'usuari</div>
+        <div class="layer-desc">CLI (bash, cmd, PowerShell) · GUI (GNOME, KDE, Windows Explorer)</div>
+      </div>
+      <div style="text-align:center;color:var(--muted);font-size:.8rem;padding:.2rem 0">↓ API del SO (POSIX, Win32 API) ↓</div>
+      <div class="arch-layer al-api">
+        <div>Capa de serveis del SO (API / Llibreries del sistema)</div>
+        <div class="layer-desc">glibc · msvcrt.dll · ntdll.dll · ld-linux.so</div>
+      </div>
+      <div style="text-align:center;color:var(--muted);font-size:.8rem;padding:.2rem 0">↓ ↓</div>
+      <div class="arch-layer al-kernel">
+        <div>Kernel (Nucli)</div>
+        <div class="layer-desc">Gestió de processos · Memòria virtual · Sistema de fitxers · I/O · Xarxa · Seguretat</div>
+      </div>
+      <div style="text-align:center;color:var(--muted);font-size:.8rem;padding:.2rem 0">↓ Controladors de dispositiu (Drivers) ↓</div>
+      <div class="arch-layer al-hal">
+        <div>HAL — Hardware Abstraction Layer</div>
+        <div class="layer-desc">Abstracció del hardware → el kernel no parla directament amb el maquinari</div>
+      </div>
+      <div style="text-align:center;color:var(--muted);font-size:.8rem;padding:.2rem 0">↓ ↓</div>
+      <div class="arch-layer al-hw">
+        <div>Hardware físic</div>
+        <div class="layer-desc">CPU · RAM · Discs · Targetes de xarxa · Perifèrics</div>
+      </div>
+    </div>
+
+    <div class="grid g2 fi" style="margin-top:2rem">
+      <div class="card bl-asix">
+        <h3>🧠 Tipus d'arquitectura de kernel</h3>
+        <div style="overflow-x:auto">
+        <table class="ptable" style="font-size:.82rem">
+          <thead><tr><th>Tipus</th><th>Descripció</th><th>Exemples</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Monolític</strong></td><td>Tot el SO en un sol espai de kernel. Ràpid però menys modular.</td><td>Linux, BSD</td></tr>
+            <tr><td><strong>Microkernel</strong></td><td>El kernel fa el mínim. Serveis com a processos d'usuari. Més segur, menys ràpid.</td><td>MINIX, QNX, L4</td></tr>
+            <tr><td><strong>Híbrid</strong></td><td>Combina aspectes dels dos anteriors. Serveis al kernel per rendiment.</td><td>Windows NT, macOS (XNU)</td></tr>
+            <tr><td><strong>Exokernel</strong></td><td>El kernel exposa el hardware directament. Màxima eficiència.</td><td>MIT Exokernel (recerca)</td></tr>
+            <tr><td><strong>Unikernel</strong></td><td>SO minimalista per a una sola aplicació. Usat en cloud/contenidors.</td><td>MirageOS, IncludeOS</td></tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+      <div class="card bl-asix">
+        <h3>🔑 Components del Kernel</h3>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.35rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">⚙️ <strong style="color:var(--ink)">Planificador de processos (scheduler):</strong> decideix quin procés s'executa en cada moment. Algoritmes: Round Robin, CFS (Linux), MLFQ (Windows).</li>
+          <li style="padding:.35rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">🧠 <strong style="color:var(--ink)">Gestor de memòria:</strong> assigna i allibera RAM. Implementa la memòria virtual (paginació, segmentació).</li>
+          <li style="padding:.35rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">📁 <strong style="color:var(--ink)">Sistema de fitxers virtual (VFS):</strong> abstracció unificada sobre NTFS, ext4, FAT32, etc.</li>
+          <li style="padding:.35rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">🔌 <strong style="color:var(--ink)">Gestió d'E/S i IRQ:</strong> interruptes hardware, DMA, drivers.</li>
+          <li style="padding:.35rem 0;font-size:.88rem;color:var(--muted)">🌐 <strong style="color:var(--ink)">Pila de xarxa:</strong> TCP/IP, protocols de xarxa integrats al kernel.</li>
+        </ul>
+      </div>
+    </div>
+
+    <hr>
+
+    <!-- T3 — FUNCIONS DEL SO -->
+    <div class="section-tag tag-asix fi">Tema 3</div>
+    <h2 class="fi">Funcions d'un sistema operatiu</h2>
+    <p class="lead fi">El SO realitza cinc grans funcions que permeten als programes executar-se de manera eficient, segura i ordenada sobre el hardware.</p>
+
+    <div class="grid g3 fi">
+      <div class="card bl-asix">
+        <div class="card-icon" style="background:#f5f3ff">⚙️</div>
+        <h3>1. Gestió de processos</h3>
+        <p>Crea, planifica, suspèn i elimina processos. Gestiona la concurrència (múltiples processos en aparent simultaneïtat) i la comunicació entre processos (IPC: pipes, sockets, memòria compartida). En Windows: Administrador de Tasques. En Linux: <code>ps</code>, <code>top</code>, <code>htop</code>.</p>
+      </div>
+      <div class="card bl-asix">
+        <div class="card-icon" style="background:#f5f3ff">🧠</div>
+        <h3>2. Gestió de memòria</h3>
+        <p>Assigna espais de memòria als processos. Implementa <strong>memòria virtual</strong> (cada procés creu tenir memòria contigua) usant paginació. Gestiona el swap (àrea d'intercanvi en disc quan la RAM s'omple). Protegeix que un procés no accedeixi a la memòria d'un altre.</p>
+      </div>
+      <div class="card bl-asix">
+        <div class="card-icon" style="background:#f5f3ff">📁</div>
+        <h3>3. Gestió del sistema de fitxers</h3>
+        <p>Organitza les dades en fitxers i directoris. Gestiona els permisos d'accés (lectura, escriptura, execució). Suporta múltiples sistemes de fitxers: NTFS (Windows), ext4/XFS/Btrfs (Linux), FAT32 (compatible universal), exFAT (USB/targetes).</p>
+      </div>
+      <div class="card bl-asix">
+        <div class="card-icon" style="background:#f5f3ff">🔌</div>
+        <h3>4. Gestió de dispositius (I/O)</h3>
+        <p>Gestiona la comunicació amb el hardware a través dels <strong>controladors (drivers)</strong>. Proporciona una interfície uniforme: una aplicació llegeix un fitxer igual si és en un SSD, un NAS o un CD. Inclou la gestió d'interrupcions (IRQ) i DMA.</p>
+      </div>
+      <div class="card bl-asix">
+        <div class="card-icon" style="background:#f5f3ff">🔐</div>
+        <h3>5. Gestió de seguretat</h3>
+        <p>Control d'accés (autenticació d'usuaris, autoritzacions). Aïllament de processos (un procés no pot llegir la memòria d'un altre). Auditoria (logs). En Linux: DAC (permisos UNIX), MAC (SELinux, AppArmor). En Windows: ACL, UAC, Windows Defender.</p>
+      </div>
+      <div class="card bl-asix">
+        <div class="card-icon" style="background:#f5f3ff">🖥️</div>
+        <h3>6. Interfície amb l'usuari</h3>
+        <p>El SO proporciona una interfície per interaccionar-hi: <strong>CLI</strong> (bash, sh, zsh, PowerShell, cmd) o <strong>GUI</strong> (GNOME, KDE, Cinnamon, Windows Desktop). En entorns de servidor s'usa quasi exclusivament CLI per eficiència i menor consum de recursos.</p>
+      </div>
+    </div>
+
+    <!-- PRÀCTICA 2 -->
+    <div class="lab-card fi">
+      <div class="lab-header">
+        <div class="lab-icon">🔬</div>
+        <div class="lab-title-block">
+          <h4>Pràctica 1.2 — Explorar processos, memòria i sistema de fitxers</h4>
+          <p>Verificar les funcions del SO des de la línia de comandos</p>
+        </div>
+        <div class="lab-os-tags"><span class="os-tag os-both">🔀 Windows + Ubuntu</span></div>
+      </div>
+      <div class="lab-body">
+        <h5>🐧 Ubuntu — Gestió de processos i memòria</h5>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">Terminal</span><span class="term-os term-os-ubuntu">Ubuntu</span></div>
+          <div class="term-body">
+            <span class="comment"># Llistar processos actius (ample format)</span><br>
+            <span class="prompt-ub">user@host:~$</span> <span class="cmd">ps aux --sort=-%mem | head -15</span><br>
+            <span class="out">USER       PID %CPU %MEM    VSZ   RSS  COMMAND</span><br>
+            <span class="out">root         1  0.0  0.1  168624 13520  /sbin/init</span><br><br>
+            <span class="comment"># Monitor interactiu (com el Task Manager de Linux)</span><br>
+            <span class="prompt-ub">user@host:~$</span> <span class="cmd">htop</span><br><br>
+            <span class="comment"># Ús de la memòria virtual (swap)</span><br>
+            <span class="prompt-ub">user@host:~$</span> <span class="cmd">swapon --show</span><br>
+            <span class="comment"># Estadístiques del sistema de fitxers</span><br>
+            <span class="prompt-ub">user@host:~$</span> <span class="cmd">df -hT</span><br>
+            <span class="out">Filesystem     Type   Size  Used Avail Use% Mounted on</span><br>
+            <span class="out">/dev/sda1      ext4    50G   12G   35G  26% /</span><br>
+            <span class="comment"># Mostrar permisos de fitxers (funció de seguretat)</span><br>
+            <span class="prompt-ub">user@host:~$</span> <span class="cmd">ls -la /etc/ | head -10</span>
+          </div>
+        </div>
+        <h5>🪟 Windows — PowerShell</h5>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">PowerShell</span><span class="term-os term-os-win">Windows</span></div>
+          <div class="term-body">
+            <span class="comment"># Llistar processos per ús de memòria</span><br>
+            <span class="prompt-win">PS C:\&gt;</span> <span class="cmd">Get-Process</span> <span class="flag">| Sort-Object</span> <span class="cmd">WorkingSet -Descending</span> <span class="flag">| Select-Object</span> <span class="cmd">-First 10 Name, CPU, WorkingSet</span><br><br>
+            <span class="comment"># Ús del disc</span><br>
+            <span class="prompt-win">PS C:\&gt;</span> <span class="cmd">Get-PSDrive</span> <span class="flag">-PSProvider</span> <span class="cmd">FileSystem</span><br>
+            <span class="comment"># Llista de serveis en execució</span><br>
+            <span class="prompt-win">PS C:\&gt;</span> <span class="cmd">Get-Service</span> <span class="flag">| Where-Object</span> <span class="cmd">{$_.Status -eq 'Running'}</span> <span class="flag">| Sort-Object</span> <span class="cmd">DisplayName</span>
+          </div>
+        </div>
+        <div class="lab-entrega"><strong>📋 Lliurament:</strong> Captura dels 5 processos que més memòria consumeixen en cada sistema. Indica quina funció del SO gestiona cada recurs observat.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     T4-5 — TIPUS DE SO I APLICACIONS
+═══════════════════════════════════════════ -->
+<section id="tipus" class="s-cream">
+  <div class="container">
+    <div class="ra-banner ra-asix fi">
+      <div class="ra-num">4–5</div>
+      <div>
+        <h2>Tipus de sistemes operatius i d'aplicacions</h2>
+        <p>Classificació per funció, per arquitectura, per llicència i per entorn d'ús. Tipologia de programes.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-asix fi">Tema 4 — Classificació</div>
+    <h2 class="fi">Tipus de sistemes operatius</h2>
+    <div style="overflow-x:auto" class="fi">
+      <table class="ptable">
+        <thead>
+          <tr><th>Criteri</th><th>Tipus</th><th>Descripció</th><th>Exemples</th></tr>
+        </thead>
+        <tbody>
+          <tr><td rowspan="5"><strong>Per nombre d'usuaris</strong></td><td><span class="badge b-asix">Monousuari</span></td><td>Un sol usuari a la vegada. Dissenyat per a ús personal.</td><td>MS-DOS, Windows 9x, CP/M</td></tr>
+          <tr><td><span class="badge b-green">Multiusuari</span></td><td>Múltiples usuaris simultàniament. Aïllament de sessions.</td><td>Linux, Windows Server, macOS</td></tr>
+          <tr><td colspan="3"></td></tr>
+          <tr><td rowspan="2"></td><td colspan="2"></td></tr>
+          <tr><td colspan="3"></td></tr>
+          <tr><td rowspan="3"><strong>Per nombre de processos</strong></td><td><span class="badge b-amber">Monotasca</span></td><td>Executa un sol procés a la vegada.</td><td>MS-DOS</td></tr>
+          <tr><td><span class="badge b-green">Multitasca cooperativa</span></td><td>El procés cedeix voluntàriament el control de la CPU.</td><td>Windows 3.x, Mac OS 9</td></tr>
+          <tr><td><span class="badge b-asix">Multitasca preemptiva</span></td><td>El SO pot interrompre un procés per cedir la CPU a un altre. Estàndard modern.</td><td>Linux, Windows NT+, macOS</td></tr>
+          <tr><td rowspan="3"><strong>Per temps de resposta</strong></td><td><span class="badge b-win">Temps compartit (time-sharing)</span></td><td>La CPU rota entre processos molt ràpidament. Sensació de paral·lelisme.</td><td>Linux, Windows</td></tr>
+          <tr><td><span class="badge b-ubuntu">Temps real dur (Hard RT)</span></td><td>Garantia absoluta de resposta en temps determinat. Fallar és catastròfic.</td><td>VxWorks, QNX, RTEMS</td></tr>
+          <tr><td><span class="badge b-amber">Temps real tou (Soft RT)</span></td><td>La resposta en temps és desitjable però un retard no és crític.</td><td>Linux amb PREEMPT_RT</td></tr>
+          <tr><td rowspan="3"><strong>Per entorn</strong></td><td><span class="badge b-asix">Escriptori</span></td><td>GUI, ús interactiu, driver support ampli, facilitat d'ús.</td><td>Windows 11, Ubuntu Desktop, macOS</td></tr>
+          <tr><td><span class="badge b-win">Servidor</span></td><td>Sense GUI (o mínima), màxima estabilitat i seguretat, serveis 24/7.</td><td>Windows Server, Debian, RHEL, Ubuntu Server</td></tr>
+          <tr><td><span class="badge b-ubuntu">Embegut / IoT</span></td><td>Recursos mínims, temps real, hardware específic.</td><td>Raspberry Pi OS, FreeRTOS, Android</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout cl-asix fi" style="margin-top:1.5rem">
+      <span class="callout-icon">🧠</span>
+      <div>
+        <strong>Distribucions Linux a conèixer com a tècnic ASIX:</strong>
+        <div class="pills" style="margin-top:.5rem">
+          <span class="pill pill-u">Ubuntu 24.04 LTS</span>
+          <span class="pill pill-u">Debian 12 "Bookworm"</span>
+          <span class="pill pill-u">RHEL / CentOS / AlmaLinux</span>
+          <span class="pill pill-u">Fedora</span>
+          <span class="pill pill-u">openSUSE Leap</span>
+          <span class="pill pill-w">Arch Linux</span>
+          <span class="pill pill-g">Kali Linux (auditoria)</span>
+          <span class="pill">Alpine Linux (contenidors)</span>
+        </div>
+      </div>
+    </div>
+
+    <hr>
+    <div class="section-tag tag-asix fi">Tema 5 — Aplicacions</div>
+    <h2 class="fi">Tipus d'aplicacions</h2>
+    <div class="grid g3 fi">
+      <div class="card bl-asix">
+        <div class="card-icon" style="background:#f5f3ff">🛠️</div>
+        <h3>Aplicacions de sistema</h3>
+        <p>Utilitats que gestionen el sistema: gestors de discos (fdisk, Disk Management), compiladors (gcc, clang), depuradors (gdb), eines de monitoratge (Nagios, Zabbix), shells (bash, PowerShell).</p>
+      </div>
+      <div class="card bl-asix">
+        <div class="card-icon" style="background:#f5f3ff">💼</div>
+        <h3>Aplicacions d'usuari</h3>
+        <p>Productivitat (Microsoft Office, LibreOffice), navegadors (Firefox, Chrome), correus (Thunderbird, Outlook), editors de codi (VS Code, Vim), bases de dades (MySQL Workbench).</p>
+      </div>
+      <div class="card bl-asix">
+        <div class="card-icon" style="background:#f5f3ff">🌐</div>
+        <h3>Serveis / Daemons</h3>
+        <p>Programes sense interfície gràfica que corren en segon pla. Apache/Nginx (web), OpenSSH (accés remot), cron (tasques programades), systemd (gestor de serveis en Linux). En Windows: <em>Services</em>.</p>
+      </div>
+      <div class="card bl-asix">
+        <div class="card-icon" style="background:#f5f3ff">🐳</div>
+        <h3>Aplicacions virtualitzades / contenidors</h3>
+        <p>Programes empaquetats amb les seves dependències. Docker containers, Snap (Ubuntu), Flatpak (Linux), AppImage. Avantatge: portabilitat total entre distribucions.</p>
+      </div>
+      <div class="card bl-asix">
+        <div class="card-icon" style="background:#f5f3ff">🔌</div>
+        <h3>Controladors (Drivers)</h3>
+        <p>Software de sistema que permet al SO comunicar-se amb el hardware. Corren a nivell de kernel. Exemples: driver de targeta gràfica (NVIDIA, AMD), driver de xarxa, driver d'impressora.</p>
+      </div>
+      <div class="card bl-asix">
+        <div class="card-icon" style="background:#f5f3ff">🧰</div>
+        <h3>Middleware</h3>
+        <p>Capa intermèdia entre el SO i les aplicacions: Java Virtual Machine (JVM), .NET Runtime, ODBC (connexions a BD), servidors d'aplicacions (JBoss, Tomcat). Afavoreixen la portabilitat del codi.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     T6 — LLICÈNCIES
+═══════════════════════════════════════════ -->
+<section id="llicencies" class="s-asix">
+  <div class="container">
+    <div class="ra-banner ra-asix fi" style="background:linear-gradient(135deg,#064e3b,#059669)">
+      <div class="ra-num">6</div>
+      <div>
+        <h2>Llicències i tipus de llicències</h2>
+        <p>El marc legal que regula l'ús, distribució i modificació del programari. Clau en decisió de sistemes empresarials.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-green fi">Fonaments legals</div>
+    <h2 class="fi">Programari lliure vs programari propietari</h2>
+    <p class="lead fi">La llicència és el contracte legal entre el creador del software i l'usuari. Defineix el que l'usuari <em>pot</em> i el que <em>no pot</em> fer. Com a tècnics ASIX hem de saber quina llicència té cada peça de software que instal·lem a l'empresa.</p>
+
+    <div class="grid g2 fi">
+      <div class="card bl-green">
+        <div class="card-icon" style="background:#f0fdf4">🆓</div>
+        <h3>Les 4 llibertats del Programari Lliure (FSF/GNU)</h3>
+        <p style="margin-bottom:.75rem">Definides per Richard Stallman. Un programa és <em>lliure</em> si l'usuari té:</p>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.35rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">🔢 <strong style="color:var(--ink)">Llibertat 0:</strong> Executar el programa per a qualsevol propòsit.</li>
+          <li style="padding:.35rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">🔢 <strong style="color:var(--ink)">Llibertat 1:</strong> Estudiar com funciona el programa (necessita accés al codi font).</li>
+          <li style="padding:.35rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">🔢 <strong style="color:var(--ink)">Llibertat 2:</strong> Redistribuir còpies del programa.</li>
+          <li style="padding:.35rem 0;font-size:.88rem;color:var(--muted)">🔢 <strong style="color:var(--ink)">Llibertat 3:</strong> Distribuir còpies de les versions modificades (millora la comunitat).</li>
+        </ul>
+        <div class="callout cl-green" style="margin-top:.75rem;padding:.85rem 1rem">
+          <span class="callout-icon">💡</span>
+          <p><strong>Atenció:</strong> "lliure" fa referència a llibertat, <strong>no a preu</strong> (free as in freedom, not free as in beer). El programari lliure pot ser de pagament.</p>
+        </div>
+      </div>
+      <div class="card bl-amber">
+        <div class="card-icon" style="background:#fffbeb">🔒</div>
+        <h3>Programari propietari (privatiu)</h3>
+        <p style="margin-bottom:.75rem">L'usuari rep el software compilat (codi font no disponible) i accepta una llicència EULA (End-User License Agreement) que restringeix:</p>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.35rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">🚫 <strong style="color:var(--ink)">Redistribució:</strong> no es pot copiar ni distribuir el software sense permís.</li>
+          <li style="padding:.35rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">🚫 <strong style="color:var(--ink)">Enginyeria inversa:</strong> prohibida en la majoria de llicències.</li>
+          <li style="padding:.35rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">🚫 <strong style="color:var(--ink)">Modificació:</strong> el codi font no és accessible.</li>
+          <li style="padding:.35rem 0;font-size:.88rem;color:var(--muted)">💰 <strong style="color:var(--ink)">Model de negoci:</strong> llicències per usuari, per dispositiu, per subscripció (SaaS).</li>
+        </ul>
+        <div class="ex ex-amber" style="margin-top:.75rem">
+          <div class="ex-lbl">Exemples propietaris</div>
+          <p>Windows (Microsoft) · macOS (Apple) · Office 365 · Adobe Creative Cloud · VMware vSphere · Oracle Database</p>
+        </div>
+      </div>
+    </div>
+
+    <hr>
+    <h2 class="fi">Principals tipus de llicències</h2>
+    <div style="overflow-x:auto" class="fi">
+      <table class="ptable">
+        <thead>
+          <tr><th>Llicència</th><th>Tipus</th><th>Codi font</th><th>Modificar</th><th>Distribuir</th><th>Usos comercials</th><th>Copyleft</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>GPL v2/v3</strong></td><td><span class="badge b-green">Lliure</span></td><td>✅</td><td>✅</td><td>✅ (amb GPL)</td><td>✅</td><td>✅ Fort — les derivades han de ser GPL</td></tr>
+          <tr><td><strong>LGPL</strong></td><td><span class="badge b-green">Lliure</span></td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>⚠️ Feble — permet usar en propietari com a biblioteca</td></tr>
+          <tr><td><strong>MIT</strong></td><td><span class="badge b-asix">Permissiva</span></td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌ — Pots incorporar en software propietari</td></tr>
+          <tr><td><strong>Apache 2.0</strong></td><td><span class="badge b-asix">Permissiva</span></td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌ — Inclou protecció de patents</td></tr>
+          <tr><td><strong>BSD (2/3-clause)</strong></td><td><span class="badge b-asix">Permissiva</span></td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>❌ — Molt permissiva, fins i tot més que MIT</td></tr>
+          <tr><td><strong>AGPL v3</strong></td><td><span class="badge b-green">Lliure</span></td><td>✅</td><td>✅</td><td>✅ (amb AGPL)</td><td>✅</td><td>✅ Molt fort — fins i tot per a serveis web</td></tr>
+          <tr><td><strong>Creative Commons</strong></td><td><span class="badge b-win">Contingut</span></td><td>—</td><td>Depèn variant</td><td>Depèn variant</td><td>Depèn (NC)</td><td>Depèn (SA = Share-Alike)</td></tr>
+          <tr><td><strong>EULA (propietari)</strong></td><td><span class="badge b-amber">Propietari</span></td><td>❌</td><td>❌</td><td>❌</td><td>Normalment sí</td><td>N/A</td></tr>
+          <tr><td><strong>Freeware</strong></td><td><span class="badge b-amber">Propietari gratuït</span></td><td>❌</td><td>❌</td><td>Normalment sí</td><td>❌</td><td>N/A</td></tr>
+          <tr><td><strong>Shareware</strong></td><td><span class="badge b-amber">Propietari</span></td><td>❌</td><td>❌</td><td>✅ (versió trial)</td><td>Versió de pagament</td><td>N/A</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout cl-amber fi" style="margin-top:1.5rem">
+      <span class="callout-icon">⚠️</span>
+      <div>
+        <strong>Implicació pràctica: el "copyleft viral" de la GPL</strong>
+        <p style="margin-top:.4rem">Si una empresa incorpora codi amb llicència GPL al seu producte comercial, <strong>tot el producte resultant ha de publicar-se amb GPL</strong>. Empreses com Apple, Microsoft i moltes altres eviten deliberadament usar codi GPL en els seus productes principals, preferint llicències MIT o Apache que permeten la incorporació en software propietari sense aquesta restricció. Alternativa empresarial: LGPL (per a biblioteques) o llicències duals (OpenSSL: OpenSSL License + MIT).</p>
+      </div>
+    </div>
+
+    <!-- PRÀCTICA 3 -->
+    <div class="lab-card fi">
+      <div class="lab-header">
+        <div class="lab-icon">🔬</div>
+        <div class="lab-title-block">
+          <h4>Pràctica 1.3 — Auditar llicències del software instal·lat</h4>
+          <p>Identificar les llicències dels programes instal·lats al sistema</p>
+        </div>
+        <div class="lab-os-tags"><span class="os-tag os-both">🔀 Windows + Ubuntu</span></div>
+      </div>
+      <div class="lab-body">
+        <p>Com a tècnic ASIX, has de saber quines llicències té el software instal·lat a l'empresa per garantir el compliment legal (license compliance).</p>
+        <h5>🐧 Ubuntu — Llicències dels paquets instal·lats</h5>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">Terminal</span><span class="term-os term-os-ubuntu">Ubuntu</span></div>
+          <div class="term-body">
+            <span class="comment"># Mostrar llicència d'un paquet concret</span><br>
+            <span class="prompt-ub">user@host:~$</span> <span class="cmd">apt-cache show bash | grep -i "license\|copyright"</span><br><br>
+            <span class="comment"># Fitxer de copyright de qualsevol paquet instal·lat</span><br>
+            <span class="prompt-ub">user@host:~$</span> <span class="cmd">cat /usr/share/doc/bash/copyright | head -30</span><br><br>
+            <span class="comment"># Llistar tots els paquets instal·lats amb la seva llicència (licensecheck)</span><br>
+            <span class="prompt-ub">user@host:~$</span> <span class="cmd">sudo apt install licensecheck</span><br>
+            <span class="prompt-ub">user@host:~$</span> <span class="cmd">licensecheck /usr/share/doc/vim/copyright</span><br><br>
+            <span class="comment"># Comprovar si hi ha llicències no lliures al sistema</span><br>
+            <span class="prompt-ub">user@host:~$</span> <span class="cmd">vrms</span>    <span class="comment"># Virtual Richard M. Stallman — informa del non-free</span>
+          </div>
+        </div>
+        <h5>🪟 Windows — Llicències instal·lades</h5>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">PowerShell — Administrador</span><span class="term-os term-os-win">Windows</span></div>
+          <div class="term-body">
+            <span class="comment"># Llistar tot el software instal·lat (registre)</span><br>
+            <span class="prompt-win">PS C:\&gt;</span> <span class="cmd">Get-ItemProperty</span> <span class="path">HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*</span> <span class="flag">|</span><br>
+            <span class="cmd"> Select-Object DisplayName, DisplayVersion, Publisher | Sort-Object DisplayName</span><br><br>
+            <span class="comment"># Clau de llicència del Windows instal·lat</span><br>
+            <span class="prompt-win">PS C:\&gt;</span> <span class="cmd">slmgr /dlv</span>    <span class="comment"># Informació completa de la llicència</span><br>
+            <span class="prompt-win">PS C:\&gt;</span> <span class="cmd">slmgr /xpr</span>    <span class="comment"># Data d'expiració de la llicència</span>
+          </div>
+        </div>
+        <div class="lab-entrega"><strong>📋 Lliurament:</strong> Llista de 10 programes instal·lats al sistema (5 per OS), identificant la seva llicència (GPL, MIT, EULA propietari, etc.). Justifica si cada llicència seria acceptable en un entorn empresarial.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     T7 — GESTORS D'ARRENCADA
+═══════════════════════════════════════════ -->
+<section id="arrencada" class="s-cream">
+  <div class="container">
+    <div class="ra-banner fi" style="background:linear-gradient(135deg,#78350f,#d97706);color:white">
+      <div class="ra-num" style="color:rgba(255,255,255,.25)">7</div>
+      <div>
+        <h2>Gestors d'arrencada</h2>
+        <p>La seqüència d'arrencada completa: de l'encesa del botó al prompt de login. BIOS, UEFI, MBR, GPT, GRUB2 i Windows Boot Manager.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-amber fi">La seqüència d'arrencada</div>
+    <h2 class="fi">Del botó d'encesa al prompt de login</h2>
+    <p class="lead fi">Entendre la seqüència completa d'arrencada és fonamental per diagnosticar errors, configurar sistemes dual-boot i gestionar entorns d'instal·lació. Aquí la seqüència detallada:</p>
+
+    <ol class="steps fi">
+      <li><p><strong>Power-On:</strong> La font d'alimentació estabilitza la tensió (Power Good signal). La CPU rep un reset hardware i carrega la primera instrucció des d'una adreça fixa (0xFFFFFFF0 en x86).</p></li>
+      <li><p><strong>Firmware (BIOS/UEFI):</strong> El firmware s'executa des de la memòria flash de la placa base. Realitza el POST (Power-On Self Test): comprova CPU, RAM, dispositius. Si hi ha error crític: bips de codi o missatge en pantalla.</p></li>
+      <li><p><strong>Detecció de dispositius:</strong> El firmware enumera tots els dispositius connectats (PCI, USB, SATA, NVMe) i els inicialitza bàsicament. Construeix la taula ACPI per comunicar la topologia al SO.</p></li>
+      <li><p><strong>Selecció del dispositiu d'arrencada:</strong> Basant-se en l'ordre de boot configurat al BIOS/UEFI, selecciona el dispositiu (disc, USB, xarxa PXE…).</p></li>
+      <li><p><strong>MBR o EFI System Partition:</strong> En BIOS+MBR: llegeix els primers 512 bytes del disc (MBR), que contenen el bootloader de primera etapa. En UEFI+GPT: accedeix directament a la partició EFI (ESP, format FAT32) i executa el fitxer .efi del gestor d'arrencada.</p></li>
+      <li><p><strong>Bootloader (GRUB2 / Windows Boot Manager):</strong> Mostra el menú d'arrencada, carrega el kernel del SO a la RAM i li passa el control.</p></li>
+      <li><p><strong>Kernel:</strong> S'inicia el kernel del SO. Detecta el hardware (dmesg), munta el sistema de fitxers arrel, inicialitza els mòduls/drivers.</p></li>
+      <li><p><strong>Init / systemd (Linux) o smss.exe (Windows):</strong> El primer procés d'espai d'usuari (PID 1 en Linux). Arrenca tots els serveis del sistema en l'ordre correcte. En Linux modern: systemd. En Windows: Session Manager Subsystem.</p></li>
+      <li><p><strong>Login Manager:</strong> Es presenta la pantalla d'inici de sessió (GDM, SDDM, LightDM en Linux; Winlogon en Windows) o el prompt de terminal en servidors.</p></li>
+    </ol>
+
+    <hr>
+    <div class="grid g2 fi">
+      <div class="card bl-amber">
+        <h3>⚠️ BIOS (Legacy) — Característiques</h3>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">📅 <strong style="color:var(--ink)">Origen:</strong> IBM PC, 1981. Interfície de 16 bits en mode real.</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">💾 <strong style="color:var(--ink)">MBR (Master Boot Record):</strong> 512 bytes al sector 0 del disc. Limitat a 4 particions primàries i discs &lt; 2 TB.</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">🔢 <strong style="color:var(--ink)">Direccionament:</strong> CHS (Cylinder-Head-Sector), obsolet. Limitat a 2,2 TB.</li>
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted)">🔓 <strong style="color:var(--ink)">Seguretat:</strong> cap verificació de la cadena d'arrencada. Vulnerable a bootkits.</li>
+        </ul>
+      </div>
+      <div class="card bl-asix">
+        <h3>✅ UEFI — L'estàndard modern</h3>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">📅 <strong style="color:var(--ink)">Origen:</strong> Intel EFI → UEFI Forum. Estàndard des de ~2006, obligatori des de Win 8.</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">💾 <strong style="color:var(--ink)">GPT (GUID Partition Table):</strong> fins a 128 particions primàries, discs &gt; 2 TB (límit teòric: 9,4 ZB).</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">🔐 <strong style="color:var(--ink)">Secure Boot:</strong> verifica la signatura criptogràfica del bootloader. Prevé bootkits i rootkits.</li>
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted)">🖥️ <strong style="color:var(--ink)">Interfície:</strong> GUI gràfica, suport de ratolí, xarxa des del firmware, shell UEFI (EFI Shell).</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="grid g2 fi" style="margin-top:1.25rem">
+      <div class="card bl-ubuntu">
+        <h3>🐧 GRUB2 (Grand Unified Bootloader v2)</h3>
+        <p style="margin-bottom:.75rem">El gestor d'arrencada estàndard de la majoria de distribucions Linux (Ubuntu, Debian, Fedora, etc.).</p>
+        <div class="ex ex-ubuntu">
+          <div class="ex-lbl">Fitxers clau de GRUB2</div>
+          <p>
+            <code>/boot/grub/grub.cfg</code> — configuració generada automàticament (no editar directament)<br>
+            <code>/etc/default/grub</code> — paràmetres que l'usuari pot modificar<br>
+            <code>/etc/grub.d/</code> — scripts que generen el grub.cfg<br>
+            <code>/boot/efi/EFI/</code> — fitxers .efi per a UEFI
+          </p>
+        </div>
+        <div class="ex ex-ubuntu" style="margin-top:.5rem">
+          <div class="ex-lbl">Paràmetres importants a /etc/default/grub</div>
+          <p>
+            <code>GRUB_TIMEOUT=5</code> — temps que es mostra el menú (en seg.)<br>
+            <code>GRUB_DEFAULT=0</code> — entrada del menú seleccionada per defecte<br>
+            <code>GRUB_CMDLINE_LINUX="quiet splash"</code> — paràmetres passats al kernel
+          </p>
+        </div>
+      </div>
+      <div class="card bl-win">
+        <h3>🪟 Windows Boot Manager (Bootmgr)</h3>
+        <p style="margin-bottom:.75rem">Gestor d'arrencada de Windows Vista en endavant. Configuració emmagatzemada a la BCD (Boot Configuration Data Store).</p>
+        <div class="ex ex-win">
+          <div class="ex-lbl">Eines de gestió</div>
+          <p>
+            <code>bcdedit</code> — eina de línia de comandos per gestionar la BCD<br>
+            <code>msconfig</code> — eina gràfica per gestionar l'arrencada<br>
+            <code>Configuració UEFI</code> → Configuració → Recuperació → Opcions d'inici avançat
+          </p>
+        </div>
+        <div class="ex ex-win" style="margin-top:.5rem">
+          <div class="ex-lbl">Fitxers clau de Windows Boot</div>
+          <p>
+            <code>\EFI\Microsoft\Boot\bootmgfw.efi</code> — fitxer UEFI (ESP)<br>
+            <code>\BCD</code> — base de dades de configuració d'arrencada<br>
+            <code>winload.efi</code> — carregador del kernel de Windows<br>
+            <code>ntoskrnl.exe</code> — el kernel de Windows NT
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRÀCTICA 4 -->
+    <div class="lab-card fi">
+      <div class="lab-header">
+        <div class="lab-icon">🔬</div>
+        <div class="lab-title-block">
+          <h4>Pràctica 1.4 — Gestió del gestor d'arrencada</h4>
+          <p>Configurar GRUB2 i inspeccionar la BCD de Windows</p>
+        </div>
+        <div class="lab-os-tags"><span class="os-tag os-both">🔀 Windows + Ubuntu</span></div>
+      </div>
+      <div class="lab-body">
+        <h5>🐧 Ubuntu — Configurar GRUB2</h5>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">Terminal — root</span><span class="term-os term-os-ubuntu">Ubuntu</span></div>
+          <div class="term-body">
+            <span class="comment"># Veure la configuració actual de GRUB</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">cat /etc/default/grub</span><br><br>
+            <span class="comment"># Modificar el timeout a 10 segons</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">nano /etc/default/grub</span><br>
+            <span class="comment"># Canvia GRUB_TIMEOUT=5 per GRUB_TIMEOUT=10</span><br><br>
+            <span class="comment"># Regenerar grub.cfg (SEMPRE fer-ho després de canviar /etc/default/grub)</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">update-grub</span><br>
+            <span class="out">Sourcing file `/etc/default/grub'</span><br>
+            <span class="out">Generating grub configuration file ...</span><br>
+            <span class="ok">Found linux image: /boot/vmlinuz-6.8.0-51-generic</span><br>
+            <span class="out">done</span><br><br>
+            <span class="comment"># Llistar entrades del menú GRUB</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">grep -E "menuentry|submenu" /boot/grub/grub.cfg | head -20</span><br><br>
+            <span class="comment"># Veure els paràmetres del kernel actual en execució</span><br>
+            <span class="prompt-ub">user@host:~$</span> <span class="cmd">cat /proc/cmdline</span>
+          </div>
+        </div>
+        <h5>🪟 Windows — Gestió de la BCD amb bcdedit</h5>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">CMD — Administrador</span><span class="term-os term-os-win">Windows</span></div>
+          <div class="term-body">
+            <span class="comment"># Mostrar tota la configuració de la BCD</span><br>
+            <span class="prompt-win">C:\&gt;</span> <span class="cmd">bcdedit /enum all</span><br><br>
+            <span class="comment"># Canviar el temps de visualització del menú (en ms)</span><br>
+            <span class="prompt-win">C:\&gt;</span> <span class="cmd">bcdedit /timeout 10</span><br><br>
+            <span class="comment"># Veure si Secure Boot està actiu</span><br>
+            <span class="prompt-win">PS C:\&gt;</span> <span class="cmd">Confirm-SecureBootUEFI</span><br>
+            <span class="out">True</span><br><br>
+            <span class="comment"># Informació de la partició EFI</span><br>
+            <span class="prompt-win">C:\&gt;</span> <span class="cmd">diskpart</span><br>
+            <span class="prompt-win">DISKPART&gt;</span> <span class="cmd">list disk</span><br>
+            <span class="prompt-win">DISKPART&gt;</span> <span class="cmd">select disk 0</span><br>
+            <span class="prompt-win">DISKPART&gt;</span> <span class="cmd">list partition</span>
+          </div>
+        </div>
+        <div class="lab-entrega"><strong>📋 Lliurament:</strong> (1) Captura del menú GRUB modificat al reiniciar (Ubuntu). (2) Sortida de <code>bcdedit /enum all</code> (Windows), identificant l'IDENTIFIER de l'entrada activa del Windows. (3) Respon: quina diferència hi ha entre MBR i GPT en el context de les particions que veieu?</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     T8-9 — INSTAL·LACIÓ DE SO
+═══════════════════════════════════════════ -->
+<section id="installacio" class="s-win">
+  <div class="container">
+    <div class="ra-banner ra-win fi">
+      <div class="ra-num">8–9</div>
+      <div>
+        <h2>Consideracions prèvies i instal·lació de SO</h2>
+        <p>Planificació, particionament, sistemes de fitxers i instal·lació de Windows 11 i Ubuntu Server/Desktop.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-win fi">Tema 8 — Previ a la instal·lació</div>
+    <h2 class="fi">Consideracions prèvies a la instal·lació</h2>
+    <p class="lead fi">Instal·lar un SO sense planificació prèvia és una recepta per al fracàs en un entorn professional. Abans de començar cal revisar sistematicament aquests punts:</p>
+
+    <div class="grid g2 fi">
+      <div class="card bl-win">
+        <div class="card-icon" style="background:#f0f7ff">📋</div>
+        <h3>1. Verificació de requisits</h3>
+        <div style="overflow-x:auto">
+        <table class="ptable" style="font-size:.82rem;margin-top:.5rem">
+          <thead><tr><th>Recurs</th><th>Windows 11</th><th>Ubuntu 24.04 LTS</th></tr></thead>
+          <tbody>
+            <tr><td><strong>CPU</strong></td><td>1 GHz, 2 nuclis, 64-bit, TPM 2.0</td><td>1 GHz, 64-bit (o ARM64)</td></tr>
+            <tr><td><strong>RAM</strong></td><td>4 GB (mín.) / 8 GB rec.</td><td>1 GB (CLI) / 4 GB (GUI)</td></tr>
+            <tr><td><strong>Disc</strong></td><td>64 GB</td><td>25 GB (Desktop) / 10 GB (Server)</td></tr>
+            <tr><td><strong>Gràfica</strong></td><td>DirectX 12 / WDDM 2.0</td><td>Qualsevol (llicència lliure)</td></tr>
+            <tr><td><strong>Particions</strong></td><td>EFI + MSR + Windows + Recovery</td><td>/ + swap + /boot/efi (UEFI)</td></tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+      <div class="card bl-asix">
+        <div class="card-icon" style="background:#f5f3ff">🗂️</div>
+        <h3>2. Planificació del particionament</h3>
+        <p style="margin-bottom:.75rem">Decisions que cal prendre <em>abans</em> d'arrencar l'instal·lador:</p>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">💾 <strong style="color:var(--ink)">Esquema de taula de particions:</strong> MBR (legacy) o GPT (recomanat). GPT és obligatori per a UEFI i discs &gt; 2 TB.</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">📦 <strong style="color:var(--ink)">Sistema de fitxers:</strong> NTFS (Windows), ext4/Btrfs/XFS (Linux). Per a unitats extraïbles: exFAT.</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">📐 <strong style="color:var(--ink)">Distribució de particions:</strong> sistema, dades, swap, home separats? Depèn de l'ús.</li>
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted)">🔐 <strong style="color:var(--ink)">Xifrat:</strong> BitLocker (Windows), LUKS (Linux). Imprescindible en portàtils d'empresa.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout cl-blue fi">
+      <span class="callout-icon">🧠</span>
+      <div>
+        <strong>Sistemes de fitxers: resum comparatiu</strong>
+        <div style="overflow-x:auto;margin-top:.75rem">
+          <table class="ptable" style="font-size:.82rem">
+            <thead><tr><th>FS</th><th>SO</th><th>Max. fitxer</th><th>Max. volum</th><th>Journaling</th><th>Característiques clau</th></tr></thead>
+            <tbody>
+              <tr><td><strong>NTFS</strong></td><td>Windows</td><td>16 TB</td><td>256 TB</td><td>✅</td><td>Permisos ACL, xifrat EFS, compressió, VSS (snapshots)</td></tr>
+              <tr><td><strong>ext4</strong></td><td>Linux</td><td>16 TB</td><td>1 EB</td><td>✅</td><td>Estable, ràpid, suport ampli. Estàndard en Debian/Ubuntu.</td></tr>
+              <tr><td><strong>XFS</strong></td><td>Linux</td><td>8 EB</td><td>8 EB</td><td>✅</td><td>Excel·lent per a fitxers grans. Estàndard a RHEL/CentOS.</td></tr>
+              <tr><td><strong>Btrfs</strong></td><td>Linux</td><td>16 EB</td><td>16 EB</td><td>CoW</td><td>Snapshots, RAID integrat, compressió. Default en openSUSE, Fedora.</td></tr>
+              <tr><td><strong>FAT32</strong></td><td>Universal</td><td>4 GB</td><td>2 TB</td><td>❌</td><td>Màxima compatibilitat. Sense permisos. Limitat a 4 GB/fitxer.</td></tr>
+              <tr><td><strong>exFAT</strong></td><td>Universal</td><td>128 PB</td><td>128 PB</td><td>❌</td><td>FAT32 sense límit de 4 GB. Ideal per a USB/SD cards grans.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <hr>
+    <div class="section-tag tag-win fi">Tema 9 — Instal·lació</div>
+    <h2 class="fi">Procés d'instal·lació de SO</h2>
+
+    <div class="grid g2 fi">
+      <div class="card bl-win">
+        <h3>🪟 Instal·lació Windows 11</h3>
+        <ol class="steps" style="margin-top:.5rem">
+          <li><p>Descarregar la ISO oficial de <strong>microsoft.com/software-download</strong> i crear un USB bootable amb <strong>Rufus</strong> o l'<em>Media Creation Tool</em>.</p></li>
+          <li><p>A la UEFI: verificar que <strong>Secure Boot</strong> i <strong>TPM 2.0</strong> estan actius (requisits obligatoris de Win 11).</p></li>
+          <li><p>Arrencar des del USB. Seleccionar idioma, teclat, edició (Home/Pro/Server). Introduir la clau de producte (o saltar per activar posteriorment).</p></li>
+          <li><p>Triar <strong>"Instal·lació personalitzada"</strong> per gestionar les particions manualment. Crear particions: EFI (100 MB), MSR (16 MB), Windows (mínim 64 GB), Recuperació (500 MB).</p></li>
+          <li><p>L'instal·lador copia els fitxers (uns 20-30 minuts). El sistema reinicia diverses vegades.</p></li>
+          <li><p>Configuració inicial (OOBE): compte Microsoft o local, privacitat, nom del PC, PIN.</p></li>
+          <li><p>Postinstal·lació: Windows Update, drivers (Device Manager), activació.</p></li>
+        </ol>
+      </div>
+      <div class="card bl-ubuntu">
+        <h3>🐧 Instal·lació Ubuntu Server 24.04 LTS</h3>
+        <ol class="steps" style="margin-top:.5rem">
+          <li><p>Descarregar la ISO de <strong>ubuntu.com/download/server</strong>. Crear USB amb <strong>balenaEtcher</strong> o <code>dd if=ubuntu.iso of=/dev/sdX bs=4M status=progress</code>.</p></li>
+          <li><p>Arrencar des del USB. Seleccionar idioma, teclat, tipus d'instal·lació (minimitzada o completa).</p></li>
+          <li><p>Configuració de xarxa: IP estàtica recomanada per a servidors (o DHCP per a proves). Configurar proxy si cal.</p></li>
+          <li><p>Particionament: <strong>guiat en disc sencer</strong> (ràpid) o <strong>manual</strong> (recomanat en producció). Esquema recomanat: /boot/efi (1 GB, FAT32), / (20+ GB, ext4), swap (= RAM si poca RAM), /home o /var separats si és servidor.</p></li>
+          <li><p>Crear l'usuari administrador (no root directament). Activar OpenSSH Server per accés remot.</p></li>
+          <li><p>Seleccionar snap de servidor (opcional): LAMP, Docker, Kubernetes, etc.</p></li>
+          <li><p>L'instal·lador finalitza, reinicia. Postinstal·lació: <code>apt update && apt upgrade</code>, configuració de xarxa, SSH keys.</p></li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- PRÀCTICA 5 -->
+    <div class="lab-card fi">
+      <div class="lab-header">
+        <div class="lab-icon">🔬</div>
+        <div class="lab-title-block">
+          <h4>Pràctica 1.5 — Instal·lació en màquina virtual</h4>
+          <p>Instal·lar Ubuntu Server 24.04 LTS i Windows 11 en VMs amb VirtualBox/VMware</p>
+        </div>
+        <div class="lab-os-tags"><span class="os-tag os-both">🔀 Windows + Ubuntu</span></div>
+      </div>
+      <div class="lab-body">
+        <p>Utilitzarem virtualització per practicar la instal·lació sense risc per al sistema host. Instal·larem dos sistemes operatius en màquines virtuals separades.</p>
+        <h5>Creació de la VM (VirtualBox)</h5>
+        <ul class="lab-steps">
+          <li><p>Obre VirtualBox → Nova. Nom: <strong>Ubuntu-Server-2404</strong>. Tipus: Linux. Versió: Ubuntu (64-bit). Assignar 2 GB RAM, 1 CPU, disc 25 GB (VDI, dinàmic).</p></li>
+          <li><p>A la VM creada → Configuració → Sistema → Placa base: activa <strong>EFI</strong>. Processador: 2 nuclis. Pantalla: 128 MB VRAM.</p></li>
+          <li><p>Emmagatzematge → Controlador IDE: munteu la ISO d'Ubuntu Server com a unitat òptica virtual.</p></li>
+          <li><p>Inicia la VM i segueix el procés d'instal·lació d'Ubuntu Server. Usa el particionament guiat en disc sencer (LVM).</p></li>
+          <li><p>Un cop instal·lat, comprova l'accés SSH: des del host, a la VM en mode xarxa NAT amb port forwarding (host 2222 → guest 22).</p></li>
+        </ul>
+        <h5>🐧 Verificació postinstal·lació Ubuntu</h5>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">Connexió SSH al servidor Ubuntu</span><span class="term-os term-os-ubuntu">Ubuntu Server</span></div>
+          <div class="term-body">
+            <span class="comment"># Des del host, connectar per SSH a la VM</span><br>
+            <span class="prompt-ub">user@host:~$</span> <span class="cmd">ssh -p 2222 adminuser@127.0.0.1</span><br><br>
+            <span class="comment"># Verificar versió del SO instal·lat</span><br>
+            <span class="prompt-ub">adminuser@ubuntu-srv:~$</span> <span class="cmd">lsb_release -a</span><br>
+            <span class="out">Distributor ID: Ubuntu</span><br>
+            <span class="out">Description:    Ubuntu 24.04.1 LTS</span><br>
+            <span class="out">Release:        24.04</span><br>
+            <span class="out">Codename:       noble</span><br><br>
+            <span class="comment"># Verificar particions creades</span><br>
+            <span class="prompt-ub">adminuser@ubuntu-srv:~$</span> <span class="cmd">lsblk -f</span><br>
+            <span class="comment"># Comprovar espai en disc</span><br>
+            <span class="prompt-ub">adminuser@ubuntu-srv:~$</span> <span class="cmd">df -h</span><br>
+            <span class="comment"># Temps d'arrencada del sistema</span><br>
+            <span class="prompt-ub">adminuser@ubuntu-srv:~$</span> <span class="cmd">systemd-analyze blame | head -20</span>
+          </div>
+        </div>
+        <div class="lab-entrega"><strong>📋 Lliurament:</strong> Captura de la VM en execució mostrant: (1) <code>lsb_release -a</code>, (2) <code>lsblk -f</code> amb les particions creades, (3) <code>systemd-analyze blame</code> mostrant els serveis d'arrencada. Justifica l'esquema de particions triat.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     T10-11 — APLICACIONS I ACTUALITZACIONS
+═══════════════════════════════════════════ -->
+<section id="aplicacions" class="s-ubuntu">
+  <div class="container">
+    <div class="ra-banner ra-ubuntu fi">
+      <div class="ra-num">10–11</div>
+      <div>
+        <h2>Instal·lació d'aplicacions i actualitzacions</h2>
+        <p>Gestors de paquets, repositoris, actualitzacions del SO i estratègies de manteniment a llarg termini.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-ubuntu fi">Gestors de paquets Linux</div>
+    <h2 class="fi">Gestió de paquets a GNU/Linux</h2>
+    <p class="lead fi">Una de les grans avantatges de Linux és el sistema de gestió de paquets: un repositori central d'on s'instal·len, actualitzen i desinstal·len totes les aplicacions de manera consistent i segura.</p>
+
+    <div class="grid g2 fi">
+      <div class="card bl-ubuntu">
+        <div class="card-icon" style="background:#fff5f1">📦</div>
+        <h3>APT — Debian/Ubuntu (dpkg)</h3>
+        <p style="margin-bottom:.75rem">Sistema de paquets <code>.deb</code>. Repositoris configurats a <code>/etc/apt/sources.list</code> i <code>/etc/apt/sources.list.d/</code>.</p>
+        <div class="terminal" style="margin-top:.5rem">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">APT — Operacions bàsiques</span><span class="term-os term-os-ubuntu">Ubuntu/Debian</span></div>
+          <div class="term-body">
+            <span class="comment"># Actualitzar la llista de paquets disponibles</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">apt update</span><br><br>
+            <span class="comment"># Actualitzar tots els paquets instal·lats</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">apt upgrade -y</span><br><br>
+            <span class="comment"># Actualització completa (inclou canvis de dependències)</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">apt full-upgrade</span><br><br>
+            <span class="comment"># Instal·lar un paquet</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">apt install nginx -y</span><br><br>
+            <span class="comment"># Eliminar un paquet (mantenint fitxers de configuració)</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">apt remove nginx</span><br><br>
+            <span class="comment"># Eliminar COMPLETAMENT (inclou config)</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">apt purge nginx</span><br><br>
+            <span class="comment"># Eliminar paquets orfes (dependències no usades)</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">apt autoremove</span><br><br>
+            <span class="comment"># Cercar un paquet als repositoris</span><br>
+            <span class="prompt-ub">user@host:~$</span> <span class="cmd">apt search "web server"</span><br><br>
+            <span class="comment"># Informació detallada d'un paquet</span><br>
+            <span class="prompt-ub">user@host:~$</span> <span class="cmd">apt show nginx</span>
+          </div>
+        </div>
+      </div>
+      <div class="card bl-asix">
+        <div class="card-icon" style="background:#f5f3ff">🗄️</div>
+        <h3>Altres gestors de paquets Linux</h3>
+        <div class="ex ex-asix" style="margin-bottom:.75rem">
+          <div class="ex-lbl">DNF / YUM — RHEL, Fedora, CentOS</div>
+          <p>
+            <code>dnf update -y</code> — actualitzar tot<br>
+            <code>dnf install httpd -y</code> — instal·lar Apache<br>
+            <code>dnf remove httpd</code> — desinstal·lar<br>
+            <code>dnf search "web server"</code> — cercar
+          </p>
+        </div>
+        <div class="ex ex-asix" style="margin-bottom:.75rem">
+          <div class="ex-lbl">Pacman — Arch Linux</div>
+          <p>
+            <code>pacman -Syu</code> — actualitzar sistema complet<br>
+            <code>pacman -S nginx</code> — instal·lar<br>
+            <code>pacman -R nginx</code> — eliminar<br>
+            <code>pacman -Ss "web"</code> — cercar
+          </p>
+        </div>
+        <div class="ex ex-asix">
+          <div class="ex-lbl">Snap / Flatpak — Paquets universals</div>
+          <p>
+            <code>snap install code --classic</code> — VS Code via Snap<br>
+            <code>flatpak install flathub org.gimp.GIMP</code><br>
+            <code>snap list</code> — llistar snaps instal·lats<br>
+            Avantatge: aïllament (sandbox), actualització automàtica, independent de la distro.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <hr>
+    <div class="section-tag tag-win fi">Gestió de paquets Windows</div>
+    <h2 class="fi">Instal·lació d'aplicacions a Windows</h2>
+    <div class="grid g2 fi">
+      <div class="card bl-win">
+        <div class="card-icon" style="background:#f0f7ff">🪟</div>
+        <h3>Winget — Windows Package Manager</h3>
+        <p style="margin-bottom:.75rem">Client de línia de comandos oficial de Microsoft (Windows 10 21H2+, integrat a Windows 11). Permet instal·lar, actualitzar i desinstal·lar aplicacions des de la terminal.</p>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">PowerShell / Terminal</span><span class="term-os term-os-win">Windows</span></div>
+          <div class="term-body">
+            <span class="comment"># Cercar una aplicació</span><br>
+            <span class="prompt-win">PS C:\&gt;</span> <span class="cmd">winget search "Visual Studio Code"</span><br><br>
+            <span class="comment"># Instal·lar una aplicació</span><br>
+            <span class="prompt-win">PS C:\&gt;</span> <span class="cmd">winget install Microsoft.VisualStudioCode</span><br>
+            <span class="prompt-win">PS C:\&gt;</span> <span class="cmd">winget install Mozilla.Firefox</span><br>
+            <span class="prompt-win">PS C:\&gt;</span> <span class="cmd">winget install Git.Git</span><br><br>
+            <span class="comment"># Actualitzar totes les apps instal·lades via winget</span><br>
+            <span class="prompt-win">PS C:\&gt;</span> <span class="cmd">winget upgrade --all</span><br><br>
+            <span class="comment"># Desinstal·lar</span><br>
+            <span class="prompt-win">PS C:\&gt;</span> <span class="cmd">winget uninstall Mozilla.Firefox</span><br><br>
+            <span class="comment"># Exportar llista d'apps instal·lades (backup)</span><br>
+            <span class="prompt-win">PS C:\&gt;</span> <span class="cmd">winget export -o apps-backup.json</span><br>
+            <span class="comment"># Restaurar la llista en un altre equip</span><br>
+            <span class="prompt-win">PS C:\&gt;</span> <span class="cmd">winget import -i apps-backup.json</span>
+          </div>
+        </div>
+      </div>
+      <div class="card bl-win">
+        <div class="card-icon" style="background:#f0f7ff">🔄</div>
+        <h3>Windows Update i WSUS</h3>
+        <p style="margin-bottom:.75rem">El sistema d'actualització de Microsoft permet mantenir el SO i les seves aplicacions actualitzades. En entorns empresarials s'usa <strong>WSUS</strong> (Windows Server Update Services) per centralitzar i controlar les actualitzacions.</p>
+        <div class="ex ex-win" style="margin-bottom:.75rem">
+          <div class="ex-lbl">PowerShell — Gestió d'actualitzacions</div>
+          <p>
+            <code>Get-WindowsUpdate</code> — llistar actualitzacions pendents<br>
+            <code>Install-WindowsUpdate -AcceptAll</code> — instal·lar totes<br>
+            Mòdul necessari: <code>Install-Module PSWindowsUpdate</code>
+          </p>
+        </div>
+        <div class="ex ex-win">
+          <div class="ex-lbl">Tipus d'actualitzacions Windows</div>
+          <p>
+            🔐 <strong>Security Updates:</strong> pegats de seguretat crítics. Aplicar ASAP.<br>
+            🔧 <strong>Quality Updates (Cumulative):</strong> correccions mensuals acumulatives.<br>
+            🆕 <strong>Feature Updates:</strong> noves versions del SO (anuals). Requereixen més planificació.<br>
+            🖥️ <strong>Driver Updates:</strong> drivers de hardware via Windows Update.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRÀCTICA 6 -->
+    <div class="lab-card fi">
+      <div class="lab-header">
+        <div class="lab-icon">🔬</div>
+        <div class="lab-title-block">
+          <h4>Pràctica 1.6 — Gestió de paquets i actualitzacions</h4>
+          <p>APT, Winget, actualitzacions del sistema i backups de configuració de paquets</p>
+        </div>
+        <div class="lab-os-tags"><span class="os-tag os-both">🔀 Windows + Ubuntu</span></div>
+      </div>
+      <div class="lab-body">
+        <h5>🐧 Ubuntu — Instal·lació, actualització i neteja</h5>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">Terminal — root</span><span class="term-os term-os-ubuntu">Ubuntu</span></div>
+          <div class="term-body">
+            <span class="comment"># Actualització completa del sistema</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">apt update && apt full-upgrade -y && apt autoremove -y</span><br><br>
+            <span class="comment"># Instal·lar eines de xarxa i utilitats del curs</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">apt install -y net-tools curl wget vim htop tree nmap git</span><br><br>
+            <span class="comment"># Exportar llista de paquets instal·lats (backup)</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">dpkg --get-selections > ~/paquets-backup.txt</span><br>
+            <span class="comment"># Restaurar en un nou sistema:</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">dpkg --set-selections < ~/paquets-backup.txt && apt-get dselect-upgrade</span><br><br>
+            <span class="comment"># Veure repositoris configurats</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">cat /etc/apt/sources.list</span><br>
+            <span class="comment"># Afegir un repositori extern (exemple: Docker)</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker.gpg</span>
+          </div>
+        </div>
+        <h5>🪟 Windows — Winget i Windows Update</h5>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">PowerShell — Administrador</span><span class="term-os term-os-win">Windows</span></div>
+          <div class="term-body">
+            <span class="comment"># Instal·lar eines per al curs via winget</span><br>
+            <span class="prompt-win">PS C:\&gt;</span> <span class="cmd">winget install Git.Git Microsoft.VisualStudioCode PuTTY.PuTTY Wireshark.Wireshark -h</span><br><br>
+            <span class="comment"># Llistar totes les aplicacions instal·lades i versions disponibles</span><br>
+            <span class="prompt-win">PS C:\&gt;</span> <span class="cmd">winget upgrade --all --include-unknown</span><br><br>
+            <span class="comment"># Mòdul PSWindowsUpdate per gestionar updates per script</span><br>
+            <span class="prompt-win">PS C:\&gt;</span> <span class="cmd">Install-Module -Name PSWindowsUpdate -Force</span><br>
+            <span class="prompt-win">PS C:\&gt;</span> <span class="cmd">Get-WindowsUpdate -MicrosoftUpdate</span><br>
+            <span class="prompt-win">PS C:\&gt;</span> <span class="cmd">Install-WindowsUpdate -AcceptAll -AutoReboot</span>
+          </div>
+        </div>
+        <div class="lab-entrega"><strong>📋 Lliurament:</strong> (1) Fitxer <code>paquets-backup.txt</code> de Ubuntu. (2) Fitxer <code>apps-backup.json</code> de Windows (winget export). (3) Captura de <code>winget upgrade --all</code> mostrant el nombre d'actualitzacions disponibles. Respon: quins avantatges té usar un gestor de paquets en lloc d'instal·lar manualment cada aplicació?</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     T12-13 — FITXERS D'INICI I REGISTRE
+═══════════════════════════════════════════ -->
+<section id="fitxers" class="s-dark">
+  <div class="container">
+    <div class="ra-banner ra-asix fi">
+      <div class="ra-num">12–13</div>
+      <div>
+        <h2>Fitxers d'inici i Registre del sistema</h2>
+        <p>Configuració de l'arrencada dels serveis, systemd, /etc/fstab i el Registre de Windows (regedit).</p>
+      </div>
+    </div>
+
+    <div class="section-tag fi" style="color:rgba(255,255,255,.5)"><span style="display:inline-block;width:20px;height:2px;background:var(--ubuntu);margin-right:.5rem"></span>Tema 12 — Fitxers d'inici Linux</div>
+    <h2 class="fi">systemd: el gestor de serveis modern</h2>
+    <p class="lead fi">En les distribucions Linux modernes (Ubuntu 15.04+, Debian 8+, RHEL 7+, Fedora 15+), <strong>systemd</strong> és el primer procés que s'executa (PID 1) i gestiona tots els serveis del sistema.</p>
+
+    <div class="grid g2 fi">
+      <div class="card">
+        <h3>Conceptes clau de systemd</h3>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.35rem 0;border-bottom:1px solid rgba(255,255,255,.1);font-size:.88rem;color:rgba(255,255,255,.7)">⚙️ <strong style="color:white">Unit:</strong> la unitat bàsica de systemd. Cada servei, muntatge, socket, etc. és una "unit". Definides en fitxers .service, .mount, .socket, .timer…</li>
+          <li style="padding:.35rem 0;border-bottom:1px solid rgba(255,255,255,.1);font-size:.88rem;color:rgba(255,255,255,.7)">🎯 <strong style="color:white">Target:</strong> equivalent als antics runlevels. <code>multi-user.target</code> = CLI, <code>graphical.target</code> = GUI, <code>rescue.target</code> = mode segur.</li>
+          <li style="padding:.35rem 0;border-bottom:1px solid rgba(255,255,255,.1);font-size:.88rem;color:rgba(255,255,255,.7)">📂 <strong style="color:white">Ubicació dels units:</strong> <code>/lib/systemd/system/</code> (del SO), <code>/etc/systemd/system/</code> (personals/override).</li>
+          <li style="padding:.35rem 0;font-size:.88rem;color:rgba(255,255,255,.7)">🔗 <strong style="color:white">Dependències:</strong> <code>Requires=</code>, <code>Wants=</code>, <code>After=</code>, <code>Before=</code> permeten ordenar l'arrencada dels serveis.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Fitxers de configuració importants</h3>
+        <div class="ex" style="background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.1)">
+          <div class="ex-lbl" style="color:var(--ubuntu)">/etc/fstab</div>
+          <p style="color:rgba(255,255,255,.75);font-family:'JetBrains Mono',monospace;font-size:.78rem">
+            # &lt;dispositiu&gt; &lt;punt_muntatge&gt; &lt;tipus_fs&gt; &lt;opcions&gt; &lt;dump&gt; &lt;pass&gt;<br>
+            UUID=abc123 /          ext4  errors=remount-ro 0  1<br>
+            UUID=def456 /boot/efi  vfat  umask=0077        0  1<br>
+            UUID=ghi789 none       swap  sw                0  0<br>
+            //srv/compartit /mnt/nfs nfs  defaults          0  0
+          </p>
+        </div>
+        <div class="ex" style="background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.1);margin-top:.5rem">
+          <div class="ex-lbl" style="color:var(--ubuntu)">/etc/rc.local (deprecated, usat per compatibilitat)</div>
+          <p style="color:rgba(255,255,255,.75);font-size:.83rem">Fitxer llegit en l'arrencada per executar comandos manuals. <strong>Millor alternativa modern:</strong> crear un .service de systemd amb <code>ExecStart=</code> i <code>WantedBy=multi-user.target</code>.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="terminal fi">
+      <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">systemctl — Control de serveis</span><span class="term-os term-os-ubuntu">Ubuntu</span></div>
+      <div class="term-body">
+        <span class="comment"># Veure l'estat general del sistema</span><br>
+        <span class="prompt-ub">root@host:~#</span> <span class="cmd">systemctl status</span><br><br>
+        <span class="comment"># Llistar tots els serveis actius</span><br>
+        <span class="prompt-ub">root@host:~#</span> <span class="cmd">systemctl list-units --type=service --state=active</span><br><br>
+        <span class="comment"># Gestió d'un servei concret (nginx d'exemple)</span><br>
+        <span class="prompt-ub">root@host:~#</span> <span class="cmd">systemctl start nginx</span>     <span class="comment"># Iniciar</span><br>
+        <span class="prompt-ub">root@host:~#</span> <span class="cmd">systemctl stop nginx</span>      <span class="comment"># Aturar</span><br>
+        <span class="prompt-ub">root@host:~#</span> <span class="cmd">systemctl restart nginx</span>   <span class="comment"># Reiniciar</span><br>
+        <span class="prompt-ub">root@host:~#</span> <span class="cmd">systemctl reload nginx</span>    <span class="comment"># Recarregar config (sense aturar el servei)</span><br>
+        <span class="prompt-ub">root@host:~#</span> <span class="cmd">systemctl enable nginx</span>    <span class="comment"># Activar a l'arrencada (symlink a /etc/systemd/system/)</span><br>
+        <span class="prompt-ub">root@host:~#</span> <span class="cmd">systemctl disable nginx</span>   <span class="comment"># Desactivar de l'arrencada</span><br>
+        <span class="prompt-ub">root@host:~#</span> <span class="cmd">systemctl is-enabled nginx</span> <span class="comment"># Comprovar si s'inicia automàticament</span><br><br>
+        <span class="comment"># Veure logs del servei (journald)</span><br>
+        <span class="prompt-ub">root@host:~#</span> <span class="cmd">journalctl -u nginx -f</span>    <span class="comment"># -f = follow (en temps real)</span><br>
+        <span class="prompt-ub">root@host:~#</span> <span class="cmd">journalctl -b</span>             <span class="comment"># Logs des de l'últim arrencada</span><br>
+        <span class="prompt-ub">root@host:~#</span> <span class="cmd">journalctl --since "1 hour ago"</span>
+      </div>
+    </div>
+
+    <hr>
+    <div class="section-tag fi" style="color:rgba(255,255,255,.5)"><span style="display:inline-block;width:20px;height:2px;background:var(--win);margin-right:.5rem"></span>Tema 13 — Registre de Windows</div>
+    <h2 class="fi">El Registre del sistema (Windows Registry)</h2>
+    <p class="lead fi">El Registre de Windows és la base de dades jeràrquica centralitzada on el SO i les aplicacions emmagatzemen la seva configuració. Entendre'l és imprescindible per a diagnosi, auditoria i scripting avançat.</p>
+
+    <div class="grid g2 fi">
+      <div class="card">
+        <h3>Claus principals (Hives)</h3>
+        <div style="overflow-x:auto">
+        <table class="ptable" style="font-size:.82rem">
+          <thead><tr><th>Clau</th><th>Abreviació</th><th>Contingut</th></tr></thead>
+          <tbody>
+            <tr><td><strong>HKEY_LOCAL_MACHINE</strong></td><td><span class="badge b-win">HKLM</span></td><td>Configuració del SO i del hardware. Afecta tots els usuaris. Els admins l'escriuen.</td></tr>
+            <tr><td><strong>HKEY_CURRENT_USER</strong></td><td><span class="badge b-asix">HKCU</span></td><td>Configuració de l'usuari actiu. Preferències, aplicacions, escriptori.</td></tr>
+            <tr><td><strong>HKEY_CLASSES_ROOT</strong></td><td><span class="badge b-green">HKCR</span></td><td>Associació d'extensions de fitxer amb aplicacions. Fusió de HKLM\Software\Classes i HKCU\Software\Classes.</td></tr>
+            <tr><td><strong>HKEY_USERS</strong></td><td><span class="badge b-amber">HKU</span></td><td>Perfils de tots els usuaris del sistema.</td></tr>
+            <tr><td><strong>HKEY_CURRENT_CONFIG</strong></td><td><span class="badge b-red">HKCC</span></td><td>Configuració de hardware actual (en temps real). No es guarda permanentment.</td></tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Claus importants a conèixer</h3>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.3rem 0;border-bottom:1px solid rgba(255,255,255,.1);font-size:.85rem;color:rgba(255,255,255,.7)"><code style="color:#60adf0">HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion</code><br><span style="color:rgba(255,255,255,.5)">Versió del SO, clau de producte, data d'instal·lació</span></li>
+          <li style="padding:.3rem 0;border-bottom:1px solid rgba(255,255,255,.1);font-size:.85rem;color:rgba(255,255,255,.7)"><code style="color:#60adf0">HKLM\SYSTEM\CurrentControlSet\Services</code><br><span style="color:rgba(255,255,255,.5)">Configuració de tots els serveis i drivers del sistema</span></li>
+          <li style="padding:.3rem 0;border-bottom:1px solid rgba(255,255,255,.1);font-size:.85rem;color:rgba(255,255,255,.7)"><code style="color:#60adf0">HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run</code><br><span style="color:rgba(255,255,255,.5)">Programes que s'executen a l'arrencada per a tots els usuaris</span></li>
+          <li style="padding:.3rem 0;font-size:.85rem;color:rgba(255,255,255,.7)"><code style="color:#60adf0">HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Run</code><br><span style="color:rgba(255,255,255,.5)">Programes d'inici de l'usuari actual (malware sovint aquí)</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- PRÀCTICA 7 -->
+    <div class="lab-card fi" style="border-color:rgba(255,255,255,.15)">
+      <div class="lab-header">
+        <div class="lab-icon">🔬</div>
+        <div class="lab-title-block">
+          <h4>Pràctica 1.7 — systemd i Registre de Windows</h4>
+          <p>Crear un servei systemd personalitzat i explorar el Registre de Windows per PowerShell</p>
+        </div>
+        <div class="lab-os-tags"><span class="os-tag os-both">🔀 Windows + Ubuntu</span></div>
+      </div>
+      <div class="lab-body">
+        <h5>🐧 Ubuntu — Crear un servei systemd personalitzat</h5>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">Terminal — root</span><span class="term-os term-os-ubuntu">Ubuntu</span></div>
+          <div class="term-body">
+            <span class="comment"># Crear un script que s'executarà com a servei</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">cat > /usr/local/bin/hola-servei.sh &lt;&lt; 'EOF'</span><br>
+            <span class="out">#!/bin/bash</span><br>
+            <span class="out">while true; do</span><br>
+            <span class="out">  echo "$(date): Servei en execució" >> /var/log/hola-servei.log</span><br>
+            <span class="out">  sleep 60</span><br>
+            <span class="out">done</span><br>
+            <span class="out">EOF</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">chmod +x /usr/local/bin/hola-servei.sh</span><br><br>
+            <span class="comment"># Crear el fitxer .service</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">cat > /etc/systemd/system/hola-servei.service &lt;&lt; 'EOF'</span><br>
+            <span class="out">[Unit]</span><br>
+            <span class="out">Description=El meu primer servei systemd</span><br>
+            <span class="out">After=network.target</span><br>
+            <span class="out"></span><br>
+            <span class="out">[Service]</span><br>
+            <span class="out">Type=simple</span><br>
+            <span class="out">ExecStart=/usr/local/bin/hola-servei.sh</span><br>
+            <span class="out">Restart=on-failure</span><br>
+            <span class="out">User=nobody</span><br>
+            <span class="out"></span><br>
+            <span class="out">[Install]</span><br>
+            <span class="out">WantedBy=multi-user.target</span><br>
+            <span class="out">EOF</span><br><br>
+            <span class="comment"># Recarregar systemd, habilitar i iniciar el servei</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">systemctl daemon-reload</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">systemctl enable --now hola-servei.service</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">systemctl status hola-servei.service</span>
+          </div>
+        </div>
+        <h5>🪟 Windows — Explorar el Registre via PowerShell</h5>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">PowerShell — Administrador</span><span class="term-os term-os-win">Windows</span></div>
+          <div class="term-body">
+            <span class="comment"># Llegir la versió del SO des del Registre</span><br>
+            <span class="prompt-win">PS C:\&gt;</span> <span class="cmd">Get-ItemProperty</span> <span class="path">"HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion"</span> <span class="flag">|</span><br>
+            <span class="cmd"> Select-Object ProductName, DisplayVersion, InstallDate</span><br><br>
+            <span class="comment"># Llistar programes d'inici automàtic (possibles malwares)</span><br>
+            <span class="prompt-win">PS C:\&gt;</span> <span class="cmd">Get-ItemProperty</span> <span class="path">"HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run"</span><br>
+            <span class="prompt-win">PS C:\&gt;</span> <span class="cmd">Get-ItemProperty</span> <span class="path">"HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run"</span><br><br>
+            <span class="comment"># Crear una clau de registre (exemple pràctic)</span><br>
+            <span class="prompt-win">PS C:\&gt;</span> <span class="cmd">New-Item</span> <span class="flag">-Path</span> <span class="path">"HKCU:\SOFTWARE\AsixTest"</span> <span class="flag">-Force</span><br>
+            <span class="prompt-win">PS C:\&gt;</span> <span class="cmd">New-ItemProperty</span> <span class="flag">-Path</span> <span class="path">"HKCU:\SOFTWARE\AsixTest"</span> <span class="flag">-Name</span> <span class="cmd">"Alumne"</span> <span class="flag">-Value</span> <span class="cmd">"NomAlumne"</span><br>
+            <span class="comment"># Exportar una part del registre (backup)</span><br>
+            <span class="prompt-win">PS C:\&gt;</span> <span class="cmd">reg export "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" C:\backup-reg.reg</span>
+          </div>
+        </div>
+        <div class="lab-entrega"><strong>📋 Lliurament:</strong> (1) Captura de <code>systemctl status hola-servei.service</code> mostrant l'estat "active (running)". (2) Contingut del fitxer .service creat. (3) Captura dels programes d'inici de Windows (HKCU Run). Identifica si hi ha algun programa sospitós i com el verificaries.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     T14 — CONTROLADORS
+═══════════════════════════════════════════ -->
+<section id="controladors" class="s-cream">
+  <div class="container">
+    <div class="ra-banner fi" style="background:linear-gradient(135deg,#0f4c75,#1b6ca8);color:white">
+      <div class="ra-num" style="color:rgba(255,255,255,.25)">14</div>
+      <div>
+        <h2>Actualització i manteniment de controladors</h2>
+        <p>Drivers en Windows (Device Manager, DISM, PowerShell) i mòduls del kernel a Linux (lsmod, modprobe, DKMS).</p>
+      </div>
+    </div>
+
+    <h2 class="fi">Controladors de dispositiu (Drivers)</h2>
+    <p class="lead fi">Un controlador (driver) és un component de software que permet al SO comunicar-se amb un dispositiu de hardware específic. Operen al nivell de kernel i una driver defectuós pot causar <em>kernel panic</em> (Linux) o <em>pantalla blava</em> BSoD (Windows).</p>
+
+    <div class="grid g2 fi">
+      <div class="card bl-win">
+        <div class="card-icon" style="background:#f0f7ff">🪟</div>
+        <h3>Gestió de drivers a Windows</h3>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.35rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">🖥️ <strong style="color:var(--ink)">Administrador de dispositius (devmgmt.msc):</strong> eina gràfica. Dispositius amb ⚠️ indiquen driver faltant o conflicte.</li>
+          <li style="padding:.35rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">✅ <strong style="color:var(--ink)">Firma digital WHQL:</strong> Microsoft certifica els drivers perquè superin proves de compatibilitat. Un driver sense firma requereix Secure Boot desactivat.</li>
+          <li style="padding:.35rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">⬇️ <strong style="color:var(--ink)">Fonts:</strong> Windows Update (automàtic), web del fabricant (NVidia, AMD, Intel), Driver Store.</li>
+          <li style="padding:.35rem 0;font-size:.88rem;color:var(--muted)">↩️ <strong style="color:var(--ink)">Rollback:</strong> si un driver nou causa problemes, pots tornar a la versió anterior des del Device Manager → Propietats → Controlador → Retrocedeix el controlador.</li>
+        </ul>
+        <div class="terminal" style="margin-top:.75rem">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">PowerShell</span><span class="term-os term-os-win">Windows</span></div>
+          <div class="term-body">
+            <span class="comment"># Llistar tots els drivers instal·lats</span><br>
+            <span class="prompt-win">PS C:\&gt;</span> <span class="cmd">Get-WindowsDriver</span> <span class="flag">-Online</span> <span class="flag">| Sort-Object ClassName | Format-Table ClassName, OriginalFileName, Version</span><br><br>
+            <span class="comment"># Buscar drivers de dispositius sense instal·lar</span><br>
+            <span class="prompt-win">PS C:\&gt;</span> <span class="cmd">Get-WmiObject Win32_PnPEntity | Where-Object{$_.ConfigManagerErrorCode -ne 0}</span><br><br>
+            <span class="comment"># Exportar (backup) tots els drivers de tercers</span><br>
+            <span class="prompt-win">PS C:\&gt;</span> <span class="cmd">Export-WindowsDriver</span> <span class="flag">-Online -Destination</span> <span class="cmd">C:\DriversBackup</span><br><br>
+            <span class="comment"># Forçar instal·lació d'un driver .inf</span><br>
+            <span class="prompt-win">PS C:\&gt;</span> <span class="cmd">pnputil /add-driver C:\driver.inf /install</span>
+          </div>
+        </div>
+      </div>
+      <div class="card bl-ubuntu">
+        <div class="card-icon" style="background:#fff5f1">🐧</div>
+        <h3>Mòduls del kernel a Linux</h3>
+        <p style="margin-bottom:.75rem">A Linux, els drivers es carreguen com a <strong>mòduls del kernel</strong> (fitxers .ko — kernel object). Poden carregar-se i descarregar-se dinàmicament sense reiniciar.</p>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">Terminal — root</span><span class="term-os term-os-ubuntu">Ubuntu</span></div>
+          <div class="term-body">
+            <span class="comment"># Llistar tots els mòduls carregats</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">lsmod</span><br>
+            <span class="out">Module                  Size  Used by</span><br>
+            <span class="out">nvidia               56774720    0</span><br>
+            <span class="out">kvm_intel             471040    0</span><br><br>
+            <span class="comment"># Informació d'un mòdul específic</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">modinfo kvm_intel</span><br><br>
+            <span class="comment"># Carregar un mòdul manualment</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">modprobe kvm_intel</span><br><br>
+            <span class="comment"># Descarregar un mòdul</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">modprobe -r kvm_intel</span><br><br>
+            <span class="comment"># Fer que un mòdul es carregui a l'arrencada</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">echo "kvm_intel" >> /etc/modules-load.d/kvm.conf</span><br><br>
+            <span class="comment"># Bloquejar un mòdul (blacklist, per conflictes)</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">echo "blacklist nouveau" >> /etc/modprobe.d/blacklist.conf</span><br>
+            <span class="comment"># Drivers addicionals recomanats (Ubuntu GUI)</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">ubuntu-drivers devices</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">ubuntu-drivers autoinstall</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout cl-asix fi">
+      <span class="callout-icon">🔑</span>
+      <div>
+        <strong>DKMS — Dynamic Kernel Module Support</strong>
+        <p style="margin-top:.4rem">Quan el kernel de Linux s'actualitza, els mòduls compilats per a la versió antiga deixen de funcionar. <strong>DKMS</strong> (Dynamic Kernel Module Support) recompila automàticament els mòduls de tercers (com els drivers NVIDIA o VirtualBox) quan s'actualitza el kernel. Sense DKMS, caldria reinstal·lar manualment cada driver de tercers en cada actualització del kernel.</p>
+        <div class="terminal" style="margin-top:.75rem">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">DKMS</span><span class="term-os term-os-ubuntu">Ubuntu</span></div>
+          <div class="term-body">
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">dkms status</span>            <span class="comment"># Veure mòduls DKMS instal·lats</span><br>
+            <span class="out">nvidia/550.78, 6.8.0-51-generic, x86_64: installed</span><br>
+            <span class="out">vboxhost/7.0.14, 6.8.0-51-generic, x86_64: installed</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRÀCTICA 8 -->
+    <div class="lab-card fi">
+      <div class="lab-header">
+        <div class="lab-icon">🔬</div>
+        <div class="lab-title-block">
+          <h4>Pràctica 1.8 — Gestió de controladors</h4>
+          <p>Auditoria, backup i instal·lació de drivers en Windows i Linux</p>
+        </div>
+        <div class="lab-os-tags"><span class="os-tag os-both">🔀 Windows + Ubuntu</span></div>
+      </div>
+      <div class="lab-body">
+        <h5>🐧 Ubuntu — Identificar hardware sense driver i instal·lar drivers de tercers</h5>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">Terminal</span><span class="term-os term-os-ubuntu">Ubuntu</span></div>
+          <div class="term-body">
+            <span class="comment"># Veure el hardware detectat</span><br>
+            <span class="prompt-ub">user@host:~$</span> <span class="cmd">lspci | grep -i "vga\|audio\|network\|wireless"</span><br><br>
+            <span class="comment"># Comprovar si hi ha drivers addicionals disponibles</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">ubuntu-drivers devices</span><br>
+            <span class="out">== /sys/devices/.../0000:01:00.0 ==</span><br>
+            <span class="out">modalias : pci:v000010DEd00002206sv...</span><br>
+            <span class="ok">driver   : nvidia-driver-550 - third-party free recommended</span><br>
+            <span class="out">driver   : nvidia-driver-535 - third-party free</span><br><br>
+            <span class="comment"># Instal·lar el driver recomanat automàticament</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">ubuntu-drivers autoinstall</span><br><br>
+            <span class="comment"># Veure missatges de detecció de hardware a l'arrencada</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">dmesg | grep -i "error\|fail\|warning" | head -20</span>
+          </div>
+        </div>
+        <h5>🪟 Windows — Backup i restauració de drivers</h5>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">PowerShell — Administrador</span><span class="term-os term-os-ubuntu">Windows</span></div>
+          <div class="term-body">
+            <span class="comment"># Exportar tots els drivers de tercers instal·lats</span><br>
+            <span class="prompt-win">PS C:\&gt;</span> <span class="cmd">$dest = "C:\BackupDrivers"</span><br>
+            <span class="prompt-win">PS C:\&gt;</span> <span class="cmd">New-Item -Path $dest -ItemType Directory -Force</span><br>
+            <span class="prompt-win">PS C:\&gt;</span> <span class="cmd">Export-WindowsDriver -Online -Destination $dest</span><br>
+            <span class="out">Exporting driver: oem12.inf (Realtek PCIe GbE Family Controller)</span><br>
+            <span class="out">Exporting driver: oem15.inf (NVIDIA GeForce RTX 4060)</span><br><br>
+            <span class="comment"># Verificar drivers amb problemes (codi d'error 0 = OK)</span><br>
+            <span class="prompt-win">PS C:\&gt;</span> <span class="cmd">Get-WmiObject Win32_PnPEntity</span> <span class="flag">| Where-Object</span> <span class="cmd">{$_.ConfigManagerErrorCode -ne 0}</span> <span class="flag">|</span><br>
+            <span class="cmd"> Select-Object Name, ConfigManagerErrorCode</span>
+          </div>
+        </div>
+        <div class="lab-entrega"><strong>📋 Lliurament:</strong> (1) Sortida de <code>ubuntu-drivers devices</code> de la VM Ubuntu. (2) Llista de drivers exportats a C:\BackupDrivers. (3) Respon: per quin motiu és important fer un backup dels drivers <em>abans</em> d'actualitzar el sistema operatiu o reinstal·lar-lo?</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     PREGUNTES TEÒRIQUES
+═══════════════════════════════════════════ -->
+<section id="preguntes" style="background:#fffbf0;padding:6rem 2rem;">
+  <div class="container">
+    <div class="ra-banner ra-preguntes fi">
+      <div class="ra-num">?</div>
+      <div>
+        <h2>10 Preguntes teòriques — RA1</h2>
+        <p>Nivell CFGS. Preguntes de raonament, comparació i resolució de problemes basades en els 14 continguts del RA1.</p>
+      </div>
+    </div>
+
+    <div class="grid fi" style="gap:.9rem;margin-bottom:2rem">
+
+      <div class="q-card">
+        <div class="q-num">1</div>
+        <div class="q-body">
+          <h4>Un kernel monolític com Linux inclou els drivers directament en el nucli, mentre que un microkernel com QNX els executa com a processos d'espai d'usuari. Raona quines avantatges de rendiment té el monolític i quines avantatges de seguretat i estabilitat té el microkernel. Per quin motiu el microkernel no ha desplaçat el monolític en sistemes de propòsit general?</h4>
+          <p>Relaciona la resposta amb sistemes de temps real dur i justifica per quin tipus d'entorn triaries un microkernel i quan triaries Linux.</p>
+          <span class="q-tag qt-asix">Arquitectura</span><span class="q-tag qt-asix">Kernel</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">2</div>
+        <div class="q-body">
+          <h4>Una empresa de 200 empleats utilitza un programari de gestió amb llicència GPL v3. El proveïdor original ha deixat de donar suport i l'empresa vol modificar el codi per adaptar-lo a les seves necessitats actuals i mantenir-lo internament. Analitza: ¿Pot l'empresa fer-ho legalment? ¿Hauria de publicar el codi modificat? ¿Canviaria la resposta si la llicència fos MIT? ¿I si fos LGPL?</h4>
+          <p>Compara les implicacions legals i pràctiques de cada cas. Quin impacte tindria usar AGPL en un SaaS?</p>
+          <span class="q-tag qt-lic">Llicències</span><span class="q-tag qt-lic">GPL</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">3</div>
+        <div class="q-body">
+          <h4>Explica detalladament la seqüència d'arrencada completa d'un equip modern amb UEFI i GPT que té instal·lat Ubuntu 24.04 en dual boot amb Windows 11. A quin punt de la seqüència es decideix quin SO s'engega? Quin fitxer .efi s'executa en cadascun dels dos sistemes? Com configuraries GRUB2 perquè Windows sigui l'opció per defecte amb un timeout de 15 segons?</h4>
+          <p>Indica les implicacions de tenir Secure Boot actiu en aquest escenari de dual boot i com s'hi resol.</p>
+          <span class="q-tag qt-boot">Arrencada</span><span class="q-tag qt-asix">UEFI/GPT</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">4</div>
+        <div class="q-body">
+          <h4>Un servidor de producció Ubuntu 22.04 LTS fa 18 mesos que no s'ha actualitzat. Com a tècnic ASIX, has de planificar la seva actualització a Ubuntu 24.04 LTS de manera segura. Descriu el procés complet: comprovacions prèvies, estratègia de backup, comandes a executar i pla de rollback si l'actualització falla. Quin risc suposen els 18 mesos sense pegats de seguretat?</h4>
+          <p>Considera que el servidor té: Apache2, MySQL, un script Python personalitzat com a servei systemd i un mòdul DKMS per al driver de la targeta de xarxa.</p>
+          <span class="q-tag qt-ubuntu">Actualitzacions</span><span class="q-tag qt-asix">Planificació</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">5</div>
+        <div class="q-body">
+          <h4>Compara els sistemes de fitxers ext4, Btrfs i XFS per als següents escenaris: (a) servidor web amb molts fitxers petits (HTML, CSS, JS), (b) servidor NAS amb fitxers grans de vídeo (10-50 GB cada un), (c) servidor de bases de dades MySQL amb alta càrrega d'escriptura aleatòria. Justifica la teva elecció per a cada cas.</h4>
+          <p>Considera: rendiment d'E/S, suport de snapshots, integritat de dades (journaling vs CoW), estabilitat i suport empresarial a llarg termini.</p>
+          <span class="q-tag qt-asix">Sistemes de fitxers</span><span class="q-tag qt-ubuntu">Servidors</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">6</div>
+        <div class="q-body">
+          <h4>Un usuari es queixa que el seu portàtil Windows 11 mostra una "pantalla blava de la mort" (BSoD) amb el codi d'error "DRIVER_IRQL_NOT_LESS_OR_EQUAL" cada vegada que es connecta a la xarxa WiFi. Descriu el procés de diagnosi: quines eines fas servir, on busques els fitxers de volcats de memòria (minidumps), com identifiques quin driver és el culpable i com el solucionaries.</h4>
+          <p>Inclou les comandes de PowerShell per extreure informació dels minidumps i explica el concepte de "kernel space" vs "user space" en relació als BSoD.</p>
+          <span class="q-tag qt-win">Drivers</span><span class="q-tag qt-win">Diagnosi</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">7</div>
+        <div class="q-body">
+          <h4>L'empresa on treballes compra 50 llicències de Windows 11 Professional per als nous equips. L'IT manager vol saber: quina diferència hi ha entre una llicència OEM, una llicència Retail i una llicència de volum (MAK vs KMS)? Quina seria la millor opció per als 50 equips? Qui pot activar les llicències KMS i quin requisit té?</h4>
+          <p>Addicionalment, explica quin impacte té sobre la llicència el fet que un equip OEM canviï la placa base o sigui reimageat a un hardware diferent.</p>
+          <span class="q-tag qt-lic">Llicències</span><span class="q-tag qt-win">Windows</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">8</div>
+        <div class="q-body">
+          <h4>El fitxer /etc/fstab és essencial per a l'arrencada de Linux. Explica: quins camps té cada entrada, quin és el risc d'un error a /etc/fstab (el sistema no arrenca), com s'hauria d'usar l'UUID en lloc del nom del dispositiu (/dev/sda1) i per quin motiu. Com probes que una nova entrada a fstab és correcta sense reiniciar el sistema?</h4>
+          <p>Escriu l'entrada correcta de fstab per muntar automàticament: (a) una partició ext4 amb UUID conegut a /data, (b) una carpeta NFS remota a /mnt/nas, (c) un dispositiu LUKS xifrat.</p>
+          <span class="q-tag qt-ubuntu">fstab</span><span class="q-tag qt-asix">Arrencada</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">9</div>
+        <div class="q-body">
+          <h4>Compara la gestió d'inici de serveis entre systemd (Linux modern), SysV Init (Linux clàssic) i el Gestor de Control de Serveis de Windows (SCM). Quines avantatges té systemd sobre SysV Init en termes d'inici paral·lel, gestió de dependències i supervisió de serveis en cas de crash? Posa exemples amb la sintaxi de les unitats systemd.</h4>
+          <p>Explica també el concepte de "socket activation" de systemd i com permet iniciar serveis sota demanda per millorar el temps d'arrencada del servidor.</p>
+          <span class="q-tag qt-ubuntu">systemd</span><span class="q-tag qt-asix">Serveis</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">10</div>
+        <div class="q-body">
+          <h4>L'empresa vol adoptar una política d'instal·lació de sistemes operatius no assistida (unattended installation) per desplegar ràpidament nous equips. Compara les eines disponibles per a Windows (Windows Deployment Services + answer file / Autopilot) i per a Ubuntu (preseed / cloud-init / Kickstart). Quines d'aquestes eines faries servir en un entorn on cal desplegar 20 servidors idèntics Ubuntu en un cloud privat? Justifica la resposta.</h4>
+          <p>Descriu breument el format d'un fitxer cloud-init bàsic que configuri: usuari admin, SSH key, paquet nginx instal·lat i hostname personalitzat.</p>
+          <span class="q-tag qt-ubuntu">Automatització</span><span class="q-tag qt-win">Desplegament</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- RESUM FINAL -->
+<section class="s-cream">
+  <div class="container fi">
+    <div class="section-tag tag-asix">Resum del RA1</div>
+    <h2>El que heu après</h2>
+    <p class="lead">Resum dels 14 continguts del RA1 i la seva aplicació professional com a tècnics ASIX.</p>
+    <div class="grid g4 fi">
+      <div class="card bl-asix">
+        <div class="card-icon" style="background:#f5f3ff">🏗️</div>
+        <h3>Fonaments (1–3)</h3>
+        <p>Estructura HW/SW/Firmware. Arquitectura de kernel (monolític, microkernel, híbrid). 6 funcions del SO. Capes del sistema. <strong>lscpu, uname, Get-ComputerInfo.</strong></p>
+      </div>
+      <div class="card bl-asix">
+        <div class="card-icon" style="background:#f5f3ff">📋</div>
+        <h3>Tipus i Llicències (4–6)</h3>
+        <p>SO per entorn, temps de resposta, nuclis. 4 llibertats del SW lliure. GPL copyleft. MIT/Apache permissives. EULA propietari. <strong>apt show, slmgr, vrms.</strong></p>
+      </div>
+      <div class="card bl-amber">
+        <div class="card-icon" style="background:#fffbeb">🔃</div>
+        <h3>Arrencada (7)</h3>
+        <p>Seqüència POST→UEFI→GPT→GRUB2/Bootmgr→Kernel→systemd. BIOS vs UEFI. MBR vs GPT. Secure Boot. <strong>grub-update, bcdedit, cat /proc/cmdline.</strong></p>
+      </div>
+      <div class="card" style="border-left:3px solid var(--win)">
+        <div class="card-icon" style="background:#f0f7ff">💿</div>
+        <h3>Instal·lació (8–9)</h3>
+        <p>Requisits, particionament, FS (NTFS/ext4/Btrfs). Instal·lació Windows 11 i Ubuntu Server. Virtualització amb VirtualBox. <strong>lsblk -f, df -hT, diskpart.</strong></p>
+      </div>
+      <div class="card" style="border-left:3px solid var(--ubuntu)">
+        <div class="card-icon" style="background:#fff5f1">📦</div>
+        <h3>Aplicacions (10–11)</h3>
+        <p>APT, DNF, Pacman, Snap, Flatpak. Winget. Repositoris. Windows Update, WSUS. Backup de paquets. <strong>apt update/upgrade, winget upgrade --all.</strong></p>
+      </div>
+      <div class="card bl-asix">
+        <div class="card-icon" style="background:#f5f3ff">⚙️</div>
+        <h3>Inici i Registre (12–13)</h3>
+        <p>systemd units, targets, journalctl. /etc/fstab. Crear serveis personalitzats. Windows Registry HKLM/HKCU. <strong>systemctl, journalctl, regedit, reg export.</strong></p>
+      </div>
+      <div class="card bl-asix">
+        <div class="card-icon" style="background:#f5f3ff">🔌</div>
+        <h3>Controladors (14)</h3>
+        <p>Drivers kernel mode. Device Manager Windows. lsmod, modprobe, DKMS. Backup drivers. ubuntu-drivers. <strong>Export-WindowsDriver, dkms status.</strong></p>
+      </div>
+      <div class="card bl-green">
+        <div class="card-icon" style="background:#f0fdf4">🛠️</div>
+        <h3>8 Pràctiques</h3>
+        <p>Hardware info, processos, llicències, GRUB, instal·lació VM, paquets, systemd+Registre, drivers. Tot documentat amb captures i lliuraments.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p><strong>RA1 — Instal·lació de Sistemes Operatius · ASIX · MP0369 · Implantació de Sistemes Operatius</strong></p>
+  <p style="margin-top:.4rem">Estructura · Arquitectura · Llicències · BIOS/UEFI · GRUB2 · Windows Boot · APT · systemd · Registre · Drivers</p>
+  <p style="margin-top:.4rem">Departament d'Informàtica · Administració de Sistemes Informàtics en Xarxa (ASIX)</p>
+</footer>
+
+<script>
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+  }, { threshold: 0.06, rootMargin: '0px 0px -30px 0px' });
+  document.querySelectorAll('.fi').forEach(el => io.observe(el));
+</script>
+</body>
+</html>

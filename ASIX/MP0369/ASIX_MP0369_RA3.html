@@ -1,0 +1,1698 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RA3 — Assegurament de la Informació · ASIX · MP0369</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:#0d0f1a; --paper:#f4f2ed; --cream:#eceae3; --navy:#1a1f4e;
+  --asix:#6d28d9; --asix-l:#7c3aed; --asix-d:#4c1d95;
+  --win:#0078d4; --win-d:#005a9e;
+  --ubuntu:#e95420; --ubuntu-d:#c2440e;
+  --green:#059669; --amber:#d97706; --red:#dc2626;
+  --teal:#0891b2; --teal-d:#0e7490;
+  --muted:#6b6f85; --border:#d6d2c9; --card:#ffffff;
+  --term:#0f111a; --term2:#161b2e;
+  --radius:16px; --radius-sm:8px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);font-size:16px;line-height:1.7;overflow-x:hidden;}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(244,242,237,.94);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:62px;}
+.nav-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:.95rem;color:var(--navy);letter-spacing:-.02em;}
+.nav-logo span{color:var(--asix-l);}
+.nav-pills{display:flex;gap:.3rem;list-style:none;flex-wrap:wrap;}
+.nav-pills a{text-decoration:none;font-size:.7rem;font-weight:600;padding:.22rem .6rem;border-radius:100px;color:var(--muted);transition:all .2s;border:1px solid transparent;}
+.nav-pills a:hover,.nav-pills a.act{color:var(--asix-l);border-color:var(--asix-l);background:rgba(109,40,217,.07);}
+
+.hero{min-height:100vh;display:grid;place-items:center;background:var(--navy);color:white;position:relative;overflow:hidden;padding:8rem 2rem 4rem;}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 70% 55% at 80% 20%,rgba(109,40,217,.4) 0%,transparent 60%),radial-gradient(ellipse 55% 45% at 15% 75%,rgba(8,145,178,.3) 0%,transparent 60%),radial-gradient(ellipse 45% 35% at 50% 95%,rgba(233,84,32,.15) 0%,transparent 55%);}
+.hero-dots{position:absolute;inset:0;opacity:.06;background-image:radial-gradient(rgba(255,255,255,.7) 1px,transparent 1px);background-size:28px 28px;}
+.hero-grid{position:absolute;inset:0;opacity:.04;background-image:linear-gradient(rgba(255,255,255,.4) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.4) 1px,transparent 1px);background-size:48px 48px;}
+.hero-content{position:relative;z-index:1;text-align:center;max-width:880px;}
+.hero-badge{display:inline-flex;align-items:center;gap:.5rem;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.85);font-size:.78rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:.35rem 1rem;border-radius:100px;margin-bottom:1.5rem;}
+.hero h1{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(2.4rem,6vw,4.8rem);line-height:1.05;letter-spacing:-.03em;margin-bottom:1.5rem;}
+.hero h1 .a{color:#c084fc;} .hero h1 .b{color:#6ee7b7;} .hero h1 .c{color:#60adf0;}
+.hero p{font-size:1.05rem;color:rgba(255,255,255,.6);max-width:620px;margin:0 auto 2.5rem;}
+.hero-pills-row{display:flex;justify-content:center;gap:.6rem;flex-wrap:wrap;margin-bottom:2rem;}
+.hero-pill{display:inline-flex;align-items:center;gap:.5rem;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);padding:.45rem 1rem;border-radius:10px;font-size:.8rem;font-weight:500;color:white;text-decoration:none;transition:all .25s;}
+.hero-pill:hover{background:rgba(255,255,255,.15);transform:translateY(-2px);}
+.hero-pill .dot{width:9px;height:9px;border-radius:50%;}
+.scroll-hint{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.4rem;color:rgba(255,255,255,.3);font-size:.72rem;letter-spacing:.1em;}
+.scroll-hint::after{content:'';display:block;width:1px;height:36px;background:linear-gradient(to bottom,rgba(255,255,255,.35),transparent);animation:pulse 2s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:.3}50%{opacity:1}}
+
+section{padding:5.5rem 2rem;}
+.container{max-width:1100px;margin:0 auto;}
+.section-tag{font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;display:flex;align-items:center;gap:.5rem;margin-bottom:.9rem;}
+.section-tag::before{content:'';display:block;width:20px;height:2px;}
+.tag-asix{color:var(--asix-l);} .tag-asix::before{background:var(--asix-l);}
+.tag-win{color:var(--win);} .tag-win::before{background:var(--win);}
+.tag-ubuntu{color:var(--ubuntu);} .tag-ubuntu::before{background:var(--ubuntu);}
+.tag-green{color:var(--green);} .tag-green::before{background:var(--green);}
+.tag-amber{color:var(--amber);} .tag-amber::before{background:var(--amber);}
+.tag-teal{color:var(--teal);} .tag-teal::before{background:var(--teal);}
+.tag-red{color:var(--red);} .tag-red::before{background:var(--red);}
+.tag-pregs{color:#92400e;} .tag-pregs::before{background:#92400e;}
+
+h2{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(1.65rem,3.5vw,2.5rem);line-height:1.1;letter-spacing:-.025em;color:var(--navy);margin-bottom:.9rem;}
+h3{font-family:'Syne',sans-serif;font-weight:700;font-size:1.12rem;color:var(--navy);margin-bottom:.6rem;}
+h4{font-family:'Syne',sans-serif;font-weight:700;font-size:.93rem;color:var(--navy);margin-bottom:.4rem;}
+.lead{font-size:1.02rem;color:var(--muted);max-width:740px;margin-bottom:2.5rem;line-height:1.75;}
+
+.grid{display:grid;gap:1.2rem;}
+.g2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr));}
+.g3{grid-template-columns:repeat(auto-fit,minmax(230px,1fr));}
+.g4{grid-template-columns:repeat(auto-fit,minmax(200px,1fr));}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.65rem;transition:transform .2s,box-shadow .2s;}
+.card:hover{transform:translateY(-3px);box-shadow:0 12px 32px rgba(26,31,78,.1);}
+.card p{color:var(--muted);font-size:.91rem;}
+.card-icon{width:42px;height:42px;border-radius:10px;display:grid;place-items:center;font-size:1.25rem;margin-bottom:.85rem;}
+.bl-asix{border-left:3px solid var(--asix-l);} .bl-win{border-left:3px solid var(--win);}
+.bl-ubuntu{border-left:3px solid var(--ubuntu);} .bl-green{border-left:3px solid var(--green);}
+.bl-amber{border-left:3px solid var(--amber);} .bl-red{border-left:3px solid var(--red);}
+.bl-teal{border-left:3px solid var(--teal);}
+
+.ra-banner{border-radius:var(--radius);padding:1.4rem 2rem;display:flex;align-items:center;gap:1.2rem;margin-bottom:2.5rem;color:white;}
+.ra-num{font-family:'Syne',sans-serif;font-weight:800;font-size:2.2rem;opacity:.22;flex-shrink:0;line-height:1;}
+.ra-banner h2{color:white;font-size:1.3rem;margin-bottom:.15rem;}
+.ra-banner p{color:rgba(255,255,255,.68);font-size:.86rem;}
+.ra-asix{background:linear-gradient(135deg,var(--asix-d),var(--asix-l));}
+.ra-win{background:linear-gradient(135deg,var(--win-d),var(--win));}
+.ra-ubuntu{background:linear-gradient(135deg,var(--ubuntu-d),var(--ubuntu));}
+.ra-green{background:linear-gradient(135deg,#064e3b,var(--green));}
+.ra-teal{background:linear-gradient(135deg,var(--teal-d),var(--teal));}
+.ra-red{background:linear-gradient(135deg,#7f1d1d,var(--red));}
+.ra-preguntes{background:linear-gradient(135deg,#92400e,#d97706);}
+.ra-both{background:linear-gradient(135deg,var(--asix-d),var(--teal-d));}
+
+.callout{border-radius:var(--radius);padding:1.4rem 1.65rem;margin:1.4rem 0;display:flex;gap:.9rem;align-items:flex-start;}
+.callout-icon{font-size:1.35rem;flex-shrink:0;margin-top:.1rem;}
+.callout p,.callout li{font-size:.91rem;}
+.callout ul{padding-left:1.15rem;} .callout li{margin-bottom:.22rem;}
+.cl-asix{background:rgba(109,40,217,.07);border:1px solid rgba(109,40,217,.2);}
+.cl-blue{background:rgba(0,120,212,.07);border:1px solid rgba(0,120,212,.2);}
+.cl-green{background:rgba(5,150,105,.07);border:1px solid rgba(5,150,105,.2);}
+.cl-amber{background:rgba(251,188,4,.1);border:1px solid rgba(251,188,4,.3);}
+.cl-red{background:rgba(220,38,38,.07);border:1px solid rgba(220,38,38,.2);}
+.cl-teal{background:rgba(8,145,178,.07);border:1px solid rgba(8,145,178,.2);}
+.cl-ubuntu{background:rgba(233,84,32,.07);border:1px solid rgba(233,84,32,.2);}
+
+.terminal{background:var(--term);border-radius:var(--radius-sm);overflow:hidden;margin:.75rem 0;font-family:'JetBrains Mono',monospace;font-size:.79rem;}
+.term-bar{background:var(--term2);padding:.5rem 1rem;display:flex;align-items:center;gap:.5rem;border-bottom:1px solid rgba(255,255,255,.06);}
+.term-dot{width:11px;height:11px;border-radius:50%;}
+.term-title{color:rgba(255,255,255,.4);font-size:.7rem;letter-spacing:.05em;margin-left:.25rem;}
+.term-os{font-size:.67rem;font-weight:600;padding:.1rem .45rem;border-radius:4px;margin-left:auto;}
+.term-os-win{background:rgba(0,120,212,.25);color:#60adf0;}
+.term-os-ubuntu{background:rgba(233,84,32,.25);color:#f4956a;}
+.term-os-both{background:rgba(109,40,217,.25);color:#c084fc;}
+.term-body{padding:.9rem 1.2rem;line-height:1.75;}
+.term-body .prompt-win{color:#60adf0;} .term-body .prompt-ub{color:#f4956a;}
+.term-body .cmd{color:#e2e8f0;} .term-body .out{color:#94a3b8;}
+.term-body .comment{color:#475569;} .term-body .ok{color:#6ee7b7;}
+.term-body .err{color:#fca5a5;} .term-body .path{color:#fbbf24;}
+.term-body .flag{color:#c084fc;} .term-body .val{color:#86efac;}
+.term-body .hi{color:#f0abfc;}
+
+.lab-card{background:linear-gradient(135deg,#0f111a,#161b2e);border:1px solid rgba(255,255,255,.08);border-radius:var(--radius);overflow:hidden;margin:2rem 0;}
+.lab-header{padding:.95rem 1.5rem;display:flex;align-items:center;gap:.9rem;border-bottom:1px solid rgba(255,255,255,.07);}
+.lab-icon{font-size:1.45rem;flex-shrink:0;}
+.lab-title-block h4{font-family:'Syne',sans-serif;font-weight:700;font-size:.98rem;color:white;margin:0 0 .1rem;}
+.lab-title-block p{font-size:.76rem;color:rgba(255,255,255,.5);margin:0;}
+.lab-os-tags{display:flex;gap:.35rem;margin-left:auto;}
+.os-tag{font-size:.66rem;font-weight:700;padding:.18rem .6rem;border-radius:100px;letter-spacing:.04em;white-space:nowrap;}
+.os-win{background:rgba(0,120,212,.3);color:#60adf0;border:1px solid rgba(0,120,212,.4);}
+.os-ubuntu{background:rgba(233,84,32,.3);color:#f4956a;border:1px solid rgba(233,84,32,.4);}
+.os-both{background:rgba(109,40,217,.3);color:#c084fc;border:1px solid rgba(109,40,217,.4);}
+.lab-body{padding:1.4rem;}
+.lab-body p{color:rgba(255,255,255,.7);font-size:.88rem;margin-bottom:.7rem;}
+.lab-body h5{font-family:'Syne',sans-serif;font-weight:700;font-size:.83rem;color:rgba(255,255,255,.9);margin:.7rem 0 .38rem;}
+.lab-steps{counter-reset:ls;list-style:none;padding:0;display:flex;flex-direction:column;gap:.45rem;}
+.lab-steps li{counter-increment:ls;display:flex;gap:.7rem;align-items:flex-start;font-size:.86rem;color:rgba(255,255,255,.65);}
+.lab-steps li::before{content:counter(ls);flex-shrink:0;width:23px;height:23px;border-radius:50%;background:rgba(109,40,217,.5);color:#c084fc;display:grid;place-items:center;font-family:'Syne',sans-serif;font-weight:700;font-size:.7rem;}
+.lab-steps li strong{color:rgba(255,255,255,.9);}
+.lab-entrega{background:rgba(109,40,217,.15);border:1px solid rgba(109,40,217,.3);border-radius:var(--radius-sm);padding:.8rem 1rem;margin-top:.9rem;font-size:.82rem;color:rgba(255,255,255,.7);}
+.lab-entrega strong{color:#c084fc;}
+
+.ptable{width:100%;border-collapse:collapse;font-size:.86rem;}
+.ptable th,.ptable td{padding:.78rem .95rem;text-align:left;border-bottom:1px solid var(--border);}
+.ptable th{background:var(--navy);color:white;font-family:'Syne',sans-serif;font-weight:700;}
+.ptable th:first-child{border-radius:8px 0 0 0;} .ptable th:last-child{border-radius:0 8px 0 0;}
+.ptable tr:hover td{background:var(--cream);}
+.badge{display:inline-block;padding:.13rem .5rem;border-radius:100px;font-size:.71rem;font-weight:700;font-family:'Syne',sans-serif;}
+.b-asix{background:rgba(109,40,217,.12);color:var(--asix-l);}
+.b-win{background:rgba(0,120,212,.12);color:var(--win);}
+.b-ubuntu{background:rgba(233,84,32,.12);color:var(--ubuntu);}
+.b-green{background:rgba(5,150,105,.12);color:var(--green);}
+.b-amber{background:rgba(217,119,6,.15);color:#92400e;}
+.b-red{background:rgba(220,38,38,.1);color:var(--red);}
+.b-teal{background:rgba(8,145,178,.12);color:var(--teal);}
+
+.ex{background:var(--cream);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.9rem 1.15rem;margin:.6rem 0;}
+.ex .ex-lbl{font-size:.67rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.28rem;}
+.ex p{font-size:.86rem;color:var(--ink);}
+.ex-asix .ex-lbl{color:var(--asix-l);} .ex-win .ex-lbl{color:var(--win);}
+.ex-ubuntu .ex-lbl{color:var(--ubuntu);} .ex-green .ex-lbl{color:var(--green);}
+.ex-amber .ex-lbl{color:var(--amber);} .ex-red .ex-lbl{color:var(--red);}
+.ex-teal .ex-lbl{color:var(--teal);}
+
+.pills{display:flex;flex-wrap:wrap;gap:.38rem;margin:.6rem 0;}
+.pill{padding:.2rem .7rem;border-radius:100px;font-size:.77rem;border:1px solid var(--border);background:var(--cream);color:var(--ink);}
+.pill-a{background:rgba(109,40,217,.1);border-color:rgba(109,40,217,.3);color:var(--asix-l);}
+.pill-w{background:rgba(0,120,212,.1);border-color:rgba(0,120,212,.3);color:var(--win);}
+.pill-u{background:rgba(233,84,32,.1);border-color:rgba(233,84,32,.3);color:var(--ubuntu);}
+.pill-g{background:rgba(5,150,105,.1);border-color:rgba(5,150,105,.3);color:var(--green);}
+.pill-r{background:rgba(220,38,38,.1);border-color:rgba(220,38,38,.3);color:var(--red);}
+.pill-t{background:rgba(8,145,178,.1);border-color:rgba(8,145,178,.3);color:var(--teal);}
+
+.s-cream{background:var(--cream);} .s-asix{background:#f5f3ff;}
+.s-win{background:#f0f7ff;} .s-ubuntu{background:#fff5f1;}
+.s-green{background:#f0fdf4;} .s-teal{background:#ecfeff;}
+.s-dark{background:var(--navy);color:white;}
+.s-dark h2,.s-dark h3,.s-dark h4{color:white;}
+.s-dark .lead{color:rgba(255,255,255,.6);}
+.s-dark .card{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.1);}
+.s-dark .card h3,.s-dark .card h4{color:white;}
+.s-dark .card p{color:rgba(255,255,255,.6);}
+.s-dark .ptable th{background:rgba(255,255,255,.1);}
+.s-dark .ptable td{border-color:rgba(255,255,255,.1);color:rgba(255,255,255,.8);}
+.s-dark .ptable tr:hover td{background:rgba(255,255,255,.05);}
+
+.steps{counter-reset:st;list-style:none;display:flex;flex-direction:column;gap:.75rem;}
+.steps li{counter-increment:st;display:flex;gap:.85rem;align-items:flex-start;padding:.85rem 1.05rem;background:var(--cream);border-radius:var(--radius-sm);font-size:.89rem;}
+.steps li::before{content:counter(st);flex-shrink:0;width:27px;height:27px;border-radius:50%;background:var(--asix-l);color:white;display:grid;place-items:center;font-family:'Syne',sans-serif;font-weight:700;font-size:.78rem;}
+.steps li p{color:var(--ink);margin:0;} .steps li strong{color:var(--navy);}
+
+.q-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.4rem 1.85rem;display:flex;gap:1.15rem;align-items:flex-start;transition:transform .2s,box-shadow .2s;}
+.q-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.08);}
+.q-num{flex-shrink:0;width:34px;height:34px;border-radius:50%;background:var(--cream);border:2px solid var(--border);display:grid;place-items:center;font-family:'Syne',sans-serif;font-weight:800;font-size:.86rem;color:var(--asix-l);}
+.q-body h4{margin-bottom:.3rem;color:var(--navy);font-size:.93rem;}
+.q-body p{color:var(--muted);font-size:.84rem;font-style:italic;}
+.q-tag{display:inline-block;padding:.13rem .55rem;border-radius:100px;font-size:.69rem;font-weight:700;margin-top:.45rem;margin-right:.28rem;}
+.qt-asix{background:rgba(109,40,217,.1);color:var(--asix-l);}
+.qt-win{background:rgba(0,120,212,.1);color:var(--win);}
+.qt-ubuntu{background:rgba(233,84,32,.1);color:var(--ubuntu);}
+.qt-green{background:rgba(5,150,105,.1);color:var(--green);}
+.qt-teal{background:rgba(8,145,178,.1);color:var(--teal);}
+.qt-sec{background:rgba(220,38,38,.1);color:var(--red);}
+.qt-both{background:rgba(109,40,217,.1);color:var(--asix-l);}
+
+/* RAID Diagram */
+.raid-diagram{display:flex;gap:.6rem;align-items:stretch;flex-wrap:wrap;margin:1.2rem 0;}
+.raid-disk{border-radius:var(--radius-sm);padding:.8rem .6rem;text-align:center;font-family:'JetBrains Mono',monospace;font-size:.78rem;flex:1;min-width:70px;display:flex;flex-direction:column;gap:.3rem;}
+.disk-label{font-family:'Syne',sans-serif;font-weight:700;font-size:.75rem;}
+.disk-block{border-radius:4px;padding:.25rem .1rem;font-size:.65rem;font-weight:700;}
+.rd-0{background:rgba(8,145,178,.1);border:1px solid rgba(8,145,178,.3);}
+.rd-1{background:rgba(5,150,105,.1);border:1px solid rgba(5,150,105,.3);}
+.rd-5{background:rgba(109,40,217,.1);border:1px solid rgba(109,40,217,.3);}
+.rd-fail{background:rgba(220,38,38,.1);border:2px dashed var(--red);opacity:.7;}
+.block-a{background:rgba(0,120,212,.2);color:#60adf0;}
+.block-b{background:rgba(5,150,105,.2);color:#6ee7b7;}
+.block-p{background:rgba(217,119,6,.2);color:#fbbf24;}
+.block-c{background:rgba(109,40,217,.2);color:#c084fc;}
+.block-mirror{background:rgba(5,150,105,.15);color:#6ee7b7;}
+
+/* Backup timeline */
+.backup-timeline{position:relative;padding-left:2rem;margin:1.5rem 0;}
+.backup-timeline::before{content:'';position:absolute;left:.55rem;top:0;bottom:0;width:2px;background:var(--border);}
+.bt-item{position:relative;margin-bottom:1.1rem;}
+.bt-dot{position:absolute;left:-1.56rem;top:.35rem;width:14px;height:14px;border-radius:50%;border:2px solid var(--card);}
+.bt-content{padding:.7rem 1rem;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--card);}
+.bt-content h5{font-family:'Syne',sans-serif;font-weight:700;font-size:.85rem;margin-bottom:.2rem;}
+.bt-content p{font-size:.83rem;color:var(--muted);}
+
+/* Quota bar */
+.quota-bar-wrap{background:var(--cream);border-radius:var(--radius-sm);padding:1rem 1.2rem;margin:.6rem 0;}
+.quota-label{font-family:'Syne',sans-serif;font-weight:700;font-size:.8rem;margin-bottom:.4rem;display:flex;justify-content:space-between;}
+.quota-bar{height:16px;border-radius:8px;background:var(--border);overflow:hidden;position:relative;}
+.quota-fill{height:100%;border-radius:8px;transition:width .3s;}
+.quota-warn-line{position:absolute;top:0;bottom:0;width:2px;background:var(--amber);}
+
+hr{border:none;border-top:1px solid var(--border);margin:2.5rem 0;}
+footer{background:var(--ink);color:rgba(255,255,255,.4);padding:3rem 2rem;text-align:center;font-size:.84rem;}
+footer strong{color:white;}
+.fi{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fi.in{opacity:1;transform:none;}
+@media(max-width:640px){.nav-pills{display:none;} .lab-os-tags{display:none;} .raid-diagram{flex-direction:column;}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">ASIX · <span>MP0369 RA3</span> · Implantació SO</div>
+  <ul class="nav-pills">
+    <li><a href="#fs">Sistemes Fitxers</a></li>
+    <li><a href="#enllacos">Enllaços</a></li>
+    <li><a href="#cerca">Cerca</a></li>
+    <li><a href="#discos">Discos</a></li>
+    <li><a href="#raid">RAID</a></li>
+    <li><a href="#backup">Còpies Seg.</a></li>
+    <li><a href="#recuperacio">Recuperació</a></li>
+    <li><a href="#imatges">Imatges</a></li>
+    <li><a href="#quotes">Quotes</a></li>
+    <li><a href="#preguntes" class="act">Preguntes</a></li>
+  </ul>
+</nav>
+
+<section class="hero" id="top">
+  <div class="hero-bg"></div><div class="hero-dots"></div><div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-badge">🛡️ ASIX · Implantació de Sistemes Operatius · MP0369 · RA3</div>
+    <h1><span class="a">Assegurament</span> de la<br><span class="b">Informació</span> del <span class="c">Sistema</span></h1>
+    <p>Sistemes de fitxers, RAID, còpies de seguretat, tolerància a errors i recuperació de sistemes. Teoria ampliada de nivell CFGS amb exercicis pràctics incrustats a Windows i Ubuntu.</p>
+    <div class="hero-pills-row">
+      <a href="#fs" class="hero-pill"><span class="dot" style="background:#c084fc"></span>Sistemes de Fitxers</a>
+      <a href="#discos" class="hero-pill"><span class="dot" style="background:var(--win)"></span>Discos &amp; Particions</a>
+      <a href="#raid" class="hero-pill"><span class="dot" style="background:var(--green)"></span>RAID</a>
+      <a href="#backup" class="hero-pill"><span class="dot" style="background:var(--teal)"></span>Còpies de Seguretat</a>
+      <a href="#recuperacio" class="hero-pill"><span class="dot" style="background:var(--ubuntu)"></span>Recuperació</a>
+      <a href="#quotes" class="hero-pill"><span class="dot" style="background:var(--amber)"></span>Quotes de Disc</a>
+      <a href="#preguntes" class="hero-pill"><span class="dot" style="background:#f59e0b"></span>10 Preguntes</a>
+    </div>
+  </div>
+  <div class="scroll-hint">DESPLAÇA</div>
+</section>
+
+<!-- INTRO -->
+<section class="s-cream" id="intro">
+  <div class="container fi">
+    <div class="section-tag tag-asix">Resultat d'Aprenentatge 3 · MP0369</div>
+    <h2>Assegura la informació del sistema</h2>
+    <p class="lead">Descrivint els procediments i utilitzant còpies de seguretat i sistemes tolerants a errors. 19 continguts que cobreixen des dels fonaments dels sistemes de fitxers fins a la recuperació de servidors en producció.</p>
+    <div class="grid g4 fi">
+      <div class="card bl-asix">
+        <div class="card-icon" style="background:#f5f3ff">🗂️</div>
+        <h3>Sistemes de Fitxers</h3>
+        <p>NTFS, ext4, Btrfs, XFS, ZFS. Permisos, ACLs, enllaços, muntatge i quotes de disc.</p>
+        <div class="pills" style="margin-top:.6rem"><span class="pill pill-a">T1–T4, T8, T19</span></div>
+      </div>
+      <div class="card bl-teal">
+        <div class="card-icon" style="background:#ecfeff">💾</div>
+        <h3>Discos &amp; RAID</h3>
+        <p>Particions, volums, desfragmentació, RAID0/1/5 per programari. Tolerància a errors.</p>
+        <div class="pills" style="margin-top:.6rem"><span class="pill pill-t">T9–T12</span></div>
+      </div>
+      <div class="card bl-green">
+        <div class="card-icon" style="background:#f0fdf4">🔒</div>
+        <h3>Còpies de Seguretat</h3>
+        <p>Tipus (completa, incremental, diferencial), plans, programació i eines professionals.</p>
+        <div class="pills" style="margin-top:.6rem"><span class="pill pill-g">T13–T14</span></div>
+      </div>
+      <div class="card bl-red">
+        <div class="card-icon" style="background:#fff5f5">🔧</div>
+        <h3>Recuperació</h3>
+        <p>Discos de recuperació, consola de recuperació, punts de restauració i imatges de servidor.</p>
+        <div class="pills" style="margin-top:.6rem"><span class="pill pill-r">T15–T18</span></div>
+      </div>
+    </div>
+    <div class="callout cl-asix fi" style="margin-top:1.5rem">
+      <span class="callout-icon">🔬</span>
+      <div>
+        <strong>Llegenda dels exercicis pràctics incrustats:</strong>
+        <p style="margin-top:.3rem">Al llarg de la teoria trobareu caixes fosques amb exercicis pràctics immediats. <span style="color:var(--win);font-weight:600">🪟 Windows</span> (PowerShell/Diskpart/GUI), <span style="color:var(--ubuntu);font-weight:600">🐧 Ubuntu/Linux</span> (terminal Bash), o <span style="color:var(--asix-l);font-weight:600">🔀 Ambdós</span> per comparar els dos sistemes.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ T1-T4: SISTEMES DE FITXERS ═══ -->
+<section id="fs" class="s-asix">
+  <div class="container">
+    <div class="ra-banner ra-asix fi">
+      <div class="ra-num">1</div>
+      <div>
+        <h2>Sistemes de fitxers — Teoria i gestió</h2>
+        <p>NTFS, ext4, Btrfs, XFS, ZFS. Estructura interna, permisos, ACLs i eines de gestió.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-asix fi">Fonaments dels sistemes de fitxers</div>
+    <h2 class="fi">Què és un sistema de fitxers?</h2>
+    <p class="lead fi">Un <strong>sistema de fitxers</strong> (filesystem) és l'estructura de dades que el SO utilitza per organitzar i emmagatzemar fitxers a un dispositiu d'emmagatzematge. Defineix com es guarden els fitxers, els metadades associats (permisos, dates, propietari) i l'estructura de directoris. Sense sistema de fitxers, un disc és simplement una seqüència de blocs buits.</p>
+
+    <div class="grid g3 fi">
+      <div class="card bl-asix">
+        <div class="card-icon" style="background:#f5f3ff">🧱</div>
+        <h3>Conceptes fonamentals</h3>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">📦 <strong style="color:var(--ink)">Bloc (clúster):</strong> unitat mínima d'assignació d'espai. Mida típica: 4 KB. Un fitxer d'1 byte ocupa 4 KB al disc.</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">🪪 <strong style="color:var(--ink)">Inode (Linux):</strong> estructura que conté tots els metadades d'un fitxer (permisos, propietari, timestamps, adreces de blocs). NO conté el nom del fitxer.</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">📓 <strong style="color:var(--ink)">MFT (Windows NTFS):</strong> Master File Table — equivalent Windows als inodes. Cada fitxer té al menys una entrada a la MFT.</li>
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted)">📋 <strong style="color:var(--ink)">Journal/Log:</strong> registre de transaccions que permet recuperar la consistència del FS després d'un tall de llum.</li>
+        </ul>
+      </div>
+      <div class="card bl-win">
+        <div class="card-icon" style="background:#f0f7ff">🪟</div>
+        <h3>NTFS — Windows</h3>
+        <p style="margin-bottom:.6rem"><em>New Technology File System.</em> FS principal de Windows NT i successors.</p>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)">✅ Permisos granulars (ACLs) per fitxer i carpeta</li>
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)">✅ Journaling — integritat en cas de tall</li>
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)">✅ Compressió i xifrat (EFS) per fitxer</li>
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)">✅ Flux d'alternes de dades (ADS)</li>
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)">✅ Volum màxim: 256 TB. Fitxer màxim: 16 TB</li>
+          <li style="padding:.25rem 0;font-size:.85rem;color:var(--muted)">⚠️ Propietari Microsoft — Linux accedeix en lectura/escriptura amb ntfs-3g</li>
+        </ul>
+      </div>
+      <div class="card bl-ubuntu">
+        <div class="card-icon" style="background:#fff5f1">🐧</div>
+        <h3>ext4 — Linux</h3>
+        <p style="margin-bottom:.6rem"><em>Fourth Extended Filesystem.</em> FS per defecte a la majoria de distribucions Linux.</p>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)">✅ Journaling (3 modes: writeback, ordered, data)</li>
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)">✅ Extents — assignació contigua eficient</li>
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)">✅ Volum màxim: 1 EB. Fitxer màxim: 16 TB</li>
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)">✅ Fins a 4 bilions d'inodes</li>
+          <li style="padding:.25rem 0;font-size:.85rem;color:var(--muted)">⚠️ No suporta snapshots natius ni RAID integrat</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Taula comparativa FS -->
+    <div class="section-tag tag-asix fi" style="margin-top:3rem">Comparativa de sistemes de fitxers</div>
+    <h2 class="fi">Sistemes de fitxers moderns: NTFS, ext4, Btrfs, XFS, ZFS, FAT32/exFAT</h2>
+    <div style="overflow-x:auto" class="fi">
+      <table class="ptable">
+        <thead>
+          <tr><th>FS</th><th>Sistema</th><th>Journaling</th><th>Snapshots</th><th>RAID integrat</th><th>Mida màx volum</th><th>Ús recomanat</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>NTFS</strong></td><td><span class="badge b-win">Windows</span></td><td>✅ Sí</td><td>❌ No (VSS extern)</td><td>❌ No</td><td>256 TB</td><td>Particions Windows, discos interns</td></tr>
+          <tr><td><strong>ReFS</strong></td><td><span class="badge b-win">Windows Server</span></td><td>✅ Sí</td><td>⚠️ Amb Storage Spaces</td><td>⚠️ Storage Spaces</td><td>35 PB</td><td>Servidors Windows, NAS empresarial</td></tr>
+          <tr><td><strong>ext4</strong></td><td><span class="badge b-ubuntu">Linux</span></td><td>✅ Sí</td><td>❌ No</td><td>❌ No (md RAID extern)</td><td>1 EB</td><td>Particions Linux generals, VMs</td></tr>
+          <tr><td><strong>Btrfs</strong></td><td><span class="badge b-ubuntu">Linux</span></td><td>✅ CoW</td><td>✅ Natius</td><td>✅ RAID 0/1/5/10</td><td>16 EB</td><td>Servidors Linux moderns, NAS Synology</td></tr>
+          <tr><td><strong>XFS</strong></td><td><span class="badge b-ubuntu">Linux</span></td><td>✅ Sí</td><td>❌ No</td><td>❌ No</td><td>8 EB</td><td>Fitxers grans, servidors de dades (RHEL)</td></tr>
+          <tr><td><strong>ZFS</strong></td><td><span class="badge b-asix">Multiplataforma</span></td><td>✅ CoW</td><td>✅ Natius</td><td>✅ RAID-Z (1/2/3)</td><td>256 ZB</td><td>NAS professionals, FreeBSD, TrueNAS</td></tr>
+          <tr><td><strong>FAT32</strong></td><td><span class="badge b-asix">Universal</span></td><td>❌ No</td><td>❌ No</td><td>❌ No</td><td>2 TB</td><td>Dispositius USB (fitxer màx: 4 GB)</td></tr>
+          <tr><td><strong>exFAT</strong></td><td><span class="badge b-asix">Universal</span></td><td>❌ No</td><td>❌ No</td><td>❌ No</td><td>128 PB</td><td>USB de gran capacitat, SD cards, interoperabilitat</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Permisos NTFS vs Linux -->
+    <div class="section-tag tag-asix fi" style="margin-top:3.5rem">Permisos i ACLs</div>
+    <h2 class="fi">Model de permisos: NTFS (Windows) vs POSIX (Linux)</h2>
+    <p class="lead fi">Els permisos de fitxers defineixen qui pot llegir, escriure o executar cada recurs. Windows i Linux usen models completament diferents, tot i compartir objectius similars de control d'accés.</p>
+
+    <div class="grid g2 fi">
+      <div class="card bl-ubuntu">
+        <div class="card-icon" style="background:#fff5f1">🐧</div>
+        <h3>Permisos POSIX — Linux</h3>
+        <p style="margin-bottom:.75rem">Tres entitats: <strong>propietari (u)</strong>, <strong>grup (g)</strong>, <strong>altres (o)</strong>. Tres accions: <strong>r</strong>(lectura=4), <strong>w</strong>(escriptura=2), <strong>x</strong>(execució=1).</p>
+        <div class="terminal" style="margin-top:.5rem">
+          <div class="term-bar">
+            <span class="term-dot" style="background:#ff5f57"></span>
+            <span class="term-title">Permisos Linux — exemples complets</span>
+            <span class="term-os term-os-ubuntu">🐧 Ubuntu</span>
+          </div>
+          <div class="term-body" style="font-size:.76rem">
+            <div><span class="prompt-ub">$</span> <span class="cmd">ls -la /srv/techcorp/</span></div>
+            <div><span class="out">-rwxr-x--- 1 admin it_admins 4096 fitxer.sh</span></div>
+            <div><span class="comment"># r=4 w=2 x=1 → rwx=7 r-x=5 ---=0 → 750</span></div>
+            <div><span class="comment"># admin pot tot; it_admins pot llegir+executar; altres: res</span></div>
+            <div style="margin-top:.4rem"><span class="comment"># Canviar permisos (forma octal)</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">chmod 750 fitxer.sh</span></div>
+            <div><span class="comment"># Canviar propietari i grup</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">chown admin:it_admins fitxer.sh</span></div>
+            <div style="margin-top:.4rem"><span class="comment"># ACLs esteses (getfacl/setfacl)</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">setfacl -m u:jdoe:r-- fitxer.sh</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">getfacl fitxer.sh</span></div>
+            <div><span class="out"># file: fitxer.sh</span></div>
+            <div><span class="out">user::rwx</span></div>
+            <div><span class="out">user:jdoe:r--   ← ACL per a jdoe</span></div>
+            <div><span class="out">group::r-x</span></div>
+            <div><span class="out">other::---</span></div>
+            <div style="margin-top:.4rem"><span class="comment"># Bits especials: SUID, SGID, Sticky bit</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">chmod u+s /usr/bin/programa</span>  <span class="comment"># SUID: executa com a propietari</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">chmod +t /tmp</span>                  <span class="comment"># Sticky: sols el propietari pot esborrar</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="card bl-win">
+        <div class="card-icon" style="background:#f0f7ff">🪟</div>
+        <h3>ACLs NTFS — Windows</h3>
+        <p style="margin-bottom:.75rem">Model d'accés basat en ACE (Access Control Entry) agrupades en ACL (Access Control List). Molt més granular que POSIX.</p>
+        <div class="terminal" style="margin-top:.5rem">
+          <div class="term-bar">
+            <span class="term-dot" style="background:#ff5f57"></span>
+            <span class="term-title">Permisos NTFS — icacls PowerShell</span>
+            <span class="term-os term-os-win">🪟 Windows</span>
+          </div>
+          <div class="term-body" style="font-size:.76rem">
+            <div><span class="comment"># Veure permisos NTFS d'una carpeta</span></div>
+            <div><span class="prompt-win">PS></span> <span class="cmd">icacls C:\ASIX\dades</span></div>
+            <div><span class="out">C:\ASIX\dades BUILTIN\Administrators:(OI)(CI)(F)</span></div>
+            <div><span class="out">              BUILTIN\Users:(OI)(CI)(RX)</span></div>
+            <div><span class="comment"># F=Full, RX=Read+Execute, R=Read, W=Write</span></div>
+            <div><span class="comment"># (OI)=Object Inherit, (CI)=Container Inherit</span></div>
+            <div style="margin-top:.4rem"><span class="comment"># Afegir permís de lectura per a jdoe</span></div>
+            <div><span class="prompt-win">PS></span> <span class="cmd">icacls C:\ASIX\dades /grant jdoe:(OI)(CI)(R)</span></div>
+            <div style="margin-top:.4rem"><span class="comment"># Negar permís explícit (té prioritat)</span></div>
+            <div><span class="prompt-win">PS></span> <span class="cmd">icacls C:\ASIX\secret /deny jdoe:(OI)(CI)(F)</span></div>
+            <div style="margin-top:.4rem"><span class="comment"># Eliminar tots els permisos d'un usuari</span></div>
+            <div><span class="prompt-win">PS></span> <span class="cmd">icacls C:\ASIX\dades /remove jdoe</span></div>
+            <div style="margin-top:.4rem"><span class="comment"># Copiar permisos d'un fitxer a un altre</span></div>
+            <div><span class="prompt-win">PS></span> <span class="cmd">icacls C:\ASIX\dades /save permisos.txt</span></div>
+            <div><span class="prompt-win">PS></span> <span class="cmd">icacls C:\ASIX\nous\ /restore permisos.txt</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LAB 1: Permisos -->
+    <div class="lab-card fi">
+      <div class="lab-header">
+        <span class="lab-icon">🧪</span>
+        <div class="lab-title-block">
+          <h4>Lab 1.1 — Permisos de fitxers, ACLs i estructura de directoris</h4>
+          <p>Implementa un sistema de control d'accés per a un projecte compartit entre equips</p>
+        </div>
+        <div class="lab-os-tags"><span class="os-tag os-both">🔀 Ambdós</span></div>
+      </div>
+      <div class="lab-body">
+        <p>Creareu l'estructura de directoris per al projecte "AlphaProject", amb accés diferenciat per a tres equips: <code>dev</code> (lectura+escriptura), <code>qa</code> (lectura+execució), <code>management</code> (només lectura).</p>
+        <h5>🐧 Ubuntu</h5>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">Ubuntu — Estructura de permisos per projecte</span><span class="term-os term-os-ubuntu">🐧 Ubuntu</span></div>
+          <div class="term-body">
+            <div><span class="comment"># Crea l'estructura</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">sudo mkdir -p /srv/alphaproject/{src,docs,reports,scripts}</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">sudo groupadd dev; sudo groupadd qa; sudo groupadd management</span></div>
+            <div style="margin-top:.4rem"><span class="comment"># Propietari i grup base</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">sudo chown -R root:dev /srv/alphaproject</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">sudo chmod 2770 /srv/alphaproject/src</span>  <span class="comment"># SGID: nous fitxers hereten grup</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">sudo chmod 2750 /srv/alphaproject/docs</span></div>
+            <div style="margin-top:.4rem"><span class="comment"># ACLs per a QA (lectura+execució) i Management (sols lectura)</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">sudo setfacl -Rm g:qa:r-x,g:management:r-- /srv/alphaproject/docs</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">sudo setfacl -Rdm g:qa:r-x,g:management:r-- /srv/alphaproject/docs</span></div>
+            <div><span class="comment"># -d = default (nous fitxers hereten les ACLs)</span></div>
+            <div style="margin-top:.4rem"><span class="comment"># Verifica</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">getfacl /srv/alphaproject/docs</span></div>
+          </div>
+        </div>
+        <ul class="lab-steps">
+          <li><strong>Estructura de directoris del SO:</strong> Executa <code>man hier</code> (Linux) o obre <em>Explorador de fitxers → C:\</em> (Windows) per estudiar l'estructura estàndard. Documenta la funció de: <code>/etc</code>, <code>/var</code>, <code>/proc</code>, <code>/sys</code>, <code>/home</code>, <code>/srv</code> (Linux) i <code>C:\Windows</code>, <code>C:\Users</code>, <code>C:\Program Files</code> (Windows).</li>
+          <li><strong>Windows:</strong> Crea l'equivalent a <code>C:\Projectes\AlphaProject\</code>. Usa <code>icacls</code> per donar permisos de Modificació al grup <code>dev</code>, Lectura+Execució a <code>qa</code> i Lectura a <code>management</code>. Activa l'herència per a totes les subcarpetes.</li>
+          <li><strong>Prova els permisos:</strong> Com a usuari membre de cada grup, intenta crear, llegir i modificar fitxers. Documenta quins permisos permeten quines accions.</li>
+          <li><strong>Bits especials Linux:</strong> Crea un directori compartit amb sticky bit (<code>chmod +t</code>) i comprova que un usuari no pot esborrar fitxers d'un altre tot i tenir permisos d'escriptura al directori.</li>
+        </ul>
+        <div class="lab-entrega"><strong>📋 Documenta:</strong> Sortida de <code>getfacl</code> per a cada directori. Taula de permisos per grup (qui pot fer què a cada directori). Captura de l'error quan un usuari intenta fer una acció no permesa.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ T3: GESTIÓ D'ENLLAÇOS ═══ -->
+<section id="enllacos" class="s-win">
+  <div class="container">
+    <div class="ra-banner ra-win fi">
+      <div class="ra-num">2</div>
+      <div>
+        <h2>Gestió d'enllaços i cerca d'informació</h2>
+        <p>Hard links, soft links (symlinks), identificació de programari i informació del sistema.</p>
+      </div>
+    </div>
+    <div class="section-tag tag-asix fi">Tipus d'enllaços</div>
+    <h2 class="fi">Enllaços durs i simbòlics: diferències clau</h2>
+    <p class="lead fi">Un <strong>enllaç</strong> és una referència a un fitxer o directori. Entendre la diferència entre hard links i symlinks és fonamental per a l'administració de sistemes, especialment per a la gestió d'espai i els scripts d'automatització.</p>
+
+    <div class="grid g2 fi">
+      <div class="card bl-asix">
+        <div class="card-icon" style="background:#f5f3ff">🔗</div>
+        <h3>Hard Link (Enllaç dur)</h3>
+        <p style="margin-bottom:.6rem">Un hard link és una <strong>entrada de directori addicional que apunta al mateix inode</strong>. El fitxer no s'esborra fins que el recompte de hard links arriba a 0.</p>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)">✅ No hi ha distinció entre "fitxer original" i "hard link"</li>
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)">✅ Si s'esborra un nom, el fitxer segueix existint</li>
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)">❌ No pot creuar sistemes de fitxers (han d'estar al mateix FS)</li>
+          <li style="padding:.25rem 0;font-size:.85rem;color:var(--muted)">❌ No funciona per a directoris (excepció: <code>.</code> i <code>..</code>)</li>
+        </ul>
+        <div class="terminal" style="margin-top:.5rem">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-title">Hard links</span><span class="term-os term-os-both">🔀 Ambdós</span></div>
+          <div class="term-body" style="font-size:.76rem">
+            <div><span class="comment"># Linux: ln (sense -s)</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">ln original.txt hardlink.txt</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">ls -li</span> <span class="comment"># Mateix inode!</span></div>
+            <div><span class="out">1234567 -rw-r--r-- 2 user group original.txt</span></div>
+            <div><span class="out">1234567 -rw-r--r-- 2 user group hardlink.txt</span></div>
+            <div style="margin-top:.3rem"><span class="comment"># Windows: mklink /H</span></div>
+            <div><span class="prompt-win">></span> <span class="cmd">mklink /H hardlink.txt original.txt</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="card bl-ubuntu">
+        <div class="card-icon" style="background:#fff5f1">🔀</div>
+        <h3>Soft Link / Symlink (Enllaç simbòlic)</h3>
+        <p style="margin-bottom:.6rem">Un symlink és un fitxer especial que <strong>conté la ruta d'un altre fitxer o directori</strong>. Similar a una drecera de Windows, però a nivell de SO.</p>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)">✅ Pot apuntar a directoris i a fitxers en altre FS</li>
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)">✅ Té el seu propi inode (diferent del destí)</li>
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)">❌ Si s'esborra el fitxer original, el symlink queda trencat (dangling)</li>
+          <li style="padding:.25rem 0;font-size:.85rem;color:var(--muted)">❌ Lleuger overhead en accés (resolució de ruta)</li>
+        </ul>
+        <div class="terminal" style="margin-top:.5rem">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-title">Symlinks</span><span class="term-os term-os-both">🔀 Ambdós</span></div>
+          <div class="term-body" style="font-size:.76rem">
+            <div><span class="comment"># Linux: ln -s (ruta_destí, nom_link)</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">ln -s /srv/dades/versio3 /srv/actual</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">ls -la /srv/actual</span></div>
+            <div><span class="out">lrwxrwxrwx 1 root root 20 actual -> /srv/dades/versio3</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">readlink -f /srv/actual</span></div>
+            <div><span class="out">/srv/dades/versio3</span></div>
+            <div style="margin-top:.3rem"><span class="comment"># Windows: mklink (directori: /D, junction: /J)</span></div>
+            <div><span class="prompt-win">></span> <span class="cmd">mklink link.txt C:\dades\fitxer.txt</span></div>
+            <div><span class="prompt-win">></span> <span class="cmd">mklink /D DirLink C:\dades\versio3</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cerca d'informació i programari -->
+    <div class="section-tag tag-win fi" style="margin-top:3rem">Cerca i inventari del sistema</div>
+    <h2 class="fi">Cerca d'informació: fitxers, programari i rendiment</h2>
+    <div class="terminal fi">
+      <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">Cerca i inventari — Windows i Ubuntu</span><span class="term-os term-os-both">🔀 Ambdós</span></div>
+      <div class="term-body">
+        <div><span class="comment">═══ CERCA DE FITXERS ═══</span></div>
+        <div><span class="comment"># Ubuntu: find i locate</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">find / -name "*.conf" -type f -mtime -7 2>/dev/null</span> <span class="comment"># Modificats als últims 7 dies</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">find /home -size +100M -type f</span>                      <span class="comment"># Fitxers grans</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">find / -perm /4000 -type f 2>/dev/null</span>               <span class="comment"># Fitxers amb SUID (risc de seguretat)</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">locate sshd.conf</span>                                       <span class="comment"># Ràpid però pot no ser actualitzat</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">updatedb && locate *.key</span>                              <span class="comment"># Actualitzar i cercar</span></div>
+        <div style="margin-top:.5rem"><span class="comment"># Windows: PowerShell</span></div>
+        <div><span class="prompt-win">PS></span> <span class="cmd">Get-ChildItem C:\ -Recurse -Filter "*.log" -ErrorAction SilentlyContinue | Where-Object {$_.LastWriteTime -gt (Get-Date).AddDays(-7)}</span></div>
+        <div><span class="prompt-win">PS></span> <span class="cmd">Get-ChildItem C:\Users -Recurse | Where-Object {$_.Length -gt 100MB}</span></div>
+        <div style="margin-top:.75rem"><span class="comment">═══ PROGRAMARI INSTAL·LAT ═══</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">dpkg --list | grep -i "nginx\|apache\|mysql"</span>  <span class="comment"># Buscar paquets específics</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">apt list --installed 2>/dev/null | wc -l</span>         <span class="comment"># Comptar paquets</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">dpkg -S /usr/bin/python3</span>                            <span class="comment"># Quin paquet conté un fitxer</span></div>
+        <div><span class="prompt-win">PS></span> <span class="cmd">Get-Package | Sort-Object Name | Format-Table Name,Version,Source</span></div>
+        <div><span class="prompt-win">PS></span> <span class="cmd">Get-WmiObject -Class Win32_Product | Select Name,Version | Sort Name</span></div>
+        <div style="margin-top:.75rem"><span class="comment">═══ INFORMACIÓ DEL SISTEMA ═══</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">uname -a</span>               <span class="comment"># Kernel, arquitectura, hostname</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">lscpu</span>                  <span class="comment"># CPU detallada</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">free -h</span>                <span class="comment"># RAM i swap</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">df -hT</span>                 <span class="comment"># Espai dels sistemes de fitxers muntats</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">iostat -xz 1 5</span>        <span class="comment"># Estadístiques d'I/O de discos</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">vmstat 1 5</span>            <span class="comment"># Memòria, swap, CPU</span></div>
+        <div><span class="prompt-win">PS></span> <span class="cmd">Get-ComputerInfo | Select OsName,OsVersion,CsProcessors,CsTotalPhysicalMemory</span></div>
+        <div><span class="prompt-win">PS></span> <span class="cmd">Get-PhysicalDisk | Format-Table FriendlyName,Size,MediaType,HealthStatus</span></div>
+      </div>
+    </div>
+
+    <div class="lab-card fi">
+      <div class="lab-header">
+        <span class="lab-icon">🧪</span>
+        <div class="lab-title-block">
+          <h4>Lab 2.1 — Enllaços, cerca i inventari del sistema</h4>
+          <p>Explora fitxers SUID, crea estructura de symlinks versionada i genera informe d'inventari</p>
+        </div>
+        <div class="lab-os-tags"><span class="os-tag os-both">🔀 Ambdós</span></div>
+      </div>
+      <div class="lab-body">
+        <ul class="lab-steps">
+          <li><strong>Symlinks per a versionat:</strong> Crea els directoris <code>/srv/app/v1.0</code>, <code>/srv/app/v2.0</code> i un symlink <code>/srv/app/current → /srv/app/v2.0</code>. Simula un "rollback" canviant el symlink a v1.0 amb <code>ln -sfn</code>. Comprova que les aplicacions que usaven <code>/srv/app/current</code> ara accedeixen a v1.0.</li>
+          <li><strong>Auditoria de fitxers SUID:</strong> Executa <code>find / -perm /4000 -type f 2>/dev/null</code>. Explica per quin motiu és un risc de seguretat tenir fitxers amb SUID innecessaris. Llista 3 fitxers legítims que necessiten SUID i per quin motiu.</li>
+          <li><strong>Informe d'inventari automatitzat:</strong> Crea un script Bash que generi un fitxer <code>/tmp/inventari_$(date +%F).txt</code> amb: hostname, IP, SO i kernel, espai de disc, RAM total/lliure, i llista dels 10 paquets instal·lats més recents.</li>
+          <li><strong>Windows — Comprova l'ús d'espai per carpeta:</strong> Executa <code>Get-ChildItem C:\Users -Directory | ForEach-Object {[PSCustomObject]@{Carpeta=$_.Name;MidaMB=[(Get-ChildItem $_.FullName -Recurse -ErrorAction SilentlyContinue | Measure-Object -Sum Length).Sum/1MB -as [int]]}} | Sort-Object MidaMB -Descending</code></li>
+        </ul>
+        <div class="lab-entrega"><strong>📋 Documenta:</strong> Sortida del script d'inventari. Llista de fitxers SUID trobats amb justificació de quins haurien de tenir SUID i quins no. Captura del symlink de versionat amb <code>ls -la</code>.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ T8-T10: DISCOS, PARTICIONS I VOLUMS ═══ -->
+<section id="discos" class="s-teal">
+  <div class="container">
+    <div class="ra-banner ra-teal fi">
+      <div class="ra-num">3</div>
+      <div>
+        <h2>Discos, particions, volums i muntatge</h2>
+        <p>MBR vs GPT, particions primàries/esteses/lògiques, LVM, muntatge, fstab i desfragmentació.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-teal fi">Esquemes de particionament</div>
+    <h2 class="fi">MBR vs GPT — la diferència crítica</h2>
+    <p class="lead fi">L'esquema de particionament defineix com s'organitzen les particions al disc. La tria entre MBR i GPT té implicacions en la mida màxima del disc, el nombre de particions, la compatibilitat amb UEFI i la resiliència davant errors.</p>
+
+    <div class="grid g2 fi">
+      <div class="card bl-amber">
+        <div class="card-icon" style="background:#fffbeb">🕰️</div>
+        <h3>MBR — Master Boot Record (Legacy)</h3>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.87rem;color:var(--muted)">📏 <strong style="color:var(--ink)">Límit de disc:</strong> 2 TB màxim. Discos més grans no funcionen correctament.</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.87rem;color:var(--muted)">🗃️ <strong style="color:var(--ink)">Particions:</strong> Màxim 4 primàries, o 3 primàries + 1 estesa (amb particions lògiques il·limitades).</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.87rem;color:var(--muted)">🔒 <strong style="color:var(--ink)">Arrencada:</strong> BIOS (Legacy). Incompatible amb Secure Boot modern.</li>
+          <li style="padding:.3rem 0;font-size:.87rem;color:var(--muted)">⚠️ <strong style="color:var(--ink)">Resiliència:</strong> Una còpia del MBR al primer sector. Si es corromp, el disc no arrenca.</li>
+        </ul>
+      </div>
+      <div class="card bl-green">
+        <div class="card-icon" style="background:#f0fdf4">🆕</div>
+        <h3>GPT — GUID Partition Table (Modern)</h3>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.87rem;color:var(--muted)">📏 <strong style="color:var(--ink)">Límit de disc:</strong> 9,4 ZB (pràcticament il·limitat).</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.87rem;color:var(--muted)">🗃️ <strong style="color:var(--ink)">Particions:</strong> Fins a 128 particions primàries (cap partició "estesa").</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.87rem;color:var(--muted)">🔒 <strong style="color:var(--ink)">Arrencada:</strong> UEFI. Suporta Secure Boot. Compatible amb Windows 11 (obligatori).</li>
+          <li style="padding:.3rem 0;font-size:.87rem;color:var(--muted)">✅ <strong style="color:var(--ink)">Resiliència:</strong> Còpies de la taula de particions al inici I al final del disc. Molt més robust.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- LVM -->
+    <div class="section-tag tag-teal fi" style="margin-top:3rem">LVM — Linux Volume Manager</div>
+    <h2 class="fi">LVM: gestió lògica de volums a Linux</h2>
+    <p class="lead fi"><strong>LVM (Logical Volume Manager)</strong> afegeix una capa d'abstracció entre el hardware físic i els sistemes de fitxers. Permet redimensionar volums en calent, crear snapshots i agregar múltiples discos físics en un únic volum lògic sense repartir.</p>
+
+    <div class="arch-diagram fi" style="display:grid;grid-template-rows:auto auto auto;gap:.5rem;margin:1.5rem 0">
+      <div style="background:rgba(8,145,178,.1);border:1px solid rgba(8,145,178,.3);border-radius:var(--radius-sm);padding:.85rem 1.5rem;text-align:center;font-family:'Syne',sans-serif;font-weight:700;font-size:.88rem;color:var(--teal-d)">
+        LV (Logical Volumes): /dev/vg_data/lv_home (50G) + /dev/vg_data/lv_srv (100G)
+        <div style="font-family:'DM Sans',sans-serif;font-weight:400;font-size:.8rem;opacity:.85;margin-top:.2rem">Volums lògics — el que veu el SO. Redimensionables en calent</div>
+      </div>
+      <div style="background:rgba(5,150,105,.1);border:1px solid rgba(5,150,105,.3);border-radius:var(--radius-sm);padding:.85rem 1.5rem;text-align:center;font-family:'Syne',sans-serif;font-weight:700;font-size:.88rem;color:#065f46">
+        VG (Volume Group): vg_data (150G total = sdb 100G + sdc 50G)
+        <div style="font-family:'DM Sans',sans-serif;font-weight:400;font-size:.8rem;opacity:.85;margin-top:.2rem">Grup de volums — pool d'espai lliure agregat de múltiples discos</div>
+      </div>
+      <div style="background:rgba(109,40,217,.1);border:1px solid rgba(109,40,217,.3);border-radius:var(--radius-sm);padding:.85rem 1.5rem;text-align:center;font-family:'Syne',sans-serif;font-weight:700;font-size:.88rem;color:var(--asix-l)">
+        PV (Physical Volumes): /dev/sdb1 (100G) + /dev/sdc1 (50G)
+        <div style="font-family:'DM Sans',sans-serif;font-weight:400;font-size:.8rem;opacity:.85;margin-top:.2rem">Volums físics — particions o discos inicialitzats per LVM</div>
+      </div>
+    </div>
+
+    <div class="terminal fi">
+      <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">Gestió de discos i LVM — Ubuntu i Windows</span><span class="term-os term-os-both">🔀 Ambdós</span></div>
+      <div class="term-body">
+        <div><span class="comment">═══ UBUNTU — fdisk, parted, LVM ═══</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">lsblk -f</span>                         <span class="comment"># Llistar blocs, FS i muntatge</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">sudo fdisk -l /dev/sdb</span>           <span class="comment"># Informació de particions del disc</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">sudo parted /dev/sdb print</span>       <span class="comment"># Parted: suporta GPT</span></div>
+        <div style="margin-top:.4rem"><span class="comment"># Crear partició GPT amb parted</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">sudo parted /dev/sdb mklabel gpt</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">sudo parted /dev/sdb mkpart primary ext4 1MiB 100%</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">sudo mkfs.ext4 /dev/sdb1</span>         <span class="comment"># Formatar amb ext4</span></div>
+        <div style="margin-top:.4rem"><span class="comment"># LVM — crear infraestructura</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">sudo pvcreate /dev/sdb1 /dev/sdc1</span>  <span class="comment"># Inicialitzar PVs</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">sudo vgcreate vg_data /dev/sdb1 /dev/sdc1</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">sudo lvcreate -L 50G -n lv_home vg_data</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">sudo mkfs.ext4 /dev/vg_data/lv_home</span></div>
+        <div style="margin-top:.4rem"><span class="comment"># Ampliar un LV i el FS en calent</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">sudo lvextend -L +20G /dev/vg_data/lv_home</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">sudo resize2fs /dev/vg_data/lv_home</span>  <span class="comment"># Ampliar FS ext4</span></div>
+        <div style="margin-top:.5rem"><span class="comment">═══ WINDOWS — diskpart i PowerShell ═══</span></div>
+        <div><span class="prompt-win">DISKPART></span> <span class="cmd">list disk</span>        <span class="comment"># Discos disponibles</span></div>
+        <div><span class="prompt-win">DISKPART></span> <span class="cmd">select disk 1</span></div>
+        <div><span class="prompt-win">DISKPART></span> <span class="cmd">convert gpt</span>     <span class="comment"># Convertir a GPT (esborra dades!)</span></div>
+        <div><span class="prompt-win">DISKPART></span> <span class="cmd">create partition primary size=51200</span></div>
+        <div><span class="prompt-win">DISKPART></span> <span class="cmd">format fs=ntfs quick label="Dades"</span></div>
+        <div><span class="prompt-win">DISKPART></span> <span class="cmd">assign letter=D</span></div>
+        <div style="margin-top:.4rem"><span class="comment"># Ampliar volum (PowerShell)</span></div>
+        <div><span class="prompt-win">PS></span> <span class="cmd">$size = (Get-PartitionSupportedSize -DriveLetter D).SizeMax</span></div>
+        <div><span class="prompt-win">PS></span> <span class="cmd">Resize-Partition -DriveLetter D -Size $size</span></div>
+      </div>
+    </div>
+
+    <!-- Muntatge i fstab -->
+    <div class="section-tag tag-ubuntu fi" style="margin-top:3rem">Muntatge i /etc/fstab</div>
+    <h2 class="fi">Muntatge de dispositius i automatització amb /etc/fstab</h2>
+    <div class="grid g2 fi">
+      <div>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-title">/etc/fstab — format i exemples</span><span class="term-os term-os-ubuntu">🐧 Ubuntu</span></div>
+          <div class="term-body" style="font-size:.76rem">
+            <div><span class="comment"># Camps: dispositiu punt_muntatge tipus opcions dump pass</span></div>
+            <div><span class="val">UUID=abc123  /         ext4  errors=remount-ro  0 1</span></div>
+            <div><span class="val">UUID=def456  /home     ext4  defaults           0 2</span></div>
+            <div><span class="val">/dev/sdb1    /mnt/dades ext4  defaults,noatime  0 2</span></div>
+            <div><span class="val">//srv/share  /mnt/nas  cifs  credentials=/etc/samba.cred,uid=1000 0 0</span></div>
+            <div><span class="val">tmpfs        /tmp      tmpfs mode=1777,size=2G 0 0</span></div>
+            <div style="margin-top:.4rem"><span class="comment"># Obtenir UUID d'un dispositiu</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">blkid /dev/sdb1</span></div>
+            <div><span class="out">/dev/sdb1: UUID="abc123..." TYPE="ext4"</span></div>
+            <div style="margin-top:.4rem"><span class="comment"># Muntar tot el fstab (verifica errors)</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">sudo mount -a</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">sudo systemd-analyze verify /etc/fstab</span></div>
+            <div style="margin-top:.4rem"><span class="comment"># Muntatge temporal</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">sudo mount -t ext4 /dev/sdb1 /mnt/temp</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">sudo umount /mnt/temp</span></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="callout cl-amber">
+          <span class="callout-icon">⚠️</span>
+          <div>
+            <strong>Usa sempre UUID al fstab, mai /dev/sdX</strong>
+            <p style="margin-top:.3rem">El nom <code>/dev/sda</code>, <code>/dev/sdb</code> pot canviar entre reinicis (ordre de detecció del kernel). L'UUID és permanent i únic per cada partició. Un fstab incorrecte pot impedir l'arrencada del sistema!</p>
+          </div>
+        </div>
+        <div class="callout cl-green" style="margin-top:.75rem">
+          <span class="callout-icon">💡</span>
+          <div>
+            <strong>Opcions de muntatge importants:</strong>
+            <ul style="margin-top:.3rem">
+              <li><code>noatime</code> — No actualitza temps d'accés. Millora rendiment en SSD.</li>
+              <li><code>ro</code> — Muntatge en mode lectura. Per a discos de recuperació.</li>
+              <li><code>noexec</code> — Evita executar binaris. Seguretat extra a /tmp.</li>
+              <li><code>nosuid</code> — Ignora bits SUID/SGID. Seguretat extra.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="lab-card fi">
+      <div class="lab-header">
+        <span class="lab-icon">🧪</span>
+        <div class="lab-title-block">
+          <h4>Lab 3.1 — Discos, particions, LVM i muntatge persistent</h4>
+          <p>Afegeix un disc virtual, particions, crea un LV i munta de forma persistent</p>
+        </div>
+        <div class="lab-os-tags"><span class="os-tag os-both">🔀 Ambdós</span></div>
+      </div>
+      <div class="lab-body">
+        <p>A la teva VM, afegeix un segon disc virtual de 20 GB (des de l'hipervisor: VirtualBox, VMware o virt-manager). Després:</p>
+        <ul class="lab-steps">
+          <li><strong>Ubuntu — Identifica el nou disc:</strong> Usa <code>lsblk</code> i <code>fdisk -l</code> per identificar el disc (probablement <code>/dev/sdb</code>). Crea una taula GPT i dues particions: <code>sdb1</code> de 10 GB i <code>sdb2</code> de 10 GB.</li>
+          <li><strong>Ubuntu — LVM:</strong> Inicialitza <code>sdb1</code> com a PV. Crea un VG <code>vg_practiques</code>. Crea dos LV: <code>lv_dades</code> (6 GB, ext4) i <code>lv_logs</code> (3 GB, xfs). Formata'ls.</li>
+          <li><strong>Ubuntu — Muntatge persistent al fstab:</strong> Crea els punts de muntatge <code>/srv/dades</code> i <code>/var/log/extern</code>. Afegeix entrades al <code>/etc/fstab</code> usant UUID. Verifica amb <code>mount -a</code> i reinicia per comprovar que es munten automàticament.</li>
+          <li><strong>Ubuntu — Amplia lv_dades en calent:</strong> Afegeix 2 GB a <code>lv_dades</code> sense desmuntar-lo. Usa <code>lvextend</code> + <code>resize2fs</code>. Verifica amb <code>df -h</code>.</li>
+          <li><strong>Windows — Diskpart:</strong> Afegeix un disc virtual a la VM Windows. Usa Diskpart per crear una partició GPT, formatar en NTFS i assignar lletra. Usa "Gestió de discos" per crear un volum distribuït amb dos discos.</li>
+        </ul>
+        <div class="lab-entrega"><strong>📋 Documenta:</strong> Sortida de <code>lsblk -f</code> mostrant l'estructura LVM completa. Contingut del fstab amb les noves entrades. Captura de <code>df -h</code> abans i després d'ampliar el LV.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ T10-T12: RAID ═══ -->
+<section id="raid" class="s-dark">
+  <div class="container">
+    <div class="ra-banner ra-both fi">
+      <div class="ra-num">4</div>
+      <div>
+        <h2>RAID — Redundant Array of Independent Disks</h2>
+        <p>RAID0 (rendiment), RAID1 (mirall), RAID5 (paritat), RAID10. Implementació per programari.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-asix fi">Conceptes RAID</div>
+    <h2 class="fi">Tipus de RAID: rendiment vs tolerància a errors</h2>
+    <p class="lead fi"><strong>RAID</strong> és una tecnologia que combina múltiples discos físics per obtenir avantatges de rendiment, capacitat o tolerància a errors (o una combinació). El RAID <em>no substitueix les còpies de seguretat</em> — protegeix contra falles de disc, però no contra errors humans, virus o desastres.</p>
+
+    <!-- RAID 0 -->
+    <div class="card fi" style="margin-bottom:1.5rem;background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.1)">
+      <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1rem">
+        <span style="font-family:'Syne',sans-serif;font-weight:800;font-size:2rem;color:var(--teal);opacity:.6">RAID 0</span>
+        <div>
+          <h3>Striping — Màxim rendiment, zero redundància</h3>
+          <p style="color:rgba(255,255,255,.6);font-size:.88rem">Mínim 2 discos. Dades distribuïdes en blocs alternats (strips). La capacitat SUMA. Si falla 1 disc, es perden TOTES les dades.</p>
+        </div>
+      </div>
+      <div class="raid-diagram">
+        <div class="raid-disk rd-0"><div class="disk-label" style="color:var(--teal)">Disc 1</div><div class="disk-block block-a">Bloc A1</div><div class="disk-block block-c">Bloc C1</div><div class="disk-block block-a">Bloc E1</div></div>
+        <div class="raid-disk rd-0"><div class="disk-label" style="color:var(--teal)">Disc 2</div><div class="disk-block block-b">Bloc B1</div><div class="disk-block block-a">Bloc D1</div><div class="disk-block block-b">Bloc F1</div></div>
+      </div>
+      <div class="grid g3" style="margin-top:.75rem">
+        <div class="ex ex-teal"><div class="ex-lbl">Capacitat</div><p>N × mida_disc. 2×1TB = 2TB útils.</p></div>
+        <div class="ex ex-green"><div class="ex-lbl">Rendiment</div><p>Lectura/Escriptura: N× millor. Excel·lent per a vídeo, edició.</p></div>
+        <div class="ex ex-red"><div class="ex-lbl">Tolerància</div><p>ZERO. Qualsevol disc falla = pèrdua total.</p></div>
+      </div>
+    </div>
+
+    <!-- RAID 1 -->
+    <div class="card fi" style="margin-bottom:1.5rem;background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.1)">
+      <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1rem">
+        <span style="font-family:'Syne',sans-serif;font-weight:800;font-size:2rem;color:var(--green);opacity:.6">RAID 1</span>
+        <div>
+          <h3>Mirroring — Màxima redundància, capacitat a la meitat</h3>
+          <p style="color:rgba(255,255,255,.6);font-size:.88rem">Mínim 2 discos. Les mateixes dades s'escriuen simultàniament a tots els discos. Pot suportar la fallada de N-1 discos.</p>
+        </div>
+      </div>
+      <div class="raid-diagram">
+        <div class="raid-disk rd-1"><div class="disk-label" style="color:var(--green)">Disc 1 (primari)</div><div class="disk-block block-mirror">Bloc A</div><div class="disk-block block-mirror">Bloc B</div><div class="disk-block block-mirror">Bloc C</div></div>
+        <div class="raid-disk rd-1"><div class="disk-label" style="color:var(--green)">Disc 2 (mirall)</div><div class="disk-block block-mirror">Còpia A</div><div class="disk-block block-mirror">Còpia B</div><div class="disk-block block-mirror">Còpia C</div></div>
+      </div>
+      <div class="grid g3" style="margin-top:.75rem">
+        <div class="ex ex-teal"><div class="ex-lbl">Capacitat</div><p>Mida d'1 sol disc. 2×2TB = 2TB útils.</p></div>
+        <div class="ex ex-green"><div class="ex-lbl">Rendiment</div><p>Lectura: fins 2×. Escriptura: igual a 1 disc.</p></div>
+        <div class="ex ex-green"><div class="ex-lbl">Tolerància</div><p>Aguanta 1 disc fallit. Sistema segueix operatiu.</p></div>
+      </div>
+    </div>
+
+    <!-- RAID 5 -->
+    <div class="card fi" style="margin-bottom:1.5rem;background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.1)">
+      <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1rem">
+        <span style="font-family:'Syne',sans-serif;font-weight:800;font-size:2rem;color:#c084fc;opacity:.6">RAID 5</span>
+        <div>
+          <h3>Striping + Paritat distribuïda — Equilibri ideal</h3>
+          <p style="color:rgba(255,255,255,.6);font-size:.88rem">Mínim 3 discos. Les dades i la paritat (XOR) es distribueixen entre tots els discos. Pot suportar la fallada d'1 disc.</p>
+        </div>
+      </div>
+      <div class="raid-diagram">
+        <div class="raid-disk rd-5"><div class="disk-label" style="color:#c084fc">Disc 1</div><div class="disk-block block-a">A1</div><div class="disk-block block-b">B1</div><div class="disk-block block-p">P3</div></div>
+        <div class="raid-disk rd-5"><div class="disk-label" style="color:#c084fc">Disc 2</div><div class="disk-block block-b">A2</div><div class="disk-block block-p">P2</div><div class="disk-block block-c">C1</div></div>
+        <div class="raid-disk rd-5"><div class="disk-label" style="color:#c084fc">Disc 3</div><div class="disk-block block-p">P1</div><div class="disk-block block-c">B2</div><div class="disk-block block-a">C2</div></div>
+      </div>
+      <div class="grid g3" style="margin-top:.75rem">
+        <div class="ex ex-teal"><div class="ex-lbl">Capacitat</div><p>(N-1) × mida_disc. 3×2TB = 4TB útils. 1 disc per a paritat.</p></div>
+        <div class="ex ex-green"><div class="ex-lbl">Rendiment</div><p>Lectura excel·lent. Escriptura moderada (càlcul XOR).</p></div>
+        <div class="ex ex-green"><div class="ex-lbl">Tolerància</div><p>Aguanta 1 disc fallit. Reconstrucció possible amb els restants.</p></div>
+      </div>
+    </div>
+
+    <!-- Taula RAID resum -->
+    <div style="overflow-x:auto" class="fi">
+      <table class="ptable">
+        <thead><tr><th>RAID</th><th>Discos mín.</th><th>Capacitat útil</th><th>Fallades suportades</th><th>Lectura</th><th>Escriptura</th><th>Ús típic</th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge b-teal">RAID 0</span></td><td>2</td><td>N × disc</td><td>❌ Cap</td><td>⚡⚡⚡</td><td>⚡⚡⚡</td><td>Edició vídeo, scratch discs</td></tr>
+          <tr><td><span class="badge b-green">RAID 1</span></td><td>2</td><td>1 × disc</td><td>✅ N-1 discos</td><td>⚡⚡</td><td>⚡</td><td>SO, bases de dades petites</td></tr>
+          <tr><td><span class="badge b-asix">RAID 5</span></td><td>3</td><td>(N-1) × disc</td><td>✅ 1 disc</td><td>⚡⚡⚡</td><td>⚡⚡</td><td>Servidors de fitxers, NAS</td></tr>
+          <tr><td><span class="badge b-asix">RAID 6</span></td><td>4</td><td>(N-2) × disc</td><td>✅ 2 discos</td><td>⚡⚡</td><td>⚡</td><td>NAS crítics, arxius de llarga durada</td></tr>
+          <tr><td><span class="badge b-amber">RAID 10</span></td><td>4</td><td>N/2 × disc</td><td>✅ 1 per mirall</td><td>⚡⚡⚡</td><td>⚡⚡⚡</td><td>BD MySQL/PostgreSQL de producció</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- RAID per programari -->
+    <div class="section-tag tag-asix fi" style="margin-top:3rem">Implementació per programari</div>
+    <h2 class="fi">RAID per programari: mdadm (Linux) i Storage Spaces (Windows)</h2>
+
+    <div class="terminal fi">
+      <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">RAID per programari — mdadm i PowerShell</span><span class="term-os term-os-both">🔀 Ambdós</span></div>
+      <div class="term-body">
+        <div><span class="comment">═══ UBUNTU — mdadm ═══</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">sudo apt install mdadm -y</span></div>
+        <div style="margin-top:.4rem"><span class="comment"># Crear RAID 1 amb sdb i sdc</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">sudo mdadm --create /dev/md0 --level=1 --raid-devices=2 /dev/sdb1 /dev/sdc1</span></div>
+        <div><span class="comment"># Crear RAID 5 amb 3 discos</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">sudo mdadm --create /dev/md1 --level=5 --raid-devices=3 /dev/sdb /dev/sdc /dev/sdd</span></div>
+        <div style="margin-top:.4rem"><span class="comment"># Monitoritzar la reconstrucció (pot trigar hores!)</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">watch cat /proc/mdstat</span></div>
+        <div><span class="out">md0 : active raid1 sdb1[0] sdc1[1]</span></div>
+        <div><span class="out">      20955136 blocks super 1.2 [2/2] [UU]</span></div>
+        <div><span class="out">      [====>................] recovery = 23.5%</span></div>
+        <div style="margin-top:.4rem"><span class="comment"># Simular fallada d'un disc (testing)</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">sudo mdadm --fail /dev/md0 /dev/sdc1</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">sudo mdadm --remove /dev/md0 /dev/sdc1</span></div>
+        <div><span class="comment"># Reemplaçar disc (hot-swap)</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">sudo mdadm --add /dev/md0 /dev/sdd1</span>  <span class="comment"># nou disc</span></div>
+        <div style="margin-top:.4rem"><span class="comment"># Guardar configuració RAID persistent</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">sudo mdadm --detail --scan >> /etc/mdadm/mdadm.conf</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">sudo update-initramfs -u</span></div>
+        <div style="margin-top:.75rem"><span class="comment">═══ WINDOWS — Storage Spaces (PowerShell) ═══</span></div>
+        <div><span class="prompt-win">PS></span> <span class="cmd">Get-PhysicalDisk | Where-Object CanPool -eq $True</span></div>
+        <div><span class="prompt-win">PS></span> <span class="cmd">$discs = Get-PhysicalDisk | Where-Object CanPool -eq $True</span></div>
+        <div><span class="prompt-win">PS></span> <span class="cmd">New-StoragePool -FriendlyName "Pool_RAID" -StorageSubSystemFriendlyName * -PhysicalDisks $discs</span></div>
+        <div><span class="prompt-win">PS></span> <span class="cmd">New-VirtualDisk -StoragePoolFriendlyName "Pool_RAID" -FriendlyName "VDISK_Mirror" -ResiliencySettingName Mirror -Size 50GB</span></div>
+      </div>
+    </div>
+
+    <div class="lab-card fi">
+      <div class="lab-header">
+        <span class="lab-icon">🧪</span>
+        <div class="lab-title-block">
+          <h4>Lab 4.1 — Implementació i simulació de fallada en RAID per programari</h4>
+          <p>Crea RAID1 amb mdadm, simula la fallada d'un disc i comprova la recuperació</p>
+        </div>
+        <div class="lab-os-tags"><span class="os-tag os-ubuntu">🐧 Ubuntu</span><span class="os-tag os-win">🪟 Windows</span></div>
+      </div>
+      <div class="lab-body">
+        <p>Treballareu amb discos virtuals a la VM. Necessiteu almenys 3 discos addicionals de 10 GB cadascun.</p>
+        <ul class="lab-steps">
+          <li><strong>Ubuntu — RAID1:</strong> Crea un RAID1 amb <code>sdb</code> i <code>sdc</code>. Formata'l amb ext4 i munta a <code>/mnt/raid1</code>. Crea 5 fitxers de prova. Verifica l'estat amb <code>mdadm --detail /dev/md0</code>.</li>
+          <li><strong>Ubuntu — Simula fallada:</strong> Executa <code>mdadm --fail /dev/md0 /dev/sdc1</code>. Comprova <code>/proc/mdstat</code> i <code>mdadm --detail /dev/md0</code>. Verifica que els fitxers de prova encara es poden llegir. Documenta el missatge d'error.</li>
+          <li><strong>Ubuntu — Reemplaça el disc:</strong> Retira el disc fallat (<code>--remove</code>) i afegeix el nou disc <code>sdd</code> (<code>--add</code>). Monitoritza la reconstrucció amb <code>watch cat /proc/mdstat</code>. Comprova que quan arriba al 100% l'estat torna a ser [UU].</li>
+          <li><strong>Ubuntu — RAID5 teòric:</strong> Calcula: si tens 4 discos de 2 TB en RAID5, quanta capacitat útil tens? Quantes fallades aguanta? Si un disc falla i trigues 48h a reemplaçar-lo i durant la reconstrucció falla un segon disc, quines dades perds?</li>
+          <li><strong>Windows — Storage Spaces:</strong> Afegeix 2 discos virtuals i crea un Storage Pool. Crea un Virtual Disk en mode "Mirror". Formata'l i afegeix fitxers. Observa com Windows gestiona la redundància des de "Gestió de discos".</li>
+        </ul>
+        <div class="lab-entrega"><strong>📋 Documenta:</strong> Sortida de <code>mdadm --detail /dev/md0</code> en estat normal, en fallada i un cop reconstruït. Explicació pas a pas de la recuperació. Càlcul de capacitat RAID5 amb els discos del lab.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ T13-T14: CÒPIES DE SEGURETAT ═══ -->
+<section id="backup" class="s-green">
+  <div class="container">
+    <div class="ra-banner ra-green fi">
+      <div class="ra-num">5</div>
+      <div>
+        <h2>Còpies de seguretat — Teoria i implementació</h2>
+        <p>Tipus de backup, estratègies (3-2-1), eines professionals, plans i programació.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-green fi">Tipus de còpies de seguretat</div>
+    <h2 class="fi">Completa, incremental i diferencial</h2>
+    <p class="lead fi">Triar el tipus de còpia de seguretat adequat és fonamental per equilibrar el temps de còpia, l'espai consumit i el temps de recuperació. No existeix un tipus "millor" universal — la decisió depèn dels requisits del negoci.</p>
+
+    <div class="grid g3 fi">
+      <div class="card bl-green">
+        <div class="card-icon" style="background:#f0fdf4">💯</div>
+        <h3>Còpia completa (Full)</h3>
+        <p style="margin-bottom:.6rem">Copia <strong>absolutament tots els fitxers</strong> cada vegada. El bit d'arxiu es neteja.</p>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)">✅ Recuperació: 1 sol conjunt de cintes/arxius</li>
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)">✅ Màxima velocitat de restauració</li>
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)">❌ Molt de temps i espai per còpia</li>
+          <li style="padding:.25rem 0;font-size:.85rem;color:var(--muted)">📅 Normalment: setmanal o mensual</li>
+        </ul>
+      </div>
+      <div class="card bl-teal">
+        <div class="card-icon" style="background:#ecfeff">➕</div>
+        <h3>Còpia incremental</h3>
+        <p style="margin-bottom:.6rem">Copia <strong>només els fitxers canviats des de l'última còpia</strong> (completa o incremental). El bit d'arxiu es neteja.</p>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)">✅ Molt ràpida i ocupa poc espai</li>
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)">❌ Recuperació: necessita Full + TOTES les incrementals en ordre</li>
+          <li style="padding:.25rem 0;font-size:.85rem;color:var(--muted)">❌ Restauració complexa i lenta</li>
+        </ul>
+      </div>
+      <div class="card bl-amber">
+        <div class="card-icon" style="background:#fffbeb">📊</div>
+        <h3>Còpia diferencial</h3>
+        <p style="margin-bottom:.6rem">Copia <strong>tots els fitxers canviats des de l'última còpia COMPLETA</strong>. El bit d'arxiu NO es neteja.</p>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)">✅ Recuperació: Full + l'última diferencial</li>
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)">⚖️ Velocitat i espai: entre full i incremental</li>
+          <li style="padding:.25rem 0;font-size:.85rem;color:var(--muted)">📅 Creix cada dia fins a la pròxima Full</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Timeline backup -->
+    <div class="section-tag tag-green fi" style="margin-top:3rem">Plans de còpies de seguretat</div>
+    <h2 class="fi">Estratègia de backup: regla 3-2-1 i plans combinats</h2>
+    <p class="lead fi">La <strong>regla 3-2-1</strong> és el estàndard de facto per a la protecció de dades: <strong>3</strong> còpies dels dades, en <strong>2</strong> suports físics diferents, amb <strong>1</strong> còpia fora del lloc (off-site o núvol).</p>
+
+    <div class="grid g2 fi">
+      <div>
+        <h3>Exemple de pla setmanal combinat</h3>
+        <div class="backup-timeline">
+          <div class="bt-item">
+            <div class="bt-dot" style="background:var(--green)"></div>
+            <div class="bt-content">
+              <h5>🗓️ Diumenge 02:00 — Còpia Completa</h5>
+              <p>Tots els sistemes. Durada: 4h. S'emmagatzema al NAS local + replicació al núvol (S3). Reté les últimes 4 còpies completes.</p>
+            </div>
+          </div>
+          <div class="bt-item">
+            <div class="bt-dot" style="background:var(--teal)"></div>
+            <div class="bt-content">
+              <h5>📅 Dl–Ds 03:00 — Còpia Incremental (o Diferencial)</h5>
+              <p>Només fitxers nous o modificats. Durada: 30-60 min. Al NAS local. Retransmissió al núvol comprimida i xifrada (AES-256).</p>
+            </div>
+          </div>
+          <div class="bt-item">
+            <div class="bt-dot" style="background:var(--amber)"></div>
+            <div class="bt-content">
+              <h5>🔄 Mensual — Arxivament a llarg termini</h5>
+              <p>Còpia completa a cinta LTO o a emmagatzematge fred (S3 Glacier). Reté 12 mesos. Per a compliment normatiu (RGPD).</p>
+            </div>
+          </div>
+          <div class="bt-item">
+            <div class="bt-dot" style="background:var(--asix-l)"></div>
+            <div class="bt-content">
+              <h5>🧪 Trimestral — Test de recuperació</h5>
+              <p>Restauració completa en entorn de test. Documenta RPO i RTO reals. <strong>Un backup no provat no és un backup!</strong></p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="callout cl-teal">
+          <span class="callout-icon">📐</span>
+          <div>
+            <strong>RPO i RTO — Mètriques crítiques:</strong>
+            <ul style="margin-top:.5rem">
+              <li><strong>RPO (Recovery Point Objective):</strong> Quanta informació es pot permetre perdre. Un RPO d'1 dia significa que en cas de desastre perdrem com a màxim les dades de les últimes 24h.</li>
+              <li><strong>RTO (Recovery Time Objective):</strong> Quant de temps pot estar el sistema aturat. Un RTO de 4h significa que en 4h s'ha de tenir el sistema operatiu.</li>
+              <li>El backup ha d'estar dissenyat per complir el RPO/RTO definit pel negoci.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="callout cl-amber" style="margin-top:1rem">
+          <span class="callout-icon">⚠️</span>
+          <div>
+            <strong>Errors comuns de backup que cal evitar:</strong>
+            <ul style="margin-top:.4rem">
+              <li>Fer backup i restaurar al mateix disc (RAID1 no protegeix de borrar fitxers)</li>
+              <li>No provar mai la restauració (un backup invàlid és inútil)</li>
+              <li>No xifrar les còpies fora del lloc</li>
+              <li>No automatitzar (el backup manual s'oblida)</li>
+              <li>Confondre RAID amb backup</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Eines de backup -->
+    <div class="section-tag tag-green fi" style="margin-top:3rem">Eines de còpies de seguretat</div>
+    <h2 class="fi">Eines professionals: rsync, tar, Timeshift, Veeam, Bacula</h2>
+
+    <div class="terminal fi">
+      <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">Eines de backup — Ubuntu i Windows</span><span class="term-os term-os-both">🔀 Ambdós</span></div>
+      <div class="term-body">
+        <div><span class="comment">═══ UBUNTU — rsync (la navalla suïssa del backup) ═══</span></div>
+        <div><span class="comment"># Còpia completa local</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">rsync -aHAXv --delete /srv/dades/ /mnt/backup/dades/</span></div>
+        <div><span class="comment"># -a=arxiu(permisos+dates+links) -H=hard-links -A=ACLs -X=xattr --delete=esborra al destí el que s'ha esborrat a la font</span></div>
+        <div style="margin-top:.4rem"><span class="comment"># Còpia remota via SSH (encriptada)</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">rsync -aHAXzv --delete -e "ssh -p 22" /srv/dades/ backupuser@backupserver:/backups/srv/</span></div>
+        <div style="margin-top:.4rem"><span class="comment"># Backup incremental amb hard-links (deduplicació a nivell de fitxer)</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">DATE=$(date +%Y-%m-%d)</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">rsync -aHAX --link-dest=/mnt/backup/latest /srv/dades/ /mnt/backup/$DATE/</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">ln -sfn /mnt/backup/$DATE /mnt/backup/latest</span></div>
+        <div style="margin-top:.4rem"><span class="comment"># tar + compressió + xifrat (backup offline)</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">tar -czf - /srv/dades | gpg --symmetric --cipher-algo AES256 > /mnt/backup/dades-$(date +%F).tar.gz.gpg</span></div>
+        <div style="margin-top:.4rem"><span class="comment"># Automatitzar amb cron (executa backup cada nit a les 02:00)</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">crontab -e</span></div>
+        <div><span class="val">0 2 * * * /usr/local/bin/backup.sh >> /var/log/backup.log 2>&1</span></div>
+        <div style="margin-top:.75rem"><span class="comment">═══ WINDOWS — wbadmin i PowerShell ═══</span></div>
+        <div><span class="prompt-win">PS></span> <span class="cmd">wbadmin start backup -backupTarget:\\servidor\backups -include:C: -allCritical -quiet</span></div>
+        <div><span class="prompt-win">PS></span> <span class="cmd">wbadmin get versions</span>   <span class="comment"># Llistar backups disponibles</span></div>
+        <div><span class="prompt-win">PS></span> <span class="cmd">wbadmin start recovery -version:04/01/2025-22:00 -itemType:Volume -items:C: -recoveryTarget:D:</span></div>
+        <div style="margin-top:.4rem"><span class="comment"># Tasca programada de backup (Task Scheduler)</span></div>
+        <div><span class="prompt-win">PS></span> <span class="cmd">$action = New-ScheduledTaskAction -Execute 'wbadmin' -Argument 'start backup -backupTarget:E: -include:C: -quiet'</span></div>
+        <div><span class="prompt-win">PS></span> <span class="cmd">$trigger = New-ScheduledTaskTrigger -Daily -At 02:00</span></div>
+        <div><span class="prompt-win">PS></span> <span class="cmd">Register-ScheduledTask -TaskName "BackupDiari" -Action $action -Trigger $trigger -RunLevel Highest</span></div>
+      </div>
+    </div>
+
+    <div class="lab-card fi">
+      <div class="lab-header">
+        <span class="lab-icon">🧪</span>
+        <div class="lab-title-block">
+          <h4>Lab 5.1 — Pla de backup complet amb rsync incremental i automatització</h4>
+          <p>Implementa una estratègia de backup 3-2-1 amb còpies increments i verificació</p>
+        </div>
+        <div class="lab-os-tags"><span class="os-tag os-both">🔀 Ambdós</span></div>
+      </div>
+      <div class="lab-body">
+        <ul class="lab-steps">
+          <li><strong>Dissenya el pla:</strong> Defineix RPO i RTO per a un servidor web de pimes. Documenta l'estratègia: quins dades calen, quants backups es conserven, on s'emmagatzemen (local/remot/núvol) i quan s'executen.</li>
+          <li><strong>Ubuntu — Script de backup incremental:</strong> Crea <code>/usr/local/bin/backup_incremental.sh</code> que faci un backup amb <code>rsync --link-dest</code> del directori <code>/srv/web/</code> cap a <code>/mnt/backup/</code>, usant la data com a nom del directori de destí. El script ha de logejar l'inici, final, durada i espai usat.</li>
+          <li><strong>Ubuntu — Automatitza amb cron:</strong> Programa el script perquè s'executi a les 03:00 de dilluns a dissabte. Afegeix una tasca de backup complet (sense <code>--link-dest</code>) els diumenges a les 02:00. Verifica el crontab amb <code>crontab -l</code>.</li>
+          <li><strong>Ubuntu — Verifica la recuperació:</strong> Esborra deliberadament 2 fitxers de <code>/srv/web/</code>. Restaura'ls des del backup del dia anterior amb <code>rsync</code>. Documenta el procés de recuperació.</li>
+          <li><strong>Windows — Còpia de seguretat programada:</strong> Crea una tasca programada que executi <code>wbadmin</code> cada nit. Verifica que s'executa correctament al Visor d'esdeveniments. Simula una recuperació d'un fitxer concret des de la GUI de "Còpia de seguretat de Windows".</li>
+        </ul>
+        <div class="lab-entrega"><strong>📋 Documenta:</strong> Script de backup complet comentat. Contingut del crontab. Log d'una execució del backup amb durada i espai usat. Procés de recuperació documentat pas a pas.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ T15-T17: RECUPERACIÓ DEL SISTEMA ═══ -->
+<section id="recuperacio" class="s-ubuntu">
+  <div class="container">
+    <div class="ra-banner ra-ubuntu fi">
+      <div class="ra-num">6</div>
+      <div>
+        <h2>Recuperació en cas de fallada del sistema</h2>
+        <p>Discos d'arrencada, consola de recuperació, punts de restauració i recuperació de dades.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-ubuntu fi">Discos i entorns de recuperació</div>
+    <h2 class="fi">Live USB, discos de recuperació i entorns d'emergència</h2>
+    <p class="lead fi">Un <strong>disc de recuperació</strong> és un sistema mínim que permet arrancar l'equip i accedir als discos quan el SO principal no arrenca. Tota empresa ha de tenir discos de recuperació preparats i provats <em>abans</em> de necessitar-los.</p>
+
+    <div class="grid g3 fi">
+      <div class="card bl-win">
+        <div class="card-icon" style="background:#f0f7ff">🪟</div>
+        <h3>Windows — Eines de recuperació</h3>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)">💾 <strong style="color:var(--ink)">Disc de reparació (Recovery Drive):</strong> USB de 16 GB amb WinRE. Permet accedir a opcions avançades d'arrencada.</li>
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)">🔧 <strong style="color:var(--ink)">WinRE (Recovery Environment):</strong> entorn de recuperació integrat. Reparació d'arrencada, restauració de sistema, restabliment de fàbrica.</li>
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)">⌨️ <strong style="color:var(--ink)">Consola de recuperació (cmd):</strong> des de WinRE → Solucionar problemes → Opcions avançades → Símbol del sistema.</li>
+          <li style="padding:.25rem 0;font-size:.85rem;color:var(--muted)">📸 <strong style="color:var(--ink)">Punts de restauració:</strong> VSS snapshots del sistema. Permet tornar a un estat previ sense perdre fitxers personals.</li>
+        </ul>
+      </div>
+      <div class="card bl-ubuntu">
+        <div class="card-icon" style="background:#fff5f1">🐧</div>
+        <h3>Ubuntu — Entorns de recuperació</h3>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)">🐧 <strong style="color:var(--ink)">Live USB d'Ubuntu:</strong> arrenca un Ubuntu complet sense instal·lar. Permet muntar el disc del sistema afectat i recuperar fitxers.</li>
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)">🔧 <strong style="color:var(--ink)">Mode de recuperació (recovery mode):</strong> opció del GRUB. Arrenca amb el kernel mínime i accés root sense contrasenya.</li>
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)">🔑 <strong style="color:var(--ink)">Restablir contrasenya root:</strong> des de GRUB, editar les opcions del kernel, afegir <code>init=/bin/bash</code>.</li>
+          <li style="padding:.25rem 0;font-size:.85rem;color:var(--muted)">💿 <strong style="color:var(--ink)">Rescatux / System Rescue CD:</strong> eines especialitzades per a recuperació avançada (fsck, testdisk, chroot).</li>
+        </ul>
+      </div>
+      <div class="card bl-asix">
+        <div class="card-icon" style="background:#f5f3ff">🛠️</div>
+        <h3>Eines de recuperació de dades</h3>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)">🔍 <strong style="color:var(--ink)">TestDisk:</strong> recupera particions esborrades i fa arrencables discos danyats.</li>
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)">📸 <strong style="color:var(--ink)">PhotoRec:</strong> recupera fitxers esborrats independentment del FS (signatures de fitxer).</li>
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)">🗺️ <strong style="color:var(--ink)">extundelete:</strong> recuperació específica per a ext3/ext4.</li>
+          <li style="padding:.25rem 0;font-size:.85rem;color:var(--muted)">💊 <strong style="color:var(--ink)">fsck / chkdsk:</strong> verificació i reparació del sistema de fitxers.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Consola recuperació -->
+    <div class="section-tag tag-ubuntu fi" style="margin-top:3rem">Recuperació per consola</div>
+    <h2 class="fi">Recuperació per consola: Windows i Ubuntu</h2>
+
+    <div class="terminal fi">
+      <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">Recuperació del sistema — consola de recuperació</span><span class="term-os term-os-both">🔀 Ambdós</span></div>
+      <div class="term-body">
+        <div><span class="comment">═══ WINDOWS — Consola de Recuperació ═══</span></div>
+        <div><span class="comment"># Accés: DVD/USB Windows → Reparar → Opcions Avançades → Símbol del sistema</span></div>
+        <div><span class="prompt-win">X:\></span> <span class="cmd">bootrec /fixmbr</span>      <span class="comment"># Reparar MBR (BIOS legacy)</span></div>
+        <div><span class="prompt-win">X:\></span> <span class="cmd">bootrec /fixboot</span>     <span class="comment"># Reparar sector d'arrencada</span></div>
+        <div><span class="prompt-win">X:\></span> <span class="cmd">bootrec /rebuildbcd</span>  <span class="comment"># Reconstruir BCD (Boot Configuration Data)</span></div>
+        <div><span class="prompt-win">X:\></span> <span class="cmd">bcdedit</span>               <span class="comment"># Veure entrades del gestor d'arrencada</span></div>
+        <div style="margin-top:.4rem"><span class="comment"># Reparar UEFI/GPT</span></div>
+        <div><span class="prompt-win">X:\></span> <span class="cmd">diskpart</span></div>
+        <div><span class="prompt-win">DISKPART></span> <span class="cmd">list vol</span>  <span class="comment"># Identificar partició EFI (FAT32)</span></div>
+        <div><span class="prompt-win">DISKPART></span> <span class="cmd">select vol 2</span></div>
+        <div><span class="prompt-win">DISKPART></span> <span class="cmd">assign letter=Z</span></div>
+        <div><span class="prompt-win">X:\></span> <span class="cmd">bcdboot C:\Windows /s Z: /f UEFI</span></div>
+        <div style="margin-top:.4rem"><span class="comment"># Reparar fitxers de sistema (SFC)</span></div>
+        <div><span class="prompt-win">X:\></span> <span class="cmd">sfc /scannow /offbootdir=C:\ /offwindir=C:\Windows</span></div>
+        <div><span class="prompt-win">X:\></span> <span class="cmd">dism /image:C:\ /cleanup-image /restorehealth</span></div>
+        <div style="margin-top:.75rem"><span class="comment">═══ UBUNTU — Recuperació des de Live USB ═══</span></div>
+        <div><span class="comment"># Muntar el sistema instal·lat per fer chroot</span></div>
+        <div><span class="prompt-ub">live$</span> <span class="cmd">sudo mount /dev/sda2 /mnt</span>              <span class="comment"># Partició arrel</span></div>
+        <div><span class="prompt-ub">live$</span> <span class="cmd">sudo mount /dev/sda1 /mnt/boot/efi</span>    <span class="comment"># Partició EFI (si UEFI)</span></div>
+        <div><span class="prompt-ub">live$</span> <span class="cmd">sudo mount --bind /dev /mnt/dev</span></div>
+        <div><span class="prompt-ub">live$</span> <span class="cmd">sudo mount --bind /proc /mnt/proc</span></div>
+        <div><span class="prompt-ub">live$</span> <span class="cmd">sudo mount --bind /sys /mnt/sys</span></div>
+        <div><span class="prompt-ub">live$</span> <span class="cmd">sudo chroot /mnt</span>                       <span class="comment"># Entrar al sistema instal·lat</span></div>
+        <div><span class="comment"># Ara estem "dins" del sistema instal·lat</span></div>
+        <div><span class="prompt-ub">chroot#</span> <span class="cmd">grub-install /dev/sda</span>              <span class="comment"># Reinstal·lar GRUB</span></div>
+        <div><span class="prompt-ub">chroot#</span> <span class="cmd">update-grub</span>                        <span class="comment"># Regenerar grub.cfg</span></div>
+        <div><span class="prompt-ub">chroot#</span> <span class="cmd">passwd root</span>                        <span class="comment"># Canviar contrasenya root si cal</span></div>
+        <div><span class="prompt-ub">chroot#</span> <span class="cmd">apt install -f</span>                     <span class="comment"># Reparar paquets trencats</span></div>
+        <div><span class="prompt-ub">chroot#</span> <span class="cmd">exit</span></div>
+        <div><span class="prompt-ub">live$</span> <span class="cmd">sudo umount -R /mnt && reboot</span></div>
+        <div style="margin-top:.4rem"><span class="comment"># Verificació i reparació del FS (amb disc desmuntat)</span></div>
+        <div><span class="prompt-ub">live$</span> <span class="cmd">sudo fsck -f /dev/sda2</span>   <span class="comment"># Verificar ext4 (SEMPRE desmuntat)</span></div>
+        <div><span class="prompt-ub">live$</span> <span class="cmd">sudo e2fsck -C0 -f /dev/sda2</span>  <span class="comment"># Verificació completa amb progrés</span></div>
+      </div>
+    </div>
+
+    <!-- Punts de restauració -->
+    <div class="section-tag tag-win fi" style="margin-top:3rem">Punts de restauració i VSS</div>
+    <h2 class="fi">Punts de restauració Windows i Snapshots Linux</h2>
+    <div class="grid g2 fi">
+      <div class="card bl-win">
+        <div class="card-icon" style="background:#f0f7ff">📸</div>
+        <h3>Windows — VSS i Punts de restauració</h3>
+        <p style="margin-bottom:.6rem"><strong>VSS (Volume Shadow Copy Service)</strong> fa snapshots del volum en un instant determinat. Els punts de restauració usen VSS per capturar l'estat del sistema.</p>
+        <div class="terminal" style="margin-top:.5rem">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-title">VSS i punts de restauració</span><span class="term-os term-os-win">🪟 Windows</span></div>
+          <div class="term-body" style="font-size:.75rem">
+            <div><span class="comment"># Crear punt de restauració</span></div>
+            <div><span class="prompt-win">PS></span> <span class="cmd">Checkpoint-Computer -Description "Pre-instal·lació" -RestorePointType "APPLICATION_INSTALL"</span></div>
+            <div style="margin-top:.3rem"><span class="comment"># Llistar punts de restauració</span></div>
+            <div><span class="prompt-win">PS></span> <span class="cmd">Get-ComputerRestorePoint | Format-Table Description,CreationTime,SequenceNumber</span></div>
+            <div style="margin-top:.3rem"><span class="comment"># Shadow copies (VSS) per backup</span></div>
+            <div><span class="prompt-win">PS></span> <span class="cmd">vssadmin list shadows</span></div>
+            <div><span class="prompt-win">PS></span> <span class="cmd">vssadmin create shadow /for=C:</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="card bl-ubuntu">
+        <div class="card-icon" style="background:#fff5f1">📷</div>
+        <h3>Linux — Snapshots amb LVM i Timeshift</h3>
+        <div class="terminal" style="margin-top:.5rem">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-title">LVM snapshots i Timeshift</span><span class="term-os term-os-ubuntu">🐧 Ubuntu</span></div>
+          <div class="term-body" style="font-size:.75rem">
+            <div><span class="comment"># LVM snapshot (punt de recuperació)</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">sudo lvcreate --size 5G --snapshot --name snap_home /dev/vg/lv_home</span></div>
+            <div><span class="comment"># Muntar el snapshot per verificar</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">sudo mount /dev/vg/snap_home /mnt/snap -o ro</span></div>
+            <div><span class="comment"># Restaurar (rollback al snapshot)</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">sudo umount /home</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">sudo lvconvert --merge /dev/vg/snap_home</span></div>
+            <div style="margin-top:.3rem"><span class="comment"># Timeshift (GUI + CLI)</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">sudo apt install timeshift</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">sudo timeshift --create --comments "Pre-update"</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">sudo timeshift --list</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">sudo timeshift --restore</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="lab-card fi">
+      <div class="lab-header">
+        <span class="lab-icon">🧪</span>
+        <div class="lab-title-block">
+          <h4>Lab 6.1 — Recuperació real: GRUB trencat i contrasenya perduda</h4>
+          <p>Escenaris de recuperació reals: reinstaŀla GRUB des de Live USB i restableix la contrasenya root</p>
+        </div>
+        <div class="lab-os-tags"><span class="os-tag os-both">🔀 Ambdós</span></div>
+      </div>
+      <div class="lab-body">
+        <p>⚠️ Realitza aquest lab en una VM per evitar riscos al sistema real. Treballaràs amb escenaris de falla reals.</p>
+        <ul class="lab-steps">
+          <li><strong>Ubuntu — Trenca el GRUB intencionadament:</strong> Executa <code>sudo dd if=/dev/zero of=/dev/sda bs=446 count=1</code> per sobreescriure el MBR. Reinicia la VM i comprova que no arrenca. Usa el Live USB per fer chroot i reinstal·lar GRUB.</li>
+          <li><strong>Ubuntu — Recupera la contrasenya root:</strong> Des del GRUB, prem <code>e</code> per editar l'entrada d'arrencada. Localitza la línia <code>linux</code> i substitueix <code>ro quiet splash</code> per <code>rw init=/bin/bash</code>. Premeu <code>Ctrl+X</code> per arrencar. Un cop al shell, executa <code>passwd root</code> i reinicia.</li>
+          <li><strong>Ubuntu — Crea i restaura un snapshot LVM:</strong> Crea un snapshot del LV home. Afegeix 3 fitxers. Restaura al snapshot. Comprova que els fitxers afegits han desaparegut (rollback exitós).</li>
+          <li><strong>Windows — Punt de restauració:</strong> Crea un punt de restauració manualment. Instal·la un programa. Restaura el sistema al punt anterior. Comprova que el programa ha desaparegut però els fitxers de l'usuari segueixen.</li>
+          <li><strong>Windows — Consola de recuperació:</strong> Desde la ISO de Windows en mode reparació, obre el símbol del sistema. Executa <code>sfc /scannow /offbootdir=C:\ /offwindir=C:\Windows</code> i interpreta el resultat.</li>
+        </ul>
+        <div class="lab-entrega"><strong>📋 Documenta:</strong> Pas a pas de cada escenari de recuperació amb les comandes exactes. Captura de la pantalla d'error inicial i la del sistema recuperat. Temps total de cada recuperació.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ T18: IMATGES DE SERVIDORS ═══ -->
+<section id="imatges" class="s-asix">
+  <div class="container">
+    <div class="ra-banner ra-asix fi">
+      <div class="ra-num">7</div>
+      <div>
+        <h2>Còpies de seguretat i imatges de servidors</h2>
+        <p>Clonació de discos, imatges de sistema, Clonezilla, dd i estratègies de desplegament massiu.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-asix fi">Imatges de disc i clonació</div>
+    <h2 class="fi">Clonació vs imatge: diferències i casos d'ús</h2>
+    <p class="lead fi">Una <strong>imatge de disc</strong> és una còpia exacta bit a bit d'un disc o partició emmagatzemada en un fitxer. Una <strong>clonació</strong> és la còpia directa d'un disc a un altre. Ambdues tècniques són fonamentals per a la gestió de servidors i el desplegament massiu d'equips.</p>
+
+    <div class="grid g2 fi">
+      <div class="card bl-ubuntu">
+        <div class="card-icon" style="background:#fff5f1">🖥️</div>
+        <h3>Clonezilla — Clonació professional</h3>
+        <p style="margin-bottom:.6rem">Eina de codi obert basada en Linux, especialitzada en clonació de discos i particions. Compatible amb múltiples sistemes de fitxers.</p>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)">💻 <strong style="color:var(--ink)">Disc a disc:</strong> clona un disc físic directament a un altre (copiar servidor).</li>
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)">📁 <strong style="color:var(--ink)">Disc a imatge:</strong> crea un fitxer d'imatge comprimit. Molt eficient.</li>
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)">🌐 <strong style="color:var(--ink)">Mode multicast:</strong> desplega la mateixa imatge a centenars d'equips simultàniament per xarxa.</li>
+          <li style="padding:.25rem 0;font-size:.85rem;color:var(--muted)">🚀 <strong style="color:var(--ink)">PXE Boot:</strong> arrencada per xarxa sense USB. Ideal per a aules i parcs d'ordinadors.</li>
+        </ul>
+      </div>
+      <div class="card bl-asix">
+        <div class="card-icon" style="background:#f5f3ff">⚙️</div>
+        <h3>dd — La navalla suïssa de les imatges</h3>
+        <p style="margin-bottom:.6rem">Comanda Unix per copiar dades a baix nivell, bloc a bloc. Extrem en potència i en perill: no fa cap comprovació.</p>
+        <div class="terminal" style="margin-top:.5rem">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-title">dd — còpies de disc a baix nivell</span><span class="term-os term-os-ubuntu">🐧 Ubuntu</span></div>
+          <div class="term-body" style="font-size:.76rem">
+            <div><span class="comment"># Crea imatge d'un disc complet</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">sudo dd if=/dev/sda of=/mnt/backup/disc.img bs=4M status=progress</span></div>
+            <div><span class="comment"># Crea imatge comprimida (molt menys espai)</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">sudo dd if=/dev/sda bs=4M | gzip > /mnt/backup/disc.img.gz</span></div>
+            <div style="margin-top:.3rem"><span class="comment"># Restaurar imatge al disc</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">sudo dd if=/mnt/backup/disc.img of=/dev/sdb bs=4M status=progress</span></div>
+            <div><span class="comment"># Esborrar disc de forma segura (zeros)</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">sudo dd if=/dev/zero of=/dev/sdb bs=4M status=progress</span></div>
+            <div style="margin-top:.3rem"><span class="err"># ⚠️ PERILL: if=input if=output. Invertir = pèrdua total de dades!</span></div>
+            <div><span class="comment"># Comprova sempre dues vegades abans d'executar</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Windows Imaging -->
+    <div class="section-tag tag-win fi" style="margin-top:3rem">Windows — Imatges amb WIM i DISM</div>
+    <h2 class="fi">Imatges de Windows: WIM, DISM i Windows Server Backup</h2>
+    <div class="terminal fi">
+      <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">DISM i imatges WIM — Windows</span><span class="term-os term-os-win">🪟 Windows</span></div>
+      <div class="term-body">
+        <div><span class="comment"># Capturar una imatge WIM d'un volum</span></div>
+        <div><span class="prompt-win">></span> <span class="cmd">dism /capture-image /imagefile:E:\backup\sistema.wim /capturedir:C:\ /name:"Sistema ASIX" /compress:maximum /checkintegrity</span></div>
+        <div style="margin-top:.4rem"><span class="comment"># Aplicar (restaurar) una imatge WIM</span></div>
+        <div><span class="prompt-win">></span> <span class="cmd">dism /apply-image /imagefile:E:\backup\sistema.wim /index:1 /applydir:C:\</span></div>
+        <div style="margin-top:.4rem"><span class="comment"># Gestionar imatges WIM (veure contingut)</span></div>
+        <div><span class="prompt-win">></span> <span class="cmd">dism /get-imageinfo /imagefile:E:\backup\sistema.wim</span></div>
+        <div><span class="prompt-win">></span> <span class="cmd">dism /mount-image /imagefile:E:\backup\sistema.wim /index:1 /mountdir:C:\mount</span></div>
+        <div style="margin-top:.4rem"><span class="comment"># Windows Server Backup (wbadmin) — còpia de seguretat del sistema complet</span></div>
+        <div><span class="prompt-win">PS></span> <span class="cmd">wbadmin start systemstatebackup -backupTarget:\\servidor\backups</span></div>
+        <div><span class="prompt-win">PS></span> <span class="cmd">wbadmin start recovery -version:04/01/2025-02:00 -itemType:Volume -items:C: -recoveryTarget:C:</span></div>
+      </div>
+    </div>
+
+    <div class="lab-card fi">
+      <div class="lab-header">
+        <span class="lab-icon">🧪</span>
+        <div class="lab-title-block">
+          <h4>Lab 7.1 — Creació i restauració d'imatge de sistema amb dd i DISM</h4>
+          <p>Crea una imatge de disc, simula una pèrdua total i restaura el sistema</p>
+        </div>
+        <div class="lab-os-tags"><span class="os-tag os-both">🔀 Ambdós</span></div>
+      </div>
+      <div class="lab-body">
+        <ul class="lab-steps">
+          <li><strong>Ubuntu — Imatge amb dd:</strong> Crea una imatge comprimida d'una partició de prova de la VM: <code>dd if=/dev/sdb bs=4M | gzip > /mnt/external/particio.img.gz</code>. Anota la mida original del disc i la mida de la imatge comprimida. Calcula el percentatge de compressió.</li>
+          <li><strong>Ubuntu — Restaura la imatge:</strong> Formata <code>/dev/sdb</code> (esborra tot). Restaura la imatge: <code>gunzip -c /mnt/external/particio.img.gz | dd of=/dev/sdb bs=4M status=progress</code>. Verifica que els fitxers originals hi són.</li>
+          <li><strong>Ubuntu — Prova testdisk:</strong> Instal·la <code>testdisk</code>. Usa-lo per analitzar un disc i veure les particions existents. Simula recuperar una partició "perduda" (pots crear una i esborrar-ne la entrada amb fdisk sense esborrar les dades).</li>
+          <li><strong>Windows — DISM:</strong> Captura una imatge WIM de la partició D: (o crea una partició de prova petita). Verifica la integritat de la imatge. Munta la imatge i comprova que pots llegir els fitxers sense restaurar-la.</li>
+          <li><strong>Reflexió:</strong> Compara el temps i l'espai requerit entre: (a) backup rsync, (b) imatge dd comprimida, (c) snapshot LVM. Quina tria per a cada escenari: servidor de producció diari, desplegament massiu d'equips, recuperació d'urgència?</li>
+        </ul>
+        <div class="lab-entrega"><strong>📋 Documenta:</strong> Comandes exactes de creació i restauració. Comparativa de mides (disc original vs imatge). Temps de creació i restauració. Recomanació motivada de quina eina usar en cada escenari.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ T19: QUOTES DE DISC ═══ -->
+<section id="quotes" class="s-win">
+  <div class="container">
+    <div class="ra-banner ra-win fi">
+      <div class="ra-num">8</div>
+      <div>
+        <h2>Quotes de disc — Nivells i advertències</h2>
+        <p>Gestió d'espai per usuari i grup. Soft quota, hard quota i grace period. NTFS i Linux.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-asix fi">Conceptes de quotes</div>
+    <h2 class="fi">Quotes de disc: controla l'espai per usuari</h2>
+    <p class="lead fi">Les <strong>quotes de disc</strong> permeten a l'administrador limitar l'espai que cada usuari (o grup) pot consumir a un sistema de fitxers. Sense quotes, un sol usuari podria omplir tot el disc i deixar el sistema sense espai per als altres.</p>
+
+    <div class="grid g3 fi">
+      <div class="card bl-teal">
+        <div class="card-icon" style="background:#ecfeff">📊</div>
+        <h3>Soft Quota (Límit suau)</h3>
+        <p style="margin-bottom:.6rem">Límit que es pot superar temporalment. Quan es sobrepassa, comença el compte del <strong>grace period</strong>.</p>
+        <div class="quota-bar-wrap">
+          <div class="quota-label"><span>Usuari: jdoe</span><span style="color:var(--amber)">Soft: 4GB</span></div>
+          <div class="quota-bar">
+            <div class="quota-fill" style="width:80%;background:var(--amber)"></div>
+            <div class="quota-warn-line" style="left:66%"></div>
+          </div>
+          <div style="font-size:.75rem;color:var(--muted);margin-top:.3rem">Ús actual: 3,2 GB de 4 GB (soft) / 5 GB (hard). ⚠️ Grace period actiu: 6 dies restants.</div>
+        </div>
+      </div>
+      <div class="card bl-red">
+        <div class="card-icon" style="background:#fff5f5">🚫</div>
+        <h3>Hard Quota (Límit dur)</h3>
+        <p style="margin-bottom:.6rem">Límit absolut. Quan s'arriba, el sistema denega qualsevol escriptura addicional. No hi ha excepcions.</p>
+        <div class="quota-bar-wrap">
+          <div class="quota-label"><span>Usuari: jdoe</span><span style="color:var(--red)">Hard: 5GB</span></div>
+          <div class="quota-bar">
+            <div class="quota-fill" style="width:100%;background:var(--red)"></div>
+          </div>
+          <div style="font-size:.75rem;color:var(--muted);margin-top:.3rem">❌ Quota hard assolida. Escriptures denegades. Qualsevol intent de guardar arxius fallarà.</div>
+        </div>
+      </div>
+      <div class="card bl-amber">
+        <div class="card-icon" style="background:#fffbeb">⏱️</div>
+        <h3>Grace Period</h3>
+        <p style="margin-bottom:.6rem">Temps que l'usuari té per reduir el seu ús per sota de la soft quota un cop superada.</p>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)">⏰ Valor típic: 7 dies (configurable)</li>
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)">📧 Genera avisos automàtics per correu</li>
+          <li style="padding:.25rem 0;font-size:.85rem;color:var(--muted)">🔴 En exhaurir-se, la soft quota es comporta com hard quota</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Implementació de quotes -->
+    <div class="section-tag tag-asix fi" style="margin-top:3rem">Implementació de quotes</div>
+    <h2 class="fi">Quotes a Linux (quota) i Windows (NTFS Disk Quotas)</h2>
+
+    <div class="terminal fi">
+      <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">Quotes de disc — Ubuntu i Windows</span><span class="term-os term-os-both">🔀 Ambdós</span></div>
+      <div class="term-body">
+        <div><span class="comment">═══ UBUNTU — quota ═══</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">sudo apt install quota quotatool -y</span></div>
+        <div style="margin-top:.4rem"><span class="comment"># 1. Habilitar quotes al fstab (afegir "usrquota,grpquota" a les opcions)</span></div>
+        <div><span class="val">UUID=xxx /home ext4 defaults,usrquota,grpquota 0 2</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">sudo mount -o remount /home</span></div>
+        <div style="margin-top:.4rem"><span class="comment"># 2. Crear la base de dades de quotes</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">sudo quotacheck -ugm /home</span>  <span class="comment"># Crea aquota.user i aquota.group</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">sudo quotaon /home</span>           <span class="comment"># Activar el sistema de quotes</span></div>
+        <div style="margin-top:.4rem"><span class="comment"># 3. Configurar quota per a un usuari</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">sudo edquota -u jdoe</span></div>
+        <div><span class="comment"># S'obre l'editor amb els valors (en kilobytes i inodes):</span></div>
+        <div><span class="out">Filesystem  blocks  soft    hard    inodes  soft  hard</span></div>
+        <div><span class="out">/dev/sda3   102400  4194304 5242880 1000    0     0</span></div>
+        <div><span class="comment"># blocks actual=100MB; soft=4GB; hard=5GB; inodes: sense límit</span></div>
+        <div style="margin-top:.4rem"><span class="comment"># Configurar grace period</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">sudo edquota -t</span>  <span class="comment"># Grace period: ex. "7days"</span></div>
+        <div style="margin-top:.4rem"><span class="comment"># 4. Monitoritzar</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">sudo repquota -a</span>      <span class="comment"># Informe de totes les quotes</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">quota -u jdoe</span>         <span class="comment"># Quota d'un usuari concret</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">sudo warnquota</span>        <span class="comment"># Envia avisos per correu als usuaris que superen la soft</span></div>
+        <div style="margin-top:.4rem"><span class="comment"># Còpia de quota d'un usuari a un altre (eficient)</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">sudo edquota -p jdoe alumne1 alumne2 alumne3</span></div>
+        <div style="margin-top:.75rem"><span class="comment">═══ WINDOWS — Quotes NTFS ═══</span></div>
+        <div><span class="prompt-win">PS></span> <span class="cmd">fsutil quota query C:</span>                          <span class="comment"># Veure quotes actuals</span></div>
+        <div><span class="prompt-win">PS></span> <span class="cmd">fsutil quota modify C: 4294967296 5368709120</span>   <span class="comment"># Soft 4GB, Hard 5GB (bytes)</span></div>
+        <div><span class="prompt-win">PS></span> <span class="cmd">fsutil quota track C:</span>                         <span class="comment"># Activar seguiment (avisa però no bloqueja)</span></div>
+        <div><span class="prompt-win">PS></span> <span class="cmd">fsutil quota enforce C:</span>                       <span class="comment"># Activar aplicació (bloqueja en hard)</span></div>
+        <div style="margin-top:.4rem"><span class="comment"># Per a un usuari concret (Security Identifier)</span></div>
+        <div><span class="prompt-win">PS></span> <span class="cmd">$sid = (Get-LocalUser -Name "jdoe").SID.Value</span></div>
+        <div><span class="prompt-win">PS></span> <span class="cmd">fsutil quota modify C: 4294967296 5368709120 $sid</span></div>
+        <div><span class="prompt-win">PS></span> <span class="cmd">fsutil quota query C: $sid</span>                    <span class="comment"># Verificar</span></div>
+      </div>
+    </div>
+
+    <div class="lab-card fi">
+      <div class="lab-header">
+        <span class="lab-icon">🧪</span>
+        <div class="lab-title-block">
+          <h4>Lab 8.1 — Implementació completa de quotes i monitoratge</h4>
+          <p>Configura, prova i monitora quotes de disc per a múltiples usuaris</p>
+        </div>
+        <div class="lab-os-tags"><span class="os-tag os-both">🔀 Ambdós</span></div>
+      </div>
+      <div class="lab-body">
+        <ul class="lab-steps">
+          <li><strong>Ubuntu — Preparació:</strong> Instal·la el paquet <code>quota</code>. Afegeix <code>usrquota,grpquota</code> al fstab per al volum <code>/home</code>. Crea la base de dades amb <code>quotacheck</code> i activa les quotes amb <code>quotaon</code>.</li>
+          <li><strong>Ubuntu — Configura quotes per a 3 usuaris:</strong> <code>alumne1</code>: soft 200MB / hard 250MB, <code>jdoe</code>: soft 1GB / hard 1.5GB, <code>tec_asix</code>: soft 5GB / hard 6GB. Usa <code>edquota -p alumne1 alumne2 alumne3</code> per copiar la quota d'alumne1 a la resta d'alumnes.</li>
+          <li><strong>Ubuntu — Prova els límits:</strong> Com a usuari <code>alumne1</code>, genera fitxers grans amb <code>dd if=/dev/zero of=~/fitxer.bin bs=1M count=210</code>. Comprova el missatge d'error quan se supera la hard quota. Verifica <code>quota -u alumne1</code>.</li>
+          <li><strong>Ubuntu — Script d'alerta:</strong> Crea un script que executa <code>repquota -a</code> i envia un correu (o escriu a un log) amb els usuaris que superen el 80% de la soft quota.</li>
+          <li><strong>Windows — Quotes NTFS:</strong> Activa les quotes al disc D: des de <em>Propietats → Quota → Habilitar gestió de quotes</em>. Configura un límit de 100 MB per a un usuari de prova. Verifica el comportament quan se supera.</li>
+        </ul>
+        <div class="lab-entrega"><strong>📋 Documenta:</strong> Sortida de <code>repquota -a</code> amb els usuaris configurats. Captura del missatge d'error en superar la hard quota. Script d'alerta complet i comentat. Comparativa del comportament entre soft quota superada (amb grace period) i hard quota assolida.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PRÀCTICA FINAL INTEGRADA ═══ -->
+<section class="s-dark">
+  <div class="container">
+    <div class="section-tag tag-asix fi">Pràctica Final Integradora</div>
+    <h2 class="fi">Infraestructura d'emmagatzematge completa per a TechCorp S.L.</h2>
+    <p class="lead fi">Pràctica avançada que integra tots els continguts del RA3: sistemes de fitxers, RAID, quotes, backup i recuperació.</p>
+
+    <div class="lab-card fi">
+      <div class="lab-header">
+        <span class="lab-icon">🏆</span>
+        <div class="lab-title-block">
+          <h4>Pràctica Integradora — Disseny i implementació d'infraestructura d'emmagatzematge</h4>
+          <p>Escenari real: servidor de fitxers amb RAID, LVM, quotes, backup automatitzat i recuperació · Durada: 4–5h · Nivell CFGS avançat</p>
+        </div>
+        <div class="lab-os-tags"><span class="os-tag os-both">🔀 Ambdós</span></div>
+      </div>
+      <div class="lab-body">
+        <p>TechCorp S.L. necessita un servidor de fitxers Ubuntu robust. Has de dissenyar i implementar tota la infraestructura d'emmagatzematge des de zero amb 4 discos virtuals de 10 GB cadascun.</p>
+
+        <h5>📋 FASE 1 — Infraestructura RAID i LVM</h5>
+        <ul class="lab-steps">
+          <li><strong>RAID5 amb 3 discos:</strong> Usa <code>sdb</code>, <code>sdc</code> i <code>sdd</code> per crear un RAID5 (<code>/dev/md0</code>). El quart disc <code>sde</code> serà el disc de recanvi en calent (<code>--spare-devices=1</code>). Documenta la capacitat útil resultant.</li>
+          <li><strong>LVM sobre RAID:</strong> Crea un PV sobre <code>/dev/md0</code>, un VG <code>vg_techcorp</code> i els LVs: <code>lv_homes</code> (4GB, ext4), <code>lv_projectes</code> (3GB, ext4), <code>lv_logs</code> (1GB, xfs). Deixa espai lliure al VG per a futures ampliacions.</li>
+          <li><strong>fstab persistent:</strong> Afegeix totes les entrades al fstab per UUID. Usa opcions adequades (<code>noatime</code> per als LVs de dades, <code>noexec,nosuid</code> per als logs).</li>
+        </ul>
+
+        <h5>📋 FASE 2 — Permisos i quotes</h5>
+        <ul class="lab-steps">
+          <li><strong>Estructura de directoris:</strong> A <code>/srv/techcorp/projectes/</code> crea: <code>dept_it/</code>, <code>dept_rrhh/</code>, <code>dept_finances/</code>, cadascun amb subcarpetes <code>public/</code> i <code>private/</code>. La carpeta <code>public</code> ha de ser llegible per tots els departaments; la <code>private</code> sols pel departament propietari. Usa SGID per assegurar l'herència de grup.</li>
+          <li><strong>ACLs avançades:</strong> Afegeix al directori del grup <code>it_admins</code> permís de lectura sobre totes les carpetes (auditoria). Usa <code>setfacl</code> amb ACLs per defecte per assegurar que els nous fitxers hereten els permisos.</li>
+          <li><strong>Quotes per grup:</strong> Habilita quotes per grup (<code>grpquota</code>). Configura: <code>dept_it</code>: soft 2GB / hard 2.5GB, <code>dept_rrhh</code>: soft 1GB / hard 1.5GB, <code>dept_finances</code>: soft 1GB / hard 1.5GB. Grace period: 5 dies.</li>
+        </ul>
+
+        <h5>📋 FASE 3 — Pla de backup automatitzat</h5>
+        <ul class="lab-steps">
+          <li><strong>Script de backup intel·ligent:</strong> Crea <code>/usr/local/bin/techcorp_backup.sh</code> que detecti si és diumenge (backup complet) o un altre dia (incremental amb <code>--link-dest</code>). El script ha d'enviar un log per correu (o escriure a syslog), verificar l'espai disponible abans de fer el backup i sortir amb codi d'error si no n'hi ha prou.</li>
+          <li><strong>Snapshot LVM pre-backup:</strong> El script ha de crear un LVM snapshot de <code>lv_projectes</code> just abans del backup, fer la còpia des del snapshot (garantia de consistència sense aturar serveis) i eliminar el snapshot en acabar.</li>
+          <li><strong>Programació cron:</strong> Diumenge 01:00 (backup complet), Dl–Ds 03:00 (incremental), Primer de mes 00:30 (arxivament a llarg termini amb compressió gzip + xifrat GPG).</li>
+        </ul>
+
+        <h5>📋 FASE 4 — Test de fallada i recuperació</h5>
+        <ul class="lab-steps">
+          <li><strong>Simula fallada del RAID:</strong> Executa <code>mdadm --fail /dev/md0 /dev/sdc1</code>. Comprova que el sistema segueix funcionant (RAID5 tolera 1 fallada). Verifica que <code>sde</code> (disc de recanvi) entra automàticament en reconstrucció.</li>
+          <li><strong>Simulació de ransomware:</strong> Com a usuari normal, "encripta" (renombra amb extensió .enc) tots els fitxers de <code>/srv/techcorp/projectes/dept_it/</code>. Restaura els fitxers originals des del backup d'rsync. Documenta el temps de recuperació.</li>
+          <li><strong>Recuperació completa:</strong> En un disc nou (afegeix un 5è disc virtual buit), restaura la imatge dd del servidor. Verifica que el sistema és 100% funcional. Documenta el temps total de recuperació (RTO real).</li>
+        </ul>
+
+        <h5>📋 FASE 5 — Documentació tècnica</h5>
+        <ul class="lab-steps">
+          <li><strong>Redacta el document "DRP (Disaster Recovery Plan)"</strong> de TechCorp: diagrama de l'arquitectura d'emmagatzematge (RAID → LVM → FS), matriu de permisos per departament, política de backup (RPO/RTO definits), procediment de recuperació pas a pas per a 3 escenaris (fallada de disc, esborrat accidental, compromís del servidor).</li>
+          <li><strong>Informe mensual automatitzat:</strong> Script que generi un PDF (o text) amb: estat del RAID (<code>mdadm --detail</code>), espai de cada FS (<code>df -hT</code>), estat de les quotes (<code>repquota -a</code>), estat de les còpies de seguretat (darrera còpia, mida, validació de la integritat).</li>
+        </ul>
+
+        <div class="lab-entrega">
+          <strong>📦 Lliurament complet:</strong><br>
+          • Script de backup intel·ligent complet i comentat<br>
+          • Script d'informe mensual automatitzat<br>
+          • Document DRP (Disaster Recovery Plan) en PDF<br>
+          • Captures de cada fase: <code>mdadm --detail</code>, <code>lsblk -f</code>, <code>df -hT</code>, <code>repquota -a</code><br>
+          • Log de la simulació de fallada RAID i recuperació<br>
+          • Temps reals de creació de backup, fallada RAID i recuperació completa
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PREGUNTES TEÒRIQUES ═══ -->
+<section id="preguntes" class="s-cream">
+  <div class="container">
+    <div class="ra-banner ra-preguntes fi">
+      <div class="ra-num">?</div>
+      <div>
+        <h2>Preguntes teòriques — RA3</h2>
+        <p>10 preguntes de nivell CFGS per avaluar la comprensió. Sense resposta — per a reflexió i preparació d'examen.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-pregs fi">Sistemes de fitxers i discos</div>
+    <h2 class="fi">Preguntes sobre FS, permisos i discos</h2>
+    <div class="grid fi" style="gap:.9rem;margin-bottom:3rem">
+      <div class="q-card">
+        <div class="q-num">1</div>
+        <div class="q-body">
+          <h4>Explica la diferència entre un hard link i un symlink en termes d'inodes, comportament en cas d'esborrar l'original, capacitat per apuntar a directoris i compatibilitat entre sistemes de fitxers. Descriu un escenari professional on usaries cada tipus. Per quin motiu els directoris <code>.</code> i <code>..</code> són tècnicament hard links i quines implicacions té per al recompte d'hard links d'un directori?</h4>
+          <p>Com detectaries tots els hard links que apunten al mateix inode que un fitxer concret?</p>
+          <span class="q-tag qt-ubuntu">Hard links</span><span class="q-tag qt-asix">Inodes</span>
+        </div>
+      </div>
+      <div class="q-card">
+        <div class="q-num">2</div>
+        <div class="q-body">
+          <h4>Compara els models de permisos POSIX (Linux) i ACLs NTFS (Windows) en termes de: granularitat, nombre d'entitats que poden tenir permisos, herència, possibilitat de negar permisos explícitament i com interactuen quan un usuari és membre de múltiples grups. Quin model és més flexible i per quin motiu? Descriu un cas on els permisos POSIX estàndard (sense ACLs exteses) serien insuficients.</h4>
+          <p>Explica per quin motiu un permís de "Denegar" a NTFS té prioritat sobre un de "Permetre" i quina trampa pot suposar per a un administrador.</p>
+          <span class="q-tag qt-both">Permisos</span><span class="q-tag qt-sec">ACLs</span>
+        </div>
+      </div>
+      <div class="q-card">
+        <div class="q-num">3</div>
+        <div class="q-body">
+          <h4>Descriu l'arquitectura LVM (Physical Volume → Volume Group → Logical Volume) i explica com permet ampliar un sistema de fitxers en producció sense downtime. Quins passos exactes cal seguir per ampliar un LV ext4 en calent? I un LV XFS? Quin avantatge ofereix LVM respecte al particionament tradicional en un servidor que ha de créixer?</h4>
+          <p>Quina és la diferència entre un LVM snapshot i un backup? En quin escenari el snapshot pot fallar com a mecanisme de recuperació?</p>
+          <span class="q-tag qt-ubuntu">LVM</span><span class="q-tag qt-green">Snapshots</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-tag tag-pregs fi">RAID i tolerància a errors</div>
+    <h2 class="fi">Preguntes sobre RAID</h2>
+    <div class="grid fi" style="gap:.9rem;margin-bottom:3rem">
+      <div class="q-card">
+        <div class="q-num">4</div>
+        <div class="q-body">
+          <h4>Un servidor té 5 discos de 4 TB. Calcula la capacitat útil, el nombre de fallades que suporta i el rendiment relatiu de lectura/escriptura per a les configuracions RAID0, RAID1, RAID5, RAID6 i RAID10. Quin RAID triaries per a un servidor de base de dades MySQL on el rendiment d'escriptura és crític i no es pot permetre cap pèrdua de dades? Justifica la resposta.</h4>
+          <p>Per quin motiu es diu que "RAID no és un backup"? Descriu 3 escenaris on el RAID no protegeix i sí ho fa un backup convencional.</p>
+          <span class="q-tag qt-teal">RAID</span><span class="q-tag qt-sec">Tolerància</span>
+        </div>
+      </div>
+      <div class="q-card">
+        <div class="q-num">5</div>
+        <div class="q-body">
+          <h4>Explica el concepte de "RAID rebuild" (reconstrucció). Per quin motiu el procés de reconstrucció d'un RAID5 és perillós? Quina és la probabilitat de fallada d'un segon disc durant la reconstrucció en discos grans actuals? Quines estratègies existeixen per minimitzar el risc (RAID6 vs RAID5, spare hot, ZFS RAIDZ2)?</h4>
+          <p>Un RAID5 amb 3 discos de 8 TB triga 20 hores en reconstruir-se. Durant aquest temps, si la probabilitat de fallada d'un disc és del 5% per any, quin és el risc de fallada d'un segon disc durant la reconstrucció?</p>
+          <span class="q-tag qt-teal">RAID5</span><span class="q-tag qt-sec">Riscos</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-tag tag-pregs fi">Còpies de seguretat i recuperació</div>
+    <h2 class="fi">Preguntes sobre backup, recuperació i quotes</h2>
+    <div class="grid fi" style="gap:.9rem">
+      <div class="q-card">
+        <div class="q-num">6</div>
+        <div class="q-body">
+          <h4>Una empresa realitza una còpia completa cada diumenge i incrementals diàries. El dijous s'esborren per error fitxers crítics. Descriu el procés exacte de recuperació: quants conjunts de còpies cal restaurar, en quin ordre i per quin motiu. Compara aquest escenari si en lloc d'incrementals s'haguessin fet còpies diferencials. Quina estratègia permet una recuperació més ràpida i per quin motiu?</h4>
+          <p>Defineix RPO i RTO i explica com influeix l'elecció del tipus de backup (full/incremental/diferencial) en cadascun d'ells.</p>
+          <span class="q-tag qt-green">Backup</span><span class="q-tag qt-asix">RPO/RTO</span>
+        </div>
+      </div>
+      <div class="q-card">
+        <div class="q-num">7</div>
+        <div class="q-body">
+          <h4>Descriu pas a pas el procés de recuperació d'un servidor Ubuntu que no arrenca per un GRUB corromput, usant un Live USB. Explica totes les comandes del procés chroot (<code>mount --bind</code>, <code>chroot</code>, <code>grub-install</code>, <code>update-grub</code>) i la seva funció. Per quin motiu cal muntar <code>/dev</code>, <code>/proc</code> i <code>/sys</code> amb <code>--bind</code> abans del chroot?</h4>
+          <p>En quin cas el <code>grub-install</code> des de chroot no solucionaria el problema i caldria una acció addicional (pensa en sistemes UEFI amb GPT)?</p>
+          <span class="q-tag qt-ubuntu">GRUB</span><span class="q-tag qt-sec">Recuperació</span>
+        </div>
+      </div>
+      <div class="q-card">
+        <div class="q-num">8</div>
+        <div class="q-body">
+          <h4>Explica la diferència entre <code>dd</code>, rsync i Clonezilla per a la creació de còpies i imatges de sistemes. Per a cada eina: descriu com funciona internament, quins tipus de dades copia (bit a bit vs a nivell de fitxer), com gestiona el xifrat, quin és el format de la còpia resultant i en quin escenari professional és la millor opció.</h4>
+          <p>Per quin motiu una imatge <code>dd</code> d'un disc de 1 TB ocupa 1 TB fins i tot si el disc té només 50 GB de dades? Quines alternatives permeten comprimir l'imatge per obtenir un fitxer més petit?</p>
+          <span class="q-tag qt-ubuntu">dd</span><span class="q-tag qt-green">rsync</span>
+        </div>
+      </div>
+      <div class="q-card">
+        <div class="q-num">9</div>
+        <div class="q-body">
+          <h4>Descriu el sistema de quotes de disc a Linux (soft quota, hard quota, grace period, inodes quota). Per quin motiu pot ser insuficient limitar sols el nombre de blocs i cal afegir un límit d'inodes? Explica un atac de "exhauriment d'inodes" i com les quotes d'inodes el prevenen. Quin impacte té exhaurir els inodes d'un FS tot i tenir espai lliure?</h4>
+          <p>Com s'habiliten les quotes per a sistemes de fitxers Btrfs i en quin aspecte difereix del procés amb ext4?</p>
+          <span class="q-tag qt-ubuntu">Quotes</span><span class="q-tag qt-sec">Inodes</span>
+        </div>
+      </div>
+      <div class="q-card">
+        <div class="q-num">10</div>
+        <div class="q-body">
+          <h4>Dissenya una estratègia completa d'assegurament de la informació per a un hospital amb dades de pacients (regulació RGPD + ENS alt). Ha d'incloure: arquitectura d'emmagatzematge (RAID, replicació), tipus de backups i freqüència, ubicació de les còpies (on-site, off-site, núvol), control d'accés als backups, xifrat de les dades en repòs i en trànsit, RPO/RTO màxims acceptable i procediments de test de recuperació. Justifica cada decisió tècnica i normativa.</h4>
+          <p>Quines implicacions legals té per a l'hospital no poder recuperar dades de pacients en cas de ransomware? Com influeix el RGPD en el disseny de la política de backup?</p>
+          <span class="q-tag qt-asix">Disseny</span><span class="q-tag qt-sec">RGPD</span><span class="q-tag qt-both">Integrador</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESUM FINAL -->
+<section class="s-cream">
+  <div class="container fi">
+    <div class="section-tag tag-asix">Resum del RA3</div>
+    <h2>El que heu après</h2>
+    <p class="lead">Repàs dels conceptes clau del RA3 i la seva aplicació professional com a tècnics ASIX.</p>
+    <div class="grid g4 fi">
+      <div class="card bl-asix">
+        <div class="card-icon" style="background:#f5f3ff">🗂️</div>
+        <h3>Sistemes de Fitxers</h3>
+        <p><strong>FS:</strong> NTFS, ext4, Btrfs, XFS, ZFS. Inodes, blocs, journaling. <strong>Permisos:</strong> POSIX (rwx, SUID, SGID, sticky) + ACLs esteses. <strong>Eines:</strong> chmod, chown, setfacl, icacls. <strong>LVM:</strong> PV→VG→LV, ampliació en calent.</p>
+      </div>
+      <div class="card bl-teal">
+        <div class="card-icon" style="background:#ecfeff">💾</div>
+        <h3>Discos i RAID</h3>
+        <p><strong>Particions:</strong> MBR (≤2TB, 4 primàries) vs GPT (≤9,4ZB, 128 particions). <strong>RAID:</strong> 0 (rendiment), 1 (mirall), 5 (paritat, mínim 3 discos), 6 (2 fallades), 10. <strong>mdadm</strong> (Linux), Storage Spaces (Windows).</p>
+      </div>
+      <div class="card bl-green">
+        <div class="card-icon" style="background:#f0fdf4">🔒</div>
+        <h3>Backup</h3>
+        <p><strong>Tipus:</strong> completa, incremental (ràpida, restauració complexa), diferencial (equilibri). <strong>3-2-1:</strong> 3 còpies, 2 suports, 1 off-site. <strong>Eines:</strong> rsync, tar+GPG, wbadmin, Timeshift. <strong>Clau:</strong> testa la recuperació!</p>
+      </div>
+      <div class="card bl-red">
+        <div class="card-icon" style="background:#fff5f5">🔧</div>
+        <h3>Recuperació</h3>
+        <p><strong>Linux:</strong> Live USB + chroot + grub-install. fsck, testdisk, PhotoRec. LVM snapshots. <strong>Windows:</strong> WinRE, bootrec, bcdboot, SFC, DISM. <strong>Quotes:</strong> soft+grace period, hard (absolut). edquota, repquota.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p><strong>RA3 — Assegurament de la Informació · ASIX · MP0369 · Implantació de Sistemes Operatius</strong></p>
+  <p style="margin-top:.4rem">Sistemes de Fitxers · RAID · LVM · Backup · Recuperació · Quotes · dd · rsync · mdadm</p>
+  <p style="margin-top:.4rem">Departament d'Informàtica · Administració de Sistemes Informàtics en Xarxa</p>
+</footer>
+
+<script>
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+}, { threshold: 0.05, rootMargin: '0px 0px -30px 0px' });
+document.querySelectorAll('.fi').forEach(el => io.observe(el));
+</script>
+</body>
+</html>

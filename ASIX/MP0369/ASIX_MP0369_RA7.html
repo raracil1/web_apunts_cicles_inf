@@ -1,0 +1,1688 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RA7 — Auditoria de Seguretat · ASIX · MP0369</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:      #0d0f1a;
+  --paper:    #f4f2ed;
+  --cream:    #eceae3;
+  --navy:     #1a1f4e;
+  --asix:     #6d28d9;
+  --asix-l:   #7c3aed;
+  --asix-d:   #4c1d95;
+  --win:      #0078d4;
+  --win-d:    #005a9e;
+  --ubuntu:   #e95420;
+  --ubuntu-d: #c2440e;
+  --sec:      #dc2626;
+  --sec-d:    #7f1d1d;
+  --green:    #059669;
+  --green-d:  #064e3b;
+  --amber:    #d97706;
+  --amber-d:  #78350f;
+  --cyan:     #0891b2;
+  --cyan-d:   #164e63;
+  --muted:    #6b6f85;
+  --border:   #d6d2c9;
+  --card:     #ffffff;
+  --term:     #0f111a;
+  --term2:    #161b2e;
+  --radius:   16px;
+  --radius-sm:8px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);font-size:16px;line-height:1.7;overflow-x:hidden;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(244,242,237,0.94);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:62px;}
+.nav-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:.9rem;color:var(--navy);letter-spacing:-.02em;}
+.nav-logo span{color:var(--sec);}
+.nav-pills{display:flex;gap:.3rem;list-style:none;flex-wrap:wrap;}
+.nav-pills a{text-decoration:none;font-size:.69rem;font-weight:600;padding:.22rem .6rem;border-radius:100px;color:var(--muted);transition:all .2s;border:1px solid transparent;}
+.nav-pills a:hover{color:var(--sec);border-color:var(--sec);background:rgba(220,38,38,.06);}
+
+/* HERO */
+.hero{min-height:100vh;display:grid;place-items:center;background:var(--ink);color:white;position:relative;overflow:hidden;padding:8rem 2rem 4rem;}
+.hero-bg{position:absolute;inset:0;background:
+  radial-gradient(ellipse 65% 50% at 85% 15%,rgba(220,38,38,.3) 0%,transparent 60%),
+  radial-gradient(ellipse 55% 45% at 10% 80%,rgba(109,40,217,.25) 0%,transparent 60%),
+  radial-gradient(ellipse 45% 35% at 50% 105%,rgba(8,145,178,.2) 0%,transparent 55%);}
+.hero-dots{position:absolute;inset:0;opacity:.05;background-image:radial-gradient(rgba(255,255,255,.8) 1px,transparent 1px);background-size:28px 28px;}
+.hero-grid{position:absolute;inset:0;opacity:.04;background-image:linear-gradient(rgba(255,255,255,.4) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.4) 1px,transparent 1px);background-size:48px 48px;}
+.hero-content{position:relative;z-index:1;text-align:center;max-width:860px;}
+.hero-badge{display:inline-flex;align-items:center;gap:.5rem;background:rgba(220,38,38,.15);border:1px solid rgba(220,38,38,.35);color:rgba(255,200,200,.9);font-size:.78rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:.35rem 1rem;border-radius:100px;margin-bottom:1.5rem;}
+.hero h1{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(2.4rem,6vw,4.8rem);line-height:1.05;letter-spacing:-.03em;margin-bottom:1.5rem;}
+.hero h1 .a{color:#fca5a5;} .hero h1 .b{color:#fbbf24;} .hero h1 .c{color:#6ee7b7;}
+.hero p{font-size:1.05rem;color:rgba(255,255,255,.58);max-width:580px;margin:0 auto 2.5rem;}
+.hero-pills-row{display:flex;justify-content:center;gap:.75rem;flex-wrap:wrap;margin-bottom:2rem;}
+.hero-pill{display:inline-flex;align-items:center;gap:.5rem;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);padding:.5rem 1.1rem;border-radius:10px;font-size:.82rem;font-weight:500;color:white;text-decoration:none;transition:all .25s;}
+.hero-pill:hover{background:rgba(255,255,255,.14);transform:translateY(-2px);}
+.hero-pill .dot{width:9px;height:9px;border-radius:50%;}
+.scroll-hint{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.4rem;color:rgba(255,255,255,.28);font-size:.72rem;letter-spacing:.1em;}
+.scroll-hint::after{content:'';display:block;width:1px;height:36px;background:linear-gradient(to bottom,rgba(255,255,255,.3),transparent);animation:pulse 2s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:.3}50%{opacity:1}}
+
+/* LAYOUT */
+section{padding:5.5rem 2rem;}
+.container{max-width:1080px;margin:0 auto;}
+.section-tag{font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;display:flex;align-items:center;gap:.5rem;margin-bottom:.9rem;}
+.section-tag::before{content:'';display:block;width:20px;height:2px;}
+.tag-sec{color:var(--sec);} .tag-sec::before{background:var(--sec);}
+.tag-win{color:var(--win);} .tag-win::before{background:var(--win);}
+.tag-ubuntu{color:var(--ubuntu);} .tag-ubuntu::before{background:var(--ubuntu);}
+.tag-green{color:var(--green);} .tag-green::before{background:var(--green);}
+.tag-amber{color:var(--amber);} .tag-amber::before{background:var(--amber);}
+.tag-cyan{color:var(--cyan);} .tag-cyan::before{background:var(--cyan);}
+.tag-asix{color:var(--asix-l);} .tag-asix::before{background:var(--asix-l);}
+
+h2{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(1.6rem,3.2vw,2.4rem);line-height:1.1;letter-spacing:-.025em;color:var(--navy);margin-bottom:.9rem;}
+h3{font-family:'Syne',sans-serif;font-weight:700;font-size:1.12rem;color:var(--navy);margin-bottom:.65rem;}
+h4{font-family:'Syne',sans-serif;font-weight:700;font-size:.94rem;color:var(--navy);margin-bottom:.4rem;}
+.lead{font-size:1.02rem;color:var(--muted);max-width:720px;margin-bottom:2.5rem;line-height:1.75;}
+
+/* CARDS */
+.grid{display:grid;gap:1.25rem;}
+.g2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr));}
+.g3{grid-template-columns:repeat(auto-fit,minmax(240px,1fr));}
+.g4{grid-template-columns:repeat(auto-fit,minmax(200px,1fr));}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.75rem;transition:transform .2s,box-shadow .2s;}
+.card:hover{transform:translateY(-3px);box-shadow:0 12px 32px rgba(26,31,78,.09);}
+.card p{color:var(--muted);font-size:.92rem;}
+.card-icon{width:44px;height:44px;border-radius:10px;display:grid;place-items:center;font-size:1.3rem;margin-bottom:.9rem;}
+.bl-sec{border-left:3px solid var(--sec);}
+.bl-win{border-left:3px solid var(--win);}
+.bl-ubuntu{border-left:3px solid var(--ubuntu);}
+.bl-green{border-left:3px solid var(--green);}
+.bl-amber{border-left:3px solid var(--amber);}
+.bl-cyan{border-left:3px solid var(--cyan);}
+.bl-asix{border-left:3px solid var(--asix-l);}
+
+/* RA BANNER */
+.ra-banner{border-radius:var(--radius);padding:1.5rem 2rem;display:flex;align-items:center;gap:1.25rem;margin-bottom:3rem;color:white;}
+.ra-num{font-family:'Syne',sans-serif;font-weight:800;font-size:2.4rem;opacity:.22;flex-shrink:0;line-height:1;}
+.ra-banner h2{color:white;font-size:1.35rem;margin-bottom:.2rem;}
+.ra-banner p{color:rgba(255,255,255,.7);font-size:.88rem;}
+.ra-sec{background:linear-gradient(135deg,var(--sec-d),var(--sec));}
+.ra-win{background:linear-gradient(135deg,var(--win-d),var(--win));}
+.ra-ubuntu{background:linear-gradient(135deg,var(--ubuntu-d),var(--ubuntu));}
+.ra-green{background:linear-gradient(135deg,var(--green-d),var(--green));}
+.ra-cyan{background:linear-gradient(135deg,var(--cyan-d),var(--cyan));}
+.ra-amber{background:linear-gradient(135deg,var(--amber-d),var(--amber));}
+.ra-preguntes{background:linear-gradient(135deg,#92400e,#d97706);}
+
+/* CALLOUTS */
+.callout{border-radius:var(--radius);padding:1.4rem 1.7rem;margin:1.5rem 0;display:flex;gap:1rem;align-items:flex-start;}
+.callout-icon{font-size:1.4rem;flex-shrink:0;margin-top:.1rem;}
+.callout p,.callout li{font-size:.91rem;}
+.callout ul{padding-left:1.2rem;} .callout li{margin-bottom:.25rem;}
+.cl-sec{background:rgba(220,38,38,.07);border:1px solid rgba(220,38,38,.2);}
+.cl-blue{background:rgba(0,120,212,.07);border:1px solid rgba(0,120,212,.2);}
+.cl-green{background:rgba(5,150,105,.07);border:1px solid rgba(5,150,105,.2);}
+.cl-amber{background:rgba(217,119,6,.08);border:1px solid rgba(217,119,6,.25);}
+.cl-cyan{background:rgba(8,145,178,.07);border:1px solid rgba(8,145,178,.2);}
+.cl-asix{background:rgba(109,40,217,.07);border:1px solid rgba(109,40,217,.2);}
+.cl-ubuntu{background:rgba(233,84,32,.07);border:1px solid rgba(233,84,32,.2);}
+
+/* TERMINAL */
+.terminal{background:var(--term);border-radius:var(--radius-sm);overflow:hidden;margin:.75rem 0;font-family:'JetBrains Mono',monospace;font-size:.79rem;}
+.term-bar{background:var(--term2);padding:.55rem 1rem;display:flex;align-items:center;gap:.5rem;border-bottom:1px solid rgba(255,255,255,.06);}
+.term-dot{width:11px;height:11px;border-radius:50%;}
+.term-title{color:rgba(255,255,255,.38);font-size:.72rem;letter-spacing:.05em;margin-left:.25rem;}
+.term-os{font-size:.68rem;font-weight:600;padding:.1rem .5rem;border-radius:4px;margin-left:auto;}
+.term-os-win{background:rgba(0,120,212,.25);color:#60adf0;}
+.term-os-ubuntu{background:rgba(233,84,32,.25);color:#f4956a;}
+.term-os-both{background:rgba(109,40,217,.25);color:#c084fc;}
+.term-os-ps{background:rgba(0,120,212,.3);color:#93c5fd;}
+.term-body{padding:1rem 1.25rem;line-height:1.85;}
+.term-body .prompt-win{color:#60adf0;}
+.term-body .prompt-ps{color:#93c5fd;}
+.term-body .prompt-ub{color:#f4956a;}
+.term-body .cmd{color:#e2e8f0;}
+.term-body .out{color:#94a3b8;}
+.term-body .comment{color:#475569;}
+.term-body .ok{color:#6ee7b7;}
+.term-body .err{color:#fca5a5;}
+.term-body .warn{color:#fbbf24;}
+.term-body .path{color:#fbbf24;}
+.term-body .flag{color:#c084fc;}
+.term-body .str{color:#86efac;}
+.term-body .num{color:#fca5a5;}
+.term-body .eid{color:#38bdf8;}
+.term-body .hi{color:#ffd700;font-weight:700;}
+
+/* LAB CARD */
+.lab-card{background:linear-gradient(135deg,#0f111a,#161b2e);border:1px solid rgba(255,255,255,.08);border-radius:var(--radius);overflow:hidden;margin:2rem 0;}
+.lab-header{padding:1rem 1.5rem;display:flex;align-items:center;gap:1rem;border-bottom:1px solid rgba(255,255,255,.07);}
+.lab-icon{font-size:1.5rem;flex-shrink:0;}
+.lab-title-block h4{font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;color:white;margin:0 0 .1rem;}
+.lab-title-block p{font-size:.78rem;color:rgba(255,255,255,.48);margin:0;}
+.lab-os-tags{display:flex;gap:.4rem;margin-left:auto;}
+.os-tag{font-size:.67rem;font-weight:700;padding:.2rem .65rem;border-radius:100px;letter-spacing:.04em;white-space:nowrap;}
+.os-win{background:rgba(0,120,212,.3);color:#60adf0;border:1px solid rgba(0,120,212,.4);}
+.os-ubuntu{background:rgba(233,84,32,.3);color:#f4956a;border:1px solid rgba(233,84,32,.4);}
+.os-both{background:rgba(109,40,217,.3);color:#c084fc;border:1px solid rgba(109,40,217,.4);}
+.os-sec{background:rgba(220,38,38,.3);color:#fca5a5;border:1px solid rgba(220,38,38,.4);}
+.lab-body{padding:1.5rem;}
+.lab-body p{color:rgba(255,255,255,.68);font-size:.9rem;margin-bottom:.75rem;}
+.lab-body h5{font-family:'Syne',sans-serif;font-weight:700;font-size:.85rem;color:rgba(255,255,255,.9);margin:.75rem 0 .4rem;}
+.lab-entrega{background:rgba(220,38,38,.12);border:1px solid rgba(220,38,38,.28);border-radius:var(--radius-sm);padding:.85rem 1.1rem;margin-top:1rem;font-size:.83rem;color:rgba(255,255,255,.7);}
+.lab-entrega strong{color:#fca5a5;}
+
+/* TABLE */
+.ptable{width:100%;border-collapse:collapse;font-size:.87rem;}
+.ptable th,.ptable td{padding:.8rem 1rem;text-align:left;border-bottom:1px solid var(--border);}
+.ptable th{background:var(--navy);color:white;font-family:'Syne',sans-serif;font-weight:700;}
+.ptable th:first-child{border-radius:8px 0 0 0;} .ptable th:last-child{border-radius:0 8px 0 0;}
+.ptable tr:hover td{background:var(--cream);}
+.badge{display:inline-block;padding:.15rem .55rem;border-radius:100px;font-size:.72rem;font-weight:700;font-family:'Syne',sans-serif;}
+.b-sec{background:rgba(220,38,38,.1);color:var(--sec);}
+.b-win{background:rgba(0,120,212,.12);color:var(--win);}
+.b-green{background:rgba(5,150,105,.12);color:var(--green);}
+.b-amber{background:rgba(217,119,6,.15);color:#92400e;}
+.b-cyan{background:rgba(8,145,178,.12);color:var(--cyan);}
+.b-asix{background:rgba(109,40,217,.12);color:var(--asix-l);}
+.b-ubuntu{background:rgba(233,84,32,.12);color:var(--ubuntu);}
+
+/* EX BOX */
+.ex{background:var(--cream);border:1px solid var(--border);border-radius:var(--radius-sm);padding:1rem 1.25rem;margin:.65rem 0;}
+.ex .ex-lbl{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.3rem;}
+.ex p{font-size:.87rem;color:var(--ink);}
+.ex code{font-family:'JetBrains Mono',monospace;font-size:.82rem;background:rgba(220,38,38,.07);padding:.1rem .3rem;border-radius:3px;color:var(--sec);}
+.ex-sec .ex-lbl{color:var(--sec);}
+.ex-win .ex-lbl{color:var(--win);}
+.ex-ubuntu .ex-lbl{color:var(--ubuntu);}
+.ex-green .ex-lbl{color:var(--green);}
+.ex-cyan .ex-lbl{color:var(--cyan);}
+
+/* EVENT ID BOX */
+.eid-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:.6rem;margin:1rem 0;}
+.eid-item{background:var(--term2);border:1px solid rgba(255,255,255,.07);border-radius:var(--radius-sm);padding:.7rem 1rem;}
+.eid-num{font-family:'JetBrains Mono',monospace;font-size:.95rem;font-weight:700;color:#38bdf8;display:block;margin-bottom:.2rem;}
+.eid-cat{font-size:.68rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:.2rem;}
+.eid-desc{font-size:.8rem;color:rgba(255,255,255,.6);}
+.eid-cat-logon{color:#6ee7b7;}
+.eid-cat-obj{color:#fbbf24;}
+.eid-cat-pol{color:#c084fc;}
+.eid-cat-sys{color:#fca5a5;}
+.eid-cat-priv{color:#f4956a;}
+
+/* SEVERITY BADGE */
+.sev{display:inline-flex;align-items:center;gap:.3rem;padding:.15rem .65rem;border-radius:100px;font-size:.7rem;font-weight:700;letter-spacing:.04em;}
+.sev-crit{background:rgba(220,38,38,.15);color:#fca5a5;border:1px solid rgba(220,38,38,.3);}
+.sev-high{background:rgba(234,88,12,.15);color:#fdba74;border:1px solid rgba(234,88,12,.3);}
+.sev-med{background:rgba(217,119,6,.15);color:#fcd34d;border:1px solid rgba(217,119,6,.3);}
+.sev-low{background:rgba(5,150,105,.12);color:#6ee7b7;border:1px solid rgba(5,150,105,.25);}
+.sev-info{background:rgba(8,145,178,.12);color:#7dd3fc;border:1px solid rgba(8,145,178,.25);}
+
+/* PILLS */
+.pills{display:flex;flex-wrap:wrap;gap:.4rem;margin:.65rem 0;}
+.pill{padding:.22rem .75rem;border-radius:100px;font-size:.78rem;border:1px solid var(--border);background:var(--cream);}
+.pill-s{background:rgba(220,38,38,.1);border-color:rgba(220,38,38,.3);color:var(--sec);}
+.pill-w{background:rgba(0,120,212,.1);border-color:rgba(0,120,212,.3);color:var(--win);}
+.pill-g{background:rgba(5,150,105,.1);border-color:rgba(5,150,105,.3);color:var(--green);}
+.pill-c{background:rgba(8,145,178,.1);border-color:rgba(8,145,178,.3);color:var(--cyan);}
+.pill-a{background:rgba(109,40,217,.1);border-color:rgba(109,40,217,.3);color:var(--asix-l);}
+
+/* SECTION THEMES */
+.s-cream{background:var(--cream);}
+.s-sec{background:#fff5f5;}
+.s-win{background:#f0f7ff;}
+.s-ubuntu{background:#fff5f1;}
+.s-green{background:#f0fdf4;}
+.s-cyan{background:#f0fdff;}
+.s-amber{background:#fffbeb;}
+.s-dark{background:var(--navy);color:white;}
+.s-dark h2,.s-dark h3,.s-dark h4{color:white;}
+.s-dark .lead{color:rgba(255,255,255,.6);}
+.s-dark .card{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.1);}
+.s-dark .card h3,.s-dark .card h4{color:white;}
+.s-dark .card p{color:rgba(255,255,255,.6);}
+.s-dark .ptable th{background:rgba(255,255,255,.1);}
+.s-dark .ptable td{border-color:rgba(255,255,255,.1);color:rgba(255,255,255,.8);}
+.s-dark .ptable tr:hover td{background:rgba(255,255,255,.05);}
+
+/* STEPS */
+.steps{counter-reset:st;list-style:none;display:flex;flex-direction:column;gap:.8rem;}
+.steps li{counter-increment:st;display:flex;gap:.9rem;align-items:flex-start;padding:.9rem 1.1rem;background:var(--cream);border-radius:var(--radius-sm);font-size:.9rem;}
+.steps li::before{content:counter(st);flex-shrink:0;width:28px;height:28px;border-radius:50%;background:var(--sec);color:white;display:grid;place-items:center;font-family:'Syne',sans-serif;font-weight:700;font-size:.8rem;}
+.steps li p{color:var(--ink);margin:0;} .steps li strong{color:var(--navy);}
+
+/* Q CARDS */
+.q-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem 2rem;display:flex;gap:1.25rem;align-items:flex-start;transition:transform .2s,box-shadow .2s;}
+.q-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.08);}
+.q-num{flex-shrink:0;width:36px;height:36px;border-radius:50%;background:var(--cream);border:2px solid var(--border);display:grid;place-items:center;font-family:'Syne',sans-serif;font-weight:800;font-size:.88rem;color:var(--sec);}
+.q-body h4{margin-bottom:.35rem;color:var(--navy);font-size:.95rem;}
+.q-body p{color:var(--muted);font-size:.85rem;font-style:italic;}
+.q-tag{display:inline-block;padding:.15rem .6rem;border-radius:100px;font-size:.7rem;font-weight:700;margin-top:.5rem;margin-right:.3rem;}
+.qt-sec{background:rgba(220,38,38,.1);color:var(--sec);}
+.qt-win{background:rgba(0,120,212,.1);color:var(--win);}
+.qt-ubuntu{background:rgba(233,84,32,.1);color:var(--ubuntu);}
+.qt-audit{background:rgba(8,145,178,.1);color:var(--cyan);}
+.qt-tools{background:rgba(109,40,217,.1);color:var(--asix-l);}
+.qt-siem{background:rgba(5,150,105,.1);color:var(--green);}
+
+/* CIA TRIAD VISUAL */
+.cia-trio{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin:1.5rem 0;}
+.cia-box{border-radius:var(--radius);padding:1.5rem;text-align:center;}
+.cia-c{background:rgba(220,38,38,.08);border:1px solid rgba(220,38,38,.2);}
+.cia-i{background:rgba(8,145,178,.08);border:1px solid rgba(8,145,178,.2);}
+.cia-a{background:rgba(5,150,105,.08);border:1px solid rgba(5,150,105,.2);}
+.cia-box .cia-letter{font-family:'Syne',sans-serif;font-weight:800;font-size:2.2rem;line-height:1;margin-bottom:.3rem;}
+.cia-c .cia-letter{color:var(--sec);}
+.cia-i .cia-letter{color:var(--cyan);}
+.cia-a .cia-letter{color:var(--green);}
+.cia-box .cia-word{font-family:'Syne',sans-serif;font-weight:700;font-size:.88rem;margin-bottom:.5rem;}
+.cia-box p{font-size:.82rem;color:var(--muted);}
+
+hr{border:none;border-top:1px solid var(--border);margin:3rem 0;}
+.fi{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fi.in{opacity:1;transform:none;}
+footer{background:var(--ink);color:rgba(255,255,255,.4);padding:3rem 2rem;text-align:center;font-size:.85rem;}
+footer strong{color:white;}
+@media(max-width:640px){.nav-pills{display:none;}.lab-os-tags{display:none;}.cia-trio{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">ASIX · <span>MP0369 RA7</span> · Auditoria</div>
+  <ul class="nav-pills">
+    <li><a href="#requisits">Requisits</a></li>
+    <li><a href="#drets">Drets</a></li>
+    <li><a href="#directives">Directives</a></li>
+    <li><a href="#registre">Registre</a></li>
+    <li><a href="#objectius">Objectius</a></li>
+    <li><a href="#ambit">Àmbit</a></li>
+    <li><a href="#mecanismes">Mecanismes</a></li>
+    <li><a href="#info">Informació</a></li>
+    <li><a href="#eines">Eines</a></li>
+    <li><a href="#informes">Informes</a></li>
+    <li><a href="#preguntes">Preguntes</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div><div class="hero-dots"></div><div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-badge">🔍 ASIX · MP0369 · RA7 · Auditoria de Seguretat</div>
+    <h1><span class="a">Auditoria</span> de<br><span class="b">Seguretat</span> i <span class="c">Accés</span></h1>
+    <p>Identificar, monitoritzar i auditar l'ús i l'accés als recursos del sistema. De la política de seguretat a l'informe d'auditoria, passant per les eines reals d'un analista.</p>
+    <div class="hero-pills-row">
+      <a href="#requisits" class="hero-pill"><span class="dot" style="background:#fca5a5"></span>CIA & Normativa</a>
+      <a href="#directives" class="hero-pill"><span class="dot" style="background:#fbbf24"></span>Directives & GPO</a>
+      <a href="#registre"   class="hero-pill"><span class="dot" style="background:#38bdf8"></span>Event Log & auditd</a>
+      <a href="#mecanismes" class="hero-pill"><span class="dot" style="background:#6ee7b7"></span>SIEM & Alarmes</a>
+      <a href="#eines"      class="hero-pill"><span class="dot" style="background:#c084fc"></span>Eines d'auditoria</a>
+      <a href="#preguntes"  class="hero-pill"><span class="dot" style="background:#fcd34d"></span>10 Preguntes</a>
+    </div>
+  </div>
+  <div class="scroll-hint">DESPLAÇA</div>
+</section>
+
+<!-- INTRO RA7 -->
+<section class="s-cream" id="intro">
+  <div class="container fi">
+    <div class="section-tag tag-sec">Resultat d'Aprenentatge 7 · MP0369</div>
+    <h2>Audita la utilització i l'accés a recursos</h2>
+    <p class="lead">Identificant i respectant les necessitats de seguretat del sistema. La <strong>auditoria de seguretat</strong> és el procés continu de recollida, anàlisi i interpretació d'events del sistema per detectar desviacions, incompliments normatius i amenaces actives. Un tècnic ASIX ha de dominar tant la <em>configuració</em> de les polítiques d'auditoria com la <em>interpretació</em> dels seus registres.</p>
+
+    <div class="grid g4 fi">
+      <div class="card bl-sec">
+        <div class="card-icon" style="background:#fff5f5">🛡️</div>
+        <h3>Fonaments (T1–T3)</h3>
+        <p>Requisits de seguretat (CIA, ISO 27001, ENS, RGPD), drets d'usuari i directives de seguretat local.</p>
+        <div class="pills"><span class="pill pill-s">T1–T3</span></div>
+      </div>
+      <div class="card bl-cyan">
+        <div class="card-icon" style="background:#f0fdff">📋</div>
+        <h3>Registre i Objectius (T4–T6)</h3>
+        <p>Event Log de Windows, syslog/journald de Linux, objectius i àmbit de l'auditoria.</p>
+        <div class="pills"><span class="pill pill-c">T4–T6</span></div>
+      </div>
+      <div class="card bl-green">
+        <div class="card-icon" style="background:#f0fdf4">⚙️</div>
+        <h3>Mecanismes (T7–T8)</h3>
+        <p>auditd, Windows Audit Policy, SIEM, alarmes, accions correctives i informació del registre.</p>
+        <div class="pills"><span class="pill pill-g">T7–T8</span></div>
+      </div>
+      <div class="card bl-asix">
+        <div class="card-icon" style="background:#f5f3ff">🔬</div>
+        <h3>Eines i Informes (T9–T10)</h3>
+        <p>Lynis, Wazuh, auditd, Splunk, nmap, Nessus, Wireshark. Estructura d'un informe d'auditoria.</p>
+        <div class="pills"><span class="pill pill-a">T9–T10</span></div>
+      </div>
+    </div>
+    <div class="callout cl-sec fi" style="margin-top:1.5rem">
+      <span class="callout-icon">🔬</span>
+      <div><strong>Llegenda:</strong> <span style="color:var(--win);font-weight:600">🪟 PowerShell/Windows</span> — Gestió d'events, auditoria AD, GPO de seguretat. <span style="color:var(--ubuntu);font-weight:600">🐧 Ubuntu/Linux</span> — auditd, syslog, AppArmor, fail2ban. <span style="color:var(--asix-l);font-weight:600">🔀 Ambdós</span> — eines multiplataforma i SIEM.</div>
+    </div>
+  </div>
+</section>
+
+<!-- T1 — REQUISITS DE SEGURETAT -->
+<section id="requisits" class="s-sec">
+  <div class="container">
+    <div class="ra-banner ra-sec fi">
+      <div class="ra-num">1</div>
+      <div><h2>Requisits de seguretat del sistema i de les dades</h2>
+        <p>La tríada CIA, marcs normatius (ISO 27001, ENS, RGPD) i els pilars sobre els quals descansa qualsevol política d'auditoria.</p></div>
+    </div>
+
+    <div class="section-tag tag-sec fi">La tríada CIA</div>
+    <h2 class="fi">Confidencialitat, Integritat i Disponibilitat</h2>
+    <p class="lead fi">Tota política de seguretat es fonamenta en la <strong>tríada CIA</strong>. L'auditoria verifica que els tres pilars es respecten en tot moment. Un event d'auditoria pot ser símptoma de la violació d'un o diversos d'aquests principis.</p>
+
+    <div class="cia-trio fi">
+      <div class="cia-box cia-c">
+        <div class="cia-letter">C</div>
+        <div class="cia-word">Confidencialitat</div>
+        <p>La informació només és accessible a qui està autoritzat. Amenaces: escolta passiva (sniffing), accés no autoritzat, fuga de dades. Controls: xifrat, ACLs, MFA, VPN.</p>
+      </div>
+      <div class="cia-box cia-i">
+        <div class="cia-letter">I</div>
+        <div class="cia-word">Integritat</div>
+        <p>La informació no ha estat alterada sense autorització. Amenaces: man-in-the-middle, alteració de logs, ransomware. Controls: hashes (SHA-256), signatures digitals, WORM storage.</p>
+      </div>
+      <div class="cia-box cia-a">
+        <div class="cia-letter">A</div>
+        <div class="cia-word">Disponibilitat</div>
+        <p>Els sistemes i dades estan accessibles quan es necessiten. Amenaces: DDoS, ransomware, fallades hardware. Controls: redundància, backups, plans de continuïtat (BCP/DRP).</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-sec fi" style="margin-top:2.5rem">Normatives i estàndards</div>
+    <h2 class="fi">Marc normatiu: ISO 27001, ENS i RGPD</h2>
+    <div class="grid g3 fi">
+      <div class="card bl-sec">
+        <div class="card-icon" style="background:#fff5f5">📜</div>
+        <h3>ISO/IEC 27001</h3>
+        <p style="margin-bottom:.75rem">Estàndard internacional per a Sistemes de Gestió de la Seguretat de la Informació (SGSI). Estableix un marc per gestionar els riscos de seguretat de la informació.</p>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.87rem;color:var(--muted)">📋 <strong style="color:var(--ink)">Annex A.12:</strong> Seguretat operacional. Inclou la gestió de logs, monitorització i auditoria.</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.87rem;color:var(--muted)">🔄 <strong style="color:var(--ink)">Cicle PDCA:</strong> Planificar → Fer → Comprovar → Actuar. L'auditoria és la fase "Comprovar".</li>
+          <li style="padding:.3rem 0;font-size:.87rem;color:var(--muted)">⏱️ <strong style="color:var(--ink)">Retenció de logs:</strong> ISO 27001 recomana guardar logs almenys 1 any. Alguns sectors (banca, salut) exigeixen 5-7 anys.</li>
+        </ul>
+      </div>
+      <div class="card bl-cyan">
+        <div class="card-icon" style="background:#f0fdff">🏛️</div>
+        <h3>ENS — Esquema Nacional de Seguretat</h3>
+        <p style="margin-bottom:.75rem">Marco legal español (RD 311/2022) per a la seguretat dels sistemes d'informació de les AAPP i empreses que interactuen amb elles.</p>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.87rem;color:var(--muted)">📊 <strong style="color:var(--ink)">Categories: Bàsica, Mitjana, Alta.</strong> Determinen el nivell d'exigència de mesures de seguretat.</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.87rem;color:var(--muted)">🔍 <strong style="color:var(--ink)">Control op.mon.1:</strong> Detecció d'intrusió. Monitorització del tràfic i dels logs del sistema.</li>
+          <li style="padding:.3rem 0;font-size:.87rem;color:var(--muted)">📁 <strong style="color:var(--ink)">Control op.exp.8:</strong> Registre d'activitat dels usuaris. Auditoria d'accessos a dades.</li>
+        </ul>
+      </div>
+      <div class="card bl-amber">
+        <div class="card-icon" style="background:#fffbeb">🇪🇺</div>
+        <h3>RGPD — Reglament General de Protecció de Dades</h3>
+        <p style="margin-bottom:.75rem">Reglament europeu (UE 2016/679) que regula el tractament de dades personals. Obliga les organitzacions a auditar l'accés a les dades personals.</p>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.87rem;color:var(--muted)">📝 <strong style="color:var(--ink)">Art. 32 — Seguretat del tractament:</strong> Mesures tècniques i organitzatives per garantir la seguretat de les dades personals.</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.87rem;color:var(--muted)">⏰ <strong style="color:var(--ink)">Art. 33 — Notificació de violació:</strong> Cal notificar a l'AEPD en un màxim de <strong>72 hores</strong> des de la detecció.</li>
+          <li style="padding:.3rem 0;font-size:.87rem;color:var(--muted)">🗓️ <strong style="color:var(--ink)">Retenció de logs d'accés:</strong> Mínim el que determina la finalitat del tractament. Per defecte, recomanat 1 any.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout cl-sec fi">
+      <span class="callout-icon">🚨</span>
+      <div>
+        <strong>Principi de "necessitat de conèixer" (Need-to-Know) i mínim privilegi (Least Privilege):</strong>
+        <p style="margin-top:.4rem">Dos principis fonamentals que l'auditoria ha de verificar: (1) cada usuari només hauria de tenir accés als recursos estrictament necessaris per a la seva feina; (2) cap procés ni servei hauria de tenir més privilegis dels necessaris per funcionar. L'auditoria detecta violacions d'aquests principis: usuaris amb accés excessiu, serveis corrent com a root/SYSTEM innecessàriament, o comptes de servei amb privilegis d'administrador.</p>
+      </div>
+    </div>
+
+    <!-- PRÀCTICA 1 -->
+    <div class="lab-card fi">
+      <div class="lab-header">
+        <div class="lab-icon">🔬</div>
+        <div class="lab-title-block">
+          <h4>Pràctica 7.1 — Avaluació de la postura de seguretat del sistema</h4>
+          <p>Verificar configuracions bàsiques de seguretat i compliment de la tríada CIA</p>
+        </div>
+        <div class="lab-os-tags"><span class="os-tag os-both">🔀 Windows + Ubuntu</span></div>
+      </div>
+      <div class="lab-body">
+        <p>Abans d'auditar cal conèixer la postura de seguretat actual del sistema. Farem una inspecció inicial dels controls de seguretat bàsics.</p>
+        <h5>🐧 Ubuntu — Auditoria ràpida de configuració bàsica</h5>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">Terminal — root</span><span class="term-os term-os-ubuntu">Ubuntu</span></div>
+          <div class="term-body">
+            <span class="comment"># Comptes d'usuari amb UID 0 (superusuaris ocults)</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">awk -F: '($3 == 0) {print}' /etc/passwd</span><br>
+            <span class="out">root:x:0:0:root:/root:/bin/bash</span><br>
+            <span class="comment"># Si apareix algún altre usuari amb UID 0 és un senyal d'alerta!</span><br><br>
+            <span class="comment"># Usuaris amb shell activa (possibles comptes d'accés)</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">grep -v "nologin\|false" /etc/passwd | cut -d: -f1,3,7</span><br><br>
+            <span class="comment"># Permisos SUID/SGID — fitxers que s'executen amb privilegis elevats</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">find / -perm /4000 -type f 2>/dev/null | grep -v proc</span><br>
+            <span class="out">/usr/bin/sudo</span><br>
+            <span class="out">/usr/bin/passwd</span><br>
+            <span class="out">/usr/bin/su</span><br>
+            <span class="comment"># Qualsevol SUID no esperat pot ser un vector d'escalada de privilegis</span><br><br>
+            <span class="comment"># Comprovar si hi ha ports oberts i qui els escolta</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">ss -tlnp</span><br>
+            <span class="out">State   Recv-Q  Send-Q  Local Address:Port  Process</span><br>
+            <span class="out">LISTEN  0       128     0.0.0.0:22         sshd</span><br><br>
+            <span class="comment"># Últims 20 intents d'accés fallits</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">grep "Failed password" /var/log/auth.log | tail -20</span><br>
+            <span class="comment"># Recompte d'intents fallits per IP (possibles brute-force)</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">grep "Failed password" /var/log/auth.log | awk '{print $(NF-3)}' | sort | uniq -c | sort -rn | head -10</span>
+          </div>
+        </div>
+        <h5>🪟 Windows — Auditoria inicial amb PowerShell</h5>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">PowerShell — Administrador</span><span class="term-os term-os-ps">PowerShell</span></div>
+          <div class="term-body">
+            <span class="comment"># Usuaris membres del grup Administrators locals</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">Get-LocalGroupMember</span> <span class="flag">-Group</span> <span class="str">"Administrators"</span><br><br>
+            <span class="comment"># Serveis corrent com a SYSTEM o Administrator</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">Get-WmiObject Win32_Service</span> <span class="flag">| Where-Object</span> <span class="cmd">{$_.StartName -like "*System*" -or $_.StartName -like "*Admin*"}</span> <span class="flag">|</span><br>
+            <span class="cmd"> Select-Object Name, StartName, State</span><br><br>
+            <span class="comment"># Ports oberts i el procés associat</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">netstat -ano | findstr LISTENING</span><br><br>
+            <span class="comment"># Últims 10 events d'inici de sessió fallits (Event ID 4625)</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">Get-WinEvent</span> <span class="flag">-FilterHashtable</span> <span class="cmd">@{LogName='Security'; Id=4625}</span> <span class="flag">-MaxEvents 10</span> <span class="flag">|</span><br>
+            <span class="cmd"> Select-Object TimeCreated, Message | Format-List</span><br><br>
+            <span class="comment"># Comprovar si el Firewall de Windows està actiu en tots els perfils</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">Get-NetFirewallProfile</span> <span class="flag">| Select-Object Name, Enabled, DefaultInboundAction</span>
+          </div>
+        </div>
+        <div class="lab-entrega"><strong>📋 Lliurament:</strong> Documenta els resultats com si fos la secció "Descobriment" d'un informe d'auditoria: (1) Llista d'usuaris amb accés privilegiat (UID 0 / grup Administrators). (2) Ports oberts i serveis associats. (3) Top-5 IPs amb més intents d'autenticació fallida. (4) Avaluació: algun dels resultats representa una vulnerabilitat? Justifica-ho en relació amb el principi de mínim privilegi.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- T2 — DRETS D'USUARI -->
+<section id="drets" class="s-cream">
+  <div class="container">
+    <div class="ra-banner ra-amber fi">
+      <div class="ra-num">2</div>
+      <div><h2>Drets d'usuari</h2>
+        <p>User Rights Assignment a Windows, capabilities i sudo a Linux. La granularitat del control d'accés als recursos del sistema.</p></div>
+    </div>
+
+    <div class="section-tag tag-amber fi">Windows — User Rights</div>
+    <h2 class="fi">Drets d'usuari a Windows (User Rights Assignment)</h2>
+    <p class="lead fi">Els <strong>Drets d'usuari</strong> (User Rights) controlen quines accions de sistema pot dur a terme un usuari, independentment dels permisos NTFS sobre fitxers. Són assignables a usuaris o grups i es configuren a la Directiva de Seguretat Local o via GPO.</p>
+
+    <div style="overflow-x:auto" class="fi">
+      <table class="ptable">
+        <thead><tr><th>Dret d'usuari</th><th>Nom intern</th><th>Funció</th><th>Per defecte</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Iniciar sessió localment</strong></td><td><code>SeInteractiveLogonRight</code></td><td>Permet iniciar sessió interactiva a la consola del sistema.</td><td>Administrators, Users, Backup Operators</td></tr>
+          <tr><td><strong>Iniciar sessió com a servei</strong></td><td><code>SeServiceLogonRight</code></td><td>Permet executar un procés com a servei del sistema.</td><td>Comptes de servei específics</td></tr>
+          <tr><td><strong>Accedir des de la xarxa</strong></td><td><code>SeNetworkLogonRight</code></td><td>Permet connectar-se al sistema per la xarxa (SMB, RPC).</td><td>Everyone, Administrators</td></tr>
+          <tr><td><strong>Actuar com a part del SO</strong></td><td><code>SeTcbPrivilege</code></td><td>Permet actuar com si fos el propi SO. Dret extrem.</td><td>❌ Cap (pràcticament no s'usa)</td></tr>
+          <tr><td><strong>Depurar programes</strong></td><td><code>SeDebugPrivilege</code></td><td>Permet adjuntar un debugger a qualsevol procés, incl. LSASS.</td><td>Administrators (⚠️ vector d'atac)</td></tr>
+          <tr><td><strong>Carregar/descarregar drivers</strong></td><td><code>SeLoadDriverPrivilege</code></td><td>Permet instal·lar controladors de dispositiu.</td><td>Administrators</td></tr>
+          <tr><td><strong>Fer còpies de seguretat</strong></td><td><code>SeBackupPrivilege</code></td><td>Llegir qualsevol fitxer ignorant els permisos NTFS.</td><td>Administrators, Backup Operators</td></tr>
+          <tr><td><strong>Denegar inici de sessió localment</strong></td><td><code>SeDenyInteractiveLogonRight</code></td><td>Nega explícitament l'inici de sessió interactiu.</td><td>❌ Cap per defecte</td></tr>
+          <tr><td><strong>Canviar la zona horària</strong></td><td><code>SeTimeZonePrivilege</code></td><td>Permet canviar la zona horària del sistema.</td><td>Administrators, Users, LOCAL SERVICE</td></tr>
+          <tr><td><strong>Apagar el sistema</strong></td><td><code>SeShutdownPrivilege</code></td><td>Permet apagar el sistema operatiu.</td><td>Administrators, Users (local)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout cl-sec fi">
+      <span class="callout-icon">⚠️</span>
+      <div><strong>SeDebugPrivilege — El privilegi més perillós de Windows:</strong>
+        <p style="margin-top:.4rem">Un compte amb <code>SeDebugPrivilege</code> pot adjuntar un debugger al procés <strong>lsass.exe</strong> (Local Security Authority Subsystem Service) i extreure-hi totes les credencials d'autenticació en clar o en hash. Eines com <strong>Mimikatz</strong> n'abusa quan s'executen com a Administrador. L'auditoria ha de verificar que cap usuari que no sigui un admin legítim tingui aquest privilegi, i que els admins tinguin MFA activat.</p>
+      </div>
+    </div>
+
+    <hr>
+    <div class="section-tag tag-ubuntu fi">Linux — Capabilities i sudo</div>
+    <h2 class="fi">Drets a Linux: capabilities, sudo i PAM</h2>
+    <div class="grid g2 fi">
+      <div class="card bl-ubuntu">
+        <div class="card-icon" style="background:#fff5f1">🐧</div>
+        <h3>Linux Capabilities</h3>
+        <p style="margin-bottom:.75rem">Des del kernel 2.2, Linux fragmenta els privilegis de root en <strong>capabilities</strong> individuals. Un programa pot tenir una capability específica sense necessitar root complet.</p>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">Terminal</span><span class="term-os term-os-ubuntu">Ubuntu</span></div>
+          <div class="term-body">
+            <span class="comment"># Llistar capabilities dels fitxers del sistema</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">getcap -r / 2>/dev/null</span><br>
+            <span class="out">/usr/bin/ping cap_net_raw=ep</span><br>
+            <span class="out">/usr/bin/python3.12 cap_setuid=ep</span><br>
+            <span class="warn">             # ⚠️ python3 amb cap_setuid = risc d'escalada!</span><br><br>
+            <span class="comment"># Veure capabilities d'un procés en execució</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">cat /proc/$$/status | grep Cap</span><br><br>
+            <span class="comment"># Capabilities importants a auditar:</span><br>
+            <span class="comment"># CAP_NET_BIND_SERVICE — bind a ports < 1024</span><br>
+            <span class="comment"># CAP_NET_RAW         — sockets RAW (ping, sniffing)</span><br>
+            <span class="comment"># CAP_SETUID           — canviar UID (escalada possible)</span><br>
+            <span class="comment"># CAP_SYS_ADMIN        — equiv. a root en molts contextos</span>
+          </div>
+        </div>
+      </div>
+      <div class="card bl-ubuntu">
+        <div class="card-icon" style="background:#fff5f1">🔑</div>
+        <h3>sudo — Escalada de privilegis controlada</h3>
+        <p style="margin-bottom:.75rem">sudo permet executar comandos com a root (o un altre usuari) de manera controlada i auditada. Configuració a <code>/etc/sudoers</code> (sempre editar amb <code>visudo</code>).</p>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">Terminal</span><span class="term-os term-os-ubuntu">Ubuntu</span></div>
+          <div class="term-body">
+            <span class="comment"># Veure els privilegis sudo de l'usuari actual</span><br>
+            <span class="prompt-ub">user@host:~$</span> <span class="cmd">sudo -l</span><br>
+            <span class="out">User user may run the following commands:</span><br>
+            <span class="out">    (ALL : ALL) ALL</span><br>
+            <span class="warn">             # ⚠️ ALL:ALL és equivalent a root total!</span><br><br>
+            <span class="comment"># Configuració recomanada per a un admin de xarxa:</span><br>
+            <span class="comment"># sysadmin ALL=(ALL) /usr/sbin/iptables, /bin/systemctl</span><br><br>
+            <span class="comment"># Log de sudo (tots els comandos executats amb sudo)</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">grep sudo /var/log/auth.log | grep "COMMAND" | tail -20</span><br>
+            <span class="out">Dec 10 14:32:11 host sudo: user : TTY=pts/0 ...</span><br>
+            <span class="out">  COMMAND=/usr/bin/apt update</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRÀCTICA 2 -->
+    <div class="lab-card fi">
+      <div class="lab-header">
+        <div class="lab-icon">🔬</div>
+        <div class="lab-title-block">
+          <h4>Pràctica 7.2 — Auditoria de privilegis i drets d'usuari</h4>
+          <p>Identificar assignacions de privilegis excessius i vectores d'escalada de privilegis</p>
+        </div>
+        <div class="lab-os-tags"><span class="os-tag os-both">🔀 Windows + Ubuntu</span></div>
+      </div>
+      <div class="lab-body">
+        <h5>🪟 Windows — Exportar i auditar User Rights Assignments</h5>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">PowerShell + CMD — Administrador</span><span class="term-os term-os-ps">PowerShell</span></div>
+          <div class="term-body">
+            <span class="comment"># Exportar la configuració de seguretat completa del sistema</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">secedit /export /cfg C:\audit\security-config.inf /log C:\audit\secedit.log</span><br><br>
+            <span class="comment"># Filtrar els drets d'usuari del fitxer exportat</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">Get-Content C:\audit\security-config.inf | Select-String "Se.*Privilege\|Se.*Right"</span><br>
+            <span class="out">SeDebugPrivilege = *S-1-5-32-544</span><br>
+            <span class="out">SeRemoteShutdownPrivilege = *S-1-5-32-544</span><br><br>
+            <span class="comment"># Verificar qui té SeDebugPrivilege (el més perillós)</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">$inf = Get-Content "C:\audit\security-config.inf"</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">$inf | Select-String "SeDebugPrivilege"</span><br><br>
+            <span class="comment"># Revisar qui pot iniciar sessió de forma interactiva al servidor</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">$inf | Select-String "SeInteractiveLogonRight"</span><br><br>
+            <span class="comment"># Llistar membres del grup Administrators + grups privilegiats</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">@("Administrators","Backup Operators","Remote Desktop Users") | ForEach-Object {</span><br>
+            <span class="cmd">    Write-Host "=== $_ ===" -ForegroundColor Cyan</span><br>
+            <span class="cmd">    Get-LocalGroupMember -Group $_ | Select-Object Name, ObjectClass</span><br>
+            <span class="cmd">}</span>
+          </div>
+        </div>
+        <h5>🐧 Ubuntu — Auditoria de privilegis i sudo</h5>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">Terminal — root</span><span class="term-os term-os-ubuntu">Ubuntu</span></div>
+          <div class="term-body">
+            <span class="comment"># Llistar tots els usuaris amb accés sudo</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">grep -E "^sudo|^wheel" /etc/group</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">getent group sudo</span><br><br>
+            <span class="comment"># Buscar configuracions sudo periloses (NOPASSWD = sudo sense contrasenya!)</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">grep -r "NOPASSWD" /etc/sudoers /etc/sudoers.d/ 2>/dev/null</span><br>
+            <span class="warn">             # ⚠️ NOPASSWD és un risc: permet escalada sense autenticació</span><br><br>
+            <span class="comment"># Binaris SUID — possibles vectors d'escalada de privilegis</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">find /usr/bin /usr/sbin /bin /sbin -perm -4000 -type f 2>/dev/null</span><br><br>
+            <span class="comment"># Fitxers amb capabilities inusuals (risc escalada)</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">getcap -r /usr /bin /sbin 2>/dev/null</span><br><br>
+            <span class="comment"># Historial de comandos executats com a root (si no s'ha netejat)</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">cat /root/.bash_history | head -30</span>
+          </div>
+        </div>
+        <div class="lab-entrega"><strong>📋 Lliurament:</strong> (1) Taula dels drets d'usuari crítics (SeDebugPrivilege, SeBackupPrivilege, SeNetworkLogonRight) i qui els té assignats. (2) Llista de binaris SUID trobats a Ubuntu i avaluació si algun d'ells podria ser un vector d'escalada de privilegis (consultar GTFOBins). (3) Hi ha algun <code>NOPASSWD</code> al sudoers? Justifica per quin motiu és un risc.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- T3 — DIRECTIVES DE SEGURETAT -->
+<section id="directives" class="s-win">
+  <div class="container">
+    <div class="ra-banner ra-win fi">
+      <div class="ra-num">3</div>
+      <div><h2>Directives de seguretat local</h2>
+        <p>Local Security Policy (secpol.msc), secedit, plantilles de seguretat, AppArmor i línies de base de seguretat (CIS Benchmarks).</p></div>
+    </div>
+
+    <div class="section-tag tag-win fi">Windows Security Policy</div>
+    <h2 class="fi">La Directiva de Seguretat Local de Windows</h2>
+    <p class="lead fi">La <strong>Directiva de Seguretat Local</strong> (<code>secpol.msc</code>) és el conjunt de configuracions que defineix el comportament de seguretat d'un sistema Windows independent o membre d'un domini (on les GPO del DC poden sobreescriure-la). Agrupa polítiques de comptes, directives d'auditoria, drets d'usuari, opcions de seguretat i polítiques de claus públiques.</p>
+
+    <div class="grid g2 fi">
+      <div class="card bl-win">
+        <h3>📋 Categories de la Directiva de Seguretat Local</h3>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.4rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">🔑 <strong style="color:var(--ink)">Directives de compte:</strong> política de contrasenyes, política de bloqueig de compte, política Kerberos.</li>
+          <li style="padding:.4rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">🔍 <strong style="color:var(--ink)">Directives d'auditoria:</strong> quins events es registren al registre de seguretat (veure T4).</li>
+          <li style="padding:.4rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">👤 <strong style="color:var(--ink)">Assignació de drets d'usuari:</strong> User Rights Assignment (veure T2).</li>
+          <li style="padding:.4rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">⚙️ <strong style="color:var(--ink)">Opcions de seguretat:</strong> desactivar comptes predeterminats, xifrat de comunicació, UAC, SMB signing, NTLMv2.</li>
+          <li style="padding:.4rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">🔏 <strong style="color:var(--ink)">Directives de clau pública:</strong> certificats de confiança, xifrat EFS, BitLocker.</li>
+          <li style="padding:.4rem 0;font-size:.88rem;color:var(--muted)">🛡️ <strong style="color:var(--ink)">Firewall de Windows Defender:</strong> regles del firewall per perfil (domini, privat, públic).</li>
+        </ul>
+      </div>
+      <div class="card bl-win">
+        <h3>🔧 secedit — Gestió per línia de comandos</h3>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">CMD — Administrador</span><span class="term-os term-os-win">Windows</span></div>
+          <div class="term-body">
+            <span class="comment"># Exportar la configuració de seguretat actual</span><br>
+            <span class="prompt-win">C:\&gt;</span> <span class="cmd">secedit /export /cfg baseline.inf</span><br><br>
+            <span class="comment"># Aplicar una plantilla de seguretat (CIS Benchmark)</span><br>
+            <span class="prompt-win">C:\&gt;</span> <span class="cmd">secedit /configure /db secedit.sdb /cfg CIS_L1.inf /log apply.log</span><br><br>
+            <span class="comment"># Analitzar desviacions respecte a una plantilla</span><br>
+            <span class="prompt-win">C:\&gt;</span> <span class="cmd">secedit /analyze /db secedit.sdb /cfg baseline.inf /log analyze.log</span><br><br>
+            <span class="comment"># Veure les opcions de seguretat actuals via PowerShell</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">Get-ItemProperty</span> <span class="path">"HKLM:\SYSTEM\CurrentControlSet\Control\Lsa"</span> <span class="flag">|</span><br>
+            <span class="cmd"> Select-Object LmCompatibilityLevel, RestrictAnonymous, NoLMHash</span>
+          </div>
+        </div>
+        <div class="ex ex-win" style="margin-top:.75rem">
+          <div class="ex-lbl">Opcions de seguretat crítiques a verificar</div>
+          <p>
+            ✅ <strong>NTLMv2 only</strong> (LmCompatibilityLevel=5) — evita ataques pass-the-hash<br>
+            ✅ <strong>SMB Signing obligatori</strong> — evita MITM en xarxes locals<br>
+            ✅ <strong>UAC activat</strong> per a tots els admins<br>
+            ✅ <strong>NoLMHash=1</strong> — no emmagatzemar hash LM (obsolet i feble)<br>
+            ✅ <strong>RestrictAnonymous=1</strong> — no enumeració anònima de comptes
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <hr>
+    <div class="section-tag tag-ubuntu fi">Linux — AppArmor i línies base</div>
+    <h2 class="fi">AppArmor i CIS Benchmarks a Linux</h2>
+    <div class="grid g2 fi">
+      <div class="card bl-ubuntu">
+        <div class="card-icon" style="background:#fff5f1">🛡️</div>
+        <h3>AppArmor — MAC (Mandatory Access Control)</h3>
+        <p style="margin-bottom:.75rem">AppArmor és el sistema de control d'accés obligatori d'Ubuntu. Defineix <strong>perfils</strong> que restringeixen el que un programa pot fer, independentment dels permisos del sistema de fitxers.</p>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">Terminal — root</span><span class="term-os term-os-ubuntu">Ubuntu</span></div>
+          <div class="term-body">
+            <span class="comment"># Veure l'estat d'AppArmor i els perfils carregats</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">aa-status</span><br>
+            <span class="out">apparmor module is loaded.</span><br>
+            <span class="out">35 profiles are loaded.</span><br>
+            <span class="out">30 profiles are in enforce mode.</span><br>
+            <span class="out"> 5 profiles are in complain mode.</span><br><br>
+            <span class="comment"># Activar un perfil en mode enforce (restrictiu)</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">aa-enforce /usr/bin/firefox</span><br><br>
+            <span class="comment"># Mode complain = registra violations però no les bloqueja (prova)</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">aa-complain /usr/sbin/nginx</span><br><br>
+            <span class="comment"># Veure les últimes violacions d'AppArmor als logs</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">grep "DENIED" /var/log/syslog | tail -10</span><br>
+            <span class="out">audit: type=1400 audit(...): apparmor="DENIED" operation="open"</span><br>
+            <span class="out"> profile="/usr/sbin/nginx" name="/etc/shadow" ...</span>
+          </div>
+        </div>
+      </div>
+      <div class="card bl-green">
+        <div class="card-icon" style="background:#f0fdf4">📏</div>
+        <h3>CIS Benchmarks — Línies base de seguretat</h3>
+        <p style="margin-bottom:.75rem">El <strong>Center for Internet Security (CIS)</strong> publica guies de configuració segura per a sistemes operatius. Existeixen Benchmarks per a Windows Server, Ubuntu, RHEL, etc.</p>
+        <div class="ex ex-green" style="margin-bottom:.75rem">
+          <div class="ex-lbl">Eina: CIS-CAT Lite (auditoria automàtica CIS)</div>
+          <p>L'eina oficial de CIS pot avaluar automàticament un sistema i generar un informe indicant quin percentatge de controls del Benchmark es compleixen. Disponible gratuïtament per a membres CIS.</p>
+        </div>
+        <div class="ex ex-ubuntu">
+          <div class="ex-lbl">Lynis — auditoria ràpida del sistema</div>
+          <p>
+            <code>apt install lynis</code><br>
+            <code>lynis audit system</code><br>
+            Genera una puntuació (Hardening Index) i llista de recomanacions ordenades per severitat. 100% gratuït i de codi obert.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRÀCTICA 3 -->
+    <div class="lab-card fi">
+      <div class="lab-header">
+        <div class="lab-icon">🔬</div>
+        <div class="lab-title-block">
+          <h4>Pràctica 7.3 — Aplicar i verificar directives de seguretat</h4>
+          <p>Configurar la política d'auditoria, AppArmor i executar Lynis</p>
+        </div>
+        <div class="lab-os-tags"><span class="os-tag os-both">🔀 Windows + Ubuntu</span></div>
+      </div>
+      <div class="lab-body">
+        <h5>🪟 Windows — Configurar la política d'auditoria avançada via PowerShell</h5>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">PowerShell — Administrador</span><span class="term-os term-os-ps">PowerShell</span></div>
+          <div class="term-body">
+            <span class="comment"># Veure la política d'auditoria actual</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">auditpol /get /category:*</span><br>
+            <span class="out">System audit policy</span><br>
+            <span class="out">Category/Subcategory          Setting</span><br>
+            <span class="out">Logon/Logoff</span><br>
+            <span class="out">  Logon                       Success and Failure</span><br>
+            <span class="out">  Logoff                      Success</span><br><br>
+            <span class="comment"># Activar auditoria completa recomanada (CIS Level 1)</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">auditpol /set /subcategory:"Logon" /success:enable /failure:enable</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">auditpol /set /subcategory:"Account Lockout" /success:enable /failure:enable</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">auditpol /set /subcategory:"Privilege Use" /success:enable /failure:enable</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">auditpol /set /subcategory:"Process Creation" /success:enable</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">auditpol /set /subcategory:"Object Access" /success:enable /failure:enable</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">auditpol /set /subcategory:"Policy Change" /success:enable /failure:enable</span><br><br>
+            <span class="comment"># Exportar política d'auditoria per documentació</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">auditpol /backup /file:C:\audit\auditpol-backup.csv</span>
+          </div>
+        </div>
+        <h5>🐧 Ubuntu — Lynis: auditoria completa del sistema</h5>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">Terminal — root</span><span class="term-os term-os-ubuntu">Ubuntu</span></div>
+          <div class="term-body">
+            <span class="comment"># Instal·lar Lynis</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">apt install lynis -y</span><br><br>
+            <span class="comment"># Executar auditoria completa del sistema</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">lynis audit system</span><br><br>
+            <span class="comment"># Informació clau de la sortida de Lynis:</span><br>
+            <span class="out">[ Lynis 3.0.9 ]</span><br>
+            <span class="out">...</span><br>
+            <span class="warn">[WARNING] Found one or more vulnerable packages</span><br>
+            <span class="warn">[WARNING] No password set for single user mode</span><br>
+            <span class="out">[OK] AppArmor is enabled and has loaded profiles</span><br>
+            <span class="out">...</span><br>
+            <span class="ok">Hardening index : 67 [#############     ]</span><br><br>
+            <span class="comment"># Veure el log complet de Lynis</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">cat /var/log/lynis.log | grep "Suggestion\|Warning" | head -30</span><br><br>
+            <span class="comment"># Veure el fitxer de recomanacions</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">cat /var/log/lynis-report.dat | grep "suggestion\|warning"</span>
+          </div>
+        </div>
+        <div class="lab-entrega"><strong>📋 Lliurament:</strong> (1) Captura de <code>auditpol /get /category:*</code> abans i després de configurar les polítiques. (2) Puntuació (Hardening Index) de Lynis. (3) Llista de les 5 advertències (Warnings) més crítiques que ha detectat Lynis i proposta de correcció per a cadascuna. (4) Hi ha algun paquet vulnerable detectat per Lynis? Com el corregiries?</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- T4 — REGISTRE DEL SO -->
+<section id="registre" class="s-dark">
+  <div class="container">
+    <div class="ra-banner ra-cyan fi">
+      <div class="ra-num">4</div>
+      <div><h2>Registre del sistema operatiu</h2>
+        <p>Windows Event Log (canals, Event IDs crítics), syslog i journald de Linux. La matèria primera de l'auditoria.</p></div>
+    </div>
+
+    <div class="section-tag fi" style="color:rgba(255,255,255,.5)"><span style="display:inline-block;width:20px;height:2px;background:var(--win);margin-right:.5rem"></span>Windows Event Log</div>
+    <h2 class="fi">Windows Event Log — Canals i Event IDs</h2>
+    <p class="lead fi">Windows registra tots els events del sistema en el <strong>Windows Event Log</strong>. Organitzat en canals (logs), cada event té un <strong>Event ID</strong> únic que identifica el tipus d'event. Dominar els Event IDs crítics és imprescindible per a la detecció d'incidents.</p>
+
+    <div class="grid g3 fi">
+      <div class="card">
+        <h3>📁 Canals principals del Event Log</h3>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.35rem 0;border-bottom:1px solid rgba(255,255,255,.1);font-size:.87rem;color:rgba(255,255,255,.7)">🔐 <strong style="color:white">Security</strong> — Events d'autenticació, canvis de política, accés a objectes. El canal més important per a auditoria.</li>
+          <li style="padding:.35rem 0;border-bottom:1px solid rgba(255,255,255,.1);font-size:.87rem;color:rgba(255,255,255,.7)">⚙️ <strong style="color:white">System</strong> — Events del SO i dels drivers. Errors, avisos de hardware, inici/parada de serveis.</li>
+          <li style="padding:.35rem 0;border-bottom:1px solid rgba(255,255,255,.1);font-size:.87rem;color:rgba(255,255,255,.7)">📋 <strong style="color:white">Application</strong> — Events d'aplicacions i serveis. Errors d'aplicació, crashes, events de bases de dades.</li>
+          <li style="padding:.35rem 0;border-bottom:1px solid rgba(255,255,255,.1);font-size:.87rem;color:rgba(255,255,255,.7)">🛡️ <strong style="color:white">Microsoft-Windows-Sysmon/Operational</strong> — Sysmon: eina avançada per a forensia i detecció d'amenaces. Cal instal·lar-la a part.</li>
+          <li style="padding:.35rem 0;font-size:.87rem;color:rgba(255,255,255,.7)">🔧 <strong style="color:white">Microsoft-Windows-PowerShell/Operational</strong> — Registre d'execució de scripts PowerShell. Crucial per detectar atacs.</li>
+        </ul>
+      </div>
+      <div class="card" style="grid-column:span 2">
+        <h3>🔑 Event IDs crítics del canal Security</h3>
+        <div class="eid-grid">
+          <div class="eid-item"><span class="eid-num">4624</span><span class="eid-cat eid-cat-logon">LOGON</span><span class="eid-desc">Inici de sessió exitós. Inclou tipus (interactive, network, service, remote interactive). Monitoritzar Logon Type 10 (RemoteInteractive = RDP).</span></div>
+          <div class="eid-item"><span class="eid-num">4625</span><span class="eid-cat eid-cat-logon">LOGON</span><span class="eid-desc">Inici de sessió fallat. Inclou el codi de raó (0xC000006D = credencials incorrectes, 0xC0000234 = compte bloquejat). Alertar si >5 en 5 min.</span></div>
+          <div class="eid-item"><span class="eid-num">4634</span><span class="eid-cat eid-cat-logon">LOGON</span><span class="eid-desc">Tancament de sessió. Combinar amb 4624 per calcular la durada de sessions.</span></div>
+          <div class="eid-item"><span class="eid-num">4648</span><span class="eid-cat eid-cat-logon">LOGON</span><span class="eid-desc">Inici de sessió amb credencials explícites (runas). Sovint usat per moviments laterals.</span></div>
+          <div class="eid-item"><span class="eid-num">4720</span><span class="eid-cat eid-cat-obj">COMPTE</span><span class="eid-desc">Compte d'usuari creat. Alertar sempre en dominis de producció si no coincideix amb un procés de provisioning conegut.</span></div>
+          <div class="eid-item"><span class="eid-num">4722</span><span class="eid-cat eid-cat-obj">COMPTE</span><span class="eid-desc">Compte d'usuari activat. Possible reactivació d'un compte dormant per un atacant.</span></div>
+          <div class="eid-item"><span class="eid-num">4728</span><span class="eid-cat eid-cat-obj">GRUP</span><span class="eid-desc">Membre afegit a un grup global de seguretat. Alertar si s'afegeix un usuari a Domain Admins o Administrators.</span></div>
+          <div class="eid-item"><span class="eid-num">4756</span><span class="eid-cat eid-cat-obj">GRUP</span><span class="eid-desc">Membre afegit a un grup universal. Replicat al Global Catalog. Alertar per grups privilegiats.</span></div>
+          <div class="eid-item"><span class="eid-num">4768</span><span class="eid-cat eid-cat-logon">KERBEROS</span><span class="eid-desc">Ticket Kerberos (TGT) demanat (AS-REQ). Fallada pot indicar Kerberoasting o Password Spraying.</span></div>
+          <div class="eid-item"><span class="eid-num">4769</span><span class="eid-cat eid-cat-logon">KERBEROS</span><span class="eid-desc">Ticket de servei (TGS) demanat. Molts 4769 per comptes de servei des d'un PC nou pot indicar Kerberoasting.</span></div>
+          <div class="eid-item"><span class="eid-num">4771</span><span class="eid-cat eid-cat-logon">KERBEROS</span><span class="eid-desc">Pre-autenticació Kerberos fallada. Pot indicar atac AS-REP Roasting.</span></div>
+          <div class="eid-item"><span class="eid-num">4776</span><span class="eid-cat eid-cat-logon">NTLM</span><span class="eid-desc">Autenticació NTLM. Molts 4776 fallats = Password Spraying. Hauria d'haver-n'hi pocs si s'usa Kerberos.</span></div>
+          <div class="eid-item"><span class="eid-num">4732</span><span class="eid-cat eid-cat-obj">GRUP</span><span class="eid-desc">Membre afegit a grup local. Crític si afegeix un compte extern al grup Administrators local.</span></div>
+          <div class="eid-item"><span class="eid-num">4688</span><span class="eid-cat eid-cat-priv">PROCÉS</span><span class="eid-desc">Nou procés creat. Amb Command Line auditing activat, mostra el comando complet. Detectar powershell.exe amb codificació base64.</span></div>
+          <div class="eid-item"><span class="eid-num">4698</span><span class="eid-cat eid-cat-priv">TASQUES</span><span class="eid-desc">Tasca programada creada. Mètode comú de persistència en atacs.</span></div>
+          <div class="eid-item"><span class="eid-num">4719</span><span class="eid-cat eid-cat-pol">POLÍTICA</span><span class="eid-desc">Política d'auditoria del sistema canviada. Pot indicar que un atacant desactiva el registre per cobrir les pistes.</span></div>
+          <div class="eid-item"><span class="eid-num">4672</span><span class="eid-cat eid-cat-priv">PRIVIL.</span><span class="eid-desc">Privilegis especials assignats al nou inici de sessió. Combinat amb 4624, indica inici de sessió d'un compte privilegiat.</span></div>
+          <div class="eid-item"><span class="eid-num">1102</span><span class="eid-cat eid-cat-sys">LOG</span><span class="eid-desc">Log de seguretat esborrat. ⚠️ Alerta crítica: un atacant cobreix els seus passos. Correlacionar amb 4624/4625 anteriors.</span></div>
+        </div>
+      </div>
+    </div>
+
+    <hr>
+    <div class="section-tag fi" style="color:rgba(255,255,255,.5)"><span style="display:inline-block;width:20px;height:2px;background:var(--ubuntu);margin-right:.5rem"></span>Linux — syslog i journald</div>
+    <h2 class="fi">Registre a Linux: syslog, journald i auditd</h2>
+    <div class="grid g3 fi">
+      <div class="card">
+        <h3>📜 syslog / rsyslog</h3>
+        <p style="font-size:.88rem;color:rgba(255,255,255,.65);margin-bottom:.75rem">Sistema clàssic de logging. Fitxers en <code>/var/log/</code>. Configurat a <code>/etc/rsyslog.conf</code>. Permet enviar logs a un servidor centralitzat remot.</p>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:.77rem;background:rgba(255,255,255,.04);border-radius:6px;padding:.75rem">
+          <span style="color:#38bdf8">/var/log/auth.log</span> — Autenticació (SSH, sudo, PAM)<br>
+          <span style="color:#38bdf8">/var/log/syslog</span>    — Missatges generals del sistema<br>
+          <span style="color:#38bdf8">/var/log/kern.log</span>  — Missatges del kernel<br>
+          <span style="color:#38bdf8">/var/log/dpkg.log</span>  — Instal·lació/eliminació de paquets<br>
+          <span style="color:#38bdf8">/var/log/nginx/</span>    — Logs específics de serveis
+        </div>
+      </div>
+      <div class="card">
+        <h3>📋 journald (systemd)</h3>
+        <p style="font-size:.88rem;color:rgba(255,255,255,.65);margin-bottom:.5rem">Sistema modern de logs de systemd. Binari, estructurat i indexat. Persistent entre arrencades (a <code>/var/log/journal/</code>).</p>
+        <div class="terminal" style="margin-top:.5rem">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">journalctl</span><span class="term-os term-os-ubuntu">Ubuntu</span></div>
+          <div class="term-body" style="font-size:.76rem">
+            <span class="prompt-ub">$</span> <span class="cmd">journalctl -b</span>           <span class="comment"># Des de l'arrencada actual</span><br>
+            <span class="prompt-ub">$</span> <span class="cmd">journalctl -b -1</span>          <span class="comment"># De l'arrencada anterior</span><br>
+            <span class="prompt-ub">$</span> <span class="cmd">journalctl -u ssh -f</span>      <span class="comment"># Logs SSH en temps real</span><br>
+            <span class="prompt-ub">$</span> <span class="cmd">journalctl -p err</span>         <span class="comment"># Prioritat error o superior</span><br>
+            <span class="prompt-ub">$</span> <span class="cmd">journalctl --since "1 hour ago"</span><br>
+            <span class="prompt-ub">$</span> <span class="cmd">journalctl -k</span>             <span class="comment"># Missatges del kernel (dmesg)</span>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <h3>🔍 auditd — Auditoria a nivell de kernel</h3>
+        <p style="font-size:.88rem;color:rgba(255,255,255,.65);margin-bottom:.5rem">Subsistema del kernel Linux per a auditoria de seguretat. Registra syscalls, accessos a fitxers i canvis de configuració. Configurat amb regles granulars.</p>
+        <div class="terminal" style="margin-top:.5rem">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">auditd</span><span class="term-os term-os-ubuntu">Ubuntu</span></div>
+          <div class="term-body" style="font-size:.76rem">
+            <span class="comment"># Log: /var/log/audit/audit.log</span><br>
+            <span class="comment"># Config: /etc/audit/auditd.conf</span><br>
+            <span class="comment"># Regles: /etc/audit/rules.d/*.rules</span><br><br>
+            <span class="comment"># Consultar logs d'auditoria:</span><br>
+            <span class="prompt-ub">$</span> <span class="cmd">ausearch -m USER_AUTH -ts today</span><br>
+            <span class="prompt-ub">$</span> <span class="cmd">ausearch -f /etc/passwd</span><br>
+            <span class="prompt-ub">$</span> <span class="cmd">aureport --auth --summary</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- T5-6 — OBJECTIUS I ÀMBIT -->
+<section id="objectius" class="s-cyan">
+  <div class="container">
+    <div class="ra-banner ra-cyan fi">
+      <div class="ra-num">5–6</div>
+      <div><h2>Objectius i àmbit de l'auditoria</h2>
+        <p>Per a quin propòsit auditem, quins aspectes cal auditar i on posem els límits de l'auditoria.</p></div>
+    </div>
+
+    <div class="section-tag tag-cyan fi">Tema 5 — Objectius</div>
+    <h2 class="fi">Objectius de l'auditoria de seguretat</h2>
+    <div class="grid g3 fi">
+      <div class="card bl-cyan">
+        <div class="card-icon" style="background:#f0fdff">🎯</div>
+        <h3>Detecció d'incidents</h3>
+        <p>Identificar events de seguretat que podrien indicar un compromís del sistema: intents d'autenticació fallits, accessos fora d'horari, creació de comptes no autoritzats, escalada de privilegis, canvis en polítiques de seguretat.</p>
+      </div>
+      <div class="card bl-cyan">
+        <div class="card-icon" style="background:#f0fdff">📋</div>
+        <h3>Compliment normatiu (Compliance)</h3>
+        <p>Demostrar que l'organització compleix els requisits legals i normatius: ISO 27001, ENS, RGPD, PCI-DSS (pagament amb targeta), SOX (empreses cotitzades). Imprescindible per a certificacions i auditories externes.</p>
+      </div>
+      <div class="card bl-cyan">
+        <div class="card-icon" style="background:#f0fdff">🔍</div>
+        <h3>Forensia digital</h3>
+        <p>Reconstruir la seqüència d'events que han portat a un incident. Identificar el vector d'atac, l'abast del compromís i les dades afectades. Els logs d'auditoria són la prova principal en una investigació forense.</p>
+      </div>
+      <div class="card bl-cyan">
+        <div class="card-icon" style="background:#f0fdff">📊</div>
+        <h3>Anàlisi de riscos</h3>
+        <p>Identificar patrons de comportament inusuals que podrien representar riscos: usuaris amb accés excessiu, serveis exposats innecessàriament, configuracions febles. Base per a la millora contínua de la seguretat.</p>
+      </div>
+      <div class="card bl-cyan">
+        <div class="card-icon" style="background:#f0fdff">🛡️</div>
+        <h3>Non-repudiation (No repudi)</h3>
+        <p>Garantir que les accions d'un usuari queden registrades de manera que no pugui negar-les. Imprescindible per a processos disciplinaris i accions legals. Requereix que els logs siguin íntegres i no manipulables.</p>
+      </div>
+      <div class="card bl-cyan">
+        <div class="card-icon" style="background:#f0fdff">📈</div>
+        <h3>Rendiment i disponibilitat</h3>
+        <p>Monitoritzar l'ús de recursos (CPU, memòria, disc, xarxa) per detectar anomalies que puguin indicar un atac (DDoS, cryptominer) o una fallada imminent de hardware.</p>
+      </div>
+    </div>
+
+    <hr>
+    <div class="section-tag tag-cyan fi" id="ambit">Tema 6 — Àmbit</div>
+    <h2 class="fi">Àmbit de l'auditoria: què auditar</h2>
+    <p class="lead fi">L'àmbit defineix quins sistemes, accions i recursos queden sota la supervisió de l'auditoria. No cal (ni és pràctic) auditar absolutament tot: cal un equilibri entre seguretat, rendiment i privacitat dels usuaris.</p>
+
+    <div style="overflow-x:auto" class="fi">
+      <table class="ptable">
+        <thead><tr><th>Aspecte auditable</th><th>Prioritat</th><th>Windows (Event)</th><th>Linux (auditd/log)</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Autenticació (login/logout)</strong></td><td><span class="sev sev-crit">⬤ Crítica</span></td><td>EID 4624, 4625, 4634, 4648</td><td>auth.log, ausearch -m USER_AUTH</td></tr>
+          <tr><td><strong>Canvis en comptes privilegiats</strong></td><td><span class="sev sev-crit">⬤ Crítica</span></td><td>EID 4720, 4722, 4728, 4756</td><td>ausearch -m ADD_USER, ROLE_ASSIGN</td></tr>
+          <tr><td><strong>Accessos a fitxers sensibles</strong></td><td><span class="sev sev-crit">⬤ Crítica</span></td><td>EID 4663, 4656, 4660</td><td>auditctl -w /etc/shadow -p rwa</td></tr>
+          <tr><td><strong>Canvis en polítiques de seguretat</strong></td><td><span class="sev sev-crit">⬤ Crítica</span></td><td>EID 4719, 4817, 4902</td><td>ausearch -m CONFIG_CHANGE</td></tr>
+          <tr><td><strong>Esborrat del registre d'auditoria</strong></td><td><span class="sev sev-crit">⬤ Crítica</span></td><td>EID 1102, 1100</td><td>ausearch -m LOG_CLOSE</td></tr>
+          <tr><td><strong>Execució de processos nous</strong></td><td><span class="sev sev-high">⬤ Alta</span></td><td>EID 4688 (+ cmdline)</td><td>ausearch -m EXECVE</td></tr>
+          <tr><td><strong>Connexions de xarxa entrants/sortints</strong></td><td><span class="sev sev-high">⬤ Alta</span></td><td>Sysmon EID 3</td><td>ausearch -m SOCKADDR, netfilter</td></tr>
+          <tr><td><strong>Tasques programades (cron/Task Scheduler)</strong></td><td><span class="sev sev-high">⬤ Alta</span></td><td>EID 4698, 4699, 4702</td><td>/var/log/syslog (cron), ausearch -m CWD</td></tr>
+          <tr><td><strong>Instal·lació de software/drivers</strong></td><td><span class="sev sev-med">⬤ Mitja</span></td><td>EID 7045 (nou servei)</td><td>/var/log/dpkg.log, ausearch -m KERN_MODULE</td></tr>
+          <tr><td><strong>Accés a registre de Windows</strong></td><td><span class="sev sev-med">⬤ Mitja</span></td><td>EID 4663 (objectes)</td><td>N/A (no aplicable)</td></tr>
+          <tr><td><strong>Errors d'aplicació i crashes</strong></td><td><span class="sev sev-low">⬤ Baixa</span></td><td>Event Viewer → Application</td><td>/var/log/syslog, journalctl -p err</td></tr>
+          <tr><td><strong>Accés a impressores i recursos compartits</strong></td><td><span class="sev sev-low">⬤ Baixa</span></td><td>EID 4608 (Object Access)</td><td>Samba logs</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout cl-amber fi">
+      <span class="callout-icon">⚖️</span>
+      <div><strong>El problema del "soroll" en auditoria:</strong>
+        <p style="margin-top:.4rem">Auditar absolutament tot genera un volum de logs tan gran que és impossible d'analitzar manualment. Un sistema Windows actiu pot generar milers d'events per minut. La solució és: (1) filtrar i prioritzar per criticitat, (2) usar un SIEM (Security Information and Event Management) per correlacionar events i generar alertes automatitzades, (3) establir línies base de comportament normal i alertar sobre desviacions.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- T7 — MECANISMES D'AUDITORIA -->
+<section id="mecanismes" class="s-cream">
+  <div class="container">
+    <div class="ra-banner ra-green fi">
+      <div class="ra-num">7</div>
+      <div><h2>Mecanismes d'auditoria, alarmes i accions correctives</h2>
+        <p>auditd a Linux, Advanced Audit Policy a Windows, SIEM, fail2ban i resposta a incidents.</p></div>
+    </div>
+
+    <div class="section-tag tag-ubuntu fi">auditd — Linux</div>
+    <h2 class="fi">auditd: el sistema d'auditoria del kernel Linux</h2>
+    <p class="lead fi"><strong>auditd</strong> és el subsistema d'auditoria del kernel Linux. Opera a nivell de kernel (no pot ser fàcilment eludit per processos d'usuari) i permet definir regles granulars sobre quines syscalls i accessos a fitxers es registren.</p>
+
+    <div class="grid g2 fi">
+      <div class="card bl-ubuntu">
+        <h3>⚙️ Configuració d'auditd</h3>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">auditctl — Regles</span><span class="term-os term-os-ubuntu">Ubuntu</span></div>
+          <div class="term-body">
+            <span class="comment"># Instal·lar auditd</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">apt install auditd audispd-plugins -y</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">systemctl enable --now auditd</span><br><br>
+            <span class="comment"># Veure regles actives</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">auditctl -l</span><br><br>
+            <span class="comment"># Regles importants a afegir a /etc/audit/rules.d/audit.rules:</span><br><br>
+            <span class="comment"># Monitoritzar canvis a fitxers d'autenticació crítics</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">auditctl -w /etc/passwd -p wa -k user_modification</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">auditctl -w /etc/shadow -p wa -k shadow_access</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">auditctl -w /etc/sudoers -p wa -k sudoers_change</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">auditctl -w /etc/ssh/sshd_config -p wa -k sshd_config</span><br><br>
+            <span class="comment"># Monitoritzar escalades de privilegis (sudo, su, newgrp)</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">auditctl -w /bin/su -p x -k priv_escalation</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">auditctl -w /usr/bin/sudo -p x -k priv_escalation</span><br><br>
+            <span class="comment"># Monitoritzar syscalls d'autenticació per totes les arquitectures</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">auditctl -a always,exit -F arch=b64 -S execve -k all_commands</span><br><br>
+            <span class="comment"># Fer les regles persistents (reecrire al fitxer)</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">auditctl -l >> /etc/audit/rules.d/custom.rules</span>
+          </div>
+        </div>
+      </div>
+      <div class="card bl-ubuntu">
+        <h3>📊 Consultar logs d'auditd</h3>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">ausearch / aureport</span><span class="term-os term-os-ubuntu">Ubuntu</span></div>
+          <div class="term-body">
+            <span class="comment"># Buscar events d'autenticació fallida d'avui</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">ausearch -m USER_AUTH -ts today -sv no</span><br><br>
+            <span class="comment"># Buscar qualsevol accés al fitxer /etc/shadow</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">ausearch -f /etc/shadow -ts today</span><br><br>
+            <span class="comment"># Buscar per clau de regla</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">ausearch -k priv_escalation -ts today</span><br><br>
+            <span class="comment"># Informe resum d'autenticació</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">aureport --auth --summary</span><br>
+            <span class="out">Authentication Report Summary</span><br>
+            <span class="out">============================</span><br>
+            <span class="out">yes:  245   no:  18   total: 263</span><br><br>
+            <span class="comment"># Informe d'escalada de privilegis</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">aureport --avc --summary</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">aureport -l</span>    <span class="comment"># Logins</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">aureport -x</span>    <span class="comment"># Executions</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">aureport -m</span>    <span class="comment"># Account modifications</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr>
+    <div class="section-tag tag-sec fi">Alarmes i accions correctives</div>
+    <h2 class="fi">fail2ban — Detecció i resposta automàtica</h2>
+    <div class="grid g2 fi">
+      <div class="card bl-sec">
+        <div class="card-icon" style="background:#fff5f5">🚫</div>
+        <h3>fail2ban — Bloqueig automàtic d'IPs</h3>
+        <p style="margin-bottom:.75rem">fail2ban monitoritza els fitxers de log del sistema i bloqueja automàticament les IPs que mostren comportament maliciós (brute-force, port scanning).</p>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">fail2ban</span><span class="term-os term-os-ubuntu">Ubuntu</span></div>
+          <div class="term-body">
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">apt install fail2ban -y</span><br><br>
+            <span class="comment"># Configuració a /etc/fail2ban/jail.local</span><br>
+            <span class="comment"># [sshd]</span><br>
+            <span class="comment"># enabled  = true</span><br>
+            <span class="comment"># port     = 22</span><br>
+            <span class="comment"># maxretry = 5</span><br>
+            <span class="comment"># findtime = 600   (10 minuts)</span><br>
+            <span class="comment"># bantime  = 3600  (1 hora)</span><br><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">systemctl restart fail2ban</span><br><br>
+            <span class="comment"># Veure IPs bloquejades</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">fail2ban-client status sshd</span><br>
+            <span class="out">Status for the jail: sshd</span><br>
+            <span class="out">|- Filter:  Currently banned: 3</span><br>
+            <span class="out">            Banned IP list: 192.168.1.100 10.0.0.45</span><br><br>
+            <span class="comment"># Desbloquejar una IP manualment</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">fail2ban-client set sshd unbanip 192.168.1.100</span>
+          </div>
+        </div>
+      </div>
+      <div class="card bl-win">
+        <div class="card-icon" style="background:#f0f7ff">🪟</div>
+        <h3>Windows — Alertes i resposta via PowerShell</h3>
+        <p style="margin-bottom:.75rem">A Windows Server es poden crear alertes automatitzades basades en events del registre usant Subscriptions d'events o scripts PowerShell programats.</p>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">PowerShell</span><span class="term-os term-os-ps">PowerShell</span></div>
+          <div class="term-body">
+            <span class="comment"># Script d'alerta: detectar bloquejos de compte (EID 4740)</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">$events = Get-WinEvent</span> <span class="flag">-FilterHashtable</span> <span class="cmd">@{</span><br>
+            <span class="cmd">    LogName='Security'; Id=4740;</span><br>
+            <span class="cmd">    StartTime=(Get-Date).AddHours(-1)</span><br>
+            <span class="cmd">}</span> <span class="flag">-ErrorAction SilentlyContinue</span><br><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">foreach ($e in $events) {</span><br>
+            <span class="cmd">    $msg = $e.Message</span><br>
+            <span class="cmd">    $user = [regex]::Match($msg,'Account Name:\s+(\S+)').Groups[1].Value</span><br>
+            <span class="cmd">    Write-Host "[ALERTA] Compte bloquejat: $user a $(Get-Date)" -ForegroundColor Red</span><br>
+            <span class="comment">    # Opcional: enviar correu amb Send-MailMessage</span><br>
+            <span class="cmd">}</span><br><br>
+            <span class="comment"># Subscripció d'events (Windows Event Forwarding) per centralitzar</span><br>
+            <span class="comment"># des de múltiples servidors a un servidor col·lector centralitzat</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">wecutil qc</span>    <span class="comment"># Configurar Windows Event Collector</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRÀCTICA 4 -->
+    <div class="lab-card fi">
+      <div class="lab-header">
+        <div class="lab-icon">🔬</div>
+        <div class="lab-title-block">
+          <h4>Pràctica 7.4 — Configurar auditd, fail2ban i alertes de seguretat</h4>
+          <p>Implementar monitorització proactiva amb mecanismes d'alerta i resposta automàtica</p>
+        </div>
+        <div class="lab-os-tags"><span class="os-tag os-both">🔀 Windows + Ubuntu</span></div>
+      </div>
+      <div class="lab-body">
+        <h5>🐧 Ubuntu — Configurar auditd amb regles CIS + fail2ban</h5>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">Terminal — root</span><span class="term-os term-os-ubuntu">Ubuntu</span></div>
+          <div class="term-body">
+            <span class="comment"># Descarregar i aplicar regles CIS per a auditd</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">cat > /etc/audit/rules.d/cis.rules &lt;&lt; 'EOF'</span><br>
+            <span class="out">## Fitxers d'autenticació i seguretat</span><br>
+            <span class="out">-w /etc/passwd -p wa -k identity</span><br>
+            <span class="out">-w /etc/shadow -p wa -k identity</span><br>
+            <span class="out">-w /etc/group -p wa -k identity</span><br>
+            <span class="out">-w /etc/sudoers -p wa -k sudoers</span><br>
+            <span class="out">-w /etc/ssh/sshd_config -p wa -k sshd</span><br>
+            <span class="out">## Escalada de privilegis</span><br>
+            <span class="out">-w /bin/su -p x -k privilege_escalation</span><br>
+            <span class="out">-w /usr/bin/sudo -p x -k privilege_escalation</span><br>
+            <span class="out">## Mòduls del kernel</span><br>
+            <span class="out">-w /sbin/modprobe -p x -k module_load</span><br>
+            <span class="out">## Bloqueig de modificació de regles</span><br>
+            <span class="out">-e 2</span><br>
+            <span class="out">EOF</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">systemctl restart auditd</span><br><br>
+            <span class="comment"># Provar que les regles funcionen: intentar modificar /etc/passwd</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">touch /etc/passwd</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">ausearch -k identity -ts recent</span><br>
+            <span class="ok">---- ---- ---- type=PATH msg=audit(...): item=0 name="/etc/passwd" ...</span><br><br>
+            <span class="comment"># Configurar fail2ban per a SSH i Apache</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">cat > /etc/fail2ban/jail.local &lt;&lt; 'EOF'</span><br>
+            <span class="out">[DEFAULT]</span><br>
+            <span class="out">bantime  = 3600</span><br>
+            <span class="out">findtime = 600</span><br>
+            <span class="out">maxretry = 5</span><br>
+            <span class="out">[sshd]</span><br>
+            <span class="out">enabled = true</span><br>
+            <span class="out">[apache-auth]</span><br>
+            <span class="out">enabled = true</span><br>
+            <span class="out">EOF</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">systemctl restart fail2ban</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">fail2ban-client status</span>
+          </div>
+        </div>
+        <h5>🪟 Windows — Script de monitorització d'events crítics</h5>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">PowerShell — Monitorització Events</span><span class="term-os term-os-ps">PowerShell</span></div>
+          <div class="term-body">
+            <span class="comment"># Script de monitorització: detecta events crítics de la darrera hora</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">$critics = @(4720, 4728, 4756, 1102, 4719, 4698)</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">$descripcio = @{</span><br>
+            <span class="cmd">    4720="Compte creat"; 4728="Usuari afegit a grup privilegiat"</span><br>
+            <span class="cmd">    4756="Usuari afegit a Universal Group"; 1102="LOG ESBORRAT (CRÍTIC)"</span><br>
+            <span class="cmd">    4719="Política auditoria canviada"; 4698="Tasca programada creada"</span><br>
+            <span class="cmd">}</span><br><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">$events = Get-WinEvent</span> <span class="flag">-FilterHashtable</span> <span class="cmd">@{</span><br>
+            <span class="cmd">    LogName='Security'; Id=$critics</span><br>
+            <span class="cmd">    StartTime=(Get-Date).AddHours(-1)</span><br>
+            <span class="cmd">}</span> <span class="flag">-ErrorAction SilentlyContinue</span><br><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">if ($events) {</span><br>
+            <span class="cmd">    Write-Host "=== ALERTES DE SEGURETAT ===" -ForegroundColor Red</span><br>
+            <span class="cmd">    foreach ($e in $events) {</span><br>
+            <span class="cmd">        $desc = $descripcio[$e.Id]</span><br>
+            <span class="cmd">        Write-Host "[$($e.TimeCreated)] EID $($e.Id) — $desc" -ForegroundColor Yellow</span><br>
+            <span class="cmd">    }</span><br>
+            <span class="cmd">} else { Write-Host "Cap event crític a l'última hora." -ForegroundColor Green }</span>
+          </div>
+        </div>
+        <div class="lab-entrega"><strong>📋 Lliurament:</strong> (1) Captura d'<code>auditctl -l</code> mostrant les regles CIS actives. (2) Prova funcional: modifica /etc/passwd (amb <code>touch</code>), captura la sortida d'<code>ausearch -k identity</code>. (3) Captura de <code>fail2ban-client status</code>. (4) Executa el script PowerShell de monitorització i captura el resultat: hi ha algun event crític a l'última hora?</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- T8 — INFORMACIÓ DEL REGISTRE -->
+<section id="info" class="s-dark">
+  <div class="container">
+    <div class="ra-banner ra-cyan fi">
+      <div class="ra-num">8</div>
+      <div><h2>Informació del registre d'auditoria</h2>
+        <p>Estructura d'un event d'auditoria, camps clau, integritat dels logs i centralització amb syslog remot.</p></div>
+    </div>
+
+    <div class="section-tag fi" style="color:rgba(255,255,255,.5)"><span style="display:inline-block;width:20px;height:2px;background:var(--cyan);margin-right:.5rem"></span>Anatomia d'un event</div>
+    <h2 class="fi">Anatomia d'un event d'auditoria</h2>
+    <p class="lead fi">Per interpretar correctament un registre d'auditoria cal entendre l'estructura dels seus camps. Un event d'auditoria és la fotografia d'un moment concret en el sistema, amb tota la informació necessària per respondre a les preguntes: <strong>Qui? Quan? Des d'on? Sobre quèl? Amb quin resultat?</strong></p>
+
+    <div class="grid g2 fi">
+      <div class="card">
+        <h3>🪟 Camps d'un event del Windows Security Log</h3>
+        <div class="schema-block" style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:8px;padding:1.1rem;margin-top:.5rem">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:.78rem;line-height:1.9">
+            <span style="color:#38bdf8">TimeCreated    :</span> <span style="color:#86efac">2024-12-10T14:32:11.456Z</span>   <span style="color:#475569">← Timestamp UTC</span><br>
+            <span style="color:#38bdf8">EventID        :</span> <span style="color:#fbbf24">4624</span>                               <span style="color:#475569">← Tipus d'event</span><br>
+            <span style="color:#38bdf8">Channel        :</span> <span style="color:#86efac">Security</span>                           <span style="color:#475569">← Canal del registre</span><br>
+            <span style="color:#38bdf8">Computer       :</span> <span style="color:#86efac">SRV-DC01.asix.local</span>               <span style="color:#475569">← Equip que genera l'event</span><br>
+            <span style="color:#38bdf8">Level          :</span> <span style="color:#86efac">Information</span>                        <span style="color:#475569">← Severitat</span><br>
+            <span style="color:#38bdf8">SubjectUserName:</span> <span style="color:#fbbf24">SRV-DC01$</span>                          <span style="color:#475569">← Compte que executa l'acció</span><br>
+            <span style="color:#38bdf8">TargetUserName :</span> <span style="color:#fca5a5">jgarcia</span>                            <span style="color:#475569">← Compte sobre el qual actua</span><br>
+            <span style="color:#38bdf8">IpAddress      :</span> <span style="color:#fca5a5">192.168.1.55</span>                       <span style="color:#475569">← IP d'origen de la connexió</span><br>
+            <span style="color:#38bdf8">LogonType      :</span> <span style="color:#fbbf24">10</span>                                 <span style="color:#475569">← 10=RemoteInteractive (RDP)</span><br>
+            <span style="color:#38bdf8">AuthPackage    :</span> <span style="color:#86efac">Kerberos</span>                           <span style="color:#475569">← Protocol d'autenticació</span><br>
+            <span style="color:#38bdf8">ProcessName    :</span> <span style="color:#86efac">C:\Windows\System32\winlogon.exe</span>
+          </div>
+        </div>
+        <div class="ex" style="background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.07);margin-top:.5rem">
+          <div class="ex-lbl" style="color:#38bdf8">Logon Types importants</div>
+          <p style="color:rgba(255,255,255,.7)">
+            <strong style="color:white">2</strong> Interactive (consola local) &nbsp; <strong style="color:white">3</strong> Network (SMB, RPC)<br>
+            <strong style="color:white">4</strong> Batch (tasques programades) &nbsp; <strong style="color:white">5</strong> Service<br>
+            <strong style="color:white">7</strong> Unlock workstation &nbsp; <strong style="color:white">10</strong> RemoteInteractive (RDP)<br>
+            <strong style="color:white">11</strong> CachedInteractive (offline) &nbsp; <strong style="color:white">9</strong> NewCredentials (runas)
+          </p>
+        </div>
+      </div>
+      <div class="card">
+        <h3>🐧 Camps d'un event de auditd (Linux)</h3>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">/var/log/audit/audit.log</span><span class="term-os term-os-ubuntu">auditd</span></div>
+          <div class="term-body">
+            <span class="out">type=USER_AUTH msg=audit(1733836331.456:1042):</span><br>
+            <span class="out"> pid=1234    <span style="color:#475569">← PID del procés</span></span><br>
+            <span class="out"> uid=1000    <span style="color:#475569">← UID real de l'usuari</span></span><br>
+            <span class="out"> auid=1000   <span style="color:#475569">← UID d'autenticació (login original)</span></span><br>
+            <span class="out"> ses=42      <span style="color:#475569">← Session ID</span></span><br>
+            <span class="out"> subj=...    <span style="color:#475569">← Context SELinux/AppArmor</span></span><br>
+            <span class="out"> op=PAM:authentication</span><br>
+            <span class="out"> grantors=pam_unix</span><br>
+            <span class="out"> acct="jgarcia"  <span style="color:#475569">← Compte autenticat</span></span><br>
+            <span class="out"> exe="/usr/sbin/sshd"</span><br>
+            <span class="out"> hostname=192.168.1.55  <span style="color:#475569">← IP d'origen</span></span><br>
+            <span class="out"> addr=192.168.1.55</span><br>
+            <span class="ok"> res=success  <span style="color:#475569">← Resultat: success/failed</span></span>
+          </div>
+        </div>
+        <div class="ex" style="background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.07);margin-top:.5rem">
+          <div class="ex-lbl" style="color:var(--ubuntu)">Types d'events auditd importants</div>
+          <p style="color:rgba(255,255,255,.7)">
+            <strong style="color:white">USER_AUTH</strong> Autenticació d'usuari<br>
+            <strong style="color:white">USER_ACCT</strong> Gestió de comptes<br>
+            <strong style="color:white">SYSCALL</strong> Crida al sistema auditada<br>
+            <strong style="color:white">PATH</strong> Accés a fitxer/directori<br>
+            <strong style="color:white">EXECVE</strong> Execució d'un programa<br>
+            <strong style="color:white">KERN_MODULE</strong> Carrega de mòdul del kernel
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <hr>
+    <div class="section-tag fi" style="color:rgba(255,255,255,.5)"><span style="display:inline-block;width:20px;height:2px;background:var(--green);margin-right:.5rem"></span>Centralització i integritat</div>
+    <h2 class="fi">Centralització de logs i integritat del registre</h2>
+    <div class="grid g2 fi">
+      <div class="card">
+        <h3>🏛️ Servidor centralitzat de logs (rsyslog)</h3>
+        <p style="font-size:.88rem;color:rgba(255,255,255,.65);margin-bottom:.75rem">En entorns amb múltiples servidors, centralitzar tots els logs a un servidor dedicat és imprescindible: un atacant que compromet un sistema sol esborrar els logs locals (Event ID 1102). Si els logs s'han enviat a un servidor extern en temps real, no pot esborrar-los.</p>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">rsyslog — Servidor centralitzat</span><span class="term-os term-os-ubuntu">Ubuntu</span></div>
+          <div class="term-body">
+            <span class="comment"># Al servidor de logs (receptor):</span><br>
+            <span class="comment"># /etc/rsyslog.conf → habilitar recepció TCP/514</span><br>
+            <span class="out">module(load="imtcp")</span><br>
+            <span class="out">input(type="imtcp" port="514")</span><br><br>
+            <span class="comment"># Als clients (emissors):</span><br>
+            <span class="comment"># /etc/rsyslog.d/50-remote.conf</span><br>
+            <span class="out">*.* @@10.0.0.10:514   # @@ = TCP (fiable), @ = UDP</span><br><br>
+            <span class="comment"># Verificar que s'envien logs al servidor</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">logger "Test de centralitzacio de logs"</span><br>
+            <span class="comment"># Al servidor receptor, ha d'aparèixer:</span><br>
+            <span class="prompt-ub">root@syslog:~#</span> <span class="cmd">tail /var/log/syslog</span><br>
+            <span class="ok">Dec 10 15:00:01 client1 root: Test de centralitzacio de logs</span>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <h3>🔐 Integritat del registre d'auditoria</h3>
+        <p style="font-size:.88rem;color:rgba(255,255,255,.65);margin-bottom:.75rem">Un log que pot ser modificat o esborrat no té valor com a prova. Per garantir la integritat cal:</p>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.35rem 0;border-bottom:1px solid rgba(255,255,255,.1);font-size:.87rem;color:rgba(255,255,255,.7)">📤 <strong style="color:white">Reenviament en temps real (syslog remot, WEF):</strong> els logs s'envien a un servidor extern just en el moment de generació. L'atacant hauria de comprometer els dos sistemes simultàniament.</li>
+          <li style="padding:.35rem 0;border-bottom:1px solid rgba(255,255,255,.1);font-size:.87rem;color:rgba(255,255,255,.7)">💾 <strong style="color:white">WORM storage:</strong> emmagatzematge en "Write Once Read Many". Físicament impossible d'esborrar.</li>
+          <li style="padding:.35rem 0;border-bottom:1px solid rgba(255,255,255,.1);font-size:.87rem;color:rgba(255,255,255,.7)">🔗 <strong style="color:white">Blockchain d'auditoria:</strong> cada entrada de log inclou el hash de l'entrada anterior (estructura de cadena). Qualsevol modificació invalida tota la cadena posterior.</li>
+          <li style="padding:.35rem 0;font-size:.87rem;color:rgba(255,255,255,.7)">🔔 <strong style="color:white">Alerta en cas d'esborrat (EID 1102):</strong> el Event ID 1102 (log de seguretat esborrat) s'ha de monitoritzar amb màxima prioritat i generar una alerta immediata.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- T9 — EINES D'AUDITORIA -->
+<section id="eines" class="s-asix">
+  <div class="container">
+    <div class="ra-banner ra-asix fi">
+      <div class="ra-num">9</div>
+      <div><h2>Tècniques i eines d'auditoria</h2>
+        <p>Lynis, Wazuh, Nessus, OpenVAS, Wireshark, nmap, SIEM i les metodologies d'un analista de seguretat.</p></div>
+    </div>
+
+    <div class="section-tag tag-asix fi">Eines per categoria</div>
+    <h2 class="fi">Arsenal d'eines d'auditoria de seguretat</h2>
+    <div style="overflow-x:auto" class="fi">
+      <table class="ptable">
+        <thead><tr><th>Eina</th><th>Categoria</th><th>Plataforma</th><th>Llicència</th><th>Funció principal</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Lynis</strong></td><td><span class="badge b-green">Hardening</span></td><td><span class="badge b-ubuntu">Linux/macOS</span></td><td>GPL</td><td>Auditoria de seguretat del sistema. Genera puntuació de hardening i recomanacions.</td></tr>
+          <tr><td><strong>Microsoft Baseline Security Analyzer (MBSA)</strong></td><td><span class="badge b-green">Hardening</span></td><td><span class="badge b-win">Windows</span></td><td>Gratuït</td><td>Comprova configuració de seguretat de Windows contra recomanacions de Microsoft.</td></tr>
+          <tr><td><strong>CIS-CAT</strong></td><td><span class="badge b-green">Hardening</span></td><td>Tots</td><td>Free/Pro</td><td>Avaluació automàtica contra CIS Benchmarks. Genera informe de compliment.</td></tr>
+          <tr><td><strong>Wazuh</strong></td><td><span class="badge b-cyan">SIEM/EDR</span></td><td>Tots</td><td>GPL</td><td>SIEM open-source, detecció d'intrusió (HIDS), FIM (File Integrity Monitoring), compliance.</td></tr>
+          <tr><td><strong>Splunk</strong></td><td><span class="badge b-cyan">SIEM</span></td><td>Tots</td><td>Comercial/Free</td><td>Plataforma SIEM industrial. Indexa i correlaciona grans volums de logs. Detecció d'amenaces avançada.</td></tr>
+          <tr><td><strong>ELK Stack (Elasticsearch+Logstash+Kibana)</strong></td><td><span class="badge b-cyan">SIEM</span></td><td>Tots</td><td>Open Core</td><td>Pila de gestió de logs open-source. Kibana per a visualitzacions i dashboards d'auditoria.</td></tr>
+          <tr><td><strong>Nessus / Tenable.io</strong></td><td><span class="badge b-sec">Vulnerabilitats</span></td><td>Tots</td><td>Comercial/Free</td><td>Escàner de vulnerabilitats. Identifica CVEs, configuracions febles i ports oberts.</td></tr>
+          <tr><td><strong>OpenVAS (Greenbone)</strong></td><td><span class="badge b-sec">Vulnerabilitats</span></td><td>Linux</td><td>GPL</td><td>Escàner de vulnerabilitats open-source. Alternativa gratuïta a Nessus.</td></tr>
+          <tr><td><strong>nmap</strong></td><td><span class="badge b-amber">Xarxa</span></td><td>Tots</td><td>GPL</td><td>Escaneig de xarxa i ports. Descobriment de serveis, detecció d'OS i scripts NSE.</td></tr>
+          <tr><td><strong>Wireshark</strong></td><td><span class="badge b-amber">Xarxa</span></td><td>Tots</td><td>GPL</td><td>Anàlisi de tràfic de xarxa. Captura i dissecció de protocols. Imprescindible per a forensia de xarxa.</td></tr>
+          <tr><td><strong>John the Ripper / Hashcat</strong></td><td><span class="badge b-sec">Contrasenyes</span></td><td>Tots</td><td>GPL/Free</td><td>Crackeig de contrasenyes per a auditories d'autenticació. Verifica la feblesa dels hashes.</td></tr>
+          <tr><td><strong>Metasploit Framework</strong></td><td><span class="badge b-sec">Pentest</span></td><td>Tots</td><td>BSD/Comercial</td><td>Framework de pentesting. Explotació de vulnerabilitats en entorns autoritzats.</td></tr>
+          <tr><td><strong>OSquery</strong></td><td><span class="badge b-asix">EDR/Inventory</span></td><td>Tots</td><td>Apache</td><td>Consultar el sistema operatiu com si fos una base de dades SQL. Inventari en temps real.</td></tr>
+          <tr><td><strong>Sysmon (Sysinternals)</strong></td><td><span class="badge b-win">Monitoring</span></td><td>Windows</td><td>Gratuït</span></td><td>Enregistra events avançats: creació de processos, connexions de xarxa, canvis de registre.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <hr>
+    <div class="section-tag tag-asix fi">Eines pràctiques</div>
+    <h2 class="fi">nmap, Wazuh i OSquery en acció</h2>
+
+    <!-- PRÀCTICA 5 -->
+    <div class="lab-card fi">
+      <div class="lab-header">
+        <div class="lab-icon">🔬</div>
+        <div class="lab-title-block">
+          <h4>Pràctica 7.5 — Escaneig de xarxa amb nmap i auditoria amb Wazuh</h4>
+          <p>Descobriment d'actius, escaneig de vulnerabilitats i monitorització SIEM</p>
+        </div>
+        <div class="lab-os-tags"><span class="os-tag os-both">🔀 Windows + Ubuntu</span></div>
+      </div>
+      <div class="lab-body">
+        <p>Usarem nmap per fer un inventari de la xarxa del laboratori i analitzar el resultat com si fos part d'una auditoria de seguretat de xarxa.</p>
+        <h5>🐧 nmap — Escaneig d'auditoria de la xarxa</h5>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">Terminal — nmap</span><span class="term-os term-os-ubuntu">Ubuntu</span></div>
+          <div class="term-body">
+            <span class="comment"># Instal·lar nmap</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">apt install nmap -y</span><br><br>
+            <span class="comment"># 1. Descobriment d'hosts actius a la xarxa (ping scan)</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">nmap -sn 192.168.1.0/24</span><br>
+            <span class="out">Nmap scan report for 192.168.1.1 (Router)</span><br>
+            <span class="out">Nmap scan report for 192.168.1.10 (SRV-DC01)</span><br><br>
+            <span class="comment"># 2. Escaneig de ports + detecció de serveis i OS</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">nmap -sV -O -T4 192.168.1.10</span><br>
+            <span class="out">PORT     STATE SERVICE       VERSION</span><br>
+            <span class="out">22/tcp   open  ssh           OpenSSH 8.9</span><br>
+            <span class="out">80/tcp   open  http          nginx 1.24</span><br>
+            <span class="out">443/tcp  open  ssl/https     nginx</span><br><br>
+            <span class="comment"># 3. Escaneig de vulnerabilitats amb scripts NSE</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">nmap --script vuln 192.168.1.10</span><br><br>
+            <span class="comment"># 4. Detectar SMB signing (important per a seguretat Windows)</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">nmap --script smb-security-mode 192.168.1.0/24</span><br><br>
+            <span class="comment"># 5. Exportar resultats en XML per al informe</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">nmap -sV -oX /tmp/scan-audit.xml 192.168.1.0/24</span><br>
+            <span class="comment"># Convertir a HTML per llegibilitat</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">xsltproc /tmp/scan-audit.xml -o /tmp/scan-audit.html</span>
+          </div>
+        </div>
+        <h5>🔀 OSquery — Inventari del sistema com a SQL</h5>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">OSquery Interactive Shell</span><span class="term-os term-os-both">Ambdós</span></div>
+          <div class="term-body">
+            <span class="comment"># Instal·lar: apt install osquery (Ubuntu) / winget install osquery (Windows)</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">osqueryi</span><br><br>
+            <span class="comment"># Llistar tots els processos amb connexions de xarxa obertes</span><br>
+            <span class="out">osquery&gt; SELECT p.name, p.pid, l.local_port, l.remote_address</span><br>
+            <span class="out">         FROM process_open_sockets l JOIN processes p USING (pid)</span><br>
+            <span class="out">         WHERE l.state='ESTABLISHED';</span><br><br>
+            <span class="comment"># Usuaris amb login actiu</span><br>
+            <span class="out">osquery&gt; SELECT username, tty, host, time FROM logged_in_users;</span><br><br>
+            <span class="comment"># Fitxers modificats en les últimes 24h a /etc</span><br>
+            <span class="out">osquery&gt; SELECT path, mtime FROM file</span><br>
+            <span class="out">         WHERE path LIKE '/etc/%'</span><br>
+            <span class="out">         AND mtime > strftime('%s','now') - 86400;</span><br><br>
+            <span class="comment"># Serveis configurats per arrencar automàticament (Windows)</span><br>
+            <span class="out">osquery&gt; SELECT name, start_type, status FROM services</span><br>
+            <span class="out">         WHERE start_type='AUTO_START' ORDER BY name;</span>
+          </div>
+        </div>
+        <div class="lab-entrega"><strong>📋 Lliurament:</strong> (1) Taula de tots els hosts descoberts a la xarxa del laboratori amb nmap (IP, ports oberts, serveis detectats). (2) Captura del resultat de <code>nmap --script smb-security-mode</code>: SMB signing és obligatori? Quines implicacions de seguretat té? (3) Resultat de la consulta OSquery dels processos amb connexions establertes: hi ha algun procés sospitós? (4) Avaluació global: quin risc representaria cada servei obert detectat?</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- T10 — INFORMES D'AUDITORIA -->
+<section id="informes" class="s-amber">
+  <div class="container">
+    <div class="ra-banner ra-amber fi">
+      <div class="ra-num">10</div>
+      <div><h2>Informes d'auditoria</h2>
+        <p>Estructura d'un informe professional, evidències, classificació de troballes i pla de millora.</p></div>
+    </div>
+
+    <div class="section-tag tag-amber fi">Estructura de l'informe</div>
+    <h2 class="fi">Estructura d'un informe d'auditoria de seguretat professional</h2>
+    <p class="lead fi">Un informe d'auditoria és el producte final de tot el procés. Ha de ser comprensible tant per a un perfil tècnic (com corregir les vulnerabilitats) com per a la direcció (quin risc representen per al negoci). La claredat i l'objectivitat són fonamentals.</p>
+
+    <ol class="steps fi">
+      <li><p><strong>Resum executiu (Executive Summary):</strong> 1-2 pàgines. Pensat per a la direcció. Respon: Quin és l'abast? Quines són les troballes principals? Quin és el risc global? Quines accions immediates calen? Sense tecnicismes.</p></li>
+      <li><p><strong>Abast i metodologia:</strong> Quins sistemes s'han auditat (IPs, serveis, període temporal). Quines eines i tècniques s'han usat. Quins sistemes s'han exclòs i per quin motiu. Restriccions i limitacions de l'auditoria.</p></li>
+      <li><p><strong>Resum de troballes per severitat:</strong> Taula resum: nombre de troballes crítiques, altes, mitjanes, baixes. Gràfic de distribució. Comparació amb auditories anteriors (evolució en el temps).</p></li>
+      <li><p><strong>Troballes detallades:</strong> Per a cada vulnerabilitat o no-conformitat: identificador, descripció tècnica, prova (evidència/captura), sistemes afectats, severitat (CVSS), recomanació de correcció, termini de correcció suggerit.</p></li>
+      <li><p><strong>Pla de millora (Remediation Plan):</strong> Llista prioritzada de les accions correctives. Responsable de cada acció, termini i indicador de verificació (com saber que s'ha resolt). Les troballes crítiques han d'adreçar-se en 24-72h.</p></li>
+      <li><p><strong>Annexos:</strong> Sortides completes de les eines usades (nmap, Lynis, auditpol), llista de systems auditados, evidències addicionals, glossari de termes tècnics.</p></li>
+    </ol>
+
+    <hr>
+    <div class="section-tag tag-amber fi">Classificació de troballes</div>
+    <h2 class="fi">Classificació de severitat de les troballes (CVSS)</h2>
+    <p class="lead fi">El <strong>Common Vulnerability Scoring System (CVSS)</strong> és l'estàndard per quantificar la severitat de vulnerabilitats. Proporciona una puntuació de 0 a 10. Usem la mateixa escala per a les troballes d'auditoria.</p>
+
+    <div style="overflow-x:auto" class="fi">
+      <table class="ptable">
+        <thead><tr><th>Severitat</th><th>CVSS</th><th>Descripció</th><th>Termini de correcció</th><th>Exemple típic</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><span class="sev sev-crit">⬤ Crítica</span></td>
+            <td>9.0 – 10.0</td>
+            <td>Explotació sense autenticació possible. Compromís total del sistema. Pèrdua de dades massiva probable.</td>
+            <td><strong>24 hores</strong></td>
+            <td>RCE (Remote Code Execution) sense auth, hash admin exposat, codi maliciós en producció</td>
+          </tr>
+          <tr>
+            <td><span class="sev sev-high">⬤ Alta</span></td>
+            <td>7.0 – 8.9</td>
+            <td>Explotació possible amb poca dificultat. Pot comprometre la confidencialitat, integritat o disponibilitat.</td>
+            <td><strong>72 hores</strong></td>
+            <td>Servei vulnerable exposat, contrasenya feble d'un admin, privilege escalation possible</td>
+          </tr>
+          <tr>
+            <td><span class="sev sev-med">⬤ Mitja</span></td>
+            <td>4.0 – 6.9</td>
+            <td>Explotació requereix condicions específiques. Impacte limitat o dificultat d'explotació elevada.</td>
+            <td><strong>30 dies</strong></td>
+            <td>Paquets desactualitzats amb CVE conegut, SMB signing no obligatori, logs no centralitzats</td>
+          </tr>
+          <tr>
+            <td><span class="sev sev-low">⬤ Baixa</span></td>
+            <td>0.1 – 3.9</td>
+            <td>Impacte mínim. Requereix accés físic o condicions molt específiques per explotar.</td>
+            <td><strong>90 dies</strong></td>
+            <td">Banner de versió exposat, política de contrasenyes lleugera, script d'inici no optimitzat</td>
+          </tr>
+          <tr>
+            <td><span class="sev sev-info">⬤ Informativa</span></td>
+            <td>0.0</td>
+            <td>No representa un risc immediat però és bona pràctica corregir-ho. Millorar la postura de seguretat.</td>
+            <td>Pròxima revisió</td>
+            <td>Serveis innecessaris actius, comptes desactivats no eliminats, documentació incompleta</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- PRÀCTICA 6 — INFORME FINAL -->
+    <div class="lab-card fi">
+      <div class="lab-header">
+        <div class="lab-icon">🔬</div>
+        <div class="lab-title-block">
+          <h4>Pràctica 7.6 — Redactar un informe d'auditoria complet</h4>
+          <p>Integrar totes les pràctiques anteriors en un informe professional d'auditoria de seguretat</p>
+        </div>
+        <div class="lab-os-tags"><span class="os-tag os-sec">🔍 Informe final</span></div>
+      </div>
+      <div class="lab-body">
+        <p>L'objectiu d'aquesta pràctica integradora és consolidar totes les troballes de les pràctiques anteriors (P7.1 a P7.5) en un informe d'auditoria professional. Simularàs el rol d'un auditor de seguretat extern que ha rebut l'encàrrec d'auditar el servidor del laboratori.</p>
+        <h5>Estructura de l'informe a lliurar</h5>
+        <ul class="lab-steps">
+          <li><p><strong>Resum executiu (1 pàgina):</strong> Escenari fictici: empresa "TechCorp SL" t'ha contractat per auditar el seu servidor de fitxers (Ubuntu + Samba) i el seu DC Windows Server. Quantitat de troballes per severitat. Valoració global del risc.</p></li>
+          <li><p><strong>Abast:</strong> IPs auditades, eines usades (nmap, Lynis, auditd, auditpol), període de l'auditoria (1 jornada de laboratori), metodologia (passiva: sense explotació activa).</p></li>
+          <li><p><strong>Troballes (mínim 5):</strong> Una per cada pràctica anterior. Per a cada troballa: ID (e.g., VULN-001), descripció, evidència (captura de pantalla o sortida de comanda), severitat (CVSS), recomanació.</p></li>
+          <li><p><strong>Taula resum de troballes:</strong> ID | Títol | Severitat | Sistema afectat | Recomanació resumida | Termini.</p></li>
+          <li><p><strong>Pla de millora prioritzat:</strong> Les 3 accions més urgents, ordenades per risc. Responsable (IT, sysadmin, direcció), termini i com verificar la correcció.</p></li>
+        </ul>
+        <h5>🪟 Eines per als Event IDs del informe</h5>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">PowerShell — Recollida d'evidències per a l'informe</span><span class="term-os term-os-ps">PowerShell</span></div>
+          <div class="term-body">
+            <span class="comment"># Recopilar evidències d'autenticació de les últimes 24h</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">$report = @()</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">$events = Get-WinEvent</span> <span class="flag">-FilterHashtable</span> <span class="cmd">@{LogName='Security';Id=@(4624,4625,4720,4728);StartTime=(Get-Date).AddDays(-1)}</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">$events | Group-Object Id | Select-Object Name, Count | Sort-Object Name | Format-Table</span><br>
+            <span class="out">Name  Count</span><br>
+            <span class="out">4624   1245  (logins correctes)</span><br>
+            <span class="out">4625     18  (logins fallits)</span><br>
+            <span class="out">4720      2  (comptes creats)</span><br><br>
+            <span class="comment"># Exportar els events del dia a CSV per annexar a l'informe</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">$events | Select-Object TimeCreated, Id, LevelDisplayName, Message |</span><br>
+            <span class="cmd"> Export-Csv C:\audit\security-events-report.csv -NoTypeInformation -Encoding UTF8</span>
+          </div>
+        </div>
+        <div class="lab-entrega"><strong>📋 Lliurament final:</strong> Document PDF (mínim 6 pàgines) amb l'estructura descrita. Avaluació: (1) Qualitat de les evidències: estan ben documentades i son reproduïbles? (2) Classificació de severitat: és correcta i justificada amb el CVSS? (3) Recomanacions: són concretes, accionables i amb termini realista? (4) Presentació: és comprensible per a un director sense perfil tècnic?</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PREGUNTES TEÒRIQUES -->
+<section id="preguntes" style="background:#fffbf0;padding:6rem 2rem">
+  <div class="container">
+    <div class="ra-banner ra-preguntes fi">
+      <div class="ra-num">?</div>
+      <div><h2>10 Preguntes teòriques — RA7</h2>
+        <p>Nivell CFGS. Anàlisi de casos, disseny de polítiques, interpretació d'events i fonaments legals de l'auditoria.</p></div>
+    </div>
+    <div class="grid fi" style="gap:.9rem">
+
+      <div class="q-card">
+        <div class="q-num">1</div>
+        <div class="q-body">
+          <h4>Un sistema Windows Server detecta el Event ID 1102 ("El registre d'auditoria de seguretat s'ha esborrat") a les 3:17 AM. A l'hora prèvia (2:00–3:17 AM) el registre mostrava 847 accessos RDP (Logon Type 10) des de IPs externes, cap dels quals correspon a usuaris habituals. Descriu la cadena d'events probable (fase de l'atac), quines investigacions forenses faries immediatament i quines accions de contenció aplicaries en les pròximes 2 hores.</h4>
+          <p>Indica quins artefactes forenses buscaries en el sistema (prefetch, amcache, LNK files, memory dump) i com l'Event ID 4688 amb command-line logging podria ajudar a reconstruir l'atac.</p>
+          <span class="q-tag qt-audit">Forensia</span><span class="q-tag qt-win">Event Log</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">2</div>
+        <div class="q-body">
+          <h4>L'empresa X ha sofert una fuga de dades de clients (noms, adreces i números de targeta). L'RGPD obliga a notificar-ho a l'AEPD en 72 hores. Els logs d'auditoria mostren que en les últimes 3 setmanes el compte de servei "svc-backup" ha accedit a la base de dades de clients 2.847 vegades entre les 22:00 i las 6:00 (fora del seu horari normal). Qui és el responsable legal? Quina informació has d'incloure a la notificació a l'AEPD? Com demostraràs que els logs d'auditoria no han estat manipulats?</h4>
+          <p>Explica la diferència entre "responsable del tractament" i "encarregat del tractament" en el context de l'RGPD, i com afecta a la responsabilitat en un incident com aquest.</p>
+          <span class="q-tag qt-sec">RGPD</span><span class="q-tag qt-audit">Compliance</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">3</div>
+        <div class="q-body">
+          <h4>Explica la diferència entre auditoria passiva i auditoria activa (penetration testing). En quin context legal s'autoritza cada una? Quins riscos té realitzar un escaneig nmap de vulnerabilitats en una xarxa sense autorització prèvia? Quin document contractual és imprescindible abans de realitzar un pentest sobre sistemes d'un client? Descriu el contingut mínim d'una "Authorization to Test" (carta de permís).</h4>
+          <p>Quines consideracions ètiques i legals ha de tenir en compte un auditor que, durant un pentest, descobreix evidències d'un delicte informàtic previ (no relacionat amb l'encàrrec)?</p>
+          <span class="q-tag qt-audit">Metodologia</span><span class="q-tag qt-sec">Pentest legal</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">4</div>
+        <div class="q-body">
+          <h4>El teu equip d'auditoria detecta als logs d'auditd de Linux la seqüència d'events: (1) accés SSH exitós de la IP 10.0.0.45 com a l'usuari "webadmin"; (2) execució de <code>sudo su</code> 30 segons després; (3) execució de <code>getcap -r / 2>/dev/null</code>; (4) modificació del fitxer /etc/crontab. Interpreta cada event, identifica la fase de l'atac (recon, escalada, persistència) i les regles d'auditd que haurien capturat cadascun.</h4>
+          <p>Redacta les 4 regles auditd que haurien hagut d'estar actives per capturar exactament aquests events, usant la sintaxi de <code>auditctl</code>.</p>
+          <span class="q-tag qt-ubuntu">auditd</span><span class="q-tag qt-audit">Anàlisi d'atac</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">5</div>
+        <div class="q-body">
+          <h4>Un sistema Windows mostra el Event ID 4769 (Kerberos Service Ticket) generat des d'un únic PC en menys de 5 minuts per a 47 comptes de servei diferents del domini. Cada Event ID 4769 té el camp "Ticket Encryption Type" amb valor 0x17 (RC4-HMAC, l'algoritme més feble). Identifica l'atac, explica com funciona tècnicament (des de l'obtenció del hash fins al crackejat offline) i quines mesures preventives i de detecció implementaries.</h4>
+          <p>Explica per quin motiu la migració a AES-256 (0x12, Kerberos Encryption Type) per als comptes de servei és la solució definitiva i com la verificaries amb auditpol i PowerShell.</p>
+          <span class="q-tag qt-win">Kerberoasting</span><span class="q-tag qt-sec">Kerberos</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">6</div>
+        <div class="q-body">
+          <h4>Dissenya la política d'auditoria per a un entorn de 3 servidors (DC Windows, servidor de fitxers Ubuntu, servidor web Apache) que ha de complir ISO 27001 Annex A.12 i ENS Categoria Mitja. Per a cada servidor, especifica: (a) quins events s'auditen (mínim 5 per servidor), (b) la retenció mínima dels logs, (c) on s'emmagatzemen (local, SIEM centralitzat), (d) quin volum estimat de logs genera al dia i (e) quines alertes automàtiques es configuren.</h4>
+          <p>Justifica per quin motiu és imprescindible la sincronització NTP en tots els sistemes auditats i quin impacte tindria tenir timestamps incorrectes en una investigació forense.</p>
+          <span class="q-tag qt-audit">Disseny</span><span class="q-tag qt-sec">ISO 27001</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">7</div>
+        <div class="q-body">
+          <h4>Lynis ha avaluat un servidor Ubuntu i ha donat un Hardening Index de 52/100. Les 3 advertències principals són: (a) No s'usa AIDE/Tripwire per a File Integrity Monitoring; (b) El servei RPC-bind (port 111) està exposat i no s'usa; (c) La contrasenya de GRUB no està configurada. Per a cadascuna: descriu el risc concret, com un atacant en podria abusar, i com la corregiràs amb els comandos exactes.</h4>
+          <p>Quina seria la millora esperada al Hardening Index de Lynis si corriges les 3 vulnerabilitats? Quin valor de Hardening Index consideraries acceptable per a un servidor de producció en un entorn ENS Categoria Mitja?</p>
+          <span class="q-tag qt-ubuntu">Hardening</span><span class="q-tag qt-tools">Lynis</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">8</div>
+        <div class="q-body">
+          <h4>Explica l'arquitectura d'un SIEM (Security Information and Event Management) incloent els components: col·lectors d'agents, normalització, correlació, motor d'alertes i dashboards. Compara Wazuh (open-source) amb Splunk Enterprise en termes de: cost, escalabilitat, facilitat d'implementació, qualitat de la detecció, i compliment de normatives (ISO 27001, ENS). Per a quina mida d'organització recomanaries cadascun?</h4>
+          <p>Escriu una regla de correlació SIEM (en pseudocodi o format Wazuh XML) que detecti un "impossible travel": un usuari que s'autentica des de dues IPs geogràficament separades en menys de 30 minuts.</p>
+          <span class="q-tag qt-siem">SIEM</span><span class="q-tag qt-tools">Wazuh/Splunk</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">9</div>
+        <div class="q-body">
+          <h4>El privilege "SeDebugPrivilege" de Windows permet adjuntar un debugger al procés lsass.exe i extreure hashes de contrasenyes en memòria (Mimikatz). L'auditoria detecta que 5 comptes d'IT Helpdesk (no Domain Admins) tenen aquest privilegi assignat per una GPO antiga. Descriu el risc exacte (com passaria l'atac), quins Event IDs registraria, com retiraràs el privilegi via GPO i PowerShell, i quina alternativa de menor privilegi existeix perquè el Helpdesk pugui fer la seva feina sense SeDebugPrivilege.</h4>
+          <p>Explica el concepte de "Pass-the-Hash" (PtH) i com l'activa SeDebugPrivilege. Quines mesures de Windows (Credential Guard, Protected Users Security Group) reduirien l'impacte d'un PtH?</p>
+          <span class="q-tag qt-win">Privilegis</span><span class="q-tag qt-sec">Mimikatz</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">10</div>
+        <div class="q-body">
+          <h4>Un auditor extern lliura un informe que classifica com a "Crítica (CVSS 9.8)" la troballa: "El servidor web intern (192.168.1.20) té el mòdul Apache mod_status exposat sense autenticació a /server-status, accessible des de qualsevol host de la xarxa interna". L'equip IT argumenta que "és un servidor intern, per tant no és crític". Contra-argumenta la postura de l'equip IT amb raonaments de seguretat per defensa en profunditat (defense-in-depth) i explica com un atacant intern (o un malware que hagi compromès una estació de treball) podria usar aquesta informació per a moviments laterals.</h4>
+          <p>Redacta la secció de l'informe per a aquesta troballa seguint l'estructura estàndard: Títol, Severitat, Descripció, Evidència, Sistemes afectats, Recomanació, Termini.</p>
+          <span class="q-tag qt-audit">Informe</span><span class="q-tag qt-sec">Defense in Depth</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- RESUM FINAL -->
+<section class="s-cream">
+  <div class="container fi">
+    <div class="section-tag tag-sec">Resum del RA7</div>
+    <h2>El que heu après</h2>
+    <p class="lead">Els 10 continguts del RA7 i la seva aplicació pràctica com a tècnics ASIX encarregats de la seguretat i l'auditoria dels sistemes.</p>
+    <div class="grid g4 fi">
+      <div class="card bl-sec">
+        <div class="card-icon" style="background:#fff5f5">🛡️</div>
+        <h3>Requisits (T1)</h3>
+        <p>Tríada CIA. ISO 27001 Annex A.12. ENS (Bàsica/Mitja/Alta). RGPD Art.32-33. Principis de mínim privilegi i need-to-know. <strong>Notificació AEPD 72h.</strong></p>
+      </div>
+      <div class="card bl-amber">
+        <div class="card-icon" style="background:#fffbeb">👤</div>
+        <h3>Drets (T2)</h3>
+        <p>User Rights Assignment (SeDebugPrivilege, SeTcbPrivilege). Linux capabilities (CAP_SETUID). sudo i NOPASSWD. Binaris SUID com a vectors d'escalada. <strong>GTFOBins.</strong></p>
+      </div>
+      <div class="card bl-win">
+        <div class="card-icon" style="background:#f0f7ff">📋</div>
+        <h3>Directives (T3)</h3>
+        <p>secpol.msc. secedit /export /analyze. NTLMv2, SMB Signing, NoLMHash. AppArmor (enforce/complain). Lynis Hardening Index. CIS Benchmarks. <strong>auditpol.</strong></p>
+      </div>
+      <div class="card bl-cyan">
+        <div class="card-icon" style="background:#f0fdff">📊</div>
+        <h3>Registre (T4)</h3>
+        <p>EID 4624/4625/4720/4728/1102/4719. Logon Types (2/3/10). syslog, journald, auditd. Camps dels events (auid, subj, acct). Centralització rsyslog. <strong>ausearch, aureport.</strong></p>
+      </div>
+      <div class="card bl-cyan">
+        <div class="card-icon" style="background:#f0fdff">🎯</div>
+        <h3>Objectius & Àmbit (T5–6)</h3>
+        <p>Detecció, compliance, forensia, non-repudiation. Taula d'aspectes auditables per prioritat (Crítica → Baixa). Equilibri entre seguretat i "soroll". <strong>SIEM per correlació.</strong></p>
+      </div>
+      <div class="card bl-green">
+        <div class="card-icon" style="background:#f0fdf4">⚙️</div>
+        <h3>Mecanismes (T7–8)</h3>
+        <p>auditctl regles (-w, -a, -k). auditd + regles CIS. fail2ban (maxretry, bantime). Windows Event subscriptions. Integritat de logs (WORM, reenviament). <strong>ausearch -k, aureport.</strong></p>
+      </div>
+      <div class="card bl-asix">
+        <div class="card-icon" style="background:#f5f3ff">🔬</div>
+        <h3>Eines (T9)</h3>
+        <p>Lynis, CIS-CAT, Wazuh, Splunk, ELK, Nessus, OpenVAS, nmap (--script vuln), Wireshark, OSquery (SQL sobre el SO), Sysmon. <strong>nmap -oX per a informes.</strong></p>
+      </div>
+      <div class="card bl-sec">
+        <div class="card-icon" style="background:#fff5f5">📝</div>
+        <h3>Informes (T10)</h3>
+        <p>Estructura: Exec Summary, Abast, Troballes, Pla de millora. Severitat CVSS (Crítica 9-10, Alta 7-8.9, Mitja 4-6.9). Terminis de correcció. Evidències. <strong>Redacció bi-nivell (tècnic + direcció).</strong></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p><strong>RA7 — Auditoria de la utilització i l'accés a recursos · ASIX · MP0369 · Implantació de Sistemes Operatius</strong></p>
+  <p style="margin-top:.4rem">CIA · ISO 27001 · ENS · RGPD · User Rights · AppArmor · auditd · Event Log · fail2ban · SIEM · nmap · Lynis · Wazuh</p>
+  <p style="margin-top:.4rem">Departament d'Informàtica · Administració de Sistemes Informàtics en Xarxa (ASIX)</p>
+</footer>
+
+<script>
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('in'); });
+  }, { threshold: 0.06, rootMargin: '0px 0px -30px 0px' });
+  document.querySelectorAll('.fi').forEach(el => io.observe(el));
+</script>
+</body>
+</html>

@@ -1,0 +1,1580 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RA4 — Administració de Dominis · ASIX · MP0369</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:      #0d0f1a;
+  --paper:    #f4f2ed;
+  --cream:    #eceae3;
+  --navy:     #1a1f4e;
+  --asix:     #6d28d9;
+  --asix-l:   #7c3aed;
+  --asix-d:   #4c1d95;
+  --win:      #0078d4;
+  --win-d:    #005a9e;
+  --ubuntu:   #e95420;
+  --ubuntu-d: #c2440e;
+  --ad:       #0078d4;
+  --ldap:     #059669;
+  --ldap-d:   #064e3b;
+  --sec:      #dc2626;
+  --amber:    #d97706;
+  --green:    #059669;
+  --muted:    #6b6f85;
+  --border:   #d6d2c9;
+  --card:     #ffffff;
+  --term:     #0f111a;
+  --term2:    #161b2e;
+  --radius:   16px;
+  --radius-sm:8px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);font-size:16px;line-height:1.7;overflow-x:hidden;}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(244,242,237,0.94);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:62px;}
+.nav-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:.92rem;color:var(--navy);letter-spacing:-.02em;}
+.nav-logo span{color:var(--asix-l);}
+.nav-pills{display:flex;gap:.3rem;list-style:none;flex-wrap:wrap;}
+.nav-pills a{text-decoration:none;font-size:.7rem;font-weight:600;padding:.25rem .65rem;border-radius:100px;color:var(--muted);transition:all .2s;border:1px solid transparent;}
+.nav-pills a:hover{color:var(--asix-l);border-color:var(--asix-l);background:rgba(109,40,217,.07);}
+
+/* ── HERO ── */
+.hero{min-height:100vh;display:grid;place-items:center;background:var(--navy);color:white;position:relative;overflow:hidden;padding:8rem 2rem 4rem;}
+.hero-bg{position:absolute;inset:0;background:
+  radial-gradient(ellipse 65% 50% at 85% 20%,rgba(0,120,212,.35) 0%,transparent 60%),
+  radial-gradient(ellipse 60% 45% at 10% 80%,rgba(109,40,217,.3) 0%,transparent 60%),
+  radial-gradient(ellipse 40% 35% at 50% 100%,rgba(5,150,105,.2) 0%,transparent 55%);}
+.hero-dots{position:absolute;inset:0;opacity:.05;background-image:radial-gradient(rgba(255,255,255,.8) 1px,transparent 1px);background-size:28px 28px;}
+.hero-grid{position:absolute;inset:0;opacity:.04;background-image:linear-gradient(rgba(255,255,255,.4) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.4) 1px,transparent 1px);background-size:48px 48px;}
+.hero-content{position:relative;z-index:1;text-align:center;max-width:860px;}
+.hero-badge{display:inline-flex;align-items:center;gap:.5rem;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.85);font-size:.78rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:.35rem 1rem;border-radius:100px;margin-bottom:1.5rem;}
+.hero h1{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(2.4rem,6vw,4.8rem);line-height:1.05;letter-spacing:-.03em;margin-bottom:1.5rem;}
+.hero h1 .a{color:#93c5fd;} .hero h1 .b{color:#6ee7b7;} .hero h1 .c{color:#c084fc;}
+.hero p{font-size:1.05rem;color:rgba(255,255,255,.6);max-width:580px;margin:0 auto 2.5rem;}
+.hero-pills-row{display:flex;justify-content:center;gap:.75rem;flex-wrap:wrap;margin-bottom:2rem;}
+.hero-pill{display:inline-flex;align-items:center;gap:.5rem;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);padding:.5rem 1.1rem;border-radius:10px;font-size:.82rem;font-weight:500;color:white;text-decoration:none;transition:all .25s;}
+.hero-pill:hover{background:rgba(255,255,255,.15);transform:translateY(-2px);}
+.hero-pill .dot{width:9px;height:9px;border-radius:50%;}
+.scroll-hint{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.4rem;color:rgba(255,255,255,.3);font-size:.72rem;letter-spacing:.1em;}
+.scroll-hint::after{content:'';display:block;width:1px;height:36px;background:linear-gradient(to bottom,rgba(255,255,255,.35),transparent);animation:pulse 2s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:.3}50%{opacity:1}}
+
+/* ── LAYOUT ── */
+section{padding:5.5rem 2rem;}
+.container{max-width:1080px;margin:0 auto;}
+.section-tag{font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;display:flex;align-items:center;gap:.5rem;margin-bottom:.9rem;}
+.section-tag::before{content:'';display:block;width:20px;height:2px;}
+.tag-asix{color:var(--asix-l);} .tag-asix::before{background:var(--asix-l);}
+.tag-win{color:var(--win);} .tag-win::before{background:var(--win);}
+.tag-ldap{color:var(--ldap);} .tag-ldap::before{background:var(--ldap);}
+.tag-sec{color:var(--sec);} .tag-sec::before{background:var(--sec);}
+.tag-amber{color:var(--amber);} .tag-amber::before{background:var(--amber);}
+.tag-ubuntu{color:var(--ubuntu);} .tag-ubuntu::before{background:var(--ubuntu);}
+
+h2{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(1.6rem,3.2vw,2.4rem);line-height:1.1;letter-spacing:-.025em;color:var(--navy);margin-bottom:.9rem;}
+h3{font-family:'Syne',sans-serif;font-weight:700;font-size:1.12rem;color:var(--navy);margin-bottom:.65rem;}
+h4{font-family:'Syne',sans-serif;font-weight:700;font-size:.94rem;color:var(--navy);margin-bottom:.4rem;}
+.lead{font-size:1.02rem;color:var(--muted);max-width:720px;margin-bottom:2.5rem;line-height:1.75;}
+
+/* ── CARDS ── */
+.grid{display:grid;gap:1.25rem;}
+.g2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr));}
+.g3{grid-template-columns:repeat(auto-fit,minmax(240px,1fr));}
+.g4{grid-template-columns:repeat(auto-fit,minmax(200px,1fr));}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.75rem;transition:transform .2s,box-shadow .2s;}
+.card:hover{transform:translateY(-3px);box-shadow:0 12px 32px rgba(26,31,78,.1);}
+.card p{color:var(--muted);font-size:.92rem;}
+.card-icon{width:44px;height:44px;border-radius:10px;display:grid;place-items:center;font-size:1.3rem;margin-bottom:.9rem;}
+.bl-asix{border-left:3px solid var(--asix-l);}
+.bl-win{border-left:3px solid var(--win);}
+.bl-ldap{border-left:3px solid var(--ldap);}
+.bl-sec{border-left:3px solid var(--sec);}
+.bl-amber{border-left:3px solid var(--amber);}
+.bl-ubuntu{border-left:3px solid var(--ubuntu);}
+
+/* ── RA BANNER ── */
+.ra-banner{border-radius:var(--radius);padding:1.5rem 2rem;display:flex;align-items:center;gap:1.25rem;margin-bottom:3rem;color:white;}
+.ra-num{font-family:'Syne',sans-serif;font-weight:800;font-size:2.4rem;opacity:.22;flex-shrink:0;line-height:1;}
+.ra-banner h2{color:white;font-size:1.35rem;margin-bottom:.2rem;}
+.ra-banner p{color:rgba(255,255,255,.7);font-size:.88rem;}
+.ra-asix{background:linear-gradient(135deg,var(--asix-d),var(--asix-l));}
+.ra-win{background:linear-gradient(135deg,var(--win-d),var(--win));}
+.ra-ldap{background:linear-gradient(135deg,var(--ldap-d),var(--ldap));}
+.ra-sec{background:linear-gradient(135deg,#7f1d1d,var(--sec));}
+.ra-preguntes{background:linear-gradient(135deg,#92400e,#d97706);}
+
+/* ── CALLOUTS ── */
+.callout{border-radius:var(--radius);padding:1.5rem 1.75rem;margin:1.5rem 0;display:flex;gap:1rem;align-items:flex-start;}
+.callout-icon{font-size:1.4rem;flex-shrink:0;margin-top:.1rem;}
+.callout p,.callout li{font-size:.92rem;}
+.callout ul{padding-left:1.2rem;} .callout li{margin-bottom:.25rem;}
+.cl-asix{background:rgba(109,40,217,.07);border:1px solid rgba(109,40,217,.2);}
+.cl-blue{background:rgba(0,120,212,.07);border:1px solid rgba(0,120,212,.2);}
+.cl-ldap{background:rgba(5,150,105,.07);border:1px solid rgba(5,150,105,.2);}
+.cl-amber{background:rgba(251,188,4,.1);border:1px solid rgba(251,188,4,.3);}
+.cl-red{background:rgba(220,38,38,.07);border:1px solid rgba(220,38,38,.2);}
+.cl-ubuntu{background:rgba(233,84,32,.07);border:1px solid rgba(233,84,32,.2);}
+
+/* ── TERMINAL ── */
+.terminal{background:var(--term);border-radius:var(--radius-sm);overflow:hidden;margin:.75rem 0;font-family:'JetBrains Mono',monospace;font-size:.79rem;}
+.term-bar{background:var(--term2);padding:.55rem 1rem;display:flex;align-items:center;gap:.5rem;border-bottom:1px solid rgba(255,255,255,.06);}
+.term-dot{width:11px;height:11px;border-radius:50%;}
+.term-title{color:rgba(255,255,255,.4);font-size:.72rem;letter-spacing:.05em;margin-left:.25rem;}
+.term-os{font-size:.68rem;font-weight:600;padding:.1rem .5rem;border-radius:4px;margin-left:auto;}
+.term-os-win{background:rgba(0,120,212,.25);color:#60adf0;}
+.term-os-ubuntu{background:rgba(233,84,32,.25);color:#f4956a;}
+.term-os-both{background:rgba(109,40,217,.25);color:#c084fc;}
+.term-os-ps{background:rgba(0,120,212,.3);color:#93c5fd;}
+.term-body{padding:1rem 1.25rem;line-height:1.8;}
+.term-body .prompt-win{color:#60adf0;}
+.term-body .prompt-ps{color:#93c5fd;}
+.term-body .prompt-ub{color:#f4956a;}
+.term-body .cmd{color:#e2e8f0;}
+.term-body .out{color:#94a3b8;}
+.term-body .comment{color:#475569;}
+.term-body .ok{color:#6ee7b7;}
+.term-body .err{color:#fca5a5;}
+.term-body .path{color:#fbbf24;}
+.term-body .flag{color:#c084fc;}
+.term-body .str{color:#86efac;}
+.term-body .num{color:#fca5a5;}
+.term-body .dn{color:#7dd3fc;}
+
+/* ── LAB CARD ── */
+.lab-card{background:linear-gradient(135deg,#0f111a,#161b2e);border:1px solid rgba(255,255,255,.08);border-radius:var(--radius);overflow:hidden;margin:2rem 0;}
+.lab-header{padding:1rem 1.5rem;display:flex;align-items:center;gap:1rem;border-bottom:1px solid rgba(255,255,255,.07);}
+.lab-icon{font-size:1.5rem;flex-shrink:0;}
+.lab-title-block h4{font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;color:white;margin:0 0 .1rem;}
+.lab-title-block p{font-size:.78rem;color:rgba(255,255,255,.5);margin:0;}
+.lab-os-tags{display:flex;gap:.4rem;margin-left:auto;}
+.os-tag{font-size:.67rem;font-weight:700;padding:.2rem .65rem;border-radius:100px;letter-spacing:.04em;white-space:nowrap;}
+.os-win{background:rgba(0,120,212,.3);color:#60adf0;border:1px solid rgba(0,120,212,.4);}
+.os-ubuntu{background:rgba(233,84,32,.3);color:#f4956a;border:1px solid rgba(233,84,32,.4);}
+.os-both{background:rgba(109,40,217,.3);color:#c084fc;border:1px solid rgba(109,40,217,.4);}
+.lab-body{padding:1.5rem;}
+.lab-body p{color:rgba(255,255,255,.7);font-size:.9rem;margin-bottom:.75rem;}
+.lab-body h5{font-family:'Syne',sans-serif;font-weight:700;font-size:.85rem;color:rgba(255,255,255,.9);margin:.75rem 0 .4rem;}
+.lab-steps{counter-reset:ls;list-style:none;padding:0;display:flex;flex-direction:column;gap:.5rem;}
+.lab-steps li{counter-increment:ls;display:flex;gap:.75rem;align-items:flex-start;font-size:.87rem;color:rgba(255,255,255,.65);}
+.lab-steps li::before{content:counter(ls);flex-shrink:0;width:24px;height:24px;border-radius:50%;background:rgba(109,40,217,.5);color:#c084fc;display:grid;place-items:center;font-family:'Syne',sans-serif;font-weight:700;font-size:.72rem;}
+.lab-steps li strong{color:rgba(255,255,255,.9);}
+.lab-entrega{background:rgba(109,40,217,.15);border:1px solid rgba(109,40,217,.3);border-radius:var(--radius-sm);padding:.85rem 1.1rem;margin-top:1rem;font-size:.83rem;color:rgba(255,255,255,.7);}
+.lab-entrega strong{color:#c084fc;}
+
+/* ── TABLE ── */
+.ptable{width:100%;border-collapse:collapse;font-size:.87rem;}
+.ptable th,.ptable td{padding:.8rem 1rem;text-align:left;border-bottom:1px solid var(--border);}
+.ptable th{background:var(--navy);color:white;font-family:'Syne',sans-serif;font-weight:700;}
+.ptable th:first-child{border-radius:8px 0 0 0;} .ptable th:last-child{border-radius:0 8px 0 0;}
+.ptable tr:hover td{background:var(--cream);}
+.badge{display:inline-block;padding:.15rem .55rem;border-radius:100px;font-size:.72rem;font-weight:700;font-family:'Syne',sans-serif;}
+.b-asix{background:rgba(109,40,217,.12);color:var(--asix-l);}
+.b-win{background:rgba(0,120,212,.12);color:var(--win);}
+.b-ldap{background:rgba(5,150,105,.12);color:var(--ldap);}
+.b-amber{background:rgba(217,119,6,.15);color:#92400e;}
+.b-red{background:rgba(220,38,38,.1);color:var(--sec);}
+.b-green{background:rgba(5,150,105,.12);color:var(--green);}
+
+/* ── EX BOX ── */
+.ex{background:var(--cream);border:1px solid var(--border);border-radius:var(--radius-sm);padding:1rem 1.25rem;margin:.65rem 0;}
+.ex .ex-lbl{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.3rem;}
+.ex p{font-size:.87rem;color:var(--ink);}
+.ex code{font-family:'JetBrains Mono',monospace;font-size:.82rem;background:rgba(109,40,217,.07);padding:.1rem .3rem;border-radius:3px;color:var(--asix-l);}
+.ex-asix .ex-lbl{color:var(--asix-l);}
+.ex-win .ex-lbl{color:var(--win);}
+.ex-ldap .ex-lbl{color:var(--ldap);}
+.ex-sec .ex-lbl{color:var(--sec);}
+
+/* ── LDAP TREE ── */
+.ldap-tree{font-family:'JetBrains Mono',monospace;font-size:.82rem;background:var(--term);border-radius:var(--radius-sm);padding:1.5rem;margin:1rem 0;color:#94a3b8;line-height:2;}
+.ldap-tree .dn-dc{color:#7dd3fc;}
+.ldap-tree .dn-ou{color:#6ee7b7;}
+.ldap-tree .dn-cn{color:#fbbf24;}
+.ldap-tree .dn-comment{color:#475569;}
+
+/* ── SCHEMA BLOCK ── */
+.schema-block{background:var(--term2);border:1px solid rgba(255,255,255,.07);border-radius:var(--radius-sm);padding:1.25rem;margin:.75rem 0;}
+.schema-block .sb-title{font-family:'Syne',sans-serif;font-weight:700;font-size:.8rem;color:rgba(255,255,255,.5);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.6rem;}
+.schema-block code{font-family:'JetBrains Mono',monospace;font-size:.8rem;line-height:1.9;color:#e2e8f0;display:block;}
+.schema-block code .attr{color:#7dd3fc;}
+.schema-block code .val{color:#86efac;}
+.schema-block code .comment{color:#475569;}
+
+/* ── PILLS ── */
+.pills{display:flex;flex-wrap:wrap;gap:.4rem;margin:.65rem 0;}
+.pill{padding:.22rem .75rem;border-radius:100px;font-size:.78rem;border:1px solid var(--border);background:var(--cream);color:var(--ink);}
+.pill-a{background:rgba(109,40,217,.1);border-color:rgba(109,40,217,.3);color:var(--asix-l);}
+.pill-w{background:rgba(0,120,212,.1);border-color:rgba(0,120,212,.3);color:var(--win);}
+.pill-l{background:rgba(5,150,105,.1);border-color:rgba(5,150,105,.3);color:var(--ldap);}
+.pill-r{background:rgba(220,38,38,.1);border-color:rgba(220,38,38,.3);color:var(--sec);}
+
+/* ── SECTION THEMES ── */
+.s-cream{background:var(--cream);}
+.s-asix{background:#f5f3ff;}
+.s-win{background:#f0f7ff;}
+.s-ldap{background:#f0fdf4;}
+.s-sec{background:#fff5f5;}
+.s-dark{background:var(--navy);color:white;}
+.s-dark h2,.s-dark h3,.s-dark h4{color:white;}
+.s-dark .lead{color:rgba(255,255,255,.6);}
+.s-dark .card{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.1);}
+.s-dark .card h3,.s-dark .card h4{color:white;}
+.s-dark .card p{color:rgba(255,255,255,.6);}
+.s-dark .ptable th{background:rgba(255,255,255,.1);}
+.s-dark .ptable td{border-color:rgba(255,255,255,.1);color:rgba(255,255,255,.8);}
+.s-dark .ptable tr:hover td{background:rgba(255,255,255,.05);}
+
+/* ── STEPS ── */
+.steps{counter-reset:st;list-style:none;display:flex;flex-direction:column;gap:.8rem;}
+.steps li{counter-increment:st;display:flex;gap:.9rem;align-items:flex-start;padding:.9rem 1.1rem;background:var(--cream);border-radius:var(--radius-sm);font-size:.9rem;}
+.steps li::before{content:counter(st);flex-shrink:0;width:28px;height:28px;border-radius:50%;background:var(--asix-l);color:white;display:grid;place-items:center;font-family:'Syne',sans-serif;font-weight:700;font-size:.8rem;}
+.steps li p{color:var(--ink);margin:0;} .steps li strong{color:var(--navy);}
+
+/* ── Q CARDS ── */
+.q-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem 2rem;display:flex;gap:1.25rem;align-items:flex-start;transition:transform .2s,box-shadow .2s;}
+.q-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.08);}
+.q-num{flex-shrink:0;width:36px;height:36px;border-radius:50%;background:var(--cream);border:2px solid var(--border);display:grid;place-items:center;font-family:'Syne',sans-serif;font-weight:800;font-size:.88rem;color:var(--asix-l);}
+.q-body h4{margin-bottom:.35rem;color:var(--navy);font-size:.95rem;}
+.q-body p{color:var(--muted);font-size:.85rem;font-style:italic;}
+.q-tag{display:inline-block;padding:.15rem .6rem;border-radius:100px;font-size:.7rem;font-weight:700;margin-top:.5rem;margin-right:.3rem;}
+.qt-ad{background:rgba(0,120,212,.1);color:var(--win);}
+.qt-ldap{background:rgba(5,150,105,.1);color:var(--ldap);}
+.qt-sec{background:rgba(220,38,38,.1);color:var(--sec);}
+.qt-gpo{background:rgba(109,40,217,.1);color:var(--asix-l);}
+.qt-grups{background:rgba(217,119,6,.1);color:#92400e;}
+
+/* ── GROUP DIAGRAM ── */
+.group-nest{display:flex;flex-direction:column;gap:.5rem;margin:1rem 0;}
+.gn-row{display:flex;align-items:center;gap:.75rem;padding:.7rem 1rem;border-radius:var(--radius-sm);border:1px solid var(--border);background:white;font-size:.87rem;}
+.gn-icon{font-size:1.1rem;flex-shrink:0;}
+.gn-type{font-family:'Syne',sans-serif;font-weight:700;font-size:.78rem;padding:.15rem .6rem;border-radius:100px;white-space:nowrap;}
+.gn-gl{background:rgba(220,38,38,.1);color:var(--sec);border:1px solid rgba(220,38,38,.2);}
+.gn-gg{background:rgba(0,120,212,.1);color:var(--win);border:1px solid rgba(0,120,212,.2);}
+.gn-gu{background:rgba(109,40,217,.1);color:var(--asix-l);border:1px solid rgba(109,40,217,.2);}
+.gn-desc{color:var(--muted);flex:1;font-size:.85rem;}
+.gn-scope{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--asix-l);background:rgba(109,40,217,.06);padding:.15rem .5rem;border-radius:4px;}
+.gn-arrow{color:var(--muted);font-size:.75rem;margin-left:auto;}
+
+/* ── COMPARE TABLE ── */
+.comp-row{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin:1.25rem 0;}
+
+/* ── ANIM ── */
+hr{border:none;border-top:1px solid var(--border);margin:3rem 0;}
+.fi{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fi.in{opacity:1;transform:none;}
+footer{background:var(--ink);color:rgba(255,255,255,.4);padding:3rem 2rem;text-align:center;font-size:.85rem;}
+footer strong{color:white;}
+@media(max-width:640px){.nav-pills{display:none;}.lab-os-tags{display:none;}.comp-row{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">ASIX · <span>MP0369 RA4</span> · Dominis</div>
+  <ul class="nav-pills">
+    <li><a href="#cs">Client/Servidor</a></li>
+    <li><a href="#ldap">LDAP</a></li>
+    <li><a href="#domini">Domini & AD</a></li>
+    <li><a href="#comptes">Comptes</a></li>
+    <li><a href="#seguretat">Seguretat</a></li>
+    <li><a href="#perfils">Perfils</a></li>
+    <li><a href="#plantilles">Plantilles</a></li>
+    <li><a href="#grups">Grups</a></li>
+    <li><a href="#preguntes">Preguntes</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div><div class="hero-dots"></div><div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-badge">🏢 ASIX · MP0369 · RA4 · Administració de Dominis</div>
+    <h1><span class="a">Centralització</span><br><span class="b">de la</span> <span class="c">Informació</span></h1>
+    <p>Estructures de domini, Active Directory, LDAP, gestió de comptes, grups, perfils i polítiques. Del servidor al client, passant pel directori.</p>
+    <div class="hero-pills-row">
+      <a href="#cs"     class="hero-pill"><span class="dot" style="background:#93c5fd"></span>Client/Servidor</a>
+      <a href="#ldap"   class="hero-pill"><span class="dot" style="background:#6ee7b7"></span>LDAP & AD DS</a>
+      <a href="#comptes"class="hero-pill"><span class="dot" style="background:#fbbf24"></span>Comptes i Grups</a>
+      <a href="#perfils"class="hero-pill"><span class="dot" style="background:#f4956a"></span>Perfils i Carpetes</a>
+      <a href="#preguntes" class="hero-pill"><span class="dot" style="background:#c084fc"></span>10 Preguntes</a>
+    </div>
+  </div>
+  <div class="scroll-hint">DESPLAÇA</div>
+</section>
+
+<!-- ═══════ INTRO RA4 ═══════ -->
+<section class="s-cream" id="intro">
+  <div class="container fi">
+    <div class="section-tag tag-asix">Resultat d'Aprenentatge 4 · MP0369</div>
+    <h2>Centralitza la informació en servidors administrant estructures de dominis</h2>
+    <p class="lead">Analitzant-ne els avantatges. Treballarem principalment amb <strong>Windows Server / Active Directory Domain Services (AD DS)</strong> i coneixerem el protocol <strong>LDAP</strong> com a base teòrica i la seva implementació a Linux (<strong>OpenLDAP + Samba</strong>).</p>
+    <div class="grid g4 fi">
+      <div class="card bl-asix">
+        <div class="card-icon" style="background:#f5f3ff">🏗️</div>
+        <h3>Infraestructura</h3>
+        <p>Model client/servidor, protocol LDAP, concepte de domini, Active Directory i requisits per muntar un domini.</p>
+        <div class="pills"><span class="pill pill-a">T1–T3</span></div>
+      </div>
+      <div class="card bl-win">
+        <div class="card-icon" style="background:#f0f7ff">👤</div>
+        <h3>Gestió de comptes</h3>
+        <p>Comptes d'usuari, equips i predeterminades. Contrasenyes, bloquejos i polítiques de seguretat.</p>
+        <div class="pills"><span class="pill pill-w">T4–T6</span></div>
+      </div>
+      <div class="card" style="border-left:3px solid var(--amber)">
+        <div class="card-icon" style="background:#fffbeb">🗂️</div>
+        <h3>Perfils i carpetes</h3>
+        <p>Perfils locals, mòbils i obligatoris. Carpetes personals (home folders). Redirecció de carpetes.</p>
+        <div class="pills"><span class="pill pill-a" style="background:rgba(217,119,6,.1);border-color:rgba(217,119,6,.3);color:#92400e">T7–T8</span></div>
+      </div>
+      <div class="card bl-sec">
+        <div class="card-icon" style="background:#fff5f5">👥</div>
+        <h3>Plantilles i grups</h3>
+        <p>Plantilles d'usuari, variables d'entorn, grups de seguretat/distribució, estratègia AGDLP.</p>
+        <div class="pills"><span class="pill pill-r">T9–T10</span></div>
+      </div>
+    </div>
+    <div class="callout cl-blue fi" style="margin-top:1.5rem">
+      <span class="callout-icon">🔬</span>
+      <div>
+        <strong>Llegenda exercicis pràctics:</strong> <span style="color:var(--win);font-weight:600">🪟 PowerShell / Windows Server</span> (Active Directory), <span style="color:var(--ubuntu);font-weight:600">🐧 Ubuntu / CLI</span> (OpenLDAP, Samba), <span style="color:var(--asix-l);font-weight:600">🔀 Ambdós</span>. Totes les comandes inclouen la sintaxi exacta per executar-les al laboratori.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ T1 — CLIENT/SERVIDOR ═══════ -->
+<section id="cs" class="s-asix">
+  <div class="container">
+    <div class="ra-banner ra-asix fi">
+      <div class="ra-num">1</div>
+      <div><h2>Estructura client/servidor</h2>
+        <p>El model que fonaments tota la infraestructura IT empresarial moderna.</p></div>
+    </div>
+
+    <div class="section-tag tag-asix fi">Fonaments</div>
+    <h2 class="fi">Del model Peer-to-Peer al model Client/Servidor</h2>
+    <p class="lead fi">Entendre per quin motiu les empreses adopten el model client/servidor és el punt de partida per comprendre la necessitat del Domini. Un grup de treball (workgroup) pot funcionar per a 5 usuaris; per a 50 és un caos.</p>
+
+    <div class="grid g2 fi">
+      <div class="card bl-amber">
+        <div class="card-icon" style="background:#fffbeb">🔀</div>
+        <h3>Peer-to-Peer (Grup de Treball)</h3>
+        <p style="margin-bottom:.75rem">Cada equip és alhora client i servidor. No hi ha control central.</p>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">👤 <strong style="color:var(--ink)">Comptes locals:</strong> cada equip té la seva pròpia base de dades d'usuaris. Si l'usuari té 10 equips, té 10 comptes.</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">🔑 <strong style="color:var(--ink)">Contrasenyes descentralitzades:</strong> cada màquina la gestiona de manera independent. El canvi de contrasenya no es propaga.</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">📁 <strong style="color:var(--ink)">Recursos compartits manualment:</strong> cal configurar cada compartició manualment a cada equip.</li>
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted)">⚠️ <strong style="color:var(--ink)">Límit pràctic:</strong> ~10-20 equips. Més enllà és ingobernable en termes de seguretat i manteniment.</li>
+        </ul>
+      </div>
+      <div class="card bl-asix">
+        <div class="card-icon" style="background:#f5f3ff">🏢</div>
+        <h3>Client/Servidor (Domini)</h3>
+        <p style="margin-bottom:.75rem">Un servidor central (Domain Controller) gestiona tots els recursos i identitats de la xarxa.</p>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">✅ <strong style="color:var(--ink)">Autenticació centralitzada:</strong> un sol compte permet accedir a tots els recursos del domini (SSO — Single Sign-On).</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">🔐 <strong style="color:var(--ink)">Polítiques centralitzades (GPO):</strong> les polítiques de seguretat, programari i configuració s'apliquen des del servidor a tots els clients.</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">📊 <strong style="color:var(--ink)">Directori central (AD):</strong> catàleg de tots els recursos: usuaris, equips, impressores, aplicacions.</li>
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted)">🔄 <strong style="color:var(--ink)">Escalabilitat:</strong> des de 10 fins a milions d'objectes. Microsoft AD suporta fins a 2 bilions d'objectes per domini.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout cl-asix fi">
+      <span class="callout-icon">🏆</span>
+      <div>
+        <strong>Avantatges del model client/servidor en l'empresa:</strong>
+        <ul style="margin-top:.5rem">
+          <li><strong>Seguretat uniforme:</strong> una política de contrasenyes s'aplica a tots alhora. Un compte compromès es bloqueja centralment.</li>
+          <li><strong>Gestió simplificada:</strong> 1 admin pot gestionar 500 usuaris des d'una consola. Sense domini, caldrien 500 intervencions locals.</li>
+          <li><strong>Recuperació davant desastres:</strong> els perfils i dades estan al servidor → si el PC de l'usuari s'espatlla, res es perd.</li>
+          <li><strong>Auditoria i compliance:</strong> tots els accessos queden registrats al servidor. Imprescindible per a ISO 27001, ENS, RGPD.</li>
+          <li><strong>Desplegament de software:</strong> el software s'instal·la des del servidor a tots els clients (GPO + MSI, SCCM, Intune).</li>
+        </ul>
+      </div>
+    </div>
+
+    <hr>
+
+    <!-- Comparativa de rols del servidor -->
+    <div class="section-tag tag-asix fi">Rols del servidor</div>
+    <h2 class="fi">Rols principals d'un servidor Windows en un domini</h2>
+    <div style="overflow-x:auto" class="fi">
+      <table class="ptable">
+        <thead><tr><th>Rol</th><th>Funció</th><th>Servei/Protocol</th><th>Port(s)</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Domain Controller (DC)</strong></td><td>Autenticació Kerberos, base de dades AD DS, replicació del directori.</td><td>Kerberos, LDAP, Netlogon</td><td>88, 389, 636</td></tr>
+          <tr><td><strong>DNS Server</strong></td><td>Resolució de noms del domini. Obligatori per al funcionament d'AD.</td><td>DNS</td><td>53 (UDP/TCP)</td></tr>
+          <tr><td><strong>DHCP Server</strong></td><td>Assignació automàtica d'IPs als clients del domini.</td><td>DHCP</td><td>67/68 (UDP)</td></tr>
+          <tr><td><strong>File Server</strong></td><td>Compartir carpetes, DFS (Distributed File System), permisos NTFS.</td><td>SMB/CIFS</td><td>445 (TCP)</td></tr>
+          <tr><td><strong>Print Server</strong></td><td>Centralitza les impressores de xarxa i els seus drivers.</td><td>SMB, LPD</td><td>445, 515</td></tr>
+          <tr><td><strong>GPO / Group Policy</strong></td><td>Distribueix polítiques de configuració als clients. Part de AD DS.</td><td>SYSVOL (SMB), LDAP</td><td>445, 389</td></tr>
+          <tr><td><strong>Certificate Authority (CA)</strong></td><td>Emmet certificats digitals per a HTTPS intern, VPN, autenticació.</td><td>HTTPS, LDAP</td><td>443, 389</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- PRÀCTICA 1 -->
+    <div class="lab-card fi">
+      <div class="lab-header">
+        <div class="lab-icon">🔬</div>
+        <div class="lab-title-block">
+          <h4>Pràctica 4.1 — Instal·lar Active Directory Domain Services</h4>
+          <p>Promoure un Windows Server a Domain Controller i crear el primer domini</p>
+        </div>
+        <div class="lab-os-tags"><span class="os-tag os-win">🪟 Windows Server</span></div>
+      </div>
+      <div class="lab-body">
+        <p>Crearem el domini <strong>asix.local</strong> en una VM amb Windows Server 2022. El servidor actuarà de DC, DNS i DHCP.</p>
+        <h5>🪟 PowerShell — Instal·lació del rol AD DS i promoció a DC</h5>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">PowerShell — Administrador (Windows Server)</span><span class="term-os term-os-ps">PowerShell</span></div>
+          <div class="term-body">
+            <span class="comment"># 1. Instal·lar el rol Active Directory Domain Services</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">Install-WindowsFeature</span> <span class="flag">-Name</span> <span class="str">"AD-Domain-Services"</span> <span class="flag">-IncludeManagementTools</span><br>
+            <span class="out">Success Restart Needed Exit Code  Feature Result</span><br>
+            <span class="ok">True    No             Success   {Active Directory Domain Services}</span><br><br>
+            <span class="comment"># 2. Importar el mòdul ADDSDeployment</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">Import-Module ADDSDeployment</span><br><br>
+            <span class="comment"># 3. Crear un nou bosc/domini (primer DC del domini asix.local)</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">Install-ADDSForest</span> <span class="flag">`</span><br>
+            <span class="flag">  -DomainName</span> <span class="str">"asix.local"</span> <span class="flag">`</span><br>
+            <span class="flag">  -DomainNetbiosName</span> <span class="str">"ASIX"</span> <span class="flag">`</span><br>
+            <span class="flag">  -ForestMode</span> <span class="str">"WinThreshold"</span> <span class="flag">`</span><br>
+            <span class="flag">  -DomainMode</span> <span class="str">"WinThreshold"</span> <span class="flag">`</span><br>
+            <span class="flag">  -InstallDNS</span> <span class="flag">`</span><br>
+            <span class="flag">  -DatabasePath</span> <span class="str">"C:\Windows\NTDS"</span> <span class="flag">`</span><br>
+            <span class="flag">  -SysvolPath</span> <span class="str">"C:\Windows\SYSVOL"</span> <span class="flag">`</span><br>
+            <span class="flag">  -LogPath</span> <span class="str">"C:\Windows\NTDS"</span> <span class="flag">`</span><br>
+            <span class="flag">  -SafeModeAdministratorPassword</span> <span class="cmd">(ConvertTo-SecureString</span> <span class="str">"P@ssw0rd123!"</span> <span class="flag">-AsPlainText -Force)</span> <span class="flag">`</span><br>
+            <span class="flag">  -Force</span><br><br>
+            <span class="comment"># El servidor es reiniciarà automàticament</span><br>
+            <span class="comment"># Després del reinici, verificar el domini:</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">Get-ADDomain</span><br>
+            <span class="out">DNSRoot           : asix.local</span><br>
+            <span class="out">DomainMode        : Windows2016Domain</span><br>
+            <span class="out">PDCEmulator       : SRV-DC01.asix.local</span><br>
+            <span class="out">RIDMaster         : SRV-DC01.asix.local</span><br><br>
+            <span class="comment"># Verificar que DNS funciona correctament per al domini</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">Resolve-DnsName</span> <span class="str">"asix.local"</span> <span class="flag">-Type</span> <span class="cmd">SOA</span>
+          </div>
+        </div>
+        <div class="lab-entrega"><strong>📋 Lliurament:</strong> Captura de <code>Get-ADDomain</code> mostrant el domini creat i de <code>Get-ADForest</code>. Indica el rol FSMO PDC Emulator i explica per a quin propòsit s'usa la contrassenya DSRM (Safe Mode Administrator Password).</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ T2 — LDAP ═══════ -->
+<section id="ldap" class="s-ldap">
+  <div class="container">
+    <div class="ra-banner ra-ldap fi">
+      <div class="ra-num">2</div>
+      <div><h2>Protocol LDAP</h2>
+        <p>Lightweight Directory Access Protocol: el protocol estàndard per accedir i gestionar serveis de directori. La base d'Active Directory, OpenLDAP, Google Workspace i molts altres.</p></div>
+    </div>
+
+    <div class="section-tag tag-ldap fi">Protocol i model de dades</div>
+    <h2 class="fi">Què és LDAP i com estructura la informació</h2>
+    <p class="lead fi">LDAP (RFC 4511) és un protocol lleuger basat en TCP/IP per accedir a <strong>serveis de directori</strong>. Un directori és una base de dades jeràrquica optimitzada per a <em>lectures freqüents</em> i <em>escriptures poc freqüents</em> (a l'inrevés d'una BD SQL). Active Directory DS usa LDAP com a protocol d'accés principal.</p>
+
+    <div class="grid g3 fi">
+      <div class="card bl-ldap">
+        <div class="card-icon" style="background:#f0fdf4">🌐</div>
+        <h3>Ports LDAP</h3>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.35rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">📡 <strong style="color:var(--ink)">Port 389 (LDAP):</strong> port estàndard, comunicació en clar (no xifrada).</li>
+          <li style="padding:.35rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">🔐 <strong style="color:var(--ink)">Port 636 (LDAPS):</strong> LDAP sobre SSL/TLS. Comunicació xifrada. Obligatori en producció.</li>
+          <li style="padding:.35rem 0;font-size:.88rem;color:var(--muted)">🔒 <strong style="color:var(--ink)">Port 3268 (GC):</strong> Global Catalog en AD. Port 3269 per a GCSS (xifrat).</li>
+        </ul>
+      </div>
+      <div class="card bl-ldap">
+        <div class="card-icon" style="background:#f0fdf4">🌳</div>
+        <h3>Jerarquia del directori</h3>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">🌲 <strong style="color:var(--ink)">DIT (Directory Information Tree):</strong> l'arbre complet del directori.</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">📁 <strong style="color:var(--ink)">Entry (objecte):</strong> cada node de l'arbre. Un usuari, grup, equip, OU…</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">🔖 <strong style="color:var(--ink)">DN (Distinguished Name):</strong> la "ruta completa" que identifica de manera única cada objecte.</li>
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted)">🏷️ <strong style="color:var(--ink)">Attribute:</strong> cada camp de dades d'un objecte (cn, mail, userPrincipalName, memberOf…).</li>
+        </ul>
+      </div>
+      <div class="card bl-ldap">
+        <div class="card-icon" style="background:#f0fdf4">🔤</div>
+        <h3>Atributs clau</h3>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)"><code style="background:rgba(5,150,105,.1);padding:.1rem .3rem;border-radius:3px;color:var(--ldap-d)">dc</code> — Domain Component (part del domini)</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)"><code style="background:rgba(5,150,105,.1);padding:.1rem .3rem;border-radius:3px;color:var(--ldap-d)">ou</code> — Organizational Unit (contenidor)</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)"><code style="background:rgba(5,150,105,.1);padding:.1rem .3rem;border-radius:3px;color:var(--ldap-d)">cn</code> — Common Name (nom de l'objecte)</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)"><code style="background:rgba(5,150,105,.1);padding:.1rem .3rem;border-radius:3px;color:var(--ldap-d)">sn</code> — Surname (cognom)</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)"><code style="background:rgba(5,150,105,.1);padding:.1rem .3rem;border-radius:3px;color:var(--ldap-d)">mail</code> — Adreça de correu</li>
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted)"><code style="background:rgba(5,150,105,.1);padding:.1rem .3rem;border-radius:3px;color:var(--ldap-d)">userPrincipalName</code> — UPN (login@domini)</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 class="fi" style="margin-top:2rem">Exemple d'arbre LDAP per al domini asix.local</h3>
+    <div class="ldap-tree fi">
+      <span class="dn-comment"># Arrel del domini (Base DN)</span><br>
+      <span class="dn-dc">dc=asix,dc=local</span><br>
+      <span class="dn-comment">│</span><br>
+      <span class="dn-comment">├── </span><span class="dn-ou">ou=Usuaris</span><span class="dn-comment">,dc=asix,dc=local</span><br>
+      <span class="dn-comment">│   ├── </span><span class="dn-cn">cn=Joan Garcia</span><span class="dn-comment">,ou=Usuaris,dc=asix,dc=local</span><br>
+      <span class="dn-comment">│   ├── </span><span class="dn-cn">cn=Maria López</span><span class="dn-comment">,ou=Usuaris,dc=asix,dc=local</span><br>
+      <span class="dn-comment">│   └── </span><span class="dn-ou">ou=Informàtica</span><span class="dn-comment">,ou=Usuaris,dc=asix,dc=local</span><br>
+      <span class="dn-comment">│       └── </span><span class="dn-cn">cn=Pere Martínez</span><span class="dn-comment">,ou=Informàtica,ou=Usuaris,dc=asix,dc=local</span><br>
+      <span class="dn-comment">│</span><br>
+      <span class="dn-comment">├── </span><span class="dn-ou">ou=Grups</span><span class="dn-comment">,dc=asix,dc=local</span><br>
+      <span class="dn-comment">│   ├── </span><span class="dn-cn">cn=Admins TI</span><span class="dn-comment">,ou=Grups,dc=asix,dc=local</span><br>
+      <span class="dn-comment">│   └── </span><span class="dn-cn">cn=Vendes_GL</span><span class="dn-comment">,ou=Grups,dc=asix,dc=local</span><br>
+      <span class="dn-comment">│</span><br>
+      <span class="dn-comment">├── </span><span class="dn-ou">ou=Equips</span><span class="dn-comment">,dc=asix,dc=local</span><br>
+      <span class="dn-comment">│   ├── </span><span class="dn-cn">cn=PC-VENDES-01</span><span class="dn-comment">,ou=Equips,dc=asix,dc=local</span><br>
+      <span class="dn-comment">│   └── </span><span class="dn-cn">cn=LAPTOP-ADMIN-01</span><span class="dn-comment">,ou=Equips,dc=asix,dc=local</span><br>
+      <span class="dn-comment">│</span><br>
+      <span class="dn-comment">└── </span><span class="dn-ou">ou=Servidors</span><span class="dn-comment">,dc=asix,dc=local</span><br>
+      <span class="dn-comment">    └── </span><span class="dn-cn">cn=SRV-FILE-01</span><span class="dn-comment">,ou=Servidors,dc=asix,dc=local</span>
+    </div>
+
+    <div class="callout cl-ldap fi">
+      <span class="callout-icon">🔑</span>
+      <div>
+        <strong>Entendre els DN (Distinguished Name) és crític:</strong>
+        <p style="margin-top:.4rem">El DN és la "adreça única" de cada objecte al directori. Es llegeix <strong>de dreta a esquerra</strong>: primer el domini (arrel), després les OUs fins a arribar a l'objecte. Exemple: <code>cn=Joan Garcia,ou=Informàtica,ou=Usuaris,dc=asix,dc=local</code> significa: l'objecte "Joan Garcia" que es troba a la OU "Informàtica", dins de la OU "Usuaris", al domini "asix.local". Qualsevol crida LDAP necessita el DN complet o un filtre per localitzar l'objecte.</p>
+      </div>
+    </div>
+
+    <!-- Entrada LDIF d'exemple -->
+    <div class="schema-block fi">
+      <div class="sb-title">Exemple d'entrada LDIF — Compte d'usuari LDAP</div>
+      <code>
+        <span class="dn">dn: cn=Joan Garcia,ou=Usuaris,dc=asix,dc=local</span><br>
+        <span class="attr">objectClass</span>: <span class="val">top</span><br>
+        <span class="attr">objectClass</span>: <span class="val">person</span><br>
+        <span class="attr">objectClass</span>: <span class="val">organizationalPerson</span><br>
+        <span class="attr">objectClass</span>: <span class="val">inetOrgPerson</span><br>
+        <span class="attr">cn</span>: <span class="val">Joan Garcia</span><br>
+        <span class="attr">sn</span>: <span class="val">Garcia</span><br>
+        <span class="attr">givenName</span>: <span class="val">Joan</span><br>
+        <span class="attr">uid</span>: <span class="val">jgarcia</span><br>
+        <span class="attr">mail</span>: <span class="val">jgarcia@asix.local</span><br>
+        <span class="attr">telephoneNumber</span>: <span class="val">+34 93 123 45 67</span><br>
+        <span class="attr">userPassword</span>: <span class="val">{SSHA}9/8i7oBhKkOjZXUgD...</span> <span class="comment"># hash SSHA de la contrasenya</span><br>
+        <span class="attr">memberOf</span>: <span class="val">cn=Admins TI,ou=Grups,dc=asix,dc=local</span>
+      </code>
+    </div>
+
+    <!-- PRÀCTICA 2 -->
+    <div class="lab-card fi">
+      <div class="lab-header">
+        <div class="lab-icon">🔬</div>
+        <div class="lab-title-block">
+          <h4>Pràctica 4.2 — Consultes LDAP amb ldapsearch i Get-ADObject</h4>
+          <p>Consultar el directori amb LDAP des de línia de comandos (Ubuntu) i PowerShell (Windows)</p>
+        </div>
+        <div class="lab-os-tags"><span class="os-tag os-both">🔀 Windows + Ubuntu</span></div>
+      </div>
+      <div class="lab-body">
+        <p>Aprendrem a fer cerques al directori LDAP per identificar objectes i els seus atributs, tant des de Windows com des de Linux.</p>
+        <h5>🐧 Ubuntu — ldapsearch (consultar AD des de Linux)</h5>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">Terminal — ldap-utils</span><span class="term-os term-os-ubuntu">Ubuntu</span></div>
+          <div class="term-body">
+            <span class="comment"># Instal·lar les eines LDAP</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">apt install ldap-utils</span><br><br>
+            <span class="comment"># Cerca bàsica: tots els usuaris del domini</span><br>
+            <span class="prompt-ub">user@host:~$</span> <span class="cmd">ldapsearch</span> <span class="flag">-H</span> <span class="str">ldap://10.0.0.1</span> <span class="flag">\</span><br>
+            <span class="flag">  -D</span> <span class="str">"administrator@asix.local"</span> <span class="flag">-W</span> <span class="flag">\</span><br>
+            <span class="flag">  -b</span> <span class="str">"ou=Usuaris,dc=asix,dc=local"</span> <span class="flag">\</span><br>
+            <span class="str">"(objectClass=user)"</span> <span class="cmd">cn mail sAMAccountName</span><br><br>
+            <span class="comment"># Cercar un usuari específic per nom</span><br>
+            <span class="prompt-ub">user@host:~$</span> <span class="cmd">ldapsearch</span> <span class="flag">-H</span> <span class="str">ldap://10.0.0.1</span> <span class="flag">-D</span> <span class="str">"administrator@asix.local"</span> <span class="flag">-W</span> <span class="flag">\</span><br>
+            <span class="flag">  -b</span> <span class="str">"dc=asix,dc=local"</span> <span class="str">"(cn=Joan Garcia)"</span><br><br>
+            <span class="comment"># Comptar tots els usuaris del domini</span><br>
+            <span class="prompt-ub">user@host:~$</span> <span class="cmd">ldapsearch</span> <span class="flag">-H</span> <span class="str">ldap://10.0.0.1</span> <span class="flag">-D</span> <span class="str">"administrator@asix.local"</span> <span class="flag">-W</span> <span class="flag">\</span><br>
+            <span class="flag">  -b</span> <span class="str">"dc=asix,dc=local"</span> <span class="str">"(objectClass=user)"</span> <span class="flag">-z 0 | grep "^dn:" | wc -l</span>
+          </div>
+        </div>
+        <h5>🪟 PowerShell — Módulo ActiveDirectory</h5>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">PowerShell — ActiveDirectory Module</span><span class="term-os term-os-ps">PowerShell</span></div>
+          <div class="term-body">
+            <span class="comment"># Importar el mòdul (instal·lat amb RSAT)</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">Import-Module ActiveDirectory</span><br><br>
+            <span class="comment"># Consultar un usuari amb tots els seus atributs LDAP</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">Get-ADUser</span> <span class="flag">-Identity</span> <span class="str">"jgarcia"</span> <span class="flag">-Properties *</span><br><br>
+            <span class="comment"># Llistar tots els usuaris amb nom, UPN i OU</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">Get-ADUser</span> <span class="flag">-Filter *</span> <span class="flag">-Properties</span> <span class="cmd">DisplayName, EmailAddress</span> <span class="flag">|</span><br>
+            <span class="cmd"> Select-Object Name, SamAccountName, UserPrincipalName, DistinguishedName</span><br><br>
+            <span class="comment"># Cercar usuaris d'una OU específica (filtre LDAP directe)</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">Get-ADUser</span> <span class="flag">-Filter *</span> <span class="flag">-SearchBase</span> <span class="str">"ou=Informàtica,ou=Usuaris,dc=asix,dc=local"</span><br><br>
+            <span class="comment"># Cercar usuaris amb compte desactivat</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">Search-ADAccount</span> <span class="flag">-AccountDisabled</span> <span class="flag">-UsersOnly</span><br><br>
+            <span class="comment"># Veure les OUs del domini en format arbre</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">Get-ADOrganizationalUnit</span> <span class="flag">-Filter *</span> <span class="flag">|</span> <span class="cmd">Format-Table Name, DistinguishedName</span>
+          </div>
+        </div>
+        <div class="lab-entrega"><strong>📋 Lliurament:</strong> (1) Sortida de <code>Get-ADUser -Identity &lt;usuari&gt; -Properties *</code> del teu usuari creat a la pràctica anterior, identificant els atributs LDAP: DistinguishedName, SamAccountName, UserPrincipalName i objectGUID. (2) Esquema manual de l'arbre LDAP del domini creat (com el de la teoria però amb els objectes reals).</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ T3 — DOMINI I AD ═══════ -->
+<section id="domini" class="s-win">
+  <div class="container">
+    <div class="ra-banner ra-win fi">
+      <div class="ra-num">3</div>
+      <div><h2>Concepte de domini, subdominis i Active Directory</h2>
+        <p>Arquitectura d'un bosc AD: boscos, dominis, arbre de dominis, relacions de confiança i unitats organitzatives.</p></div>
+    </div>
+
+    <div class="section-tag tag-win fi">Arquitectura AD</div>
+    <h2 class="fi">L'arquitectura d'Active Directory Domain Services</h2>
+    <p class="lead fi">Active Directory no és simplement un repositori d'usuaris. És una arquitectura de tres nivells jeràrquics que permet escalar des d'una PYME fins a una multinacional amb milers de dominis distribuïts per tot el món.</p>
+
+    <div class="grid g3 fi">
+      <div class="card bl-win">
+        <div class="card-icon" style="background:#f0f7ff">🌲</div>
+        <h3>Bosc (Forest)</h3>
+        <p>El contenidor de màxim nivell. Un bosc agrupa un o més arbres de dominis que comparteixen el <strong>Global Catalog</strong>, l'<strong>schema</strong> AD i una <strong>relació de confiança transitiva</strong>. Tots els dominis d'un bosc confien entre ells.</p>
+        <div class="ex ex-win" style="margin-top:.75rem"><div class="ex-lbl">Exemple empresarial</div><p>Una empresa cotitzada (Grup ACME Corp.) té un bosc: <code>acmecorp.com</code>. Tots els seus dominis fills hi confien.</p></div>
+      </div>
+      <div class="card bl-win">
+        <div class="card-icon" style="background:#f0f7ff">🌳</div>
+        <h3>Arbre de dominis (Tree)</h3>
+        <p>Un arbre és un conjunt de dominis amb un espai de noms DNS continu i jeràrquic. Els dominis fills hereten part de les polítiques del pare i tenen relació de confiança bidireccional transitiva.</p>
+        <div class="ex ex-win" style="margin-top:.75rem"><div class="ex-lbl">Exemple jerarquia</div><p>
+          <code>acmecorp.com</code> (domini arrel)<br>
+          <code>espanya.acmecorp.com</code> (fill)<br>
+          <code>barcelona.espanya.acmecorp.com</code> (nét)
+        </p></div>
+      </div>
+      <div class="card bl-win">
+        <div class="card-icon" style="background:#f0f7ff">🏢</div>
+        <h3>Domini (Domain)</h3>
+        <p>La unitat administrativa bàsica d'AD. Té el seu propi DC, la seva base de dades d'objectes i les seves GPOs. Límit de seguretat entre departaments/empreses d'un bosc.</p>
+        <div class="ex ex-win" style="margin-top:.75rem"><div class="ex-lbl">Requisits mínims d'un domini</div><p>
+          1 DC amb Windows Server + Rol AD DS<br>
+          Servei DNS configurat per al domini<br>
+          IP estàtica al DC<br>
+          Nom FQDN del domini (p.ex. asix.local)
+        </p></div>
+      </div>
+    </div>
+
+    <hr>
+
+    <div class="section-tag tag-win fi">Unitats Organitzatives</div>
+    <h2 class="fi">Unitats Organitzatives (OUs): l'eina d'organització</h2>
+    <p class="lead fi">Les OUs (Organizational Units) són els <em>contenidors</em> dins d'un domini. A diferència dels grups, les OUs serveixen per <strong>delegar l'administració</strong> i <strong>aplicar GPOs</strong>, no per a permisos de recursos.</p>
+
+    <div class="grid g2 fi">
+      <div class="card bl-win">
+        <h3>📐 Estratègies de disseny d'OUs</h3>
+        <div style="overflow-x:auto">
+        <table class="ptable" style="font-size:.82rem">
+          <thead><tr><th>Estratègia</th><th>Organitzar per…</th><th>Quan usar-la</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Per ubicació geogràfica</strong></td><td>Seu/Oficina física</td><td>Empreses multinacionals amb polítiques per regió</td></tr>
+            <tr><td><strong>Per departament</strong></td><td>Vendes, RRHH, TI, Finances…</td><td>Empresa mitja. GPOs per departament (p.ex. bloqueig USB a RRHH)</td></tr>
+            <tr><td><strong>Per funció/rol</strong></td><td>Servidors, Portàtils, Impressores…</td><td>GPOs per tipus de dispositiu (WindowsUpdate, seguretat)</td></tr>
+            <tr><td><strong>Híbrida (recomanada)</strong></td><td>Primer ubicació, dins departament</td><td>La més usada en entorns reals. Màxima flexibilitat per a GPOs.</td></tr>
+          </tbody>
+        </table>
+        </div>
+        <div class="callout cl-blue" style="margin-top:1rem;padding:.85rem 1rem">
+          <span class="callout-icon">⚠️</span>
+          <p><strong>OUs vs Grups:</strong> mai confondre'ls. Les OUs serveixen per organitzar objectes i aplicar GPOs. Els Grups serveixen per assignar permisos a recursos. Un usuari pot ser en una OU i en múltiples grups alhora.</p>
+        </div>
+      </div>
+      <div class="card bl-win">
+        <h3>🔑 Rols FSMO — Els 5 operadors de màster d'operacions</h3>
+        <p style="margin-bottom:.75rem;font-size:.88rem;color:var(--muted)">En un domini AD hi ha rols especials que s'han de tenir en compte en entorns multi-DC:</p>
+        <div style="overflow-x:auto">
+        <table class="ptable" style="font-size:.8rem">
+          <thead><tr><th>Rol FSMO</th><th>Nivell</th><th>Funció</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Schema Master</strong></td><td>Bosc</td><td>Controla les modificacions a l'esquema AD</td></tr>
+            <tr><td><strong>Domain Naming Master</strong></td><td>Bosc</td><td>Afegir/eliminar dominis del bosc</td></tr>
+            <tr><td><strong>PDC Emulator</strong></td><td>Domini</td><td>Referència horària, canvis de contrasenya, polítiques</td></tr>
+            <tr><td><strong>RID Master</strong></td><td>Domini</td><td>Assigna rangs de RIDs als DCs per crear SIDs únics</td></tr>
+            <tr><td><strong>Infrastructure Master</strong></td><td>Domini</td><td>Actualitza les referències entre dominis</td></tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRÀCTICA 3 -->
+    <div class="lab-card fi">
+      <div class="lab-header">
+        <div class="lab-icon">🔬</div>
+        <div class="lab-title-block">
+          <h4>Pràctica 4.3 — Crear l'estructura d'OUs del domini</h4>
+          <p>Dissenyar i crear l'arbre d'OUs per a l'empresa "TechCorp SL" (fictícia)</p>
+        </div>
+        <div class="lab-os-tags"><span class="os-tag os-win">🪟 Windows Server</span></div>
+      </div>
+      <div class="lab-body">
+        <p>Crearem una estructura d'OUs que representi l'empresa TechCorp SL, amb seus a Barcelona i Madrid, i departaments de Vendes, IT i RRHH.</p>
+        <h5>🪟 PowerShell — Creació d'OUs en massa</h5>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">PowerShell — AD Module</span><span class="term-os term-os-ps">PowerShell</span></div>
+          <div class="term-body">
+            <span class="comment"># Crear OUs principals (sedes)</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">New-ADOrganizationalUnit</span> <span class="flag">-Name</span> <span class="str">"Barcelona"</span> <span class="flag">-Path</span> <span class="str">"dc=asix,dc=local"</span> <span class="flag">-ProtectedFromAccidentalDeletion $true</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">New-ADOrganizationalUnit</span> <span class="flag">-Name</span> <span class="str">"Madrid"</span> <span class="flag">-Path</span> <span class="str">"dc=asix,dc=local"</span> <span class="flag">-ProtectedFromAccidentalDeletion $true</span><br><br>
+            <span class="comment"># Crear sub-OUs per departament dins de cada seu</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">@("Usuaris","Equips","Grups")</span> <span class="flag">| ForEach-Object</span> <span class="cmd">{</span><br>
+            <span class="cmd">  New-ADOrganizationalUnit</span> <span class="flag">-Name</span> <span class="cmd">$_</span> <span class="flag">-Path</span> <span class="str">"ou=Barcelona,dc=asix,dc=local"</span><br>
+            <span class="cmd">  New-ADOrganizationalUnit</span> <span class="flag">-Name</span> <span class="cmd">$_</span> <span class="flag">-Path</span> <span class="str">"ou=Madrid,dc=asix,dc=local"</span><br>
+            <span class="cmd">}</span><br><br>
+            <span class="comment"># Crear sub-OUs de departaments dins Usuaris</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">@("Vendes","IT","RRHH","Finances")</span> <span class="flag">| ForEach-Object</span> <span class="cmd">{</span><br>
+            <span class="cmd">  New-ADOrganizationalUnit</span> <span class="flag">-Name</span> <span class="cmd">$_</span> <span class="flag">-Path</span> <span class="str">"ou=Usuaris,ou=Barcelona,dc=asix,dc=local"</span><br>
+            <span class="cmd">}</span><br><br>
+            <span class="comment"># Verificar l'estructura creada</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">Get-ADOrganizationalUnit</span> <span class="flag">-Filter *</span> <span class="flag">| Sort-Object DistinguishedName | Format-Table Name, DistinguishedName -AutoSize</span>
+          </div>
+        </div>
+        <div class="lab-entrega"><strong>📋 Lliurament:</strong> Captura de la sortida del darrer <code>Get-ADOrganizationalUnit</code> mostrant totes les OUs. A més, obre la consola gràfica <strong>Active Directory Users and Computers (ADUC)</strong> i captura la vista en arbre de les OUs creades. Justifica per quin motiu s'usa <code>-ProtectedFromAccidentalDeletion $true</code>.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ T4-6 — COMPTES ═══════ -->
+<section id="comptes" class="s-asix">
+  <div class="container">
+    <div class="ra-banner ra-asix fi">
+      <div class="ra-num">4–6</div>
+      <div><h2>Administració de comptes, contrasenyes i bloquejos</h2>
+        <p>Comptes predeterminats, comptes d'usuari i d'equip, polítiques de contrasenyes i bloquejos de compte.</p></div>
+    </div>
+
+    <div class="section-tag tag-asix fi">Tema 4 — Comptes predeterminades</div>
+    <h2 class="fi">Comptes predeterminades del domini</h2>
+    <p class="lead fi">En crear un domini AD, es generen automàticament un conjunt de comptes i grups amb permisos especials. Conèixer-los és clau per a la seguretat i el manteniment del domini.</p>
+
+    <div style="overflow-x:auto" class="fi">
+      <table class="ptable">
+        <thead><tr><th>Compte</th><th>SID Relatiu</th><th>Funció</th><th>Recomanació de seguretat</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Administrator</strong></td><td>RID-500</td><td>Compte d'admin del domini. Accés complet i no es pot bloquejar per polítiques de bloqueig normals.</td><td>Reanomenar-la, desactivar-la i crear una altra d'admin amb un nom no predictible.</td></tr>
+          <tr><td><strong>Guest</strong></td><td>RID-501</td><td>Accés anònim limitat. Desactivat per defecte en dominis nous.</td><td>Mantenir-la desactivada sempre. Pot ser un vector d'atac si s'activa.</td></tr>
+          <tr><td><strong>krbtgt</strong></td><td>RID-502</td><td>Compte del servei Kerberos Key Distribution Center. Xifra tots els tickets Kerberos.</td><td>Restablir la seva contrasenya periòdicament (2 cops en 2 vegades consecutives). Imprescindible post-breach.</td></tr>
+          <tr><td><strong>SYSTEM</strong></td><td>S-1-5-18</td><td>Compte local de màxim privilegi. No és un compte d'usuari real, és el compte del SO.</td><td>No es pot autenticar interactivament. Monitoritzar qualsevol procés que s'executi com a SYSTEM.</td></tr>
+          <tr><td><strong>DefaultAccount</strong></td><td>RID-503</td><td>Compte genèrica per a compatibilitat d'aplicacions (Windows 10+).</td><td>Desactivar si no s'usa aplicacions que la necessitin.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <hr>
+    <div class="section-tag tag-asix fi">Tema 5 — Contrasenyes i bloquejos</div>
+    <h2 class="fi">Polítiques de contrasenyes i bloquejos de compte (PSO)</h2>
+    <p class="lead fi">AD DS permet definir polítiques de contrasenyes a dos nivells: la <strong>Default Domain Policy</strong> (s'aplica a tot el domini) i les <strong>Fine-Grained Password Policies (PSO)</strong> (polítiques de grano fi, per a grups específics — disponibles des de Windows Server 2008).</p>
+
+    <div class="grid g2 fi">
+      <div class="card bl-sec">
+        <div class="card-icon" style="background:#fff5f5">🔑</div>
+        <h3>Paràmetres de la política de contrasenyes</h3>
+        <div style="overflow-x:auto">
+          <table class="ptable" style="font-size:.82rem;margin-top:.5rem">
+            <thead><tr><th>Paràmetre</th><th>Recomanació NIST / Entorn empresa</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Longitud mínima</strong></td><td>≥ 14 caràcters (NIST 800-63B)</td></tr>
+              <tr><td><strong>Complexitat</strong></td><td>Majúscules + minúscules + números + símbols</td></tr>
+              <tr><td><strong>Historial</strong></td><td>Recordar les últimes 24 contrasenyes</td></tr>
+              <tr><td><strong>Edat màxima</strong></td><td>90 dies (NIST ara recomana sense expiració si es detecta compromís)</td></tr>
+              <tr><td><strong>Edat mínima</strong></td><td>1 dia (evita canviar 24 vegades per tornar a la original)</td></tr>
+              <tr><td><strong>Xifratge reversible</strong></td><td>❌ Desactivat sempre (emmagatzema en clar = vulnerabilitat crítica)</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card bl-sec">
+        <div class="card-icon" style="background:#fff5f5">🔒</div>
+        <h3>Paràmetres de bloqueig de compte</h3>
+        <div style="overflow-x:auto">
+          <table class="ptable" style="font-size:.82rem;margin-top:.5rem">
+            <thead><tr><th>Paràmetre</th><th>Valor recomanat</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Llindar de bloqueig</strong></td><td>5 intents fallits</td></tr>
+              <tr><td><strong>Finestra d'observació</strong></td><td>30 minuts</td></tr>
+              <tr><td><strong>Durada del bloqueig</strong></td><td>30 min (o 0 = fins que l'admin desbloqueja)</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout cl-red" style="margin-top:1rem;padding:.85rem 1rem">
+          <span class="callout-icon">🚨</span>
+          <p><strong>Atac de bloqueig massiu (Account Lockout DoS):</strong> un atacant pot intentar bloquejar sistemàticament tots els comptes d'usuari del domini, causant una denegació de servei. La compte <strong>Administrator</strong> (RID-500) és immune a les polítiques de bloqueig per aquest motiu.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout cl-asix fi">
+      <span class="callout-icon">🎓</span>
+      <div>
+        <strong>Fine-Grained Password Policies (PSO) — Polítiques de grano fi</strong>
+        <p style="margin-top:.4rem">Permet assignar una política de contrasenyes <em>diferent</em> a grups d'usuaris específics, sense afectar la política per defecte del domini. Exemples d'ús: el grup "Domain Admins" té una política amb contrasenya de ≥20 caràcters i sense expiració + MFA obligatori; els usuaris normals tenen la política estàndard del domini. Les PSOs s'apliquen als objectes de tipus <strong>msDS-PasswordSettings</strong> i s'assignen a grups de seguretat globals.</p>
+      </div>
+    </div>
+
+    <hr>
+    <div class="section-tag tag-asix fi">Tema 6 — Comptes d'usuari i equips</div>
+    <h2 class="fi">Comptes d'usuari i comptes d'equip al domini</h2>
+
+    <div class="grid g2 fi">
+      <div class="card bl-asix">
+        <div class="card-icon" style="background:#f5f3ff">👤</div>
+        <h3>Comptes d'usuari del domini</h3>
+        <p style="margin-bottom:.75rem">A diferència dels comptes locals (emmagatzemats a la SAM de cada equip), els comptes de domini s'emmagatzemen a la <strong>base de dades AD (NTDS.dit)</strong> del DC i s'autentiquen via Kerberos.</p>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">🔤 <strong style="color:var(--ink)">SamAccountName:</strong> l'antic nom NetBIOS (≤ 20 caràcters). P.ex.: <code>jgarcia</code></li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">📧 <strong style="color:var(--ink)">UserPrincipalName (UPN):</strong> format email, usat per login modern. P.ex.: <code>jgarcia@asix.local</code></li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">🆔 <strong style="color:var(--ink)">SID (Security Identifier):</strong> identificador únic intern. Immutable. Exemple: <code>S-1-5-21-1234567890-9876543210-1122334455-1103</code></li>
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted)">🔗 <strong style="color:var(--ink)">Compte vs Perfil vs Dades:</strong> un compte pot ser eliminat i recreat amb el mateix nom, però el nou compte tindrà un SID diferent i perdrà tots els permisos del compte antic.</li>
+        </ul>
+      </div>
+      <div class="card bl-asix">
+        <div class="card-icon" style="background:#f5f3ff">💻</div>
+        <h3>Comptes d'equip del domini</h3>
+        <p style="margin-bottom:.75rem">Cada PC que s'uneix al domini crea automàticament un compte d'equip (Computer Account) a AD. Aquest compte permet que l'equip s'autentiqui al domini.</p>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">🔑 <strong style="color:var(--ink)">Contrasenya del compte d'equip:</strong> es renova automàticament cada 30 dies (Netlogon Secure Channel). L'equip la gestiona sol.</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">📋 <strong style="color:var(--ink)">Naming convention:</strong> el compte d'equip es diu igual que el hostname del PC, amb un $ al final: <code>PC-VENDES-01$</code></li>
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted)">⚠️ <strong style="color:var(--ink)">Compte trencat:</strong> si el canal segur es perd (p.ex. es restaura una imatge antiga), el PC no pot autenticar-se al domini. Solució: <code>Test-ComputerSecureChannel -Repair</code></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- PRÀCTICA 4 -->
+    <div class="lab-card fi">
+      <div class="lab-header">
+        <div class="lab-icon">🔬</div>
+        <div class="lab-title-block">
+          <h4>Pràctica 4.4 — Gestió de comptes d'usuari, PSO i unir equips al domini</h4>
+          <p>Crear comptes, configurar polítiques de contrasenya fina (PSO) i unir un client al domini</p>
+        </div>
+        <div class="lab-os-tags"><span class="os-tag os-win">🪟 Windows Server + Client</span></div>
+      </div>
+      <div class="lab-body">
+        <h5>🪟 Crear usuaris en massa des d'un CSV + PSO</h5>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">PowerShell — AD Module</span><span class="term-os term-os-ps">PowerShell</span></div>
+          <div class="term-body">
+            <span class="comment"># Crear un usuari d'exemple manualment</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">New-ADUser</span> <span class="flag">`</span><br>
+            <span class="flag">  -Name</span> <span class="str">"Joan Garcia"</span> <span class="flag">`</span><br>
+            <span class="flag">  -GivenName</span> <span class="str">"Joan"</span> <span class="flag">`</span><br>
+            <span class="flag">  -Surname</span> <span class="str">"Garcia"</span> <span class="flag">`</span><br>
+            <span class="flag">  -SamAccountName</span> <span class="str">"jgarcia"</span> <span class="flag">`</span><br>
+            <span class="flag">  -UserPrincipalName</span> <span class="str">"jgarcia@asix.local"</span> <span class="flag">`</span><br>
+            <span class="flag">  -Path</span> <span class="str">"ou=Vendes,ou=Usuaris,ou=Barcelona,dc=asix,dc=local"</span> <span class="flag">`</span><br>
+            <span class="flag">  -Department</span> <span class="str">"Vendes"</span> <span class="flag">`</span><br>
+            <span class="flag">  -OfficePhone</span> <span class="str">"93 555 01 01"</span> <span class="flag">`</span><br>
+            <span class="flag">  -AccountPassword</span> <span class="cmd">(ConvertTo-SecureString</span> <span class="str">"Welcome@2024!"</span> <span class="flag">-AsPlainText -Force)</span> <span class="flag">`</span><br>
+            <span class="flag">  -ChangePasswordAtLogon $true</span> <span class="flag">`</span><br>
+            <span class="flag">  -Enabled $true</span><br><br>
+            <span class="comment"># Crear una Fine-Grained Password Policy (PSO) per a administradors</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">New-ADFineGrainedPasswordPolicy</span> <span class="flag">`</span><br>
+            <span class="flag">  -Name</span> <span class="str">"PSO-Admins"</span> <span class="flag">`</span><br>
+            <span class="flag">  -Precedence</span> <span class="num">10</span> <span class="flag">`</span><br>
+            <span class="flag">  -MinPasswordLength</span> <span class="num">20</span> <span class="flag">`</span><br>
+            <span class="flag">  -ComplexityEnabled $true</span> <span class="flag">`</span><br>
+            <span class="flag">  -PasswordHistoryCount</span> <span class="num">24</span> <span class="flag">`</span><br>
+            <span class="flag">  -MaxPasswordAge</span> <span class="str">"180.00:00:00"</span> <span class="flag">`</span><br>
+            <span class="flag">  -LockoutThreshold</span> <span class="num">3</span> <span class="flag">`</span><br>
+            <span class="flag">  -LockoutObservationWindow</span> <span class="str">"0.00:30:00"</span> <span class="flag">`</span><br>
+            <span class="flag">  -LockoutDuration</span> <span class="str">"0.00:30:00"</span><br><br>
+            <span class="comment"># Aplicar la PSO al grup Domain Admins</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">Add-ADFineGrainedPasswordPolicySubject</span> <span class="flag">-Identity</span> <span class="str">"PSO-Admins"</span> <span class="flag">-Subjects</span> <span class="str">"Domain Admins"</span><br><br>
+            <span class="comment"># Verificar quina PSO s'aplica a un usuari</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">Get-ADUserResultantPasswordPolicy</span> <span class="flag">-Identity</span> <span class="str">"Administrator"</span>
+          </div>
+        </div>
+        <h5>🪟 Unir un equip client Windows al domini</h5>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">PowerShell — Equip Client Windows</span><span class="term-os term-os-win">Windows Client</span></div>
+          <div class="term-body">
+            <span class="comment"># Comprovar que l'equip client resol el domini (prerequisit)</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">Resolve-DnsName</span> <span class="str">"asix.local"</span><br><br>
+            <span class="comment"># Unir al domini (cal un compte amb permís d'unir equips o Domain Admins)</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">Add-Computer</span> <span class="flag">`</span><br>
+            <span class="flag">  -DomainName</span> <span class="str">"asix.local"</span> <span class="flag">`</span><br>
+            <span class="flag">  -OUPath</span> <span class="str">"ou=Equips,ou=Barcelona,dc=asix,dc=local"</span> <span class="flag">`</span><br>
+            <span class="flag">  -Credential</span> <span class="cmd">(Get-Credential)</span> <span class="flag">`</span><br>
+            <span class="flag">  -NewName</span> <span class="str">"PC-VENDES-01"</span> <span class="flag">`</span><br>
+            <span class="flag">  -Restart</span><br><br>
+            <span class="comment"># Verificar que l'equip s'ha unit al domini (des del DC)</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">Get-ADComputer</span> <span class="flag">-Filter *</span> <span class="flag">| Select-Object Name, OperatingSystem, DistinguishedName</span>
+          </div>
+        </div>
+        <div class="lab-entrega"><strong>📋 Lliurament:</strong> (1) Captura de <code>Get-ADUser -Identity jgarcia -Properties *</code> mostrant el compte creat. (2) Captura de <code>Get-ADFineGrainedPasswordPolicy PSO-Admins</code>. (3) Captura de <code>Get-ADComputer -Filter *</code> mostrant el PC unit al domini. (4) Des del client, inicia sessió amb <code>jgarcia@asix.local</code> i captura el resultat de <code>whoami /fqdn</code>.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ T7-8 — PERFILS I CARPETES ═══════ -->
+<section id="perfils" class="s-win">
+  <div class="container">
+    <div class="ra-banner ra-win fi">
+      <div class="ra-num">7–8</div>
+      <div><h2>Perfils mòbils, obligatoris i carpetes personals</h2>
+        <p>Centralitzar la configuració i les dades dels usuaris al servidor per garantir la mobilitat i la seguretat.</p></div>
+    </div>
+
+    <div class="section-tag tag-win fi">Tema 7 — Perfils</div>
+    <h2 class="fi">Tipus de perfils d'usuari</h2>
+    <p class="lead fi">El perfil d'un usuari és el conjunt de configuració personal (escriptori, documents, favorits, configuració d'aplicacions) que s'associa al seu compte. La decisió sobre quin tipus de perfil usar és clau en la gestió d'una infraestructura de domini.</p>
+
+    <div class="grid g3 fi">
+      <div class="card bl-asix">
+        <div class="card-icon" style="background:#f5f3ff">🏠</div>
+        <h3>Perfil Local</h3>
+        <p>El perfil es crea i s'emmagatzema localment a cada equip on l'usuari inicia sessió. Ubicació: <code>C:\Users\nom_usuari\</code></p>
+        <div class="pills" style="margin-top:.75rem">
+          <span class="pill pill-r">No mòbil</span>
+          <span class="pill">Configuració per equip</span>
+        </div>
+        <div class="ex ex-asix" style="margin-top:.75rem"><div class="ex-lbl">Quan usar-lo</div><p>Equips d'ús personal fixe. Llocs de treball no compartits. Entorns petits sense domini. ❌ No recomanat en dominis grans.</p></div>
+      </div>
+      <div class="card bl-win">
+        <div class="card-icon" style="background:#f0f7ff">☁️</div>
+        <h3>Perfil Mòbil (Roaming)</h3>
+        <p>El perfil s'emmagatzema al servidor (carpeta compartida) i es sincronitza en cada inici/tancament de sessió. L'usuari té el <em>mateix entorn</em> en qualsevol equip del domini.</p>
+        <div class="pills" style="margin-top:.75rem">
+          <span class="pill pill-w">Mòbil</span>
+          <span class="pill">Sincronitzat</span>
+        </div>
+        <div class="ex ex-win" style="margin-top:.75rem"><div class="ex-lbl">Configuració</div><p>A la propietat de l'usuari AD: <code>Profile Path → \\SRV-FILE-01\Profiles$\%username%</code>. Windows crea automàticament la subcarpeta.</p></div>
+      </div>
+      <div class="card bl-sec">
+        <div class="card-icon" style="background:#fff5f5">🔒</div>
+        <h3>Perfil Obligatori</h3>
+        <p>Variant del perfil mòbil on els canvis <strong>no es guarden</strong> en tancar la sessió. L'usuari sempre arrenca amb la mateixa configuració base. Ideal per a quioscos, aules o llocs de treball públics.</p>
+        <div class="pills" style="margin-top:.75rem">
+          <span class="pill pill-r">Només lectura</span>
+          <span class="pill">Centralitzat</span>
+        </div>
+        <div class="ex ex-sec" style="margin-top:.75rem"><div class="ex-lbl">Com crear-lo</div><p>Reanomenar el fitxer <code>ntuser.dat</code> a <code>ntuser.man</code> a la carpeta del perfil del servidor. El ".man" (mandatory) indica a Windows que no ha de guardar els canvis.</p></div>
+      </div>
+    </div>
+
+    <div class="callout cl-amber fi">
+      <span class="callout-icon">⚠️</span>
+      <div>
+        <strong>Problema dels perfils mòbils en entorns moderns:</strong>
+        <p style="margin-top:.4rem">Els perfils mòbils clàssics sincronitzen <em>tot</em> el perfil (incloent AppData amb GBs de dades d'aplicació), causant inicis/tancaments de sessió molt lents. La solució moderna és usar <strong>Folder Redirection</strong> (redirecció de carpetes) per redirigir Documents, Escriptori i AppData al servidor, sense sincronitzar tot el perfil. Combinat amb <strong>Offline Files</strong>, l'usuari treballa en local i sincronitza amb el servidor en segon pla.</p>
+      </div>
+    </div>
+
+    <hr>
+    <div class="section-tag tag-win fi">Tema 8 — Carpetes personals</div>
+    <h2 class="fi">Carpetes personals (Home Folders)</h2>
+    <p class="lead fi">La carpeta personal (Home Folder) és una carpeta al servidor on l'usuari emmagatzema els seus fitxers de treball. És diferent del perfil (que és configuració). En Linux, és equivalent al directori <code>/home/usuari</code>.</p>
+
+    <div class="grid g2 fi">
+      <div class="card bl-win">
+        <h3>🪟 Configuració de carpetes personals en AD</h3>
+        <ol class="steps" style="margin-top:.5rem">
+          <li><p>Crear la carpeta compartida al servidor (p.ex. <code>\\SRV-FILE-01\Homes$</code>). El <strong>$</strong> al final oculta el recurs de la navegació de xarxa.</p></li>
+          <li><p>Assignar permisos de compartició: <code>Domain Users → Control total</code> (els permisos NTFS de la subcarpeta de cada usuari restringiran l'accés real).</p></li>
+          <li><p>A ADUC o PowerShell, assignar el Home Folder: <code>-HomeDirectory "\\SRV-FILE-01\Homes$\%username%"</code> i <code>-HomeDrive "H:"</code></p></li>
+          <li><p>Windows crea automàticament la subcarpeta per a l'usuari i assigna el compte d'usuari com a propietari amb permisos exclusius.</p></li>
+          <li><p>En iniciar sessió, l'usuari veurà la unitat <strong>H:</strong> (o la lletra configurada) com a carpeta personal. Aplicacions com Word i Excel la usaran per defecte.</p></li>
+        </ol>
+      </div>
+      <div class="card bl-ubuntu">
+        <h3>🐧 Redirecció de carpetes + Offline Files (GPO)</h3>
+        <p style="margin-bottom:.75rem">La redirecció de carpetes via GPO és la forma moderna de gestionar les dades dels usuaris:</p>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">📁 <strong style="color:var(--ink)">Redirigir "Documentos":</strong> <code>\\SRV-FILE\Redirected\%username%\Documents</code></li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">🖥️ <strong style="color:var(--ink)">Redirigir "Escritorio":</strong> <code>\\SRV-FILE\Redirected\%username%\Desktop</code></li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">📸 <strong style="color:var(--ink)">Redirigir "Imágenes":</strong> permet backups centralitzats de totes les dades de l'usuari.</li>
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted)">🔌 <strong style="color:var(--ink)">Offline Files:</strong> les carpetes redirigides es sincronian a la caché local. L'usuari pot treballar sense xarxa (portàtils).</li>
+        </ul>
+        <div class="ex ex-asix" style="margin-top:.75rem"><div class="ex-lbl">GPO — On configurar-ho</div><p>Configuració d'usuari → Configuració de Windows → Redirecció de carpetes. Per a Offline Files: Configuració d'equip → Configuració de Windows → Fitxers fora de línia.</p></div>
+      </div>
+    </div>
+
+    <!-- PRÀCTICA 5 -->
+    <div class="lab-card fi">
+      <div class="lab-header">
+        <div class="lab-icon">🔬</div>
+        <div class="lab-title-block">
+          <h4>Pràctica 4.5 — Perfils mòbils i carpetes personals</h4>
+          <p>Configurar perfil mòbil, home folder i redirecció de carpetes via GPO</p>
+        </div>
+        <div class="lab-os-tags"><span class="os-tag os-win">🪟 Windows Server</span></div>
+      </div>
+      <div class="lab-body">
+        <h5>🪟 Configurar perfil mòbil i home folder via PowerShell</h5>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">PowerShell — DC</span><span class="term-os term-os-ps">PowerShell</span></div>
+          <div class="term-body">
+            <span class="comment"># Crear les carpetes compartides al servidor (si no existeixen)</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">New-Item</span> <span class="flag">-Path</span> <span class="str">"C:\Shares\Profiles$"</span> <span class="flag">-ItemType Directory</span> <span class="flag">-Force</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">New-Item</span> <span class="flag">-Path</span> <span class="str">"C:\Shares\Homes$"</span> <span class="flag">-ItemType Directory</span> <span class="flag">-Force</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">New-SmbShare</span> <span class="flag">-Name</span> <span class="str">"Profiles$"</span> <span class="flag">-Path</span> <span class="str">"C:\Shares\Profiles$"</span> <span class="flag">-FullAccess</span> <span class="str">"Domain Users"</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">New-SmbShare</span> <span class="flag">-Name</span> <span class="str">"Homes$"</span> <span class="flag">-Path</span> <span class="str">"C:\Shares\Homes$"</span> <span class="flag">-FullAccess</span> <span class="str">"Domain Users"</span><br><br>
+            <span class="comment"># Assignar perfil mòbil i carpeta personal a l'usuari</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">Set-ADUser</span> <span class="flag">-Identity</span> <span class="str">"jgarcia"</span> <span class="flag">`</span><br>
+            <span class="flag">  -ProfilePath</span> <span class="str">"\\SRV-DC01\Profiles$\jgarcia"</span> <span class="flag">`</span><br>
+            <span class="flag">  -HomeDirectory</span> <span class="str">"\\SRV-DC01\Homes$\jgarcia"</span> <span class="flag">`</span><br>
+            <span class="flag">  -HomeDrive</span> <span class="str">"H:"</span><br><br>
+            <span class="comment"># Verificar la configuració</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">Get-ADUser</span> <span class="flag">-Identity</span> <span class="str">"jgarcia"</span> <span class="flag">-Properties ProfilePath, HomeDirectory, HomeDrive</span><br>
+            <span class="out">ProfilePath   : \\SRV-DC01\Profiles$\jgarcia</span><br>
+            <span class="out">HomeDirectory : \\SRV-DC01\Homes$\jgarcia</span><br>
+            <span class="out">HomeDrive     : H:</span><br><br>
+            <span class="comment"># Verificar des del client (després d'iniciar sessió)</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">$env:USERPROFILE</span>    <span class="comment"># Ha de mostrar una ruta de servidor</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">Get-PSDrive H</span>        <span class="comment"># Ha de mostrar la carpeta personal de xarxa</span>
+          </div>
+        </div>
+        <div class="lab-entrega"><strong>📋 Lliurament:</strong> (1) Inicia sessió com a <code>jgarcia</code> des del client i captura l'explorador de Windows mostrant la unitat H: muntada. (2) Crea un fitxer a H: i tanca sessió. Verifica al servidor que el fitxer es troba a <code>C:\Shares\Homes$\jgarcia\</code>. (3) Captura de <code>Get-ADUser jgarcia -Properties ProfilePath, HomeDirectory</code>.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ T9 — PLANTILLES I VARIABLES ═══════ -->
+<section id="plantilles" class="s-cream">
+  <div class="container">
+    <div class="ra-banner ra-sec fi">
+      <div class="ra-num">9</div>
+      <div><h2>Plantilles d'usuari i variables d'entorn</h2>
+        <p>Crear usuaris consistentment i a escala. Variables que adapten l'entorn de treball a cada usuari.</p></div>
+    </div>
+
+    <div class="section-tag tag-sec fi">Tema 9 — Plantilles</div>
+    <h2 class="fi">Plantilles d'usuari a Active Directory</h2>
+    <p class="lead fi">Una plantilla d'usuari és un compte d'AD configurat amb els atributs comuns d'un tipus d'usuari (departament, OU, grups, perfil, carpeta personal, hores d'inici de sessió…) que s'usa com a base per copiar i crear nous comptes de manera consistent i ràpida.</p>
+
+    <div class="grid g2 fi">
+      <div class="card bl-sec">
+        <div class="card-icon" style="background:#fff5f5">📋</div>
+        <h3>Crear i usar plantilles d'usuari</h3>
+        <p style="margin-bottom:.75rem">Una plantilla és simplement un compte d'usuari normal que:</p>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">📛 <strong style="color:var(--ink)">Es nomena amb un prefix identificatiu:</strong> p.ex. <code>_Template_Vendes</code> o <code>TPL-VENDES</code>. El guió baix fa que aparegui al principi de la llista alfabètica.</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">🔒 <strong style="color:var(--ink)">Està desactivat:</strong> la plantilla no s'usa per iniciar sessió. <code>-Enabled $false</code></li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">✅ <strong style="color:var(--ink)">Té tots els atributs preconfigurats:</strong> departament, empresa, Path del perfil, Home Drive, grups, restriccions d'horari.</li>
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted)">📋 <strong style="color:var(--ink)">Quan es copia:</strong> <code>Get-ADUser TPL-VENDES | Set-ADUser ...</code> o clic dret → "Copiar" a ADUC. Els atributs es copien al nou compte.</li>
+        </ul>
+      </div>
+      <div class="card bl-asix">
+        <div class="card-icon" style="background:#f5f3ff">📝</div>
+        <h3>Atributs que es copien i que NO es copien</h3>
+        <div style="overflow-x:auto">
+        <table class="ptable" style="font-size:.82rem;margin-top:.5rem">
+          <thead><tr><th>Atribut</th><th>Es copia?</th></tr></thead>
+          <tbody>
+            <tr><td>Departament, Empresa, Telèfon</td><td><span class="badge b-green">✅ Sí</span></td></tr>
+            <tr><td>Pertinença a grups</td><td><span class="badge b-green">✅ Sí</span></td></tr>
+            <tr><td>Profile Path, Home Directory</td><td><span class="badge b-green">✅ Sí</span></td></tr>
+            <tr><td>Hores d'inici de sessió permeses</td><td><span class="badge b-green">✅ Sí</span></td></tr>
+            <tr><td>Restriccions de màquines d'inici de sessió</td><td><span class="badge b-green">✅ Sí</span></td></tr>
+            <tr><td>Nom, cognom, SamAccountName</td><td><span class="badge b-red">❌ No (cal omplir)</span></td></tr>
+            <tr><td>Contrasenya</td><td><span class="badge b-red">❌ No (cal assignar)</span></td></tr>
+            <tr><td>Descripció del compte</td><td><span class="badge b-amber">⚠️ Parcialment</span></td></tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+    </div>
+
+    <hr>
+    <div class="section-tag tag-amber fi">Variables d'entorn</div>
+    <h2 class="fi">Variables d'entorn del sistema i de l'usuari</h2>
+    <p class="lead fi">Les variables d'entorn són parells clau-valor que el SO posa a disposició de tots els processos. Permeten escriure scripts i configuracions portables sense hardcodejar rutes absolutes.</p>
+
+    <div class="comp-row fi">
+      <div class="card bl-win">
+        <h3>🪟 Variables d'entorn a Windows</h3>
+        <div class="ex ex-win" style="margin-bottom:.75rem">
+          <div class="ex-lbl">Variables del sistema (globals)</div>
+          <p>
+            <code>%WINDIR%</code> → <code>C:\Windows</code><br>
+            <code>%SystemDrive%</code> → <code>C:</code><br>
+            <code>%ProgramFiles%</code> → <code>C:\Program Files</code><br>
+            <code>%ProgramFiles(x86)%</code> → per a apps 32-bit<br>
+            <code>%ComputerName%</code> → nom del PC<br>
+            <code>%TEMP% / %TMP%</code> → carpeta temporal
+          </p>
+        </div>
+        <div class="ex ex-win">
+          <div class="ex-lbl">Variables de l'usuari (contextuals)</div>
+          <p>
+            <code>%USERNAME%</code> → nom de l'usuari actual<br>
+            <code>%USERDOMAIN%</code> → domini de l'usuari<br>
+            <code>%USERPROFILE%</code> → <code>C:\Users\nom_usuari</code><br>
+            <code>%APPDATA%</code> → configuració d'aplicacions<br>
+            <code>%HOMESHARE%</code> + <code>%HOMEDRIVE%</code> → carpeta personal de xarxa<br>
+            <code>%LOGONSERVER%</code> → DC on s'ha autenticat
+          </p>
+        </div>
+      </div>
+      <div class="card bl-ubuntu">
+        <h3>🐧 Variables d'entorn a Linux/Bash</h3>
+        <div class="ex ex-ldap" style="margin-bottom:.75rem">
+          <div class="ex-lbl">Variables del sistema</div>
+          <p>
+            <code>$PATH</code> → llista de directoris on cercar executables<br>
+            <code>$HOME</code> → directori personal de l'usuari (<code>/home/usuari</code>)<br>
+            <code>$USER</code> → nom de l'usuari actual<br>
+            <code>$HOSTNAME</code> → nom de la màquina<br>
+            <code>$SHELL</code> → shell de l'usuari (p.ex. /bin/bash)<br>
+            <code>$PWD</code> → directori de treball actual<br>
+            <code>$LANG</code> → idioma del sistema (<code>ca_ES.UTF-8</code>)
+          </p>
+        </div>
+        <div class="ex ex-ldap">
+          <div class="ex-lbl">Fitxers de configuració de l'entorn</div>
+          <p>
+            <code>/etc/environment</code> → variables globals del sistema<br>
+            <code>/etc/profile</code> → script d'inici per a tots els usuaris (login shells)<br>
+            <code>/etc/profile.d/*.sh</code> → fragments de configuració per aplicació<br>
+            <code>~/.bashrc</code> → configuració per a shells interactius de l'usuari<br>
+            <code>~/.bash_profile</code> → configuració de login shell de l'usuari
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRÀCTICA 6 -->
+    <div class="lab-card fi">
+      <div class="lab-header">
+        <div class="lab-icon">🔬</div>
+        <div class="lab-title-block">
+          <h4>Pràctica 4.6 — Plantilles d'usuari, importació massiva i variables</h4>
+          <p>Crear plantilles per departament i importar usuaris des d'un fitxer CSV</p>
+        </div>
+        <div class="lab-os-tags"><span class="os-tag os-both">🔀 Windows + Ubuntu</span></div>
+      </div>
+      <div class="lab-body">
+        <h5>🪟 Crear una plantilla i importar usuaris des de CSV</h5>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">PowerShell — Import massiu d'usuaris</span><span class="term-os term-os-ps">PowerShell</span></div>
+          <div class="term-body">
+            <span class="comment"># Crear plantilla per al departament de Vendes</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">New-ADUser</span> <span class="flag">-Name</span> <span class="str">"_Template_Vendes"</span> <span class="flag">-SamAccountName "_TPL-Vendes"</span> <span class="flag">`</span><br>
+            <span class="flag">  -Department</span> <span class="str">"Vendes"</span> <span class="flag">-Company</span> <span class="str">"TechCorp SL"</span> <span class="flag">`</span><br>
+            <span class="flag">  -Path</span> <span class="str">"ou=Vendes,ou=Usuaris,ou=Barcelona,dc=asix,dc=local"</span> <span class="flag">`</span><br>
+            <span class="flag">  -ProfilePath</span> <span class="str">"\\SRV-DC01\Profiles$\%username%"</span> <span class="flag">`</span><br>
+            <span class="flag">  -HomeDirectory</span> <span class="str">"\\SRV-DC01\Homes$\%username%"</span> <span class="flag">-HomeDrive "H:"</span> <span class="flag">`</span><br>
+            <span class="flag">  -AccountPassword</span> <span class="cmd">(ConvertTo-SecureString "TempPass@2024!" -AsPlainText -Force)</span> <span class="flag">-Enabled $false</span><br><br>
+            <span class="comment"># Afegir la plantilla al grup de Vendes</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">Add-ADGroupMember</span> <span class="flag">-Identity</span> <span class="str">"Vendes_GG"</span> <span class="flag">-Members</span> <span class="str">"_TPL-Vendes"</span><br><br>
+            <span class="comment"># ── IMPORTACIÓ MASSIVA DES DE CSV ──</span><br>
+            <span class="comment"># Estructura del CSV: Nom,Cognoms,SamAccount,Departament,Seu</span><br>
+            <span class="comment"># "Joan","Garcia","jgarcia","Vendes","Barcelona"</span><br>
+            <span class="comment"># "Anna","Puig","apuig","IT","Barcelona"</span><br><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">$usuaris = Import-Csv</span> <span class="flag">-Path</span> <span class="str">"C:\usuaris.csv"</span> <span class="flag">-Delimiter ";"</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">foreach</span> <span class="cmd">($u in $usuaris)</span> <span class="cmd">{</span><br>
+            <span class="cmd">    $ouPath = "ou=$($u.Departament),ou=Usuaris,ou=$($u.Seu),dc=asix,dc=local"</span><br>
+            <span class="cmd">    New-ADUser</span> <span class="flag">-Name</span> <span class="cmd">"$($u.Nom) $($u.Cognoms)"</span> <span class="flag">`</span><br>
+            <span class="flag">      -GivenName</span> <span class="cmd">$u.Nom</span> <span class="flag">-Surname</span> <span class="cmd">$u.Cognoms</span> <span class="flag">`</span><br>
+            <span class="flag">      -SamAccountName</span> <span class="cmd">$u.SamAccount</span> <span class="flag">`</span><br>
+            <span class="flag">      -UserPrincipalName</span> <span class="cmd">"$($u.SamAccount)@asix.local"</span> <span class="flag">`</span><br>
+            <span class="flag">      -Path</span> <span class="cmd">$ouPath</span> <span class="flag">`</span><br>
+            <span class="flag">      -AccountPassword</span> <span class="cmd">(ConvertTo-SecureString "Welcome@2024!" -AsPlainText -Force)</span> <span class="flag">`</span><br>
+            <span class="flag">      -ChangePasswordAtLogon $true</span> <span class="flag">-Enabled $true</span><br>
+            <span class="cmd">    Write-Host "Creat: $($u.Nom) $($u.Cognoms)" -ForegroundColor Green</span><br>
+            <span class="cmd">}</span><br><br>
+            <span class="comment"># Variables d'entorn en scripts de logon (.bat / .ps1)</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">Write-Host</span> <span class="str">"Usuari: $env:USERNAME | Domini: $env:USERDOMAIN | DC: $env:LOGONSERVER"</span>
+          </div>
+        </div>
+        <h5>🐧 Variables d'entorn i scripts d'inici de sessió a Linux</h5>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">Terminal — Bash</span><span class="term-os term-os-ubuntu">Ubuntu</span></div>
+          <div class="term-body">
+            <span class="comment"># Veure totes les variables d'entorn actuals</span><br>
+            <span class="prompt-ub">user@host:~$</span> <span class="cmd">printenv</span> <span class="flag">| sort</span><br><br>
+            <span class="comment"># Crear una variable d'entorn persistent per a l'usuari</span><br>
+            <span class="prompt-ub">user@host:~$</span> <span class="cmd">echo 'export EMPRESA="TechCorp SL"' >> ~/.bashrc</span><br>
+            <span class="prompt-ub">user@host:~$</span> <span class="cmd">source ~/.bashrc</span><br>
+            <span class="prompt-ub">user@host:~$</span> <span class="cmd">echo $EMPRESA</span><br>
+            <span class="out">TechCorp SL</span><br><br>
+            <span class="comment"># Variable global del sistema (tots els usuaris)</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">echo 'EMPRESA="TechCorp SL"' >> /etc/environment</span><br><br>
+            <span class="comment"># Script d'inici de sessió per a tots els usuaris (/etc/profile.d/)</span><br>
+            <span class="prompt-ub">root@host:~#</span> <span class="cmd">cat > /etc/profile.d/empresa.sh &lt;&lt; 'EOF'</span><br>
+            <span class="out">#!/bin/bash</span><br>
+            <span class="out">export EMPRESA="TechCorp SL"</span><br>
+            <span class="out">echo "Benvingut/da al sistema de $EMPRESA, $USER"</span><br>
+            <span class="out">alias ll='ls -alFh --color=auto'</span><br>
+            <span class="out">EOF</span>
+          </div>
+        </div>
+        <div class="lab-entrega"><strong>📋 Lliurament:</strong> (1) Sortida del script d'importació CSV mostrant els usuaris creats. (2) Captura de <code>Get-ADUser -Filter * | Select Name, DistinguishedName</code> mostrant tots els usuaris creats a les OUs correctes. (3) Des del client, inicia sessió i executa <code>set</code> (CMD) o <code>$env:*</code> (PS) per mostrar totes les variables d'entorn, identificant com a mínim 5 variables rellevants.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ T10 — GRUPS ═══════ -->
+<section id="grups" class="s-dark">
+  <div class="container">
+    <div class="ra-banner ra-asix fi">
+      <div class="ra-num">10</div>
+      <div><h2>Administració de grups, tipus i estratègies</h2>
+        <p>Grups de seguretat i distribució, àmbits (local, global, universal), grups predeterminats i estratègia AGDLP.</p></div>
+    </div>
+
+    <div class="section-tag fi" style="color:rgba(255,255,255,.5)"><span style="display:inline-block;width:20px;height:2px;background:var(--asix-l);margin-right:.5rem"></span>Tipus de grups</div>
+    <h2 class="fi">Tipus i àmbits de grups a Active Directory</h2>
+    <p class="lead fi">A Active Directory, els grups es classifiquen per <strong>tipus</strong> (per a quin propòsit s'usen) i per <strong>àmbit</strong> (on i a qui poden contenir). Confondre'ls és el primer error que comet un admin novell.</p>
+
+    <div class="grid g2 fi">
+      <div class="card">
+        <h3>📋 Tipus de grup</h3>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.5rem 0;border-bottom:1px solid rgba(255,255,255,.1);font-size:.9rem">
+            🔐 <strong style="color:white">Grup de seguretat (Security Group):</strong><br>
+            <span style="color:rgba(255,255,255,.6);font-size:.87rem">S'usa per assignar permisos a recursos (carpetes, impressores, aplicacions). Té un SID. És la meitat del model AGDLP. El tipus que més s'usa en infraestructura.</span>
+          </li>
+          <li style="padding:.5rem 0;font-size:.9rem">
+            📧 <strong style="color:white">Grup de distribució (Distribution Group):</strong><br>
+            <span style="color:rgba(255,255,255,.6);font-size:.87rem">S'usa exclusivament per a llistes de distribució de correu (Exchange/Microsoft 365). <strong>No</strong> pot assignar permisos. No té SID. No confondre'l amb un grup de seguretat.</span>
+          </li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>🌐 Àmbits de grup</h3>
+        <div class="group-nest">
+          <div class="gn-row">
+            <div class="gn-icon">🏢</div>
+            <span class="gn-type gn-gg">Global (GG)</span>
+            <div class="gn-desc">Agrupa usuaris d'un domini. S'usa per representar un rol o departament. Pot contenir: usuaris i GGs del <em>mateix domini</em>. Visible a tot el bosc.</div>
+          </div>
+          <div class="gn-row">
+            <div class="gn-icon">🔒</div>
+            <span class="gn-type gn-gl">Local de Domini (DL)</span>
+            <div class="gn-desc">S'usa per assignar permisos a recursos d'un domini. Pot contenir: usuaris, GGs i UGs de <em>qualsevol domini</em>. Però els permisos que atorga es limiten al domini local.</div>
+          </div>
+          <div class="gn-row">
+            <div class="gn-icon">🌍</div>
+            <span class="gn-type gn-gu">Universal (UG)</span>
+            <div class="gn-desc">Conté usuaris i grups de <em>qualsevol domini del bosc</em>. El contingut es replica al Global Catalog (GC). Útil en boscos multi-domini. Cost de replicació elevat: usar-lo amb moderació.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr>
+    <div class="section-tag fi" style="color:rgba(255,255,255,.5)"><span style="display:inline-block;width:20px;height:2px;background:var(--win);margin-right:.5rem"></span>Estratègia AGDLP</div>
+    <h2 class="fi">L'estratègia d'imbricació AGDLP (i AGUDLP)</h2>
+    <p class="lead fi"><strong>AGDLP</strong> (Account → Global Group → Domain Local Group → Permission) és la <em>best practice</em> de Microsoft per gestionar permisos de manera escalable, ordenada i fàcil de mantenir en entorns de domini.</p>
+
+    <div class="card fi">
+      <h3>📐 Com funciona AGDLP pas a pas</h3>
+      <div class="group-nest" style="margin-top:1rem">
+        <div class="gn-row" style="background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.1)">
+          <div class="gn-icon">👤</div>
+          <div style="flex:1">
+            <strong style="color:white;font-size:.9rem">A — Account (Compte d'usuari o d'equip)</strong><br>
+            <span style="color:rgba(255,255,255,.6);font-size:.83rem">P.ex.: <code>jgarcia</code>, <code>apuig</code>, <code>PC-VENDES-01$</code> (usuaris del domini)</span>
+          </div>
+          <span style="color:var(--asix-l);font-size:1.2rem;margin:0 .5rem">→</span>
+        </div>
+        <div class="gn-row" style="background:rgba(0,120,212,.08);border-color:rgba(0,120,212,.2)">
+          <div class="gn-icon">👥</div>
+          <div style="flex:1">
+            <strong style="color:white;font-size:.9rem">G — Global Group (Grup Global, per rol/departament)</strong><br>
+            <span style="color:rgba(255,255,255,.6);font-size:.83rem">P.ex.: <code>Vendes_GG</code>, <code>IT_GG</code>, <code>RRHH_GG</code> — agrupa els comptes d'usuaris pel seu rol</span>
+          </div>
+          <span style="color:var(--win);font-size:1.2rem;margin:0 .5rem">→</span>
+        </div>
+        <div class="gn-row" style="background:rgba(220,38,38,.08);border-color:rgba(220,38,38,.2)">
+          <div class="gn-icon">🔒</div>
+          <div style="flex:1">
+            <strong style="color:white;font-size:.9rem">DL — Domain Local Group (Grup Local, per recurs)</strong><br>
+            <span style="color:rgba(255,255,255,.6);font-size:.83rem">P.ex.: <code>RecursosCarpeta_Vendes_Lectura_GL</code>, <code>Impressora_Color_GL</code> — un grup per a cada recurs i nivell d'accés</span>
+          </div>
+          <span style="color:var(--sec);font-size:1.2rem;margin:0 .5rem">→</span>
+        </div>
+        <div class="gn-row" style="background:rgba(5,150,105,.08);border-color:rgba(5,150,105,.2)">
+          <div class="gn-icon">📁</div>
+          <div style="flex:1">
+            <strong style="color:white;font-size:.9rem">P — Permission (Permís assignat al recurs)</strong><br>
+            <span style="color:rgba(255,255,255,.6);font-size:.83rem">El DL rep els permisos NTFS (Lectura, Modificació, Control total) sobre la carpeta, impressora o aplicació</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout cl-blue fi" style="margin-top:1.5rem">
+      <span class="callout-icon">🎯</span>
+      <div>
+        <strong>Per quin motiu AGDLP és millor que assignar permisos directament a l'usuari?</strong>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:.75rem">
+          <div>
+            <p style="font-size:.88rem"><strong>❌ Sense AGDLP (mal pràctica):</strong><br>Usuari <code>jgarcia</code> té permís directe a 47 carpetes de xarxa. Quan marxa de l'empresa, cal revisar les 47 carpetes per retirar-li el permís. El risc d'oblidar-ne una és molt alt.</p>
+          </div>
+          <div>
+            <p style="font-size:.88rem"><strong>✅ Amb AGDLP:</strong><br>Usuari <code>jgarcia</code> és membre de <code>Vendes_GG</code>. Quan marxa, es treu del grup. Automàticament perd l'accés a tots els recursos als quals <code>Vendes_GG</code> donava accés. Una sola acció, efecte global.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr>
+    <div class="section-tag fi" style="color:rgba(255,255,255,.5)"><span style="display:inline-block;width:20px;height:2px;background:var(--amber);margin-right:.5rem"></span>Grups predeterminats</div>
+    <h2 class="fi">Grups predeterminats del domini</h2>
+    <div style="overflow-x:auto" class="fi">
+      <table class="ptable">
+        <thead><tr><th>Grup</th><th>Àmbit</th><th>Funcions principals</th><th>Risc si s'abusa</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Domain Admins</strong></td><td><span class="badge b-win">Global</span></td><td>Control total del domini. Membres automàticament admins locals de tots els equips del domini.</td><td>🔴 CRÍTIC — Compte compromesa = domini compromès</td></tr>
+          <tr><td><strong>Enterprise Admins</strong></td><td><span class="badge b-asix">Universal</span></td><td>Control total de tot el bosc AD. Només necessari per a canvis a nivell de bosc.</td><td>🔴 CRÍTIC — Màxim risc. No usar diàriament.</td></tr>
+          <tr><td><strong>Schema Admins</strong></td><td><span class="badge b-asix">Universal</span></td><td>Pot modificar l'schema d'AD. Canvis <strong>irreversibles</strong>.</td><td>🔴 CRÍTIC — Buidar el grup quan no s'usa</td></tr>
+          <tr><td><strong>Domain Users</strong></td><td><span class="badge b-win">Global</span></td><td>Tots els comptes d'usuari del domini hi pertanyen automàticament.</td><td>🟡 Baix — Permisos molt limitats per defecte</td></tr>
+          <tr><td><strong>Domain Computers</strong></td><td><span class="badge b-win">Global</span></td><td>Tots els equips del domini hi pertanyen automàticament (excepte DCs).</td><td>🟡 Baix</td></tr>
+          <tr><td><strong>Administrators</strong></td><td><span class="badge b-red">Local domini</span></td><td>Admins locals del DC. Inclou Domain Admins per defecte.</td><td>🟠 Alt — No afegir usuaris directament</td></tr>
+          <tr><td><strong>Remote Desktop Users</strong></td><td><span class="badge b-red">Local domini</span></td><td>Permet connectar per RDP als equips del domini (sense ser admin).</td><td>🟡 Moderat — Controlar l'accés RDP</td></tr>
+          <tr><td><strong>Group Policy Creator Owners</strong></td><td><span class="badge b-win">Global</span></td><td>Pot crear i modificar GPOs. No pot vincular-les a OUs (cal Domain Admins).</td><td>🟠 Alt — Pot modificar polítiques de seguretat</td></tr>
+          <tr><td><strong>Backup Operators</strong></td><td><span class="badge b-red">Local domini</span></td><td>Pot fer backups/restauracions de fitxers del DC, independentment dels permisos NTFS.</td><td>🟠 Alt — Accés a dades sensibles</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- PRÀCTICA 7 -->
+    <div class="lab-card fi">
+      <div class="lab-header">
+        <div class="lab-icon">🔬</div>
+        <div class="lab-title-block">
+          <h4>Pràctica 4.7 — Implementar l'estratègia AGDLP completa</h4>
+          <p>Crear grups, imbricar-los i assignar permisos sobre carpetes compartides seguint AGDLP</p>
+        </div>
+        <div class="lab-os-tags"><span class="os-tag os-win">🪟 Windows Server</span></div>
+      </div>
+      <div class="lab-body">
+        <p>Implementarem l'accés a una carpeta compartida <code>\\SRV-FILE-01\Vendes</code> per al departament de Vendes seguint estrictament la metodologia AGDLP.</p>
+        <h5>🪟 PowerShell — Implementació AGDLP pas a pas</h5>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">PowerShell — AD Module + SMB</span><span class="term-os term-os-ps">PowerShell</span></div>
+          <div class="term-body">
+            <span class="comment">## ── FASE 1: Crear grups (A → G → DL) ──</span><br><br>
+            <span class="comment"># G — Grups Globals per rol/departament</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">New-ADGroup</span> <span class="flag">-Name</span> <span class="str">"Vendes_GG"</span> <span class="flag">-GroupScope Global -GroupCategory Security</span> <span class="flag">`</span><br>
+            <span class="flag">  -Path</span> <span class="str">"ou=Grups,ou=Barcelona,dc=asix,dc=local"</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">New-ADGroup</span> <span class="flag">-Name</span> <span class="str">"IT_GG"</span> <span class="flag">-GroupScope Global -GroupCategory Security</span> <span class="flag">`</span><br>
+            <span class="flag">  -Path</span> <span class="str">"ou=Grups,ou=Barcelona,dc=asix,dc=local"</span><br><br>
+            <span class="comment"># DL — Grups de Domini Local per a cada recurs i nivell d'accés</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">New-ADGroup</span> <span class="flag">-Name</span> <span class="str">"Vendes_Carpeta_Lectura_GL"</span> <span class="flag">-GroupScope DomainLocal -GroupCategory Security</span> <span class="flag">`</span><br>
+            <span class="flag">  -Path</span> <span class="str">"ou=Grups,ou=Barcelona,dc=asix,dc=local"</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">New-ADGroup</span> <span class="flag">-Name</span> <span class="str">"Vendes_Carpeta_Escriptura_GL"</span> <span class="flag">-GroupScope DomainLocal -GroupCategory Security</span> <span class="flag">`</span><br>
+            <span class="flag">  -Path</span> <span class="str">"ou=Grups,ou=Barcelona,dc=asix,dc=local"</span><br><br>
+            <span class="comment">## ── FASE 2: Imbricar (A→G, G→DL) ──</span><br><br>
+            <span class="comment"># A → G: Afegir usuaris als grups globals</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">Add-ADGroupMember</span> <span class="flag">-Identity</span> <span class="str">"Vendes_GG"</span> <span class="flag">-Members</span> <span class="str">"jgarcia"</span><span class="cmd">,</span><span class="str">"mlopez"</span><br><br>
+            <span class="comment"># G → DL: Afegir el grup global al grup de domini local</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">Add-ADGroupMember</span> <span class="flag">-Identity</span> <span class="str">"Vendes_Carpeta_Escriptura_GL"</span> <span class="flag">-Members</span> <span class="str">"Vendes_GG"</span><br>
+            <span class="comment"># IT també té accés de lectura</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">Add-ADGroupMember</span> <span class="flag">-Identity</span> <span class="str">"Vendes_Carpeta_Lectura_GL"</span> <span class="flag">-Members</span> <span class="str">"IT_GG"</span><br><br>
+            <span class="comment">## ── FASE 3: Crear recurs i assignar permisos (DL → P) ──</span><br><br>
+            <span class="comment"># Crear carpeta</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">New-Item</span> <span class="flag">-Path</span> <span class="str">"C:\Recursos\Vendes"</span> <span class="flag">-ItemType Directory -Force</span><br><br>
+            <span class="comment"># Assignar permisos NTFS via PowerShell</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">$acl = Get-Acl</span> <span class="str">"C:\Recursos\Vendes"</span><br>
+            <span class="comment"># Permís de Lectura per al GL de Lectura</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">$regLectura = New-Object System.Security.AccessControl.FileSystemAccessRule</span><span class="cmd">(</span><span class="str">"ASIX\Vendes_Carpeta_Lectura_GL"</span><span class="cmd">,</span><span class="str">"Read"</span><span class="cmd">,</span><span class="str">"ContainerInherit,ObjectInherit"</span><span class="cmd">,</span><span class="str">"None"</span><span class="cmd">,</span><span class="str">"Allow"</span><span class="cmd">)</span><br>
+            <span class="comment"># Permís de Modificació per al GL d'Escriptura</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">$regEscriptura = New-Object System.Security.AccessControl.FileSystemAccessRule</span><span class="cmd">(</span><span class="str">"ASIX\Vendes_Carpeta_Escriptura_GL"</span><span class="cmd">,</span><span class="str">"Modify"</span><span class="cmd">,</span><span class="str">"ContainerInherit,ObjectInherit"</span><span class="cmd">,</span><span class="str">"None"</span><span class="cmd">,</span><span class="str">"Allow"</span><span class="cmd">)</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">$acl.SetAccessRule($regLectura)</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">$acl.SetAccessRule($regEscriptura)</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">Set-Acl</span> <span class="flag">-Path</span> <span class="str">"C:\Recursos\Vendes"</span> <span class="flag">-AclObject</span> <span class="cmd">$acl</span><br><br>
+            <span class="comment"># Crear el recurs compartit SMB</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">New-SmbShare</span> <span class="flag">-Name</span> <span class="str">"Vendes"</span> <span class="flag">-Path</span> <span class="str">"C:\Recursos\Vendes"</span> <span class="flag">-FullAccess</span> <span class="str">"Domain Admins"</span> <span class="flag">-ChangeAccess</span> <span class="str">"Domain Users"</span><br><br>
+            <span class="comment"># Verificar permisos NTFS resultants</span><br>
+            <span class="prompt-ps">PS C:\&gt;</span> <span class="cmd">(Get-Acl "C:\Recursos\Vendes").Access | Format-Table IdentityReference, FileSystemRights, AccessControlType</span>
+          </div>
+        </div>
+        <div class="lab-entrega"><strong>📋 Lliurament:</strong> (1) Diagrama AGDLP elaborat manualment o amb draw.io mostrant l'estructura completa: usuaris → GG → DL → permís → recurs. (2) Captura dels permisos NTFS de la carpeta. (3) Prova funcional: inicia sessió com a <code>jgarcia</code> (Vendes) i verifica que pot escriure a <code>\\SRV-DC01\Vendes</code>. Inicia sessió com un usuari IT i verifica que només pot llegir.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ PREGUNTES ═══════ -->
+<section id="preguntes" style="background:#fffbf0;padding:6rem 2rem">
+  <div class="container">
+    <div class="ra-banner ra-preguntes fi">
+      <div class="ra-num">?</div>
+      <div><h2>10 Preguntes teòriques — RA4</h2>
+        <p>Nivell CFGS. Preguntes de raonament, anàlisi de casos i disseny d'arquitectura de domini.</p></div>
+    </div>
+
+    <div class="grid fi" style="gap:.9rem">
+
+      <div class="q-card">
+        <div class="q-num">1</div>
+        <div class="q-body">
+          <h4>Una empresa té 3 seus (Barcelona, Madrid i Lisboa) i una estructura de dominis AD amb un bosc format per tres dominis: corp.local (arrel), bcn.corp.local i lx.corp.local. Explica les relacions de confiança que existeixen entre ells de manera predeterminada. Si un usuari de lx.corp.local necessita accedir a un recurs de bcn.corp.local, quina seqüència d'autenticació Kerberos es produeix i quins DCs hi intervenen?</h4>
+          <p>Indica quins rols FSMO s'haurien de tenir al domini arrel i quins als fils, i per quin motiu la redundància del PDC Emulator és crítica.</p>
+          <span class="q-tag qt-ad">Arquitectura AD</span><span class="q-tag qt-ad">FSMO</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">2</div>
+        <div class="q-body">
+          <h4>El protocol LDAP usa DN (Distinguished Name) per identificar objectes. Donada la consulta LDAP: <code>ldapsearch -b "ou=IT,ou=Usuaris,dc=empresa,dc=local" "(memberOf=cn=Admins_GG,ou=Grups,dc=empresa,dc=local)"</code>, explica: (a) a quin contenidor es limita la cerca, (b) quin filtre s'aplica i (c) quin resultat retornarà. Com modificaries la consulta per cercar usuaris desactivats a tot el domini?</h4>
+          <p>Descriu la diferència entre la cerca LDAP amb àmbit <code>base</code>, <code>onelevel</code> i <code>subtree</code>.</p>
+          <span class="q-tag qt-ldap">LDAP</span><span class="q-tag qt-ad">Consultes</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">3</div>
+        <div class="q-body">
+          <h4>L'empresa detecta que en els últims mesos s'han produït 15 bloquejos de compte de l'usuari "aadmin" durant les hores de la matinada (2:00-4:00h). La política de bloqueig és de 5 intents en 30 minuts. Descriu el procés d'investigació: quines eines de Windows Event Log (Event IDs) examines, com identifiques el PC o servidor des del qual es produeixen els intents, i quines accions correctores apliques a curt i llarg termini.</h4>
+          <p>Menciona els IDs d'esdeveniment rellevants per als bloquejos de compte i com pots usar PowerShell per automatitzar la monitorització.</p>
+          <span class="q-tag qt-sec">Seguretat</span><span class="q-tag qt-ad">Event Log</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">4</div>
+        <div class="q-body">
+          <h4>Explica la diferència entre la contrasenya d'un compte d'usuari AD i la contrasenya DSRM (Directory Services Restore Mode). En quins escenaris s'usa la contrasenya DSRM? Quin risc suposa tenir tots els DCs del domini amb la mateixa contrasenya DSRM? Com es gestiona la contrasenya DSRM en entorns de producció amb la directiva <code>DsrmAdminLogonBehavior</code>?</h4>
+          <p>Descriu el procés de reset de la contrasenya DSRM sense conèixer-la (quan un DC arrenca en mode normal) i les implicacions de seguretat de la clau <code>krbtgt</code>.</p>
+          <span class="q-tag qt-sec">DSRM</span><span class="q-tag qt-sec">Kerberos</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">5</div>
+        <div class="q-body">
+          <h4>Un usuari de l'empresa treballa en un portàtil. Té configurat un perfil mòbil i la carpeta de Documents redirigida a <code>\\SRV-FILE\Redirected\%username%\Documents</code> amb Offline Files activat. Descriu exactament el que passa en termes de sincronització quan: (a) el portàtil es connecta a la xarxa de l'empresa, (b) l'usuari modifica un document sense connexió a xarxa, i (c) en reconnectar-se es detecta un conflicte (el mateix fitxer ha estat modificat tant localment com al servidor).</h4>
+          <p>Quin mecanisme usa Windows per resoldre conflictes de sincronització d'Offline Files? Quines eines permeten veure l'estat de sincronització?</p>
+          <span class="q-tag qt-ad">Perfils mòbils</span><span class="q-tag qt-ad">Offline Files</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">6</div>
+        <div class="q-body">
+          <h4>Dissenya l'estructura de grups AD seguint la metodologia AGDLP per a l'escenari: una carpeta compartida <code>\\SRV-FILE\Projectes\Projecte_Alpha</code> on el departament de Disseny necessita accés de Control Total, el departament de Desenvolupament necessita Modificació, i tots els usuaris de l'empresa necessiten Lectura. Posa nom als grups creats seguint les convencions de nomenclatura i descriu els passos d'implementació. Quants grups en total crees?</h4>
+          <p>Explica per quin motiu <em>no</em> s'han d'assignar permisos NTFS directament als Grups Globals o als comptes d'usuari, i les dificultats que causaria en un futur si s'ho fes.</p>
+          <span class="q-tag qt-grups">AGDLP</span><span class="q-tag qt-ad">Permisos NTFS</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">7</div>
+        <div class="q-body">
+          <h4>Un tècnic intenta eliminar un compte d'usuari d'AD i rep el missatge "El compte 'jgarcia' no es pot eliminar perquè té recursos assignats". Quins recursos en AD poden estar impedint l'eliminació d'un compte? Descriu la diferència entre "desactivar" un compte, "eliminar" un compte i "moure" un compte a una OU de llimbs (off-boarding OU). Quin seria el procediment correcte de baixa d'un empleat en una empresa ISO 27001?</h4>
+          <p>Inclou les implicacions del SID i com recuperar permisos d'accés a fitxers si el compte original s'elimina i es recrea amb el mateix nom.</p>
+          <span class="q-tag qt-ad">Gestió de comptes</span><span class="q-tag qt-sec">Off-boarding</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">8</div>
+        <div class="q-body">
+          <h4>Compara les tres maneres de crear usuaris en AD a gran escala: (a) script PowerShell amb Import-Csv, (b) Windows Autopilot + Azure AD, i (c) sincronització des d'un sistema RRHH via LDAP (p.ex. SAP → AD). Quines avantatges i inconvenients té cada mètode per a una empresa de 500 empleats que contracta 50 persones noves per trimestre? Quin mètode recomanaries i per quin motiu?</h4>
+          <p>Descriu els atributs d'usuari AD que típicament venen d'un sistema RRHH (SAP, Workday) vs els que ha de configurar el departament IT (perfil, home folder, grups de seguretat).</p>
+          <span class="q-tag qt-ad">Provisionament</span><span class="q-tag qt-ldap">Integració</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">9</div>
+        <div class="q-body">
+          <h4>Explica la diferència entre un Grup Global i un Grup Universal en un entorn de bosc amb múltiples dominis. Per quin motiu Microsoft recomana evitar l'ús excessiu de Grups Universals? Quin impacte té un Grup Universal amb 10.000 membres sobre la replicació del Global Catalog (GC) en un bosc amb 3 dominis i 5 DCs? Descriu l'estratègia AGUDLP i quan s'usa respecte a AGDLP.</h4>
+          <p>Explica per quin motiu el grup "Enterprise Admins" és Universal i no Global, tenint en compte les seves funcions en un entorn multi-domini.</p>
+          <span class="q-tag qt-grups">Àmbits de grups</span><span class="q-tag qt-ad">Replicació GC</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">10</div>
+        <div class="q-body">
+          <h4>L'empresa vol migrar la seva infraestructura on-premise AD DS a un model híbrid amb Azure Active Directory (Entra ID). Compara les funcionalitats d'un DC Windows Server on-premise amb Azure AD en termes de: (a) protocol d'autenticació (Kerberos vs OAuth2/OIDC), (b) gestió de GPOs (on-prem vs Intune MDM), (c) unió al domini (Domain Join vs Entra Join). Quina eina de sincronització usa Microsoft per mantenir els dos directoris sincronitzats i quins objectes sincronitza?</h4>
+          <p>Quin seria l'impacte per als usuaris en termes de Single Sign-On (SSO) en un entorn híbrid on els serveis on-premise usen Kerberos i els serveis cloud (Microsoft 365) usen tokens OAuth2?</p>
+          <span class="q-tag qt-ad">Azure AD / Entra</span><span class="q-tag qt-ldap">Autenticació</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- RESUM FINAL -->
+<section class="s-cream">
+  <div class="container fi">
+    <div class="section-tag tag-asix">Resum del RA4</div>
+    <h2>El que heu après</h2>
+    <p class="lead">Els 10 continguts del RA4 i les seves aplicacions pràctiques com a tècnics ASIX administrant un domini Windows.</p>
+    <div class="grid g4 fi">
+      <div class="card bl-asix">
+        <div class="card-icon" style="background:#f5f3ff">🏗️</div>
+        <h3>Client/Servidor (T1)</h3>
+        <p>Avantatges del domini vs workgroup. Rols del servidor (DC, DNS, DHCP, File, CA). Prerequisits per crear un domini. <strong>Install-ADDSForest, Get-ADDomain.</strong></p>
+      </div>
+      <div class="card bl-ldap">
+        <div class="card-icon" style="background:#f0fdf4">🌳</div>
+        <h3>LDAP (T2)</h3>
+        <p>Ports 389/636. Estructura DIT, DN, OU, CN, DC. Atributs clau. Format LDIF. <strong>ldapsearch, Get-ADUser -Properties *, DistinguishedName.</strong></p>
+      </div>
+      <div class="card bl-win">
+        <div class="card-icon" style="background:#f0f7ff">🏢</div>
+        <h3>Domini & OUs (T3)</h3>
+        <p>Bosc, arbre, domini. Estratègies de disseny d'OUs (geogràfica, per departament, híbrida). 5 rols FSMO. <strong>New-ADOrganizationalUnit, Get-ADForest.</strong></p>
+      </div>
+      <div class="card bl-asix">
+        <div class="card-icon" style="background:#f5f3ff">👤</div>
+        <h3>Comptes (T4–6)</h3>
+        <p>Comptes predeterminades (RID-500/501/502). SID vs SamAccountName. PSO Fine-Grained. Unir equips. <strong>New-ADUser, New-ADFineGrainedPasswordPolicy, Add-Computer.</strong></p>
+      </div>
+      <div class="card bl-sec">
+        <div class="card-icon" style="background:#fff5f5">🔒</div>
+        <h3>Seguretat (T5)</h3>
+        <p>Política de contrasenyes (longitud, complexitat, historial). Bloqueig de comptes (llindar, finestra, durada). Account Lockout DoS. krbtgt.</p>
+      </div>
+      <div class="card bl-win">
+        <div class="card-icon" style="background:#f0f7ff">☁️</div>
+        <h3>Perfils & Carpetes (T7–8)</h3>
+        <p>Local vs mòbil vs obligatori (ntuser.man). Home Folder (H:). Folder Redirection GPO. Offline Files. <strong>Set-ADUser -ProfilePath -HomeDirectory -HomeDrive.</strong></p>
+      </div>
+      <div class="card bl-amber">
+        <div class="card-icon" style="background:#fffbeb">📋</div>
+        <h3>Plantilles (T9)</h3>
+        <p>Plantilles amb prefix _TPL-, desactivades. Atributs que es copien. Import CSV massiu. Variables %USERNAME%, %HOMEDRIVE%. Scripts de logon.</p>
+      </div>
+      <div class="card bl-sec">
+        <div class="card-icon" style="background:#fff5f5">👥</div>
+        <h3>Grups AGDLP (T10)</h3>
+        <p>Seguretat vs distribució. Global (G), DomainLocal (DL), Universal (U). Estratègia AGDLP. Grups predeterminats (DA, EA, Schema Admins). <strong>New-ADGroup, Add-ADGroupMember.</strong></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p><strong>RA4 — Centralitza la informació en servidors administrant estructures de dominis · ASIX · MP0369</strong></p>
+  <p style="margin-top:.4rem">Client/Servidor · LDAP · Active Directory · Comptes · Contrasenyes · Perfils · Carpetes · Plantilles · Grups AGDLP</p>
+  <p style="margin-top:.4rem">Departament d'Informàtica · Administració de Sistemes Informàtics en Xarxa (ASIX)</p>
+</footer>
+
+<script>
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('in'); });
+  }, { threshold: 0.06, rootMargin: '0px 0px -30px 0px' });
+  document.querySelectorAll('.fi').forEach(el => io.observe(el));
+</script>
+</body>
+</html>

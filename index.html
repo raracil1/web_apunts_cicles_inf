@@ -3,28 +3,34 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Recursos Cicles Formatius</title>
+  <title>Recursos Cicles Formatius · Informàtica</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      --ink:      #1a2332;
-      --paper:    #f0f5fb;
-      --card-bg:  #ffffff;
-      --cream:    #e4edf8;
-      --blue:     #2563eb;
-      --blue-lt:  #3b82f6;
-      --blue-pale:#dbeafe;
-      --sky:      #e0f2fe;
-      --accent:   #0ea5e9;
-      --mist:     #64748b;
-      --white:    #ffffff;
+      --ink:       #0b0e1a;
+      --paper:     #f5f4f0;
+      --cream:     #eceae3;
+      --white:     #ffffff;
+      --navy:      #111827;
+      --cobalt:    #2338a8;
+      --cobalt-l:  #3b54d4;
+      --cobalt-pale: #dde3f8;
+      --cyan:      #0891b2;
+      --cyan-pale: #e0f7fc;
+      --asix:      #2338a8;
+      --asix-l:    #4f6bde;
+      --smx:       #0e7490;
+      --smx-l:     #22b8d8;
+      --muted:     #6b7280;
+      --border:    #e0ddd5;
+      --radius:    14px;
+      --radius-sm: 8px;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     html { scroll-behavior: smooth; }
 
     body {
@@ -32,571 +38,828 @@
       background: var(--paper);
       color: var(--ink);
       overflow-x: hidden;
+      font-size: 16px;
+      line-height: 1.6;
     }
 
-    /* ── SCROLLBAR ───────────────────────────────────── */
-    ::-webkit-scrollbar { width: 6px; }
+    /* ── SCROLLBAR ─────────────────────────── */
+    ::-webkit-scrollbar { width: 5px; }
     ::-webkit-scrollbar-track { background: var(--paper); }
-    ::-webkit-scrollbar-thumb { background: var(--blue-pale); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb { background: var(--cobalt-pale); border-radius: 3px; }
 
-    /* ── NOISE TEXTURE OVERLAY ───────────────────────── */
-    body::before {
-      content: '';
+    /* ── TOPBAR ────────────────────────────── */
+    .topbar {
       position: fixed;
-      inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
-      pointer-events: none;
-      z-index: 999;
-      opacity: 0.4;
-    }
-
-    /* ── HERO ────────────────────────────────────────── */
-    header {
-      background: linear-gradient(135deg, #1d4ed8 0%, #0ea5e9 60%, #38bdf8 100%);
-      padding: 48px 80px 52px;
-      position: relative;
-      overflow: hidden;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      height: 58px;
+      background: rgba(245,244,240,0.92);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 40px;
+      padding: 0 2.5rem;
     }
-
-    /* decorative circles */
-    header::before,
-    header::after {
-      content: '';
-      position: absolute;
-      border-radius: 50%;
-      pointer-events: none;
-    }
-    header::before {
-      width: 420px; height: 420px;
-      background: rgba(255,255,255,0.06);
-      top: -160px; right: -80px;
-    }
-    header::after {
-      width: 200px; height: 200px;
-      background: rgba(255,255,255,0.05);
-      bottom: -60px; left: 30%;
-    }
-
-    .hero-left {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      z-index: 1;
-    }
-
-    .tag {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.7rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.65);
+    .topbar-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 0.9rem;
+      color: var(--navy);
+      letter-spacing: -0.02em;
       display: flex;
       align-items: center;
-      gap: 10px;
-      margin-bottom: 4px;
+      gap: 0.5rem;
     }
-    .tag::before {
-      content: '';
+    .topbar-logo .dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--cobalt);
       display: inline-block;
-      width: 22px; height: 1px;
-      background: rgba(255,255,255,0.5);
+    }
+    .topbar-links {
+      display: flex;
+      gap: 0.35rem;
+      list-style: none;
+    }
+    .topbar-links a {
+      text-decoration: none;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.3rem 0.8rem;
+      border-radius: 100px;
+      color: var(--muted);
+      transition: all 0.2s;
+      border: 1px solid transparent;
+      letter-spacing: 0.01em;
+    }
+    .topbar-links a:hover {
+      color: var(--cobalt);
+      border-color: var(--cobalt-pale);
+      background: var(--cobalt-pale);
     }
 
-    h1 {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(1.9rem, 3.5vw, 2.8rem);
-      line-height: 1.1;
-      color: var(--white);
-      font-weight: 900;
+    /* ── HERO ──────────────────────────────── */
+    .hero {
+      min-height: 100vh;
+      background: var(--navy);
+      color: white;
+      display: grid;
+      place-items: center;
+      position: relative;
+      overflow: hidden;
+      padding: 8rem 2.5rem 5rem;
     }
 
-    h1 em {
-      font-style: italic;
-      color: rgba(255,255,255,0.75);
+    /* Grid pattern */
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 48px 48px;
     }
 
-    .hero-sub {
-      font-size: 0.92rem;
-      color: rgba(255,255,255,0.7);
-      font-weight: 300;
-      line-height: 1.5;
-      max-width: 360px;
+    /* Gradient glow blobs */
+    .hero-glow {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 50% at 75% 25%, rgba(35,56,168,0.55) 0%, transparent 60%),
+        radial-gradient(ellipse 45% 40% at 20% 80%, rgba(8,145,178,0.25) 0%, transparent 60%),
+        radial-gradient(ellipse 35% 30% at 50% 50%, rgba(79,107,222,0.1) 0%, transparent 55%);
+      pointer-events: none;
     }
 
-    .hero-right {
+    /* Big decorative BG text */
+    .hero-deco-text {
+      position: absolute;
+      bottom: -0.15em;
+      right: -0.05em;
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(10rem, 20vw, 22rem);
+      line-height: 1;
+      letter-spacing: -0.05em;
+      color: rgba(255,255,255,0.03);
+      pointer-events: none;
+      user-select: none;
+      white-space: nowrap;
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 1100px;
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 3rem;
+      align-items: end;
+    }
+
+    .hero-eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      display: block;
+      width: 28px;
+      height: 1px;
+      background: rgba(255,255,255,0.3);
+    }
+
+    .hero h1 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(2.8rem, 6.5vw, 5.5rem);
+      line-height: 1.0;
+      letter-spacing: -0.035em;
+      margin-bottom: 1.5rem;
+    }
+    .hero h1 .accent { color: var(--asix-l); }
+    .hero h1 .dim { color: rgba(255,255,255,0.35); }
+
+    .hero-desc {
+      font-size: 1rem;
+      color: rgba(255,255,255,0.5);
+      max-width: 480px;
+      line-height: 1.7;
+      margin-bottom: 2.5rem;
+    }
+
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: var(--cobalt);
+      color: white;
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 0.82rem;
+      letter-spacing: 0.04em;
+      padding: 0.75rem 1.5rem;
+      border-radius: 100px;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+      text-decoration: none;
+    }
+    .hero-cta:hover {
+      background: var(--cobalt-l);
+      transform: translateY(-2px);
+    }
+    .hero-cta .arrow {
+      font-size: 1rem;
+      transition: transform 0.2s;
+    }
+    .hero-cta:hover .arrow { transform: translateY(3px); }
+
+    .hero-meta {
       display: flex;
       flex-direction: column;
       align-items: flex-end;
-      gap: 14px;
-      z-index: 1;
+      gap: 1.5rem;
+    }
+
+    .hero-stat {
       text-align: right;
     }
-
-    .hero-prof {
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
+    .hero-stat .stat-num {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 2.2rem;
+      line-height: 1;
+      color: white;
+      letter-spacing: -0.04em;
+    }
+    .hero-stat .stat-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+      margin-top: 0.2rem;
     }
 
-    .hero-prof .label {
-      font-family: 'DM Mono', monospace;
+    .hero-badge-row {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-top: 0.5rem;
+    }
+    .hero-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      padding: 0.3rem 0.8rem;
+      border-radius: 100px;
+      border: 1px solid rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.55);
+      background: rgba(255,255,255,0.05);
+    }
+
+    .scroll-indicator {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+      color: rgba(255,255,255,0.2);
+      font-family: 'JetBrains Mono', monospace;
       font-size: 0.6rem;
       letter-spacing: 0.15em;
       text-transform: uppercase;
-      color: rgba(255,255,255,0.45);
+    }
+    .scroll-indicator::after {
+      content: '';
+      display: block;
+      width: 1px;
+      height: 36px;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.25), transparent);
+      animation: scrollpulse 2s ease-in-out infinite;
+    }
+    @keyframes scrollpulse {
+      0%,100% { opacity: 0.2; }
+      50% { opacity: 1; }
     }
 
-    .hero-prof .name {
-      font-size: 0.92rem;
+    /* ── MAIN CONTENT ──────────────────────── */
+    main { padding-top: 0; }
+
+    /* ── CYCLE BLOCK ───────────────────────── */
+    .cycle-block {
+      padding: 5rem 2.5rem;
+    }
+    .cycle-block + .cycle-block {
+      border-top: 1px solid var(--border);
+    }
+    .cycle-block.smx-block {
+      background: var(--cream);
+    }
+
+    .cycle-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    /* ── CYCLE HEADER ──────────────────────── */
+    .cycle-header {
+      display: flex;
+      align-items: flex-end;
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+      padding-bottom: 1.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .cycle-code {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(2.8rem, 5vw, 4.5rem);
+      line-height: 1;
+      letter-spacing: -0.04em;
+    }
+    .asix-block .cycle-code { color: var(--asix); }
+    .smx-block  .cycle-code { color: var(--smx); }
+
+    .cycle-header-info {
+      padding-bottom: 0.3rem;
+    }
+    .cycle-fullname {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
       font-weight: 500;
-      color: rgba(255,255,255,0.9);
+      color: var(--muted);
+      max-width: 380px;
+      line-height: 1.4;
     }
-
-    .scroll-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      cursor: pointer;
-      border: 1px solid rgba(255,255,255,0.35);
-      background: rgba(255,255,255,0.12);
-      color: white;
-      font-family: 'DM Mono', monospace;
-      font-size: 0.68rem;
+    .cycle-pill {
+      display: inline-block;
+      margin-top: 0.5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 700;
       letter-spacing: 0.12em;
       text-transform: uppercase;
-      border-radius: 40px;
-      padding: 9px 18px;
-      transition: background 0.25s, border-color 0.25s;
-      backdrop-filter: blur(4px);
-      margin-top: 6px;
+      padding: 0.25rem 0.7rem;
+      border-radius: 100px;
+    }
+    .asix-block .cycle-pill {
+      background: var(--cobalt-pale);
+      color: var(--cobalt);
+    }
+    .smx-block .cycle-pill {
+      background: var(--cyan-pale);
+      color: var(--smx);
     }
 
-    .scroll-btn:hover {
-      background: rgba(255,255,255,0.22);
-      border-color: rgba(255,255,255,0.6);
-    }
-
-    .scroll-btn .arrow {
-      font-size: 0.85rem;
-    }
-
-    .year-badge {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.62rem;
-      letter-spacing: 0.18em;
-      color: rgba(255,255,255,0.35);
-      text-transform: uppercase;
-    }
-
-    /* ── SECTION INTRO ───────────────────────────────── */
-    .section-intro {
-      padding: 60px 80px 30px;
-      display: flex;
-      align-items: baseline;
-      gap: 20px;
-    }
-
-    .section-intro h2 {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(1.8rem, 3vw, 2.6rem);
-      font-weight: 700;
-      color: var(--ink);
-    }
-
-    .section-intro .module-tag {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.68rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--blue);
-      padding: 4px 12px;
-      border: 1px solid var(--blue-pale);
-      border-radius: 2px;
-      background: var(--blue-pale);
-    }
-
-    /* ── CARDS GRID ──────────────────────────────────── */
+    /* ── CARDS GRID ────────────────────────── */
     .cards-grid {
-      padding: 40px 80px 100px;
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-      gap: 24px;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.1rem;
     }
 
+    /* ── CARD ──────────────────────────────── */
     .card {
       background: var(--white);
-      border-radius: 4px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
       overflow: hidden;
       cursor: pointer;
-      position: relative;
-      transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-                  box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      transition: transform 0.3s cubic-bezier(0.22,1,0.36,1),
+                  box-shadow 0.3s cubic-bezier(0.22,1,0.36,1),
+                  border-color 0.2s;
     }
-
     .card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 20px 50px rgba(0,0,0,0.12);
+      transform: translateY(-4px);
+      box-shadow: 0 16px 48px rgba(0,0,0,0.1);
+      border-color: transparent;
     }
+    .asix-block .card:hover { box-shadow: 0 16px 48px rgba(35,56,168,0.12); }
+    .smx-block  .card:hover { box-shadow: 0 16px 48px rgba(8,145,178,0.12); }
 
-    .card-accent {
-      height: 4px;
-      background: var(--blue);
-      transition: height 0.35s ease;
+    /* color strip top */
+    .card-strip {
+      height: 3px;
+      transition: height 0.3s ease;
     }
+    .card:hover .card-strip { height: 5px; }
 
-    .card:nth-child(2) .card-accent { background: var(--accent); }
-    .card:nth-child(3) .card-accent { background: #6366f1; }
-
-    .card:hover .card-accent { height: 6px; }
+    .asix-block .card:nth-child(1) .card-strip { background: linear-gradient(90deg, var(--asix), var(--asix-l)); }
+    .asix-block .card:nth-child(2) .card-strip { background: linear-gradient(90deg, #4f46e5, #818cf8); }
+    .asix-block .card:nth-child(3) .card-strip { background: linear-gradient(90deg, #0e7490, #22d3ee); }
+    .smx-block  .card:nth-child(1) .card-strip { background: linear-gradient(90deg, var(--smx), var(--smx-l)); }
+    .smx-block  .card:nth-child(2) .card-strip { background: linear-gradient(90deg, #7c3aed, #c084fc); }
 
     .card-body {
-      padding: 30px 30px 24px;
+      padding: 1.5rem 1.65rem 1.25rem;
     }
-
-    .card-number {
-      font-family: 'DM Mono', monospace;
+    .card-module-num {
+      font-family: 'JetBrains Mono', monospace;
       font-size: 0.65rem;
-      letter-spacing: 0.2em;
-      color: var(--mist);
+      font-weight: 500;
+      color: var(--muted);
+      letter-spacing: 0.1em;
       text-transform: uppercase;
-      margin-bottom: 14px;
+      margin-bottom: 0.65rem;
     }
-
     .card-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.45rem;
+      font-family: 'Syne', sans-serif;
       font-weight: 700;
+      font-size: 1.05rem;
       color: var(--ink);
-      margin-bottom: 8px;
-      line-height: 1.2;
+      line-height: 1.25;
+      margin-bottom: 0.55rem;
     }
-
     .card-meta {
-      font-size: 0.78rem;
-      color: var(--mist);
-      font-weight: 400;
-      letter-spacing: 0.02em;
+      font-size: 0.77rem;
+      color: var(--muted);
+      line-height: 1.4;
     }
 
+    /* toggle row */
     .card-toggle {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 16px 30px;
+      padding: 0.85rem 1.65rem;
       border-top: 1px solid var(--cream);
-      font-family: 'DM Mono', monospace;
-      font-size: 0.7rem;
-      letter-spacing: 0.12em;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.67rem;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
-      color: var(--mist);
+      color: var(--muted);
       transition: color 0.2s;
     }
-
     .card:hover .card-toggle { color: var(--ink); }
 
-    .toggle-icon {
-      width: 22px; height: 22px;
-      border: 1px solid currentColor;
+    .toggle-btn {
+      width: 24px; height: 24px;
       border-radius: 50%;
+      border: 1.5px solid currentColor;
       display: flex; align-items: center; justify-content: center;
-      font-size: 0.9rem;
-      transition: transform 0.3s, background 0.2s;
+      font-size: 0.85rem;
+      transition: transform 0.3s, background 0.2s, border-color 0.2s;
+      flex-shrink: 0;
+      line-height: 1;
     }
-
-    .card.open .toggle-icon {
+    .asix-block .card.open .toggle-btn {
       transform: rotate(45deg);
-      background: var(--blue);
+      background: var(--asix);
+      border-color: var(--asix);
       color: white;
-      border-color: var(--blue);
+    }
+    .smx-block .card.open .toggle-btn {
+      transform: rotate(45deg);
+      background: var(--smx);
+      border-color: var(--smx);
+      color: white;
     }
 
-    /* ── DROPDOWN ────────────────────────────────────── */
+    /* ── DROPDOWN ──────────────────────────── */
     .dropdown {
       max-height: 0px;
       overflow: hidden;
       transition: max-height 0.45s cubic-bezier(0.22, 1, 0.36, 1);
-      background: var(--sky);
     }
+    .asix-block .dropdown { background: #f5f7ff; }
+    .smx-block  .dropdown { background: #f0fbff; }
 
     .dropdown-inner {
-      padding: 24px 30px;
+      padding: 1.25rem 1.65rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
     }
 
     .ra-item {
       display: flex;
       align-items: flex-start;
-      gap: 14px;
-      padding: 10px 0;
-      border-bottom: 1px solid rgba(37,99,235,0.1);
-      font-size: 0.85rem;
+      gap: 1rem;
+      padding: 0.7rem 0;
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+      font-size: 0.84rem;
       color: var(--ink);
       line-height: 1.5;
+      text-decoration: none;
+      transition: padding-left 0.2s, color 0.2s;
     }
-
     .ra-item:last-child { border-bottom: none; }
+    .ra-item:hover { padding-left: 0.4rem; }
+    .asix-block .ra-item:hover { color: var(--asix); }
+    .smx-block  .ra-item:hover { color: var(--smx); }
 
     .ra-num {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.65rem;
-      color: var(--mist);
-      padding-top: 3px;
-      min-width: 28px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.63rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      white-space: nowrap;
+      flex-shrink: 0;
+      margin-top: 0.1rem;
+    }
+    .asix-block .ra-num {
+      background: var(--cobalt-pale);
+      color: var(--cobalt);
+    }
+    .smx-block .ra-num {
+      background: var(--cyan-pale);
+      color: var(--smx);
     }
 
+    /* plain links (no ra-num) */
     .dropdown-link {
       display: flex;
       align-items: center;
-      gap: 10px;
-      padding: 12px 0;
+      gap: 0.65rem;
+      padding: 0.7rem 0;
       text-decoration: none;
       color: var(--ink);
-      font-size: 0.88rem;
+      font-size: 0.86rem;
       font-weight: 500;
-      border-bottom: 1px solid rgba(37,99,235,0.1);
-      transition: color 0.2s, padding-left 0.2s;
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+      transition: padding-left 0.2s, color 0.2s;
     }
-
     .dropdown-link:last-child { border-bottom: none; }
-
-    .dropdown-link:hover {
-      color: var(--blue);
-      padding-left: 6px;
-    }
-
+    .dropdown-link:hover { padding-left: 0.4rem; }
+    .asix-block .dropdown-link:hover { color: var(--asix); }
+    .smx-block  .dropdown-link:hover { color: var(--smx); }
     .dropdown-link::before {
-      content: '→';
-      font-family: 'DM Mono', monospace;
-      font-size: 0.75rem;
-      opacity: 0.35;
+      content: '↗';
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      opacity: 0.3;
       transition: opacity 0.2s;
+      flex-shrink: 0;
     }
-
     .dropdown-link:hover::before { opacity: 1; }
 
-    /* ── FOOTER ──────────────────────────────────────── */
+    /* ── FOOTER ────────────────────────────── */
     footer {
-      background: #1e3a5f;
-      color: rgba(255,255,255,0.4);
+      background: var(--ink);
+      color: rgba(255,255,255,0.25);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 24px 80px;
-      font-family: 'DM Mono', monospace;
-      font-size: 0.7rem;
+      padding: 1.75rem 2.5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
       letter-spacing: 0.12em;
       text-transform: uppercase;
+      flex-wrap: wrap;
+      gap: 0.75rem;
     }
-
-    footer .dot {
-      width: 6px; height: 6px;
+    footer strong { color: rgba(255,255,255,0.6); }
+    .footer-dot {
+      width: 5px; height: 5px;
       border-radius: 50%;
-      background: var(--accent);
+      background: var(--cobalt-l);
       display: inline-block;
     }
 
-    /* ── DIVIDER ─────────────────────────────────────── */
-    .divider {
-      width: calc(100% - 160px);
-      margin: 0 80px;
-      height: 1px;
-      background: linear-gradient(to right, var(--blue-pale), transparent);
-    }
-
-    /* ── ANIMATIONS ──────────────────────────────────── */
+    /* ── ANIMATIONS ────────────────────────── */
     @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(20px); }
+      from { opacity: 0; transform: translateY(24px); }
       to   { opacity: 1; transform: translateY(0); }
     }
+    .hero-eyebrow { animation: fadeUp 0.6s 0.1s both; }
+    .hero h1      { animation: fadeUp 0.6s 0.2s both; }
+    .hero-desc    { animation: fadeUp 0.6s 0.3s both; }
+    .hero-cta     { animation: fadeUp 0.6s 0.38s both; }
+    .hero-meta    { animation: fadeUp 0.6s 0.22s both; }
 
-    .hero-left .tag    { animation: fadeUp 0.6s 0.1s both; }
-    .hero-left h1      { animation: fadeUp 0.6s 0.2s both; }
-    .hero-left .hero-sub  { animation: fadeUp 0.6s 0.3s both; }
-    .hero-right        { animation: fadeUp 0.6s 0.25s both; }
+    /* stagger cards */
+    .card:nth-child(1) { animation: fadeUp 0.5s 0.05s both; }
+    .card:nth-child(2) { animation: fadeUp 0.5s 0.12s both; }
+    .card:nth-child(3) { animation: fadeUp 0.5s 0.19s both; }
+    .card:nth-child(4) { animation: fadeUp 0.5s 0.26s both; }
+    .card:nth-child(5) { animation: fadeUp 0.5s 0.33s both; }
 
-    /* ── RESPONSIVE ──────────────────────────────────── */
-    @media (max-width: 768px) {
-      header { flex-direction: column; padding: 36px 24px 40px; align-items: flex-start; }
-      .hero-right { align-items: flex-start; text-align: left; }
-      .section-intro { padding: 40px 24px 20px; flex-direction: column; gap: 10px; }
-      .cards-grid { padding: 20px 24px 60px; }
-      footer { padding: 20px 24px; flex-direction: column; gap: 10px; text-align: center; }
-      .divider { width: calc(100% - 48px); margin: 0 24px; }
+    /* ── RESPONSIVE ────────────────────────── */
+    @media (max-width: 860px) {
+      .hero-inner { grid-template-columns: 1fr; gap: 2rem; }
+      .hero-meta { flex-direction: row; align-items: center; justify-content: flex-start; }
+      .topbar-links { display: none; }
+    }
+    @media (max-width: 600px) {
+      .hero { padding: 7rem 1.5rem 5rem; }
+      .cycle-block { padding: 3.5rem 1.5rem; }
+      .cycle-header { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+      footer { padding: 1.5rem; flex-direction: column; align-items: flex-start; }
     }
   </style>
 </head>
-
 <body>
 
-<!-- ── HERO ───────────────────────────────────────────── -->
-<header>
-  <div class="hero-left">
-    <div class="tag">Cicles Formatius</div>
-    <h1>Recursos <em>educatius</em> en línia</h1>
-    <p class="hero-sub">Materials de teoria, pràctiques i recursos per als alumnes dels cicles formatius.</p>
+<!-- ── TOPBAR ──────────────────────────────────────── -->
+<nav class="topbar">
+  <div class="topbar-logo">
+    <span class="dot"></span>
+    Apunts INF.
+  </div>
+  <ul class="topbar-links">
+    <li><a href="#asix">ASIX</a></li>
+    <li><a href="#smx">SMX</a></li>
+  </ul>
+</nav>
+
+<!-- ── HERO ───────────────────────────────────────── -->
+<header class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-deco-text">INF</div>
+
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="hero-eyebrow">Cicles Formatius · Institut Esteve Terradas i Illa</div>
+      <h1>
+        Apunts<br>
+        <span class="accent">& recursos</span><br>
+        <span class="dim">d'informàtica</span>
+      </h1>
+      <p class="hero-desc">
+        Materials de teoria, pràctiques i recursos per als alumnes dels cicles formatius d'informàtica. Actualitzat curs 2026–2027.
+      </p>
+      <div class="hero-badge-row">
+        <span class="hero-badge">ASIX</span>
+        <span class="hero-badge">SMX</span>
+        <span class="hero-badge">2026 – 2027</span>
+      </div>
+      <br>
+      <a class="hero-cta" onclick="document.getElementById('cicles').scrollIntoView({behavior:'smooth'})" href="#">
+        Veure contingut <span class="arrow">↓</span>
+      </a>
+    </div>
+
+    
   </div>
 
-  <div class="hero-right">
-    <div class="hero-prof">
-      <span class="label">Institut</span>
-      <span class="name">Esteve Terradas i Illa</span>
-    </div>
-    <div class="year-badge">2026 – 2027</div>
-    <button class="scroll-btn" onclick="document.getElementById('cicles').scrollIntoView({behavior:'smooth'})">
-      Veure contingut <span class="arrow">↓</span>
-    </button>
-  </div>
+  <div class="scroll-indicator">Desplaça</div>
 </header>
 
-<!-- ── CONTENT ────────────────────────────────────────── -->
-<section id="cicles">
+<!-- ── MAIN ───────────────────────────────────────── -->
+<main id="cicles">
 
-  <div class="section-intro">
-    <h2>ASIX</h2>
-<span class="module-tag">Administració de Sistemes Informàtics en Xarxa</span>
-</div>
+  <!-- ── ASIX ─────────────────────────────────────── -->
+  <section class="cycle-block asix-block" id="asix">
+    <div class="cycle-inner">
 
-<div class="divider"></div>
-
-<div class="cards-grid">
-
-  <!-- IMPLANTACIÓ DE SISTEMES OPERATIUS -->
-  <div class="card" onclick="toggleCard(this, 'iso')">
-    <div class="card-accent"></div>
-    <div class="card-body">
-      <div class="card-number">Mòdul 0369</div>
-      <div class="card-title">Implantació de sistemes operatius</div>
-      <div class="card-meta">Ordre RA: 1, 2, 3, 4, 5, 6, 7, 8</div>
-    </div>
-
-    <div class="card-toggle">
-      Veure contingut
-      <span class="toggle-icon">+</span>
-    </div>
-
-    <div id="iso" class="dropdown">
-      <div class="dropdown-inner">
-
-        <a class="ra-item" href="iso/M1_RA1.html">
-          <span class="ra-num">RA 1</span>
-          Instal·la sistemes operatius, analitzant-ne les característiques i interpretant-ne la documentació tècnica.
-        </a>
-
-        <a class="ra-item" href="iso/M1_RA2.html">
-          <span class="ra-num">RA 2</span>
-          Configura el programari de base, atenent les necessitats d’explotació del sistema informàtic.
-        </a>
-
-        <a class="ra-item" href="iso/M1_RA3.html">
-          <span class="ra-num">RA 3</span>
-          Assegura la informació del sistema, descrivint els procediments i utilitzant còpies de seguretat i sistemes tolerants a errors.
-        </a>
-
-        <a class="ra-item" href="iso/M1_RA4.html">
-          <span class="ra-num">RA 4</span>
-          Centralitza la informació en servidors administrant estructures de dominis i analitzant-ne els avantatges.
-        </a>
-
-        <a class="ra-item" href="iso/M1_RA5.html">
-          <span class="ra-num">RA 5</span>
-          Administra l’accés a dominis analitzant i respectant requeriments de seguretat.
-        </a>
-
-        <a class="ra-item" href="iso/M1_RA6.html">
-          <span class="ra-num">RA 6</span>
-          Detecta problemes de rendiment monitorant el sistema amb les eines adequades i documentant el procediment.
-        </a>
-
-        <a class="ra-item" href="iso/M1_RA7.html">
-          <span class="ra-num">RA 7</span>
-          Audita la utilització i l’accés a recursos, identificant i respectant les necessitats de seguretat del sistema.
-        </a>
-
-        <a class="ra-item" href="iso/M1_RA8.html">
-          <span class="ra-num">RA 8</span>
-          Implanta programari específic amb estructura client/servidor donant resposta als requisits funcionals.
-        </a>
-
-      </div>
-    </div>
-  </div>
-  
-  </div>
-
-    <div class="section-intro">
-
-    <h2>SMX</h2>
-    <span class="module-tag">Sistemes Microinformàtics i Xarxes</span>
-  </div>
-
-  <div class="divider"></div>
-
-  <div class="cards-grid">
-
-    <!-- APLICACIONS OFIMÀTIQUES -->
-    <div class="card" onclick="toggleCard(this, 'ofimatica')">
-      <div class="card-accent"></div>
-      <div class="card-body">
-        <div class="card-number">Mòdul 0223</div>
-        <div class="card-title">Aplicacions ofimàtiques</div>
-        <div class="card-meta">Ordre RA: 8, 2, 1, 9, 3, 4, 5, 6, 7</div>
-      </div>
-      <div class="card-toggle">
-        Veure contingut
-        <span class="toggle-icon">+</span>
-      </div>
-      <div id="ofimatica" class="dropdown">
-        <div class="dropdown-inner">
-            <a class="ra-item" href="ofimatica/M3_RA1.html"><span class="ra-num">RA 1</span> Instal·la i actualitza aplicacions ofimàtiques...</a>
-
-          <a class="ra-item" href="ofimatica/M3_RA2.html"><span class="ra-num">RA 2</span> Elabora documents i plantilles...</a>
-                      <a class="ra-item" href="ofimatica/M3_RA3.html"><span class="ra-num">RA 3</span> Fulls de càlcul avançats...</a>
-
-          <a class="ra-item" href="smx/portfolio-bbdd-catala.html"><span class="ra-num">RA 4</span> Bases de dades ofimàtiques...</a>
-                              <a class="ra-item" href="ofimatica/M3_RA5.html"><span class="ra-num">RA 5</span> Imatges digitals...</a>
-
-                              <a class="ra-item" href="ofimatica/M3_RA6.html"><span class="ra-num">RA 6</span> Vídeo digital...</a>
-
-                              <a class="ra-item" href="ofimatica/M3_RA7.html"><span class="ra-num">RA 7</span> Presentacions multimèdia...</a>
-
-                    <a class="ra-item" href="ofimatica/M3_RA8.html"><span class="ra-num">RA 8</span> Correu i agenda electrònica...</a>
-                    <a class="ra-item" href="ofimatica/M3_RA9.html"><span class="ra-num">RA 9</span> Suport i resolució d'incidències...</a>
-
+      <div class="cycle-header">
+        <div class="cycle-code">ASIX</div>
+        <div class="cycle-header-info">
+          <div class="cycle-fullname">Administració de Sistemes Informàtics en Xarxa</div>
+          <span class="cycle-pill">Grau Superior</span>
         </div>
       </div>
-    </div>
 
-    <!-- DIGITALITZACIÓ -->
-    <div class="card" onclick="toggleCard(this, 'digitalitzacio')">
-      <div class="card-accent"></div>
-      <div class="card-body">
-        <div class="card-number">Mòdul 1708</div>
-        <div class="card-title">Digitalització</div>
-        <div class="card-meta">Teoria · Pràctiques · Recursos</div>
+      <div class="cards-grid">
+
+        <!-- M0369 -->
+        <div class="card" onclick="toggleCard(this, 'iso')">
+          <div class="card-strip"></div>
+          <div class="card-body">
+            <div class="card-module-num">Mòdul 0369</div>
+            <div class="card-title">Implantació de sistemes operatius</div>
+            <div class="card-meta">Ordre RA: 1, 2, 3, 4, 5, 6, 7, 8</div>
+          </div>
+          <div class="card-toggle">
+            Veure contingut
+            <span class="toggle-btn">+</span>
+          </div>
+          <div id="iso" class="dropdown">
+            <div class="dropdown-inner">
+              <a class="ra-item" href="ASIX\MP0369\ASIX_MP0369_RA1.html">
+                <span class="ra-num">RA 1</span>
+                Instal·la sistemes operatius, analitzant-ne les característiques i interpretant-ne la documentació tècnica.
+              </a>
+              <a class="ra-item" href="ASIX\MP0369\ASIX_MP0369_RA2.html">
+                <span class="ra-num">RA 2</span>
+                Configura el programari de base, atenent les necessitats d'explotació del sistema informàtic.
+              </a>
+              <a class="ra-item" href="ASIX\MP0369\ASIX_MP0369_RA3.html">
+                <span class="ra-num">RA 3</span>
+                Assegura la informació del sistema, descrivint els procediments i utilitzant còpies de seguretat i sistemes tolerants a errors.
+              </a>
+              <a class="ra-item" href="ASIX\MP0369\ASIX_MP0369_RA4.html">
+                <span class="ra-num">RA 4</span>
+                Centralitza la informació en servidors administrant estructures de dominis i analitzant-ne els avantatges.
+              </a>
+              <a class="ra-item" href="ASIX\MP0369\ASIX_MP0369_RA5.html">
+                <span class="ra-num">RA 5</span>
+                Administra l'accés a dominis analitzant i respectant requeriments de seguretat.
+              </a>
+              <a class="ra-item" href="ASIX\MP0369\ASIX_MP0369_RA6.html">
+                <span class="ra-num">RA 6</span>
+                Detecta problemes de rendiment monitorant el sistema amb les eines adequades i documentant el procediment.
+              </a>
+              <a class="ra-item" href="ASIX\MP0369\ASIX_MP0369_RA7.html">
+                <span class="ra-num">RA 7</span>
+                Audita la utilització i l'accés a recursos, identificant i respectant les necessitats de seguretat del sistema.
+              </a>
+              <a class="ra-item" href="ASIX\MP0369\ASIX_MP0369_RA8.html">
+                <span class="ra-num">RA 8</span>
+                Implanta programari específic amb estructura client/servidor donant resposta als requisits funcionals.
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- M0374 -->
+        <div class="card" onclick="toggleCard(this, '0374')">
+          <div class="card-strip"></div>
+          <div class="card-body">
+            <div class="card-module-num">Mòdul 0374</div>
+            <div class="card-title">Administració de sistemes operatius</div>
+          </div>
+          <div class="card-toggle">
+            Veure contingut
+            <span class="toggle-btn">+</span>
+          </div>
+          <div id="0374" class="dropdown">
+            <div class="dropdown-inner">
+              <a class="ra-item" href="ASIX\MP0374\PT1_Ventoy.html">
+                <span class="ra-num">PT 1</span>
+                Ventoy, USB Boot i sistemes persistents (Arch Linux)
+              </a>
+              <a class="ra-item" href="ASIX/MP0374/PT2_Proxmox_Zentyal.html">
+                <span class="ra-num">PT 2</span>
+                Proxmox + Zentyal
+              </a>
+              <a class="ra-item" href="ASIX/MP0374/PT3_NixOS.html">
+                <span class="ra-num">PT 3</span>
+                NixOS i Git
+              </a>
+              <a class="ra-item" href="ASIX/MP0374/PT4_CUPS_PDF.html">
+                <span class="ra-num">PT 4</span>
+                Servidor d'impressió PDF (CUPS + SMB)
+              </a>
+              <a class="ra-item" href="ASIX/MP0374/PT5_SFTP_Zentyal.html">
+                <span class="ra-num">PT 5</span>
+                Protocol SFTP sobre Zentyal
+              </a>
+              <a class="ra-item" href="ASIX\MP0374\bash-scripting-guide.html">
+                <span class="ra-num">RA 7</span>
+                BASH Scripting
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- M1708 ASIX -->
+        <div class="card" onclick="toggleCard(this, 'SOS')">
+          <div class="card-strip"></div>
+          <div class="card-body">
+            <div class="card-module-num">Mòdul 1708</div>
+            <div class="card-title">Sostenibilitat Aplicada al Sistema Productiu</div>
+          </div>
+          <div class="card-toggle">
+            Veure contingut
+            <span class="toggle-btn">+</span>
+          </div>
+          <div id="SOS" class="dropdown">
+            <div class="dropdown-inner">
+              <a class="ra-item" href="ASIX/SOSTENIBILITAT/sostenibilitat_asix_1708.html">
+                <span class="ra-num">RA 1–5</span>
+                Apunts i exercicis de sostenibilitat
+              </a>
+            </div>
+          </div>
+        </div>
+
       </div>
-      <div class="card-toggle">
-        Veure contingut
-        <span class="toggle-icon">+</span>
-      </div>
-      <div id="digitalitzacio" class="dropdown">
-        <div class="dropdown-inner">
-          <a class="dropdown-link" href="smx/digitalitzacio_smx.html">Teoria</a>
-          <a class="dropdown-link" href="smx/preguntes_teoriques_digitalitzacio.html">Preguntes teòriques</a>
-          <a class="dropdown-link" href="smx/digitalitzacio_google_sites.html">Pràctica Google Sites</a>
+    </div>
+  </section>
+
+  <!-- ── SMX ──────────────────────────────────────── -->
+  <section class="cycle-block smx-block" id="smx">
+    <div class="cycle-inner">
+
+      <div class="cycle-header">
+        <div class="cycle-code">SMX</div>
+        <div class="cycle-header-info">
+          <div class="cycle-fullname">Sistemes Microinformàtics i Xarxes</div>
+          <span class="cycle-pill">Grau Mitjà</span>
         </div>
       </div>
+
+      <div class="cards-grid">
+
+        <!-- M0223 -->
+        <div class="card" onclick="toggleCard(this, 'ofimatica')">
+          <div class="card-strip"></div>
+          <div class="card-body">
+            <div class="card-module-num">Mòdul 0223</div>
+            <div class="card-title">Aplicacions ofimàtiques</div>
+            <div class="card-meta">Ordre RA: 8, 2, 1, 9, 3, 4, 5, 6, 7</div>
+          </div>
+          <div class="card-toggle">
+            Veure contingut
+            <span class="toggle-btn">+</span>
+          </div>
+          <div id="ofimatica" class="dropdown">
+            <div class="dropdown-inner">
+              <a class="ra-item" href="ofimatica/M3_RA1.html"><span class="ra-num">RA 1</span> Instal·la i actualitza aplicacions ofimàtiques...</a>
+              <a class="ra-item" href="ofimatica/M3_RA2.html"><span class="ra-num">RA 2</span> Elabora documents i plantilles...</a>
+              <a class="ra-item" href="ofimatica/M3_RA3.html"><span class="ra-num">RA 3</span> Fulls de càlcul avançats...</a>
+              <a class="ra-item" href="smx/portfolio-bbdd-catala.html"><span class="ra-num">RA 4</span> Bases de dades ofimàtiques...</a>
+              <a class="ra-item" href="ofimatica/M3_RA5.html"><span class="ra-num">RA 5</span> Imatges digitals...</a>
+              <a class="ra-item" href="ofimatica/M3_RA6.html"><span class="ra-num">RA 6</span> Vídeo digital...</a>
+              <a class="ra-item" href="ofimatica/M3_RA7.html"><span class="ra-num">RA 7</span> Presentacions multimèdia...</a>
+              <a class="ra-item" href="ofimatica/M3_RA8.html"><span class="ra-num">RA 8</span> Correu i agenda electrònica...</a>
+              <a class="ra-item" href="ofimatica/M3_RA9.html"><span class="ra-num">RA 9</span> Suport i resolució d'incidències...</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Digitalització -->
+        <div class="card" onclick="toggleCard(this, 'digitalitzacio')">
+          <div class="card-strip"></div>
+          <div class="card-body">
+            <div class="card-module-num">Mòdul 1708</div>
+            <div class="card-title">Digitalització</div>
+            <div class="card-meta">Teoria · Pràctiques · Recursos</div>
+          </div>
+          <div class="card-toggle">
+            Veure contingut
+            <span class="toggle-btn">+</span>
+          </div>
+          <div id="digitalitzacio" class="dropdown">
+            <div class="dropdown-inner">
+              <a class="dropdown-link" href="smx/digitalitzacio_smx.html">Teoria</a>
+              <a class="dropdown-link" href="smx/preguntes_teoriques_digitalitzacio.html">Preguntes teòriques</a>
+              <a class="dropdown-link" href="smx/digitalitzacio_google_sites.html">Pràctica Google Sites</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
     </div>
+  </section>
 
-</section>
+</main>
 
-<!-- ── FOOTER ─────────────────────────────────────────── -->
+<!-- ── FOOTER ──────────────────────────────────────── -->
 <footer>
-  <span>© 2026 Recursos Educatius</span>
-  <span class="dot"></span>
+  <span>© 2026 <strong>Recursos Educatius</strong> · Institut Esteve Terradas i Illa</span>
+  <span class="footer-dot"></span>
 </footer>
 
 <script>
@@ -604,24 +867,31 @@
     const dropdown = document.getElementById(id);
     const isOpen = card.classList.contains('open');
 
-    // Close ALL dropdowns first (set explicit 0px, not null)
     document.querySelectorAll('.card').forEach(c => c.classList.remove('open'));
-    document.querySelectorAll('.dropdown').forEach(d => {
-      d.style.maxHeight = '0px';
-    });
+    document.querySelectorAll('.dropdown').forEach(d => { d.style.maxHeight = '0px'; });
 
-    // If it was closed, open it
     if (!isOpen) {
       card.classList.add('open');
-      // Temporarily make it visible to measure real height
       dropdown.style.maxHeight = 'none';
       const h = dropdown.scrollHeight;
       dropdown.style.maxHeight = '0px';
-      // Force reflow then animate
       dropdown.getBoundingClientRect();
       dropdown.style.maxHeight = h + 'px';
     }
   }
+
+  // Highlight active nav link on scroll
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.topbar-links a');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(s => {
+      if (window.scrollY >= s.offsetTop - 120) current = s.id;
+    });
+    navLinks.forEach(a => {
+      a.style.color = a.getAttribute('href') === '#' + current ? 'var(--cobalt)' : '';
+    });
+  });
 </script>
 
 </body>

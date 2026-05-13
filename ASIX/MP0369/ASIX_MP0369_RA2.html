@@ -1,0 +1,1932 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RA2 — Configuració del Programari de Base · ASIX · MP0369</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:     #0d0f1a;
+  --paper:   #f4f2ed;
+  --cream:   #eceae3;
+  --navy:    #1a1f4e;
+  --asix:    #6d28d9;
+  --asix-l:  #7c3aed;
+  --asix-d:  #4c1d95;
+  --win:     #0078d4;
+  --win-d:   #005a9e;
+  --ubuntu:  #e95420;
+  --ubuntu-d:#c2440e;
+  --linux:   #1a8c3e;
+  --term:    #0f111a;
+  --term2:   #161b2e;
+  --green:   #059669;
+  --amber:   #d97706;
+  --red:     #dc2626;
+  --muted:   #6b6f85;
+  --border:  #d6d2c9;
+  --card:    #ffffff;
+  --radius:  16px;
+  --radius-sm: 8px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);font-size:16px;line-height:1.7;overflow-x:hidden;}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(244,242,237,0.94);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:62px;}
+.nav-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:.95rem;color:var(--navy);letter-spacing:-.02em;}
+.nav-logo span{color:var(--asix-l);}
+.nav-pills{display:flex;gap:.3rem;list-style:none;flex-wrap:wrap;}
+.nav-pills a{text-decoration:none;font-size:0.72rem;font-weight:600;padding:.25rem .7rem;border-radius:100px;color:var(--muted);transition:all .2s;border:1px solid transparent;}
+.nav-pills a:hover{color:var(--asix-l);border-color:var(--asix-l);background:rgba(109,40,217,.07);}
+.nav-pills a.act{color:var(--asix-l);}
+
+/* ── HERO ── */
+.hero{min-height:100vh;display:grid;place-items:center;background:var(--navy);color:white;position:relative;overflow:hidden;padding:8rem 2rem 4rem;}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 70% 55% at 80% 20%,rgba(109,40,217,.4) 0%,transparent 60%),radial-gradient(ellipse 55% 45% at 15% 75%,rgba(0,120,212,.25) 0%,transparent 60%),radial-gradient(ellipse 45% 35% at 50% 95%,rgba(233,84,32,.15) 0%,transparent 55%);}
+.hero-dots{position:absolute;inset:0;opacity:.06;background-image:radial-gradient(rgba(255,255,255,.7) 1px,transparent 1px);background-size:28px 28px;}
+.hero-grid{position:absolute;inset:0;opacity:.04;background-image:linear-gradient(rgba(255,255,255,.4) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.4) 1px,transparent 1px);background-size:48px 48px;}
+.hero-content{position:relative;z-index:1;text-align:center;max-width:860px;}
+.hero-badge{display:inline-flex;align-items:center;gap:.5rem;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.85);font-size:.78rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:.35rem 1rem;border-radius:100px;margin-bottom:1.5rem;}
+.hero h1{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(2.6rem,6.5vw,5rem);line-height:1.05;letter-spacing:-.03em;margin-bottom:1.5rem;}
+.hero h1 .a{color:#c084fc;} .hero h1 .b{color:#818cf8;} .hero h1 .c{color:#6ee7b7;}
+.hero p{font-size:1.05rem;color:rgba(255,255,255,.6);max-width:580px;margin:0 auto 2.5rem;}
+.hero-pills-row{display:flex;justify-content:center;gap:.75rem;flex-wrap:wrap;margin-bottom:2rem;}
+.hero-pill{display:inline-flex;align-items:center;gap:.5rem;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);padding:.5rem 1.1rem;border-radius:10px;font-size:.83rem;font-weight:500;color:white;text-decoration:none;transition:all .25s;}
+.hero-pill:hover{background:rgba(255,255,255,.15);transform:translateY(-2px);}
+.hero-pill .dot{width:9px;height:9px;border-radius:50%;}
+.scroll-hint{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.4rem;color:rgba(255,255,255,.3);font-size:.72rem;letter-spacing:.1em;}
+.scroll-hint::after{content:'';display:block;width:1px;height:36px;background:linear-gradient(to bottom,rgba(255,255,255,.35),transparent);animation:pulse 2s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:.3}50%{opacity:1}}
+
+/* ── LAYOUT ── */
+section{padding:5.5rem 2rem;}
+.container{max-width:1080px;margin:0 auto;}
+.section-tag{font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;display:flex;align-items:center;gap:.5rem;margin-bottom:.9rem;}
+.section-tag::before{content:'';display:block;width:20px;height:2px;}
+.tag-asix{color:var(--asix-l);} .tag-asix::before{background:var(--asix-l);}
+.tag-win{color:var(--win);} .tag-win::before{background:var(--win);}
+.tag-ubuntu{color:var(--ubuntu);} .tag-ubuntu::before{background:var(--ubuntu);}
+.tag-green{color:var(--green);} .tag-green::before{background:var(--green);}
+.tag-amber{color:var(--amber);} .tag-amber::before{background:var(--amber);}
+.tag-pregs{color:#92400e;} .tag-pregs::before{background:#92400e;}
+.tag-red{color:var(--red);} .tag-red::before{background:var(--red);}
+
+h2{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(1.7rem,3.5vw,2.5rem);line-height:1.1;letter-spacing:-.025em;color:var(--navy);margin-bottom:.9rem;}
+h3{font-family:'Syne',sans-serif;font-weight:700;font-size:1.15rem;color:var(--navy);margin-bottom:.65rem;}
+h4{font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;color:var(--navy);margin-bottom:.4rem;}
+.lead{font-size:1.05rem;color:var(--muted);max-width:720px;margin-bottom:2.5rem;line-height:1.75;}
+
+/* ── CARDS ── */
+.grid{display:grid;gap:1.25rem;}
+.g2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr));}
+.g3{grid-template-columns:repeat(auto-fit,minmax(240px,1fr));}
+.g4{grid-template-columns:repeat(auto-fit,minmax(200px,1fr));}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.75rem;transition:transform .2s,box-shadow .2s;}
+.card:hover{transform:translateY(-3px);box-shadow:0 12px 32px rgba(26,31,78,.1);}
+.card p{color:var(--muted);font-size:.92rem;}
+.card-icon{width:44px;height:44px;border-radius:10px;display:grid;place-items:center;font-size:1.3rem;margin-bottom:.9rem;}
+.bl-asix{border-left:3px solid var(--asix-l);}
+.bl-win{border-left:3px solid var(--win);}
+.bl-ubuntu{border-left:3px solid var(--ubuntu);}
+.bl-green{border-left:3px solid var(--green);}
+.bl-amber{border-left:3px solid var(--amber);}
+.bl-red{border-left:3px solid var(--red);}
+
+/* ── RA BANNER ── */
+.ra-banner{border-radius:var(--radius);padding:1.5rem 2rem;display:flex;align-items:center;gap:1.25rem;margin-bottom:3rem;color:white;}
+.ra-num{font-family:'Syne',sans-serif;font-weight:800;font-size:2.4rem;opacity:.25;flex-shrink:0;line-height:1;}
+.ra-banner h2{color:white;font-size:1.35rem;margin-bottom:.2rem;}
+.ra-banner p{color:rgba(255,255,255,.7);font-size:.88rem;}
+.ra-asix{background:linear-gradient(135deg,var(--asix-d),var(--asix-l));}
+.ra-win{background:linear-gradient(135deg,var(--win-d),var(--win));}
+.ra-ubuntu{background:linear-gradient(135deg,var(--ubuntu-d),var(--ubuntu));}
+.ra-green{background:linear-gradient(135deg,#064e3b,var(--green));}
+.ra-preguntes{background:linear-gradient(135deg,#92400e,#d97706);}
+.ra-resum{background:linear-gradient(135deg,#064e3b,#059669);}
+.ra-both{background:linear-gradient(135deg,var(--asix-d),var(--win));}
+
+/* ── CALLOUTS ── */
+.callout{border-radius:var(--radius);padding:1.5rem 1.75rem;margin:1.5rem 0;display:flex;gap:1rem;align-items:flex-start;}
+.callout-icon{font-size:1.4rem;flex-shrink:0;margin-top:.1rem;}
+.callout p,.callout li{font-size:.92rem;}
+.callout ul{padding-left:1.2rem;} .callout li{margin-bottom:.25rem;}
+.cl-asix{background:rgba(109,40,217,.07);border:1px solid rgba(109,40,217,.2);}
+.cl-blue{background:rgba(0,120,212,.07);border:1px solid rgba(0,120,212,.2);}
+.cl-green{background:rgba(5,150,105,.07);border:1px solid rgba(5,150,105,.2);}
+.cl-amber{background:rgba(251,188,4,.1);border:1px solid rgba(251,188,4,.3);}
+.cl-red{background:rgba(220,38,38,.07);border:1px solid rgba(220,38,38,.2);}
+.cl-ubuntu{background:rgba(233,84,32,.07);border:1px solid rgba(233,84,32,.2);}
+
+/* ── TERMINAL / CODE ── */
+.terminal{background:var(--term);border-radius:var(--radius-sm);overflow:hidden;margin:.75rem 0;font-family:'JetBrains Mono',monospace;font-size:.8rem;}
+.term-bar{background:var(--term2);padding:.55rem 1rem;display:flex;align-items:center;gap:.5rem;border-bottom:1px solid rgba(255,255,255,.06);}
+.term-dot{width:11px;height:11px;border-radius:50%;}
+.term-title{color:rgba(255,255,255,.4);font-size:.72rem;letter-spacing:.05em;margin-left:.25rem;}
+.term-os{font-size:.68rem;font-weight:600;padding:.1rem .5rem;border-radius:4px;margin-left:auto;}
+.term-os-win{background:rgba(0,120,212,.25);color:#60adf0;}
+.term-os-ubuntu{background:rgba(233,84,32,.25);color:#f4956a;}
+.term-os-both{background:rgba(109,40,217,.25);color:#c084fc;}
+.term-body{padding:1rem 1.25rem;line-height:1.75;}
+.term-body .prompt-win{color:#60adf0;}
+.term-body .prompt-ub{color:#f4956a;}
+.term-body .cmd{color:#e2e8f0;}
+.term-body .out{color:#94a3b8;}
+.term-body .comment{color:#475569;}
+.term-body .ok{color:#6ee7b7;}
+.term-body .err{color:#fca5a5;}
+.term-body .path{color:#fbbf24;}
+.term-body .flag{color:#c084fc;}
+.term-body .val{color:#86efac;}
+
+/* ── INLINE PRACTICE ── */
+.lab-card{background:linear-gradient(135deg,#0f111a,#161b2e);border:1px solid rgba(255,255,255,.08);border-radius:var(--radius);overflow:hidden;margin:2rem 0;}
+.lab-header{padding:1rem 1.5rem;display:flex;align-items:center;gap:1rem;border-bottom:1px solid rgba(255,255,255,.07);}
+.lab-icon{font-size:1.5rem;flex-shrink:0;}
+.lab-title-block h4{font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;color:white;margin:0 0 .1rem;}
+.lab-title-block p{font-size:.78rem;color:rgba(255,255,255,.5);margin:0;}
+.lab-os-tags{display:flex;gap:.4rem;margin-left:auto;}
+.os-tag{font-size:.68rem;font-weight:700;padding:.2rem .65rem;border-radius:100px;letter-spacing:.04em;white-space:nowrap;}
+.os-win{background:rgba(0,120,212,.3);color:#60adf0;border:1px solid rgba(0,120,212,.4);}
+.os-ubuntu{background:rgba(233,84,32,.3);color:#f4956a;border:1px solid rgba(233,84,32,.4);}
+.os-both{background:rgba(109,40,217,.3);color:#c084fc;border:1px solid rgba(109,40,217,.4);}
+.lab-body{padding:1.5rem;}
+.lab-body p{color:rgba(255,255,255,.7);font-size:.9rem;margin-bottom:.75rem;}
+.lab-body h5{font-family:'Syne',sans-serif;font-weight:700;font-size:.85rem;color:rgba(255,255,255,.9);margin:.75rem 0 .4rem;}
+.lab-steps{counter-reset:ls;list-style:none;padding:0;display:flex;flex-direction:column;gap:.5rem;}
+.lab-steps li{counter-increment:ls;display:flex;gap:.75rem;align-items:flex-start;font-size:.87rem;color:rgba(255,255,255,.65);}
+.lab-steps li::before{content:counter(ls);flex-shrink:0;width:24px;height:24px;border-radius:50%;background:rgba(109,40,217,.5);color:#c084fc;display:grid;place-items:center;font-family:'Syne',sans-serif;font-weight:700;font-size:.72rem;}
+.lab-steps li strong{color:rgba(255,255,255,.9);}
+.lab-entrega{background:rgba(109,40,217,.15);border:1px solid rgba(109,40,217,.3);border-radius:var(--radius-sm);padding:.85rem 1.1rem;margin-top:1rem;font-size:.83rem;color:rgba(255,255,255,.7);}
+.lab-entrega strong{color:#c084fc;}
+
+/* ── TABLE ── */
+.ptable{width:100%;border-collapse:collapse;font-size:.87rem;}
+.ptable th,.ptable td{padding:.8rem 1rem;text-align:left;border-bottom:1px solid var(--border);}
+.ptable th{background:var(--navy);color:white;font-family:'Syne',sans-serif;font-weight:700;}
+.ptable th:first-child{border-radius:8px 0 0 0;} .ptable th:last-child{border-radius:0 8px 0 0;}
+.ptable tr:hover td{background:var(--cream);}
+.badge{display:inline-block;padding:.15rem .55rem;border-radius:100px;font-size:.72rem;font-weight:700;font-family:'Syne',sans-serif;}
+.b-asix{background:rgba(109,40,217,.12);color:var(--asix-l);}
+.b-win{background:rgba(0,120,212,.12);color:var(--win);}
+.b-ubuntu{background:rgba(233,84,32,.12);color:var(--ubuntu);}
+.b-green{background:rgba(5,150,105,.12);color:var(--green);}
+.b-amber{background:rgba(217,119,6,.15);color:#92400e;}
+.b-red{background:rgba(220,38,38,.1);color:var(--red);}
+
+/* ── EX BOX ── */
+.ex{background:var(--cream);border:1px solid var(--border);border-radius:var(--radius-sm);padding:1rem 1.25rem;margin:.65rem 0;}
+.ex .ex-lbl{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.3rem;}
+.ex p{font-size:.87rem;color:var(--ink);}
+.ex-asix .ex-lbl{color:var(--asix-l);}
+.ex-win .ex-lbl{color:var(--win);}
+.ex-ubuntu .ex-lbl{color:var(--ubuntu);}
+.ex-green .ex-lbl{color:var(--green);}
+.ex-amber .ex-lbl{color:var(--amber);}
+.ex-red .ex-lbl{color:var(--red);}
+
+/* ── PILLS ── */
+.pills{display:flex;flex-wrap:wrap;gap:.4rem;margin:.65rem 0;}
+.pill{padding:.22rem .75rem;border-radius:100px;font-size:.78rem;border:1px solid var(--border);background:var(--cream);color:var(--ink);}
+.pill-a{background:rgba(109,40,217,.1);border-color:rgba(109,40,217,.3);color:var(--asix-l);}
+.pill-w{background:rgba(0,120,212,.1);border-color:rgba(0,120,212,.3);color:var(--win);}
+.pill-u{background:rgba(233,84,32,.1);border-color:rgba(233,84,32,.3);color:var(--ubuntu);}
+.pill-g{background:rgba(5,150,105,.1);border-color:rgba(5,150,105,.3);color:var(--green);}
+.pill-r{background:rgba(220,38,38,.1);border-color:rgba(220,38,38,.3);color:var(--red);}
+
+/* ── SECTION THEMES ── */
+.s-cream{background:var(--cream);}
+.s-asix{background:#f5f3ff;}
+.s-win{background:#f0f7ff;}
+.s-ubuntu{background:#fff5f1;}
+.s-green{background:#f0fdf4;}
+.s-dark{background:var(--navy);color:white;}
+.s-dark h2,.s-dark h3,.s-dark h4{color:white;}
+.s-dark .lead{color:rgba(255,255,255,.6);}
+.s-dark .card{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.1);}
+.s-dark .card h3,.s-dark .card h4{color:white;}
+.s-dark .card p{color:rgba(255,255,255,.6);}
+.s-dark .ptable th{background:rgba(255,255,255,.1);}
+.s-dark .ptable td{border-color:rgba(255,255,255,.1);color:rgba(255,255,255,.8);}
+.s-dark .ptable tr:hover td{background:rgba(255,255,255,.05);}
+.s-dark .ex{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.1);}
+.s-dark .ex p{color:rgba(255,255,255,.75);}
+
+/* ── STEPS ── */
+.steps{counter-reset:st;list-style:none;display:flex;flex-direction:column;gap:.8rem;}
+.steps li{counter-increment:st;display:flex;gap:.9rem;align-items:flex-start;padding:.9rem 1.1rem;background:var(--cream);border-radius:var(--radius-sm);font-size:.9rem;}
+.steps li::before{content:counter(st);flex-shrink:0;width:28px;height:28px;border-radius:50%;background:var(--asix-l);color:white;display:grid;place-items:center;font-family:'Syne',sans-serif;font-weight:700;font-size:.8rem;}
+.steps li p{color:var(--ink);margin:0;} .steps li strong{color:var(--navy);}
+
+/* ── Q CARDS ── */
+.q-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem 2rem;display:flex;gap:1.25rem;align-items:flex-start;transition:transform .2s,box-shadow .2s;}
+.q-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.08);}
+.q-num{flex-shrink:0;width:36px;height:36px;border-radius:50%;background:var(--cream);border:2px solid var(--border);display:grid;place-items:center;font-family:'Syne',sans-serif;font-weight:800;font-size:.88rem;color:var(--asix-l);}
+.q-body h4{margin-bottom:.35rem;color:var(--navy);font-size:.95rem;}
+.q-body p{color:var(--muted);font-size:.85rem;font-style:italic;}
+.q-tag{display:inline-block;padding:.15rem .6rem;border-radius:100px;font-size:.7rem;font-weight:700;margin-top:.5rem;margin-right:.3rem;}
+.qt-asix{background:rgba(109,40,217,.1);color:var(--asix-l);}
+.qt-win{background:rgba(0,120,212,.1);color:var(--win);}
+.qt-ubuntu{background:rgba(233,84,32,.1);color:var(--ubuntu);}
+.qt-net{background:rgba(5,150,105,.1);color:var(--green);}
+.qt-sec{background:rgba(220,38,38,.1);color:var(--red);}
+.qt-both{background:rgba(109,40,217,.1);color:var(--asix-l);}
+
+/* ── DIAGRAM ── */
+.arch-diagram{display:flex;flex-direction:column;gap:.4rem;margin:1.5rem 0;}
+.arch-layer{border-radius:var(--radius-sm);padding:.9rem 1.5rem;text-align:center;font-family:'Syne',sans-serif;font-weight:700;font-size:.88rem;position:relative;}
+.arch-layer .layer-desc{font-family:'DM Sans',sans-serif;font-weight:400;font-size:.8rem;opacity:.85;margin-top:.2rem;}
+.al-app{background:rgba(109,40,217,.12);border:1px solid rgba(109,40,217,.25);color:var(--asix-l);}
+.al-shell{background:rgba(0,120,212,.1);border:1px solid rgba(0,120,212,.2);color:var(--win-d);}
+.al-api{background:rgba(5,150,105,.1);border:1px solid rgba(5,150,105,.2);color:#065f46;}
+.al-kernel{background:rgba(233,84,32,.1);border:1px solid rgba(233,84,32,.2);color:var(--ubuntu-d);}
+.al-hal{background:rgba(217,119,6,.1);border:1px solid rgba(217,119,6,.25);color:#78350f;}
+.al-hw{background:var(--navy);color:white;border:1px solid var(--navy);}
+
+/* ── NETWORK DIAGRAM ── */
+.net-box{border:2px solid var(--border);border-radius:var(--radius-sm);padding:.75rem 1rem;text-align:center;font-family:'Syne',sans-serif;font-weight:700;font-size:.85rem;}
+.net-ip{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--muted);margin-top:.2rem;font-weight:400;}
+.net-row{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin:1rem 0;}
+.net-arrow{color:var(--muted);font-size:1.2rem;flex-shrink:0;}
+
+/* ── SECURITY METER ── */
+.sec-level{display:flex;align-items:center;gap:.75rem;padding:.65rem 1rem;border-radius:var(--radius-sm);margin:.4rem 0;font-size:.88rem;}
+.sec-bar{flex:1;height:8px;border-radius:4px;background:var(--border);overflow:hidden;}
+.sec-fill{height:100%;border-radius:4px;}
+
+/* ── DIVIDER ── */
+hr{border:none;border-top:1px solid var(--border);margin:3rem 0;}
+
+/* ── FOOTER ── */
+footer{background:var(--ink);color:rgba(255,255,255,.4);padding:3rem 2rem;text-align:center;font-size:.85rem;}
+footer strong{color:white;}
+
+/* ── ANIM ── */
+.fi{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fi.in{opacity:1;transform:none;}
+
+@media(max-width:640px){
+  .nav-pills{display:none;}
+  .lab-os-tags{display:none;}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">ASIX · <span>MP0369 RA2</span> · Implantació SO</div>
+  <ul class="nav-pills">
+    <li><a href="#usuaris">Usuaris</a></li>
+    <li><a href="#grups">Grups</a></li>
+    <li><a href="#seguretat">Seguretat</a></li>
+    <li><a href="#perfils">Perfils</a></li>
+    <li><a href="#tcpip">TCP/IP</a></li>
+    <li><a href="#dns">DNS</a></li>
+    <li><a href="#xarxa-config">Config. Xarxa</a></li>
+    <li><a href="#portatils">Portàtils</a></li>
+    <li><a href="#preguntes" class="act">Preguntes</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="top">
+  <div class="hero-bg"></div><div class="hero-dots"></div><div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-badge">⚙️ ASIX · Implantació de Sistemes Operatius · MP0369 · RA2</div>
+    <h1><span class="a">Configuració</span> del<br><span class="b">Programari</span> <span class="c">de Base</span></h1>
+    <p>Administració d'usuaris, grups, seguretat de comptes, perfils locals, protocol TCP/IP, resolució de noms i fitxers de configuració de xarxa. Teoria ampliada de nivell CFGS amb exercicis pràctics incrustats.</p>
+    <div class="hero-pills-row">
+      <a href="#usuaris" class="hero-pill"><span class="dot" style="background:#c084fc"></span>Usuaris & Grups</a>
+      <a href="#seguretat" class="hero-pill"><span class="dot" style="background:var(--red)"></span>Seguretat</a>
+      <a href="#perfils" class="hero-pill"><span class="dot" style="background:var(--win)"></span>Perfils</a>
+      <a href="#tcpip" class="hero-pill"><span class="dot" style="background:var(--green)"></span>TCP/IP</a>
+      <a href="#dns" class="hero-pill"><span class="dot" style="background:var(--ubuntu)"></span>DNS</a>
+      <a href="#xarxa-config" class="hero-pill"><span class="dot" style="background:var(--amber)"></span>Config. Xarxa</a>
+      <a href="#preguntes" class="hero-pill"><span class="dot" style="background:#f59e0b"></span>10 Preguntes</a>
+    </div>
+  </div>
+  <div class="scroll-hint">DESPLAÇA</div>
+</section>
+
+<!-- ═══════════════════════ INTRO RA2 ═══════════════════════ -->
+<section class="s-cream" id="intro">
+  <div class="container fi">
+    <div class="section-tag tag-asix">Resultat d'Aprenentatge 2 · MP0369</div>
+    <h2>Configura el programari de base</h2>
+    <p class="lead">Atenent les necessitats d'explotació del sistema informàtic. En aquest RA es treballa la configuració completa d'un sistema operatiu en producció: des de la gestió d'identitats fins a la configuració de xarxa i l'optimització per a entorns mòbils.</p>
+
+    <div class="grid g4 fi">
+      <div class="card bl-asix">
+        <div class="card-icon" style="background:#f5f3ff">👥</div>
+        <h3>Identitats</h3>
+        <p>Usuaris i grups locals predeterminats i personalitzats. Polítiques de comptes. SID i UID/GID.</p>
+        <div class="pills" style="margin-top:.75rem"><span class="pill pill-a">T1–T3</span></div>
+      </div>
+      <div class="card bl-red">
+        <div class="card-icon" style="background:#fff5f5">🔒</div>
+        <h3>Seguretat</h3>
+        <p>Polítiques de contrasenyes, bloqueig de comptes, auditoria i perfils locals d'usuari.</p>
+        <div class="pills" style="margin-top:.75rem"><span class="pill pill-r">T4–T5</span></div>
+      </div>
+      <div class="card bl-green">
+        <div class="card-icon" style="background:#f0fdf4">🌐</div>
+        <h3>Xarxa TCP/IP</h3>
+        <p>Configuració d'IP, màscara, gateway, DNS. Adreçament IPv4 i IPv6. Diagnòstic de xarxa.</p>
+        <div class="pills" style="margin-top:.75rem"><span class="pill pill-g">T6–T7</span></div>
+      </div>
+      <div class="card bl-amber">
+        <div class="card-icon" style="background:#fffbeb">💻</div>
+        <h3>Portàtils</h3>
+        <p>Optimització d'energia, fitxers sense connexió (Offline Files), sincronització i gestió de mobilitat.</p>
+        <div class="pills" style="margin-top:.75rem"><span class="pill pill-w">T8</span></div>
+      </div>
+    </div>
+
+    <div class="callout cl-asix fi" style="margin-top:1.5rem">
+      <span class="callout-icon">🔬</span>
+      <div>
+        <strong>Llegenda dels exercicis pràctics incrustats:</strong>
+        <p style="margin-top:.3rem">Al llarg de la teoria trobareu caixes fosques amb exercicis pràctics immediats. <span style="color:var(--win);font-weight:600">🪟 Windows</span> per a PowerShell/GUI, <span style="color:var(--ubuntu);font-weight:600">🐧 Ubuntu/Linux</span> per a terminal Bash, o <span style="color:var(--asix-l);font-weight:600">🔀 Ambdós</span> quan cal comparar els dos sistemes. Cada exercici inclou les comandes exactes i el resultat esperat.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     T1 — USUARIS I GRUPS LOCALS
+═══════════════════════════════════════════ -->
+<section id="usuaris" class="s-asix">
+  <div class="container">
+    <div class="ra-banner ra-asix fi">
+      <div class="ra-num">1</div>
+      <div>
+        <h2>Administració d'usuaris i grups locals</h2>
+        <p>Conceptes, tipus de comptes, identificadors únics (SID/UID/GID) i gestió des de GUI i línia de comandes.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-asix fi">Fonaments</div>
+    <h2 class="fi">Què és un compte d'usuari?</h2>
+    <p class="lead fi">Un <strong>compte d'usuari</strong> és un objecte del sistema operatiu que representa una identitat digital. Conté credencials (nom + contrasenya), permisos, configuració personal i historial de sessions. Tota acció al sistema queda associada a un compte — és la base de la traçabilitat i la seguretat.</p>
+
+    <div class="grid g3 fi">
+      <div class="card bl-asix">
+        <div class="card-icon" style="background:#f5f3ff">🪪</div>
+        <h3>Identificadors únics</h3>
+        <p style="margin-bottom:.75rem">Cada compte té un identificador numèric únic que el SO usa internament. El nom d'usuari és una etiqueta llegible per humans, però el SO treballa amb l'ID.</p>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.35rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">🪟 <strong style="color:var(--ink)">SID (Windows):</strong> Security Identifier. Format: <code>S-1-5-21-XXXXXXXX-XXXXXXXX-XXXXXXXX-RID</code>. Únic i permanent — no canvia si es reanomena el compte.</li>
+          <li style="padding:.35rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">🐧 <strong style="color:var(--ink)">UID (Linux):</strong> User Identifier, enter de 32 bits. root=0, sistemes=1-999, usuaris=1000+.</li>
+          <li style="padding:.35rem 0;font-size:.88rem;color:var(--muted)">🐧 <strong style="color:var(--ink)">GID (Linux):</strong> Group Identifier. Cada usuari té un grup primari (igual que el seu UID per defecte) i pot pertànyer a grups secundaris.</li>
+        </ul>
+      </div>
+      <div class="card bl-win">
+        <div class="card-icon" style="background:#f0f7ff">🪟</div>
+        <h3>Tipus de comptes a Windows</h3>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.35rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">👑 <strong style="color:var(--ink)">Administrador:</strong> accés complet al sistema. Pot instal·lar programes, modificar configuració global i gestionar altres usuaris.</li>
+          <li style="padding:.35rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">👤 <strong style="color:var(--ink)">Usuari estàndard:</strong> accés limitat. Pot usar aplicacions i modificar la seva configuració personal, però no la del sistema.</li>
+          <li style="padding:.35rem 0;font-size:.88rem;color:var(--muted)">👻 <strong style="color:var(--ink)">Convidat (Guest):</strong> accés molt restringit. Deshabilitat per defecte a Windows 10/11. Sense perfil persistent.</li>
+        </ul>
+      </div>
+      <div class="card bl-ubuntu">
+        <div class="card-icon" style="background:#fff5f1">🐧</div>
+        <h3>Tipus de comptes a Linux</h3>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.35rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">👑 <strong style="color:var(--ink)">root (UID 0):</strong> superusuari. Accés absolut. Usar root directament és perillós — Ubuntu el desactiva i usa <code>sudo</code>.</li>
+          <li style="padding:.35rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">🔧 <strong style="color:var(--ink)">Usuaris del sistema (1–999):</strong> comptes per a serveis (www-data, syslog, nobody). No fan login interactiu.</li>
+          <li style="padding:.35rem 0;font-size:.88rem;color:var(--muted)">👤 <strong style="color:var(--ink)">Usuaris normals (1000+):</strong> comptes de persones reals. Primer usuari creat: UID 1000. Poden usar <code>sudo</code> si estan al grup <em>sudo</em>.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section-tag tag-asix fi" style="margin-top:4rem">Bases de dades d'usuaris</div>
+    <h2 class="fi">On s'emmagatzemen els comptes?</h2>
+    <p class="lead fi">Windows i Linux utilitzen sistemes completament diferents per emmagatzemar la informació dels comptes. Conèixer-los és fonamental per a la diagnosi i la seguretat.</p>
+
+    <div class="grid g2 fi">
+      <div class="card bl-win">
+        <div class="card-icon" style="background:#f0f7ff">🗄️</div>
+        <h3>Windows: SAM i Active Directory</h3>
+        <p style="margin-bottom:.75rem">En sistemes locals (sense domini), els comptes s'emmagatzemen a la base de dades SAM:</p>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">📂 <strong style="color:var(--ink)">Ubicació:</strong> <code>C:\Windows\System32\config\SAM</code></li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">🔐 <strong style="color:var(--ink)">Format:</strong> les contrasenyes es guarden com a hash NTLM (MD4 del password Unicode). No es guarda la contrasenya en text pla.</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">🔒 <strong style="color:var(--ink)">Bloqueig:</strong> el fitxer SAM és bloquejat pel kernel mentre Windows és actiu. No es pot llegir directament.</li>
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted)">🌐 <strong style="color:var(--ink)">En domini:</strong> els comptes es centralitzen a Active Directory (AD DS) al controlador de domini.</li>
+        </ul>
+      </div>
+      <div class="card bl-ubuntu">
+        <div class="card-icon" style="background:#fff5f1">📄</div>
+        <h3>Linux: /etc/passwd i /etc/shadow</h3>
+        <p style="margin-bottom:.75rem">Linux usa fitxers de text plans (llegibles amb cat):</p>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">📄 <strong style="color:var(--ink)">/etc/passwd:</strong> llista de tots els comptes. Llegible per tothom. Format: <code>nom:x:UID:GID:GECOS:home:shell</code></li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">🔐 <strong style="color:var(--ink)">/etc/shadow:</strong> contrasenyes en hash (SHA-512). Només llegible per root. Format: <code>nom:hash:última_canvi:min:max:avís:inactiu:expiració</code></li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">👥 <strong style="color:var(--ink)">/etc/group:</strong> grups i els seus membres. Format: <code>nom_grup:x:GID:membres</code></li>
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted)">🔑 <strong style="color:var(--ink)">/etc/gshadow:</strong> contrasenyes de grups (rarament usat). Protegit com /etc/shadow.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- TERMINAL: inspeccionar usuaris Linux -->
+    <div class="terminal fi">
+      <div class="term-bar">
+        <span class="term-dot" style="background:#ff5f57"></span>
+        <span class="term-dot" style="background:#febc2e"></span>
+        <span class="term-dot" style="background:#28c840"></span>
+        <span class="term-title">Estructura dels fitxers d'usuaris a Linux</span>
+        <span class="term-os term-os-ubuntu">🐧 Ubuntu</span>
+      </div>
+      <div class="term-body">
+        <div><span class="prompt-ub">asix@ubuntu:~$</span> <span class="cmd">cat /etc/passwd | head -5</span></div>
+        <div><span class="out">root:x:0:0:root:/root:/bin/bash</span></div>
+        <div><span class="out">daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin</span></div>
+        <div><span class="out">bin:x:2:2:bin:/bin:/usr/sbin/nologin</span></div>
+        <div><span class="out">...</span></div>
+        <div style="margin-top:.5rem"><span class="comment"># Format: nom:contrasenya(x=shadow):UID:GID:GECOS:home:shell</span></div>
+        <div style="margin-top:.5rem"><span class="prompt-ub">asix@ubuntu:~$</span> <span class="cmd">sudo cat /etc/shadow | grep asix</span></div>
+        <div><span class="out">asix:$6$salt$hash_sha512...:19800:0:99999:7:::</span></div>
+        <div style="margin-top:.5rem"><span class="comment"># Camps del shadow: últim canvi(dies des 1/1/1970):min:max:avís:inactiu:expiració</span></div>
+        <div style="margin-top:.5rem"><span class="prompt-ub">asix@ubuntu:~$</span> <span class="cmd">id asix</span></div>
+        <div><span class="ok">uid=1000(asix) gid=1000(asix) groups=1000(asix),4(adm),27(sudo),1001(docker)</span></div>
+      </div>
+    </div>
+
+    <!-- LAB 1: Gestió d'usuaris ambdós sistemes -->
+    <div class="lab-card fi">
+      <div class="lab-header">
+        <span class="lab-icon">🧪</span>
+        <div class="lab-title-block">
+          <h4>Lab 1.1 — Explorar i crear comptes d'usuari</h4>
+          <p>Identifica els comptes existents i crea nous usuaris des de línia de comandes</p>
+        </div>
+        <div class="lab-os-tags">
+          <span class="os-tag os-both">🔀 Ambdós</span>
+        </div>
+      </div>
+      <div class="lab-body">
+        <p>Treballareu en paral·lel als dos sistemes per comparar la gestió d'usuaris i comprendre les equivalències entre Windows i Linux.</p>
+        <h5>🪟 Windows — PowerShell (com Administrador)</h5>
+        <div class="terminal">
+          <div class="term-bar">
+            <span class="term-dot" style="background:#ff5f57"></span>
+            <span class="term-dot" style="background:#febc2e"></span>
+            <span class="term-dot" style="background:#28c840"></span>
+            <span class="term-title">PowerShell — Administrador</span>
+            <span class="term-os term-os-win">🪟 Windows</span>
+          </div>
+          <div class="term-body">
+            <div><span class="comment"># Llistar tots els usuaris locals</span></div>
+            <div><span class="prompt-win">PS C:\></span> <span class="cmd">Get-LocalUser | Format-Table Name,Enabled,LastLogon,SID</span></div>
+            <div><span class="out">Name           Enabled LastLogon            SID</span></div>
+            <div><span class="out">----           ------- ---------            ---</span></div>
+            <div><span class="out">Administrator  False                        S-1-5-21-...-500</span></div>
+            <div><span class="out">DefaultAccount False                        S-1-5-21-...-503</span></div>
+            <div><span class="out">Guest          False                        S-1-5-21-...-501</span></div>
+            <div><span class="out">asix_admin     True    01/06/2025 08:32:11  S-1-5-21-...-1001</span></div>
+            <div style="margin-top:.5rem"><span class="comment"># Crear nou usuari</span></div>
+            <div><span class="prompt-win">PS C:\></span> <span class="cmd">$pass = ConvertTo-SecureString "P@ssw0rd2025!" -AsPlainText -Force</span></div>
+            <div><span class="prompt-win">PS C:\></span> <span class="cmd">New-LocalUser -Name "jdoe" -Password $pass -FullName "John Doe" -Description "Usuari de proves"</span></div>
+            <div><span class="ok">Name Enabled Description</span></div>
+            <div><span class="ok">jdoe True    Usuari de proves</span></div>
+            <div style="margin-top:.5rem"><span class="comment"># Obtenir el SID d'un usuari concret</span></div>
+            <div><span class="prompt-win">PS C:\></span> <span class="cmd">(Get-LocalUser -Name "jdoe").SID</span></div>
+            <div><span class="out">S-1-5-21-3927560022-1546439792-2093784175-1002</span></div>
+          </div>
+        </div>
+
+        <h5>🐧 Ubuntu — Terminal</h5>
+        <div class="terminal">
+          <div class="term-bar">
+            <span class="term-dot" style="background:#ff5f57"></span>
+            <span class="term-dot" style="background:#febc2e"></span>
+            <span class="term-dot" style="background:#28c840"></span>
+            <span class="term-title">Terminal Ubuntu</span>
+            <span class="term-os term-os-ubuntu">🐧 Ubuntu</span>
+          </div>
+          <div class="term-body">
+            <div><span class="comment"># Llistar usuaris humans (UID >= 1000)</span></div>
+            <div><span class="prompt-ub">asix@ubuntu:~$</span> <span class="cmd">awk -F: '$3 >= 1000 && $3 < 65534 {print $1, $3, $6, $7}' /etc/passwd</span></div>
+            <div><span class="out">asix 1000 /home/asix /bin/bash</span></div>
+            <div style="margin-top:.5rem"><span class="comment"># Crear nou usuari amb home i shell per defecte</span></div>
+            <div><span class="prompt-ub">asix@ubuntu:~$</span> <span class="cmd">sudo useradd -m -s /bin/bash -c "John Doe" -G sudo jdoe</span></div>
+            <div><span class="comment"># Opcions: -m (crea home) -s (shell) -c (comentari/nom) -G (grups addicionals)</span></div>
+            <div style="margin-top:.5rem"><span class="prompt-ub">asix@ubuntu:~$</span> <span class="cmd">sudo passwd jdoe</span></div>
+            <div><span class="out">New password: </span></div>
+            <div><span class="out">Retype new password: </span></div>
+            <div><span class="ok">passwd: password updated successfully</span></div>
+            <div style="margin-top:.5rem"><span class="comment"># Verificar: UID, GID i grups</span></div>
+            <div><span class="prompt-ub">asix@ubuntu:~$</span> <span class="cmd">id jdoe</span></div>
+            <div><span class="ok">uid=1001(jdoe) gid=1001(jdoe) groups=1001(jdoe),27(sudo)</span></div>
+          </div>
+        </div>
+
+        <ul class="lab-steps">
+          <li><strong>Anota i compara:</strong> Llista tots els usuaris a ambdós sistemes. Identifica els comptes predeterminats (Administrator/root, Guest, comptes de sistema).</li>
+          <li><strong>Crea 3 usuaris nous</strong> a cada sistema: <code>alumne1</code> (estàndard), <code>tec_asix</code> (administrador) i <code>usuari_prova</code> (estàndard, sense login shell a Linux: <code>-s /usr/sbin/nologin</code>).</li>
+          <li><strong>Inspecciona el SID</strong> dels usuaris a Windows i el contingut de <code>/etc/passwd</code> a Linux. Comprèn el significat de cada camp.</li>
+          <li><strong>Modifica</strong> el nom complet (<code>Set-LocalUser -FullName</code> / <code>usermod -c</code>) i el comentari de cada usuari creat.</li>
+        </ul>
+        <div class="lab-entrega"><strong>📋 Documenta:</strong> Captura de pantalla de la llista d'usuaris a ambdós sistemes amb els nous usuaris creats. Anota el SID (Windows) i l'UID/GID (Linux) de cada usuari creat.</div>
+      </div>
+    </div>
+
+    <!-- USUARIS PREDETERMINATS -->
+    <div class="section-tag tag-asix fi" style="margin-top:4rem">Usuaris predeterminats</div>
+    <h2 class="fi">Comptes predeterminats del sistema</h2>
+    <p class="lead fi">Tots els sistemes operatius creen una sèrie de comptes predeterminats durant la instal·lació. Conèixer-los, les seves funcions i els seus riscos de seguretat és fonamental per a un administrador.</p>
+
+    <div style="overflow-x:auto" class="fi">
+      <table class="ptable">
+        <thead>
+          <tr>
+            <th>Compte</th>
+            <th>Sistema</th>
+            <th>SID/UID</th>
+            <th>Funció</th>
+            <th>Estat per defecte</th>
+            <th>Risc si s'activa</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Administrator</strong></td>
+            <td><span class="badge b-win">Windows</span></td>
+            <td><code>...-500</code></td>
+            <td>Compte d'administrador integrat. Accés total.</td>
+            <td><span class="badge b-red">Deshabilitada</span></td>
+            <td>🔴 Molt alt — objectiu d'atacs de força bruta per nom conegut</td>
+          </tr>
+          <tr>
+            <td><strong>Guest</strong></td>
+            <td><span class="badge b-win">Windows</span></td>
+            <td><code>...-501</code></td>
+            <td>Accés temporal sense perfil persistent.</td>
+            <td><span class="badge b-red">Deshabilitada</span></td>
+            <td>🟡 Mig — accés anònim a recursos compartits</td>
+          </tr>
+          <tr>
+            <td><strong>DefaultAccount</strong></td>
+            <td><span class="badge b-win">Windows</span></td>
+            <td><code>...-503</code></td>
+            <td>Compte intern del sistema (Microsoft Store apps).</td>
+            <td><span class="badge b-red">Deshabilitada</span></td>
+            <td>🟢 Baix</td>
+          </tr>
+          <tr>
+            <td><strong>WDAGUtilityAccount</strong></td>
+            <td><span class="badge b-win">Windows</span></td>
+            <td><code>...-504</code></td>
+            <td>Windows Defender App Guard (sandboxing).</td>
+            <td><span class="badge b-red">Deshabilitada</span></td>
+            <td>🟢 Baix</td>
+          </tr>
+          <tr>
+            <td><strong>root</strong></td>
+            <td><span class="badge b-ubuntu">Linux</span></td>
+            <td><code>UID 0</code></td>
+            <td>Superusuari. Accés absolut sense restriccions.</td>
+            <td><span class="badge b-amber">Compte actiu, login desactivat (Ubuntu)</span></td>
+            <td>🔴 Molt alt — login directe per SSH és objectiu d'atacs</td>
+          </tr>
+          <tr>
+            <td><strong>nobody</strong></td>
+            <td><span class="badge b-ubuntu">Linux</span></td>
+            <td><code>UID 65534</code></td>
+            <td>Compte sense privilegis per a serveis en sandboxing.</td>
+            <td>Actiu</td>
+            <td>🟢 Baix — dissenyat per tenir el mínim de permisos</td>
+          </tr>
+          <tr>
+            <td><strong>www-data</strong></td>
+            <td><span class="badge b-ubuntu">Linux</span></td>
+            <td><code>UID 33</code></td>
+            <td>Compte del servidor web Apache/Nginx.</td>
+            <td>Actiu (si s'instal·la Apache)</td>
+            <td>🟡 Mig — si el servidor web és compromès, l'atacant actua com www-data</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout cl-red fi">
+      <span class="callout-icon">⚠️</span>
+      <div>
+        <strong>Bones pràctiques de seguretat sobre comptes predeterminats:</strong>
+        <ul style="margin-top:.5rem">
+          <li><strong>Windows:</strong> Reanomena el compte Administrator (no es pot eliminar, però es pot reanomenar). Mantén-lo desactivat i usa un compte administrador amb nom no evident.</li>
+          <li><strong>Linux:</strong> Mantén el login directe de root desactivat via SSH (<code>PermitRootLogin no</code> a <code>/etc/ssh/sshd_config</code>). Usa <code>sudo</code> amb usuaris del grup sudo.</li>
+          <li>Revisa periòdicament els comptes actius. Desactiva qualsevol compte que no es faci servir.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     T2 — ADMINISTRACIÓ DE GRUPS
+═══════════════════════════════════════════ -->
+<section id="grups" class="s-win">
+  <div class="container">
+    <div class="ra-banner ra-win fi">
+      <div class="ra-num">2</div>
+      <div>
+        <h2>Administració de grups locals</h2>
+        <p>Grups predeterminats, creació, assignació i estratègia d'ús. AGDLP i principi de mínim privilegi.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-win fi">Conceptes de grups</div>
+    <h2 class="fi">Per a què serveixen els grups?</h2>
+    <p class="lead fi">Assignar permisos usuari per usuari és inviable en entorns professionals. Els <strong>grups</strong> permeten gestionar permisos col·lectivament: s'assignen permisos al grup, i tots els seus membres els hereten automàticament. Canviar els permisos d'un grup afecta immediatament tots els seus membres.</p>
+
+    <div class="grid g2 fi">
+      <div>
+        <h3>Grups predeterminats a Windows</h3>
+        <div style="overflow-x:auto;margin-top:1rem">
+          <table class="ptable">
+            <thead><tr><th>Grup</th><th>SID</th><th>Propòsit</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Administrators</strong></td><td><code>...-544</code></td><td>Accés total al sistema local</td></tr>
+              <tr><td><strong>Users</strong></td><td><code>...-545</code></td><td>Grup de tots els usuaris estàndard</td></tr>
+              <tr><td><strong>Guests</strong></td><td><code>...-546</code></td><td>Accés molt restringit (convidats)</td></tr>
+              <tr><td><strong>Power Users</strong></td><td><code>...-547</code></td><td>Privilegis intermedis (legacy)</td></tr>
+              <tr><td><strong>Remote Desktop Users</strong></td><td><code>...-555</code></td><td>Permet connexió per RDP</td></tr>
+              <tr><td><strong>Network Configuration Operators</strong></td><td><code>...-556</code></td><td>Gestiona xarxa sense ser admin</td></tr>
+              <tr><td><strong>Backup Operators</strong></td><td><code>...-551</code></td><td>Fer còpies sense tenir permisos de lectura</td></tr>
+              <tr><td><strong>IIS_IUSRS</strong></td><td><code>...-568</code></td><td>Compte del servidor web IIS</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <h3>Grups predeterminats a Linux</h3>
+        <div style="overflow-x:auto;margin-top:1rem">
+          <table class="ptable">
+            <thead><tr><th>Grup</th><th>GID tipic</th><th>Propòsit</th></tr></thead>
+            <tbody>
+              <tr><td><strong>root</strong></td><td>0</td><td>Superusuari</td></tr>
+              <tr><td><strong>sudo</strong></td><td>27</td><td>Membres poden usar sudo (Ubuntu)</td></tr>
+              <tr><td><strong>wheel</strong></td><td>10</td><td>Equivalent a sudo (Arch/RHEL)</td></tr>
+              <tr><td><strong>adm</strong></td><td>4</td><td>Lectura de logs del sistema</td></tr>
+              <tr><td><strong>www-data</strong></td><td>33</td><td>Servidor web Apache/Nginx</td></tr>
+              <tr><td><strong>docker</strong></td><td>999</td><td>Accés al socket de Docker</td></tr>
+              <tr><td><strong>dialout</strong></td><td>20</td><td>Accés a ports sèrie (Arduino, etc.)</td></tr>
+              <tr><td><strong>plugdev</strong></td><td>46</td><td>Dispositius USB extraïbles</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- LAB 2: Gestió de grups -->
+    <div class="lab-card fi">
+      <div class="lab-header">
+        <span class="lab-icon">🧪</span>
+        <div class="lab-title-block">
+          <h4>Lab 2.1 — Creació i gestió de grups. Assignació de membres</h4>
+          <p>Estructura de grups per a un departament d'IT d'empresa</p>
+        </div>
+        <div class="lab-os-tags">
+          <span class="os-tag os-both">🔀 Ambdós</span>
+        </div>
+      </div>
+      <div class="lab-body">
+        <p>Creareu una estructura de grups que reflecteixi l'organigrama d'un departament IT: <strong>IT_Admins</strong> (administradors), <strong>IT_Helpdesk</strong> (suport), <strong>IT_ReadOnly</strong> (auditoria, accés de lectura).</p>
+
+        <h5>🪟 Windows — PowerShell</h5>
+        <div class="terminal">
+          <div class="term-bar">
+            <span class="term-dot" style="background:#ff5f57"></span>
+            <span class="term-dot" style="background:#febc2e"></span>
+            <span class="term-dot" style="background:#28c840"></span>
+            <span class="term-title">PowerShell — Gestió de grups</span>
+            <span class="term-os term-os-win">🪟 Windows</span>
+          </div>
+          <div class="term-body">
+            <div><span class="comment"># Crear grups locals</span></div>
+            <div><span class="prompt-win">PS C:\></span> <span class="cmd">New-LocalGroup -Name "IT_Admins" -Description "Administradors del departament IT"</span></div>
+            <div><span class="prompt-win">PS C:\></span> <span class="cmd">New-LocalGroup -Name "IT_Helpdesk" -Description "Equip de suport tècnic"</span></div>
+            <div><span class="prompt-win">PS C:\></span> <span class="cmd">New-LocalGroup -Name "IT_ReadOnly" -Description "Accés de lectura per auditoria"</span></div>
+            <div style="margin-top:.5rem"><span class="comment"># Afegir membres als grups</span></div>
+            <div><span class="prompt-win">PS C:\></span> <span class="cmd">Add-LocalGroupMember -Group "IT_Admins" -Member "tec_asix"</span></div>
+            <div><span class="prompt-win">PS C:\></span> <span class="cmd">Add-LocalGroupMember -Group "IT_Helpdesk" -Member "jdoe","alumne1"</span></div>
+            <div style="margin-top:.5rem"><span class="comment"># Llistar membres d'un grup</span></div>
+            <div><span class="prompt-win">PS C:\></span> <span class="cmd">Get-LocalGroupMember -Group "IT_Helpdesk"</span></div>
+            <div><span class="out">ObjectClass Name                PrincipalSource</span></div>
+            <div><span class="out">----------- ----                ---------------</span></div>
+            <div><span class="out">User        DESKTOP-XXX\alumne1 Local</span></div>
+            <div><span class="out">User        DESKTOP-XXX\jdoe     Local</span></div>
+            <div style="margin-top:.5rem"><span class="comment"># Llistar tots els grups locals</span></div>
+            <div><span class="prompt-win">PS C:\></span> <span class="cmd">Get-LocalGroup | Sort-Object Name</span></div>
+          </div>
+        </div>
+
+        <h5>🐧 Ubuntu — Terminal</h5>
+        <div class="terminal">
+          <div class="term-bar">
+            <span class="term-dot" style="background:#ff5f57"></span>
+            <span class="term-dot" style="background:#febc2e"></span>
+            <span class="term-dot" style="background:#28c840"></span>
+            <span class="term-title">Terminal Ubuntu — Gestió de grups</span>
+            <span class="term-os term-os-ubuntu">🐧 Ubuntu</span>
+          </div>
+          <div class="term-body">
+            <div><span class="comment"># Crear grups</span></div>
+            <div><span class="prompt-ub">asix@ubuntu:~$</span> <span class="cmd">sudo groupadd it_admins</span></div>
+            <div><span class="prompt-ub">asix@ubuntu:~$</span> <span class="cmd">sudo groupadd it_helpdesk</span></div>
+            <div><span class="prompt-ub">asix@ubuntu:~$</span> <span class="cmd">sudo groupadd it_readonly</span></div>
+            <div style="margin-top:.5rem"><span class="comment"># Afegir usuaris a grups (sense treure'ls dels actuals)</span></div>
+            <div><span class="prompt-ub">asix@ubuntu:~$</span> <span class="cmd">sudo usermod -aG it_admins tec_asix</span></div>
+            <div><span class="comment"># -a = append (afegir sense eliminar grups existents), -G = grups addicionals</span></div>
+            <div><span class="prompt-ub">asix@ubuntu:~$</span> <span class="cmd">sudo usermod -aG it_helpdesk jdoe,alumne1</span></div>
+            <div style="margin-top:.5rem"><span class="comment"># Veure membres d'un grup</span></div>
+            <div><span class="prompt-ub">asix@ubuntu:~$</span> <span class="cmd">getent group it_helpdesk</span></div>
+            <div><span class="ok">it_helpdesk:x:1002:jdoe,alumne1</span></div>
+            <div style="margin-top:.5rem"><span class="comment"># Tots els grups del sistema</span></div>
+            <div><span class="prompt-ub">asix@ubuntu:~$</span> <span class="cmd">cat /etc/group | grep "it_"</span></div>
+            <div><span class="comment"># IMPORTANT: els canvis de grup no apliquen fins a nou login del usuari</span></div>
+            <div><span class="prompt-ub">asix@ubuntu:~$</span> <span class="cmd">newgrp it_admins</span> <span class="comment"># aplicar sense logout</span></div>
+          </div>
+        </div>
+
+        <ul class="lab-steps">
+          <li><strong>Principi de mínim privilegi:</strong> Reflexiona per quin motiu el grup <code>IT_ReadOnly</code> no hauria de poder modificar arxius. Com implementaries aquest principi a Linux (permisos rwx) i a Windows (NTFS)?</li>
+          <li><strong>Comprova:</strong> Com a usuari <code>jdoe</code>, executa <code>groups</code> (Linux) o <code>whoami /groups</code> (Windows) per veure els grups actius.</li>
+          <li><strong>Elimina un usuari d'un grup</strong> sense eliminar-lo del sistema: <code>Remove-LocalGroupMember</code> / <code>gpasswd -d usuari grup</code>.</li>
+        </ul>
+        <div class="lab-entrega"><strong>📋 Documenta:</strong> Diagrama d'organigrama amb els usuaris i els grups als que pertanyen. Captura de la sortida de <code>Get-LocalGroup</code> i <code>cat /etc/group</code>.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     T3 — SEGURETAT DE COMPTES
+═══════════════════════════════════════════ -->
+<section id="seguretat" class="s-asix">
+  <div class="container">
+    <div class="ra-banner ra-asix fi">
+      <div class="ra-num">3</div>
+      <div>
+        <h2>Seguretat de comptes d'usuari</h2>
+        <p>Polítiques de contrasenyes, bloqueig de comptes, caducitat, auditoria i principi de mínim privilegi.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-asix fi">Polítiques de contrasenyes</div>
+    <h2 class="fi">Política de contrasenyes: teoria i implementació</h2>
+    <p class="lead fi">Una contrasenya feble és la porta d'entrada més comuna als sistemes. La <strong>política de contrasenyes</strong> defineix els requisits mínims que ha de complir tota contrasenya del sistema. Un administrador ha de conèixer com configurar-les, no només aplicar-les.</p>
+
+    <div class="grid g3 fi">
+      <div class="card bl-asix">
+        <div class="card-icon" style="background:#f5f3ff">🔑</div>
+        <h3>Paràmetres de política de contrasenyes</h3>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">📏 <strong style="color:var(--ink)">Longitud mínima:</strong> recomanació actual NIST: ≥12 caràcters. No usar màxim arbitrari.</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">🔤 <strong style="color:var(--ink)">Complexitat:</strong> majúscules, minúscules, dígits, símbols. Windows: opció "La contrasenya ha de complir requisits de complexitat".</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">📅 <strong style="color:var(--ink)">Edat màxima:</strong> dies que pot estar activa una contrasenya. NIST ja no recomana canvis periòdics forçats (creen hàbits pitjors).</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">🔄 <strong style="color:var(--ink)">Historial:</strong> nombre de contrasenyes anteriors que no es poden reutilitzar. Evita el cicle ABC→ABC→ABC.</li>
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted)">⏳ <strong style="color:var(--ink)">Edat mínima:</strong> temps mínim que s'ha de mantenir una contrasenya. Evita canviar 24 vegades seguidament per tornar a l'original.</li>
+        </ul>
+      </div>
+      <div class="card bl-red">
+        <div class="card-icon" style="background:#fff5f5">🚫</div>
+        <h3>Bloqueig de comptes</h3>
+        <p style="margin-bottom:.75rem">Protegeix contra atacs de força bruta limitant els intents d'autenticació fallits:</p>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">🔢 <strong style="color:var(--ink)">Límit d'intents:</strong> nombre d'errors consecutius permesos. Recomanació: 5-10 intents.</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">⏱️ <strong style="color:var(--ink)">Durada del bloqueig:</strong> temps que el compte roman bloquejat. 0 = manual per admin. 30 min = automàtic.</li>
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted)">🔁 <strong style="color:var(--ink)">Finestra d'observació:</strong> temps durant el qual es compten els intents fallits.</li>
+        </ul>
+        <div class="callout cl-amber" style="margin-top:.75rem;padding:.85rem 1rem">
+          <span class="callout-icon">💡</span>
+          <p><strong>DoS intern:</strong> un bloqueig agressiu (3 intents) pot ser usat per atacants per bloquejar usuaris legítims intencionadament.</p>
+        </div>
+      </div>
+      <div class="card bl-green">
+        <div class="card-icon" style="background:#f0fdf4">📊</div>
+        <h3>Nivells de seguretat recomanats</h3>
+        <div class="sec-level" style="background:#f0fdf4">
+          <span style="font-size:.8rem;width:90px;flex-shrink:0">Mínim</span>
+          <div class="sec-bar"><div class="sec-fill" style="width:25%;background:var(--red)"></div></div>
+          <span style="font-size:.78rem;color:var(--muted)">8 car., 0 hist.</span>
+        </div>
+        <div class="sec-level" style="background:#f0fdf4">
+          <span style="font-size:.8rem;width:90px;flex-shrink:0">Corporatiu</span>
+          <div class="sec-bar"><div class="sec-fill" style="width:60%;background:var(--amber)"></div></div>
+          <span style="font-size:.78rem;color:var(--muted)">12 car., 5 hist.</span>
+        </div>
+        <div class="sec-level" style="background:#f0fdf4">
+          <span style="font-size:.8rem;width:90px;flex-shrink:0">Alta seguretat</span>
+          <div class="sec-bar"><div class="sec-fill" style="width:85%;background:var(--green)"></div></div>
+          <span style="font-size:.78rem;color:var(--muted)">16+ car., MFA</span>
+        </div>
+        <div class="sec-level" style="background:#f0fdf4">
+          <span style="font-size:.8rem;width:90px;flex-shrink:0">Crític/Admin</span>
+          <div class="sec-bar"><div class="sec-fill" style="width:100%;background:var(--asix-l)"></div></div>
+          <span style="font-size:.78rem;color:var(--muted)">20+ car., MFA+clau física</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Windows: secpol.msc i net accounts -->
+    <div class="section-tag tag-win fi" style="margin-top:4rem">Implementació a Windows</div>
+    <h2 class="fi">Política de seguretat local a Windows</h2>
+    <p class="lead fi">Windows gestiona la política de seguretat local a través de <code>secpol.msc</code> (GUI) o <code>net accounts</code> / PowerShell (línia de comandes). En entorns de domini, les GPO (Group Policy Objects) substitueixen la configuració local.</p>
+
+    <div class="terminal fi">
+      <div class="term-bar">
+        <span class="term-dot" style="background:#ff5f57"></span>
+        <span class="term-dot" style="background:#febc2e"></span>
+        <span class="term-dot" style="background:#28c840"></span>
+        <span class="term-title">PowerShell / cmd — Política de comptes Windows</span>
+        <span class="term-os term-os-win">🪟 Windows</span>
+      </div>
+      <div class="term-body">
+        <div><span class="comment"># Veure configuració actual de política de comptes</span></div>
+        <div><span class="prompt-win">C:\></span> <span class="cmd">net accounts</span></div>
+        <div><span class="out">Force user logoff how long after time expires?:    Never</span></div>
+        <div><span class="out">Minimum password age (days):                        0</span></div>
+        <div><span class="out">Maximum password age (days):                        42</span></div>
+        <div><span class="out">Minimum password length:                            0</span></div>
+        <div><span class="out">Length of password history maintained:              None</span></div>
+        <div><span class="out">Lockout threshold:                                  Never</span></div>
+        <div><span class="out">Lockout duration (minutes):                         30</span></div>
+        <div style="margin-top:.75rem"><span class="comment"># Configurar política robusta</span></div>
+        <div><span class="prompt-win">C:\></span> <span class="cmd">net accounts /minpwlen:12 /maxpwage:90 /minpwage:1 /uniquepw:5</span></div>
+        <div><span class="ok">The command completed successfully.</span></div>
+        <div style="margin-top:.5rem"><span class="prompt-win">C:\></span> <span class="cmd">net accounts /lockoutthreshold:5 /lockoutduration:30 /lockoutwindow:30</span></div>
+        <div><span class="ok">The command completed successfully.</span></div>
+        <div style="margin-top:.75rem"><span class="comment"># Bloquejar / desbloquejar compte manualment</span></div>
+        <div><span class="prompt-win">PS C:\></span> <span class="cmd">Disable-LocalUser -Name "jdoe"</span></div>
+        <div><span class="prompt-win">PS C:\></span> <span class="cmd">Enable-LocalUser -Name "jdoe"</span></div>
+        <div style="margin-top:.5rem"><span class="comment"># Forçar canvi de contrasenya en proper login</span></div>
+        <div><span class="prompt-win">PS C:\></span> <span class="cmd">Set-LocalUser -Name "jdoe" -PasswordNeverExpires $false</span></div>
+        <div><span class="prompt-win">PS C:\></span> <span class="cmd">net user jdoe /logonpasswordchg:yes</span></div>
+      </div>
+    </div>
+
+    <!-- Linux: PAM i chage -->
+    <div class="section-tag tag-ubuntu fi" style="margin-top:3rem">Implementació a Linux</div>
+    <h2 class="fi">PAM i chage — política de contrasenyes a Ubuntu</h2>
+    <p class="lead fi">Linux usa el mòdul <strong>PAM (Pluggable Authentication Modules)</strong> per gestionar l'autenticació. La política de contrasenyes es configura al fitxer <code>/etc/pam.d/common-password</code> i la caducitat amb l'eina <code>chage</code>.</p>
+
+    <div class="terminal fi">
+      <div class="term-bar">
+        <span class="term-dot" style="background:#ff5f57"></span>
+        <span class="term-dot" style="background:#febc2e"></span>
+        <span class="term-dot" style="background:#28c840"></span>
+        <span class="term-title">Ubuntu — PAM i chage</span>
+        <span class="term-os term-os-ubuntu">🐧 Ubuntu</span>
+      </div>
+      <div class="term-body">
+        <div><span class="comment"># Instal·lar el mòdul de qualitat de contrasenyes</span></div>
+        <div><span class="prompt-ub">asix@ubuntu:~$</span> <span class="cmd">sudo apt install libpam-pwquality -y</span></div>
+        <div style="margin-top:.5rem"><span class="comment"># Editar /etc/security/pwquality.conf per configurar la política</span></div>
+        <div><span class="prompt-ub">asix@ubuntu:~$</span> <span class="cmd">sudo nano /etc/security/pwquality.conf</span></div>
+        <div style="margin-top:.3rem"><span class="comment"># Contingut recomanat del fitxer:</span></div>
+        <div><span class="val">minlen = 12</span>          <span class="comment"># Longitud mínima</span></div>
+        <div><span class="val">dcredit = -1</span>         <span class="comment"># Almenys 1 dígit (-N = mínim N)</span></div>
+        <div><span class="val">ucredit = -1</span>         <span class="comment"># Almenys 1 majúscula</span></div>
+        <div><span class="val">lcredit = -1</span>         <span class="comment"># Almenys 1 minúscula</span></div>
+        <div><span class="val">ocredit = -1</span>         <span class="comment"># Almenys 1 caràcter especial</span></div>
+        <div><span class="val">maxrepeat = 3</span>        <span class="comment"># Màxim 3 caràcters iguals seguits</span></div>
+        <div><span class="val">usercheck = 1</span>        <span class="comment"># No pot contenir el nom d'usuari</span></div>
+        <div style="margin-top:.75rem"><span class="comment"># Caducitat de contrasenyes amb chage</span></div>
+        <div><span class="prompt-ub">asix@ubuntu:~$</span> <span class="cmd">sudo chage -l jdoe</span></div>
+        <div><span class="out">Last password change                              : Jun 01, 2025</span></div>
+        <div><span class="out">Password expires                                  : never</span></div>
+        <div><span class="out">Password inactive                                 : never</span></div>
+        <div><span class="out">Account expires                                   : never</span></div>
+        <div><span class="out">Minimum number of days between password change    : 0</span></div>
+        <div><span class="out">Maximum number of days between password change    : 99999</span></div>
+        <div style="margin-top:.5rem"><span class="comment"># Configurar caducitat: màx 90 dies, avís 7 dies abans, mínim 1 dia</span></div>
+        <div><span class="prompt-ub">asix@ubuntu:~$</span> <span class="cmd">sudo chage -M 90 -m 1 -W 7 -I 30 jdoe</span></div>
+        <div><span class="comment"># -M=màx dies, -m=min dies, -W=dies d'avís, -I=inactivitat fins bloqueig</span></div>
+        <div style="margin-top:.5rem"><span class="comment"># Forçar canvi en proper login</span></div>
+        <div><span class="prompt-ub">asix@ubuntu:~$</span> <span class="cmd">sudo chage -d 0 jdoe</span></div>
+        <div><span class="comment"># Bloquejar / desbloquejar compte</span></div>
+        <div><span class="prompt-ub">asix@ubuntu:~$</span> <span class="cmd">sudo usermod -L jdoe</span>  <span class="comment"># Lock</span></div>
+        <div><span class="prompt-ub">asix@ubuntu:~$</span> <span class="cmd">sudo usermod -U jdoe</span>  <span class="comment"># Unlock</span></div>
+        <div style="margin-top:.5rem"><span class="comment"># Verificar estat del compte (! = bloquejat)</span></div>
+        <div><span class="prompt-ub">asix@ubuntu:~$</span> <span class="cmd">sudo passwd -S jdoe</span></div>
+        <div><span class="out">jdoe L 2025-06-01 1 90 7 30</span></div>
+      </div>
+    </div>
+
+    <!-- LAB 3: Seguretat -->
+    <div class="lab-card fi">
+      <div class="lab-header">
+        <span class="lab-icon">🧪</span>
+        <div class="lab-title-block">
+          <h4>Lab 3.1 — Implementar política de seguretat corporativa</h4>
+          <p>Configura una política de seguretat completa per a un entorn empresarial</p>
+        </div>
+        <div class="lab-os-tags">
+          <span class="os-tag os-both">🔀 Ambdós</span>
+        </div>
+      </div>
+      <div class="lab-body">
+        <p>L'empresa "TechCorp S.L." et demana implementar una política de seguretat de comptes. Els requisits són: contrasenyes de mínim 12 caràcters amb complexitat, historial de 5 contrasenyes, caducitat a 90 dies, bloqueig als 5 intents fallits i desbloqueig automàtic als 30 minuts.</p>
+        <ul class="lab-steps">
+          <li><strong>Windows:</strong> Usa <code>net accounts</code> per configurar tota la política de manera programàtica. Verifica-la amb <code>net accounts</code> sense paràmetres. Complementa amb <code>secpol.msc</code> per activar "La contrasenya ha de complir els requisits de complexitat".</li>
+          <li><strong>Ubuntu:</strong> Instal·la <code>libpam-pwquality</code> i configura <code>/etc/security/pwquality.conf</code>. Aplica caducitat a l'usuari <code>jdoe</code> amb <code>chage</code>. Per al bloqueig d'intents, instal·la <code>libpam-faillock</code> i configura <code>/etc/security/faillock.conf</code> amb <code>deny=5 unlock_time=1800</code>.</li>
+          <li><strong>Prova el bloqueig:</strong> Intenta autenticar 6 vegades amb contrasenya incorrecta a Linux (<code>su jdoe</code>). Verifica l'estat amb <code>faillock --user jdoe</code>. Desbloqueja amb <code>faillock --user jdoe --reset</code>.</li>
+          <li><strong>Reflexiona:</strong> Quina diferència hi ha entre un compte <em>bloquejat</em> (lockout per intents fallits) i un compte <em>desactivat</em> (disabled per l'administrador)? Pot un compte bloquejat desbloquejar-se sol?</li>
+        </ul>
+        <div class="lab-entrega"><strong>📋 Documenta:</strong> Captura de <code>net accounts</code> (Windows) i <code>chage -l jdoe</code> (Linux) mostrant la política aplicada. Inclou la sortida de <code>faillock --user jdoe</code> després dels intents fallits.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     T4 — PERFILS LOCALS D'USUARI
+═══════════════════════════════════════════ -->
+<section id="perfils" class="s-win">
+  <div class="container">
+    <div class="ra-banner ra-win fi">
+      <div class="ra-num">4</div>
+      <div>
+        <h2>Administració de perfils locals d'usuari</h2>
+        <p>Estructura del perfil, tipus de perfils a Windows, home directory a Linux i gestió avançada.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-win fi">Perfils d'usuari a Windows</div>
+    <h2 class="fi">Estructura i tipus de perfils a Windows</h2>
+    <p class="lead fi">Un <strong>perfil d'usuari</strong> és el conjunt de configuració personal (escriptori, documents, configuració d'aplicacions, variables d'entorn) associat a un compte. A Windows, cada usuari té el seu propi perfil aïllat, de manera que els canvis d'un usuari no afecten els altres.</p>
+
+    <div class="grid g2 fi">
+      <div class="card bl-win">
+        <div class="card-icon" style="background:#f0f7ff">📁</div>
+        <h3>Estructura del perfil de Windows</h3>
+        <p style="margin-bottom:.75rem">El perfil s'emmagatzema a <code>C:\Users\&lt;nom_usuari&gt;\</code> i conté:</p>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)">🖥️ <code style="color:var(--ink)">Desktop\</code> — Arxius i dreceres de l'escriptori</li>
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)">📄 <code style="color:var(--ink)">Documents\</code> — Carpeta personal de documents</li>
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)">⬇️ <code style="color:var(--ink)">Downloads\</code> — Descàrregues</li>
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)">🖼️ <code style="color:var(--ink)">Pictures\, Videos\, Music\</code> — Multimèdia</li>
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)">⚙️ <code style="color:var(--ink)">AppData\</code> — Configuració d'aplicacions (hidden)</li>
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)">&nbsp;&nbsp;├ <code style="color:var(--ink)">AppData\Local\</code> — Dades locals (no s'exporten al perfil itinerant)</li>
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)">&nbsp;&nbsp;├ <code style="color:var(--ink)">AppData\Roaming\</code> — Dades que sí s'exporten al servidor</li>
+          <li style="padding:.25rem 0;font-size:.85rem;color:var(--muted)">&nbsp;&nbsp;└ <code style="color:var(--ink)">AppData\LocalLow\</code> — Dades d'aplicacions de confiança baixa</li>
+        </ul>
+      </div>
+      <div>
+        <div class="card bl-asix" style="margin-bottom:1rem">
+          <div class="card-icon" style="background:#f5f3ff">🏠</div>
+          <h3>Perfil local</h3>
+          <p>Emmagatzemat a la màquina local. Es crea automàticament en el primer login. Si canvies d'equip, el perfil no es transfereix. Ideal per a estacions fixes amb usuari dedicat.</p>
+        </div>
+        <div class="card bl-win" style="margin-bottom:1rem">
+          <div class="card-icon" style="background:#f0f7ff">🌐</div>
+          <h3>Perfil itinerant (Roaming)</h3>
+          <p>S'emmagatzema en un servidor de xarxa. Quan l'usuari fa login a qualsevol equip del domini, rep el seu perfil actualitzat. Requereix domini Active Directory. Sincronitza <code>AppData\Roaming\</code>.</p>
+        </div>
+        <div class="card bl-green">
+          <div class="card-icon" style="background:#f0fdf4">🔒</div>
+          <h3>Perfil obligatori</h3>
+          <p>Versió de només lectura d'un perfil itinerant. L'usuari pot fer canvis durant la sessió, però tot es descarta en tancar. S'usa en quioscos, biblioteques i aules informàtiques.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Variables d'entorn -->
+    <div class="section-tag tag-asix fi" style="margin-top:3rem">Variables d'entorn</div>
+    <h2 class="fi">Variables d'entorn: clau per als perfils</h2>
+    <p class="lead fi">Les <strong>variables d'entorn</strong> són parells nom=valor que el SO posa a disposició de tots els processos. Permeten als programes trobar recursos del sistema sense codificar rutes absolutes.</p>
+
+    <div class="terminal fi">
+      <div class="term-bar">
+        <span class="term-dot" style="background:#ff5f57"></span>
+        <span class="term-dot" style="background:#febc2e"></span>
+        <span class="term-dot" style="background:#28c840"></span>
+        <span class="term-title">Variables d'entorn — Windows i Linux</span>
+        <span class="term-os term-os-both">🔀 Ambdós</span>
+      </div>
+      <div class="term-body">
+        <div><span class="comment">═══ WINDOWS ═══</span></div>
+        <div><span class="prompt-win">PS C:\></span> <span class="cmd">Get-ChildItem Env: | Sort-Object Name | Select-Object -First 10</span></div>
+        <div><span class="out">APPDATA        C:\Users\asix\AppData\Roaming</span></div>
+        <div><span class="out">COMPUTERNAME   DESKTOP-ASIX01</span></div>
+        <div><span class="out">HOMEDRIVE      C:</span></div>
+        <div><span class="out">HOMEPATH       \Users\asix</span></div>
+        <div><span class="out">LOCALAPPDATA   C:\Users\asix\AppData\Local</span></div>
+        <div><span class="out">PATH           C:\Windows\system32;C:\Windows;...</span></div>
+        <div><span class="out">TEMP           C:\Users\asix\AppData\Local\Temp</span></div>
+        <div><span class="out">USERPROFILE    C:\Users\asix</span></div>
+        <div><span class="out">USERNAME       asix</span></div>
+        <div style="margin-top:.5rem"><span class="comment"># Crear variable d'entorn per a l'usuari actual (persistent)</span></div>
+        <div><span class="prompt-win">PS C:\></span> <span class="cmd">[System.Environment]::SetEnvironmentVariable("ASIX_HOME","C:\ASIX","User")</span></div>
+        <div style="margin-top:.75rem"><span class="comment">═══ UBUNTU ═══</span></div>
+        <div><span class="prompt-ub">asix@ubuntu:~$</span> <span class="cmd">env | sort | head -15</span></div>
+        <div><span class="out">HOME=/home/asix</span></div>
+        <div><span class="out">LANG=ca_ES.UTF-8</span></div>
+        <div><span class="out">PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin</span></div>
+        <div><span class="out">SHELL=/bin/bash</span></div>
+        <div><span class="out">USER=asix</span></div>
+        <div style="margin-top:.5rem"><span class="comment"># Variable d'entorn persistent per a l'usuari (en ~/.bashrc o ~/.profile)</span></div>
+        <div><span class="prompt-ub">asix@ubuntu:~$</span> <span class="cmd">echo 'export ASIX_HOME="/home/asix/asix_data"' >> ~/.bashrc</span></div>
+        <div><span class="prompt-ub">asix@ubuntu:~$</span> <span class="cmd">source ~/.bashrc && echo $ASIX_HOME</span></div>
+        <div><span class="ok">/home/asix/asix_data</span></div>
+        <div style="margin-top:.5rem"><span class="comment"># Per a tots els usuaris: /etc/environment o /etc/profile.d/asix.sh</span></div>
+        <div><span class="prompt-ub">asix@ubuntu:~$</span> <span class="cmd">sudo bash -c 'echo "ASIX_GLOBAL=/srv/asix" >> /etc/environment'</span></div>
+      </div>
+    </div>
+
+    <!-- LAB 4: Perfils -->
+    <div class="lab-card fi">
+      <div class="lab-header">
+        <span class="lab-icon">🧪</span>
+        <div class="lab-title-block">
+          <h4>Lab 4.1 — Explorar i gestionar perfils d'usuari</h4>
+          <p>Analitza l'estructura del perfil i configura variables d'entorn personalitzades</p>
+        </div>
+        <div class="lab-os-tags">
+          <span class="os-tag os-both">🔀 Ambdós</span>
+        </div>
+      </div>
+      <div class="lab-body">
+        <ul class="lab-steps">
+          <li><strong>Windows — Explora el perfil:</strong> Obre PowerShell i executa <code>Get-ChildItem $env:USERPROFILE -Force</code> per veure tots els arxius, inclosos els ocults. Calcula la mida del perfil amb <code>(Get-ChildItem $env:USERPROFILE -Recurse | Measure-Object -Sum Length).Sum / 1MB</code>.</li>
+          <li><strong>Ubuntu — Explora el home:</strong> Executa <code>ls -la ~/</code> i <code>du -sh ~/.*</code> per veure els arxius ocults de configuració. Identifica els fitxers <code>.bashrc</code>, <code>.profile</code>, <code>.bash_history</code> i explica la funció de cadascun.</li>
+          <li><strong>Variables d'entorn:</strong> Crea una variable <code>EMPRESA=TechCorp</code> de forma persistent a ambdós sistemes. Verifica que segueix activa en obrir una nova finestra de terminal/PowerShell.</li>
+          <li><strong>Windows — Copia i elimina un perfil:</strong> A <em>Propietats del Sistema → Avançat → Perfils d'usuari</em>, comprova quins perfils existeixen. Nota: no es pot eliminar el perfil de l'usuari que ha iniciat sessió.</li>
+          <li><strong>Ubuntu — Canvia el directori home:</strong> Amb <code>usermod -d /home/nou_home -m alumne1</code> canvia el directori home de <code>alumne1</code> i verifica que s'ha mogut el contingut.</li>
+        </ul>
+        <div class="lab-entrega"><strong>📋 Documenta:</strong> Arbre de directoris del perfil de l'usuari (<code>tree $env:USERPROFILE /f /a</code> a Windows, <code>tree ~/</code> a Ubuntu). Captura de les variables d'entorn personalitzades actives en una nova sessió.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     T5 — CONFIGURACIÓ TCP/IP
+═══════════════════════════════════════════ -->
+<section id="tcpip" class="s-green">
+  <div class="container">
+    <div class="ra-banner ra-green fi">
+      <div class="ra-num">5</div>
+      <div>
+        <h2>Configuració del protocol TCP/IP</h2>
+        <p>Adreçament IPv4/IPv6, màscara de subxarxa, gateway, DHCP vs estàtica, i eines de diagnòstic.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-green fi">Fonaments TCP/IP</div>
+    <h2 class="fi">El model TCP/IP i l'adreçament</h2>
+    <p class="lead fi">La <strong>configuració de xarxa</strong> és un dels rols principals d'un administrador de sistemes. TCP/IP és el protocol universal que permet la comunicació entre equips. Configurar-lo incorrectament fa que l'equip no pugui comunicar-se amb cap recurs de xarxa.</p>
+
+    <div class="grid g3 fi">
+      <div class="card bl-green">
+        <div class="card-icon" style="background:#f0fdf4">🏠</div>
+        <h3>Adreça IP</h3>
+        <p style="margin-bottom:.75rem">Identificador únic de cada interfície de xarxa dins d'una xarxa.</p>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">🔢 <strong style="color:var(--ink)">IPv4:</strong> 32 bits en notació decimal puntada. Ex: <code>192.168.1.100</code>. ≈4.300 milions d'adreces.</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">🌐 <strong style="color:var(--ink)">IPv6:</strong> 128 bits en hexadecimal. Ex: <code>2001:db8::1</code>. 3,4×10³⁸ adreces. Obligatori en infraestructures modernes.</li>
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted)">🔁 <strong style="color:var(--ink)">Loopback:</strong> <code>127.0.0.1</code> (IPv4) / <code>::1</code> (IPv6). Apunta a l'equip mateix. Mai surt per la interfície física.</li>
+        </ul>
+      </div>
+      <div class="card bl-asix">
+        <div class="card-icon" style="background:#f5f3ff">🎭</div>
+        <h3>Màscara de subxarxa</h3>
+        <p style="margin-bottom:.75rem">Defineix quina part de l'adreça IP identifica la xarxa i quina identifica l'host:</p>
+        <div class="ex ex-green">
+          <div class="ex-lbl">Exemple de càlcul</div>
+          <p>IP: <code>192.168.1.100</code><br>Màscara: <code>255.255.255.0</code> = <code>/24</code><br>Xarxa: <code>192.168.1.0</code><br>Rang hosts: <code>192.168.1.1 – .254</code><br>Broadcast: <code>192.168.1.255</code><br>Hosts disponibles: <strong>254</strong></p>
+        </div>
+      </div>
+      <div class="card bl-win">
+        <div class="card-icon" style="background:#f0f7ff">🚪</div>
+        <h3>Gateway (porta d'enllaç)</h3>
+        <p style="margin-bottom:.5rem">Adreça IP del router que connecta la xarxa local amb xarxes externes (Internet). Tots els paquets amb destí fora de la subxarxa local s'envien al gateway.</p>
+        <div class="ex ex-win">
+          <div class="ex-lbl">Configuració típica</div>
+          <p>IP equip: <code>192.168.1.100/24</code><br>Gateway: <code>192.168.1.1</code> (el router)<br>DNS primari: <code>8.8.8.8</code> (Google) o el del ISP<br>DNS secundari: <code>8.8.4.4</code></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Taula de rangs privats -->
+    <div class="section-tag tag-green fi" style="margin-top:3rem">Rangs d'adreces IPv4</div>
+    <h2 class="fi">Rangs d'adreces: privades, públiques i especials</h2>
+    <div style="overflow-x:auto" class="fi">
+      <table class="ptable">
+        <thead>
+          <tr><th>Rang</th><th>Notació CIDR</th><th>Tipus</th><th>Hosts disponibles</th><th>Ús típic</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>10.0.0.0 – 10.255.255.255</code></td><td><code>/8</code></td><td><span class="badge b-green">Privada classe A</span></td><td>16.777.214</td><td>Grans empreses, data centers</td></tr>
+          <tr><td><code>172.16.0.0 – 172.31.255.255</code></td><td><code>/12</code></td><td><span class="badge b-green">Privada classe B</span></td><td>1.048.574</td><td>Empreses mitjanes, VPN</td></tr>
+          <tr><td><code>192.168.0.0 – 192.168.255.255</code></td><td><code>/16</code></td><td><span class="badge b-green">Privada classe C</span></td><td>65.534</td><td>LANs domèstiques i pimes</td></tr>
+          <tr><td><code>127.0.0.0 – 127.255.255.255</code></td><td><code>/8</code></td><td><span class="badge b-asix">Loopback</span></td><td>—</td><td>Comunicació interna del SO</td></tr>
+          <tr><td><code>169.254.0.0 – 169.254.255.255</code></td><td><code>/16</code></td><td><span class="badge b-amber">APIPA / Link-local</span></td><td>65.024</td><td>Auto-assignació quan DHCP falla</td></tr>
+          <tr><td><code>0.0.0.0</code></td><td>—</td><td><span class="badge b-red">Especial</span></td><td>—</td><td>Ruta per defecte, host no configurat</td></tr>
+          <tr><td><code>255.255.255.255</code></td><td>—</td><td><span class="badge b-red">Broadcast limitat</span></td><td>—</td><td>Difusió a tota la xarxa local</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout cl-amber fi">
+      <span class="callout-icon">💡</span>
+      <div>
+        <strong>APIPA (169.254.x.x) — diagnosi important:</strong>
+        <p style="margin-top:.3rem">Si un equip té una adreça <code>169.254.x.x</code>, significa que <strong>no ha pogut obtenir IP del servidor DHCP</strong>. Causes: el servidor DHCP no és accessible, cable de xarxa desconnectat, o servei DHCP aturat. Aquesta adreça NO permet comunicació amb Internet ni amb altres xarxes.</p>
+      </div>
+    </div>
+
+    <!-- DHCP vs Estàtica -->
+    <div class="section-tag tag-green fi" style="margin-top:3rem">DHCP vs Estàtica</div>
+    <h2 class="fi">Assignació dinàmica (DHCP) vs estàtica</h2>
+
+    <div class="grid g2 fi">
+      <div class="card bl-green">
+        <div class="card-icon" style="background:#f0fdf4">🔄</div>
+        <h3>DHCP — Dynamic Host Configuration Protocol</h3>
+        <p style="margin-bottom:.75rem">El servidor DHCP assigna automàticament IP, màscara, gateway i DNS a cada equip que es connecta.</p>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">✅ <strong style="color:var(--ink)">Avantatges:</strong> zero configuració a l'equip client, gestió centralitzada, evita conflictes d'IP.</li>
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">❌ <strong style="color:var(--ink)">Inconvenients:</strong> l'IP pot canviar (lease renewal). Problemàtic per a servidors o impresores.</li>
+          <li style="padding:.25rem 0;font-size:.88rem;color:var(--muted)">⏱️ <strong style="color:var(--ink)">Lease time:</strong> temps que el client manté l'IP. En renovar, pot ser la mateixa o diferent.</li>
+        </ul>
+        <div class="ex ex-green" style="margin-top:.75rem">
+          <div class="ex-lbl">Procés DORA</div>
+          <p><strong>D</strong>iscover → <strong>O</strong>ffer → <strong>R</strong>equest → <strong>A</strong>cknowledge. El client fa broadcast, el servidor ofereix una IP, el client la sol·licita formalment i el servidor confirma.</p>
+        </div>
+      </div>
+      <div class="card bl-asix">
+        <div class="card-icon" style="background:#f5f3ff">📌</div>
+        <h3>IP estàtica</h3>
+        <p style="margin-bottom:.75rem">L'administrador configura manualment l'adreça IP directament a l'equip. Sempre la mateixa.</p>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">✅ <strong style="color:var(--ink)">Avantatges:</strong> IP sempre la mateixa, previsible. Imprescindible per a servidors, impressores, NAS, càmeres IP.</li>
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">❌ <strong style="color:var(--ink)">Inconvenients:</strong> gestió manual equip per equip, risc de conflictes d'IP si es duplica.</li>
+          <li style="padding:.25rem 0;font-size:.88rem;color:var(--muted)">💡 <strong style="color:var(--ink)">Alternativa:</strong> DHCP reservation — l'IP és "estàtica" però la gestiona el DHCP per la MAC address del dispositiu.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- LAB 5: Configuració TCP/IP -->
+    <div class="lab-card fi">
+      <div class="lab-header">
+        <span class="lab-icon">🧪</span>
+        <div class="lab-title-block">
+          <h4>Lab 5.1 — Configuració completa de xarxa i diagnòstic</h4>
+          <p>Configura IP estàtica, comprova connectivitat i diagnostica problemes de xarxa</p>
+        </div>
+        <div class="lab-os-tags">
+          <span class="os-tag os-both">🔀 Ambdós</span>
+        </div>
+      </div>
+      <div class="lab-body">
+        <h5>🪟 Windows — PowerShell (Administrador)</h5>
+        <div class="terminal">
+          <div class="term-bar">
+            <span class="term-dot" style="background:#ff5f57"></span>
+            <span class="term-dot" style="background:#febc2e"></span>
+            <span class="term-dot" style="background:#28c840"></span>
+            <span class="term-title">PowerShell — Configuració IP estàtica</span>
+            <span class="term-os term-os-win">🪟 Windows</span>
+          </div>
+          <div class="term-body">
+            <div><span class="comment"># Llistar adaptadors de xarxa i el seu índex</span></div>
+            <div><span class="prompt-win">PS C:\></span> <span class="cmd">Get-NetAdapter | Format-Table Name,InterfaceIndex,Status,MacAddress</span></div>
+            <div><span class="out">Name          IfIndex Status MacAddress</span></div>
+            <div><span class="out">Ethernet        4    Up     00-0C-29-AB-CD-EF</span></div>
+            <div style="margin-top:.5rem"><span class="comment"># Veure configuració actual</span></div>
+            <div><span class="prompt-win">PS C:\></span> <span class="cmd">Get-NetIPConfiguration -InterfaceIndex 4</span></div>
+            <div style="margin-top:.5rem"><span class="comment"># Configurar IP estàtica (eliminar primer l'assignació DHCP)</span></div>
+            <div><span class="prompt-win">PS C:\></span> <span class="cmd">New-NetIPAddress -InterfaceIndex 4 -IPAddress 192.168.1.100 -PrefixLength 24 -DefaultGateway 192.168.1.1</span></div>
+            <div><span class="comment"># PrefixLength 24 = màscara 255.255.255.0</span></div>
+            <div style="margin-top:.5rem"><span class="comment"># Configurar DNS</span></div>
+            <div><span class="prompt-win">PS C:\></span> <span class="cmd">Set-DnsClientServerAddress -InterfaceIndex 4 -ServerAddresses ("8.8.8.8","8.8.4.4")</span></div>
+            <div style="margin-top:.5rem"><span class="comment"># Tornar a DHCP</span></div>
+            <div><span class="prompt-win">PS C:\></span> <span class="cmd">Set-NetIPInterface -InterfaceIndex 4 -Dhcp Enabled</span></div>
+            <div><span class="prompt-win">PS C:\></span> <span class="cmd">Set-DnsClientServerAddress -InterfaceIndex 4 -ResetServerAddresses</span></div>
+            <div style="margin-top:.5rem"><span class="comment"># Eines de diagnosi</span></div>
+            <div><span class="prompt-win">PS C:\></span> <span class="cmd">ipconfig /all</span>                       <span class="comment"># Info completa de totes les interfícies</span></div>
+            <div><span class="prompt-win">PS C:\></span> <span class="cmd">ping 8.8.8.8 -n 4</span>               <span class="comment"># Test connectivitat</span></div>
+            <div><span class="prompt-win">PS C:\></span> <span class="cmd">tracert 8.8.8.8</span>                  <span class="comment"># Ruta fins al destí</span></div>
+            <div><span class="prompt-win">PS C:\></span> <span class="cmd">netstat -an | findstr LISTEN</span>    <span class="comment"># Ports en escolta</span></div>
+            <div><span class="prompt-win">PS C:\></span> <span class="cmd">arp -a</span>                           <span class="comment"># Taula ARP (MACs conegudes)</span></div>
+          </div>
+        </div>
+
+        <h5>🐧 Ubuntu — Terminal (ip + nmcli)</h5>
+        <div class="terminal">
+          <div class="term-bar">
+            <span class="term-dot" style="background:#ff5f57"></span>
+            <span class="term-dot" style="background:#febc2e"></span>
+            <span class="term-dot" style="background:#28c840"></span>
+            <span class="term-title">Ubuntu — ip i nmcli</span>
+            <span class="term-os term-os-ubuntu">🐧 Ubuntu</span>
+          </div>
+          <div class="term-body">
+            <div><span class="comment"># Veure interfícies i adreces IP</span></div>
+            <div><span class="prompt-ub">asix@ubuntu:~$</span> <span class="cmd">ip addr show</span></div>
+            <div><span class="out">2: ens33: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500</span></div>
+            <div><span class="out">    link/ether 00:0c:29:ab:cd:ef brd ff:ff:ff:ff:ff:ff</span></div>
+            <div><span class="out">    inet 192.168.1.50/24 brd 192.168.1.255 scope global dynamic ens33</span></div>
+            <div><span class="out">    inet6 fe80::20c:29ff:feab:cdef/64 scope link</span></div>
+            <div style="margin-top:.5rem"><span class="comment"># Ruta per defecte (gateway)</span></div>
+            <div><span class="prompt-ub">asix@ubuntu:~$</span> <span class="cmd">ip route show</span></div>
+            <div><span class="out">default via 192.168.1.1 dev ens33 proto dhcp</span></div>
+            <div><span class="out">192.168.1.0/24 dev ens33 proto kernel scope link src 192.168.1.50</span></div>
+            <div style="margin-top:.5rem"><span class="comment"># Configurar IP estàtica amb nmcli (NetworkManager)</span></div>
+            <div><span class="prompt-ub">asix@ubuntu:~$</span> <span class="cmd">sudo nmcli con mod "Wired connection 1" ipv4.method manual ipv4.addresses "192.168.1.100/24" ipv4.gateway "192.168.1.1" ipv4.dns "8.8.8.8,8.8.4.4"</span></div>
+            <div><span class="prompt-ub">asix@ubuntu:~$</span> <span class="cmd">sudo nmcli con up "Wired connection 1"</span></div>
+            <div style="margin-top:.5rem"><span class="comment"># Tornar a DHCP</span></div>
+            <div><span class="prompt-ub">asix@ubuntu:~$</span> <span class="cmd">sudo nmcli con mod "Wired connection 1" ipv4.method auto ipv4.addresses "" ipv4.gateway "" ipv4.dns ""</span></div>
+            <div style="margin-top:.5rem"><span class="comment"># Eines de diagnosi</span></div>
+            <div><span class="prompt-ub">asix@ubuntu:~$</span> <span class="cmd">ping -c 4 8.8.8.8</span></div>
+            <div><span class="prompt-ub">asix@ubuntu:~$</span> <span class="cmd">traceroute 8.8.8.8</span>           <span class="comment"># o mtr 8.8.8.8 (interactiu)</span></div>
+            <div><span class="prompt-ub">asix@ubuntu:~$</span> <span class="cmd">ss -tuln</span>                      <span class="comment"># Sockets en escolta (substitut de netstat)</span></div>
+            <div><span class="prompt-ub">asix@ubuntu:~$</span> <span class="cmd">ip neigh show</span>                <span class="comment"># Taula ARP/NDP</span></div>
+            <div><span class="prompt-ub">asix@ubuntu:~$</span> <span class="cmd">nmap -sn 192.168.1.0/24</span>     <span class="comment"># Descobrir equips a la xarxa</span></div>
+          </div>
+        </div>
+        <ul class="lab-steps">
+          <li><strong>Configura IP estàtica</strong> a ambdós sistemes seguint l'esquema: IP <code>192.168.1.100</code>, màscara <code>/24</code>, gateway <code>192.168.1.1</code>, DNS <code>8.8.8.8</code>.</li>
+          <li><strong>Verifica la connectivitat</strong> per capes: primer ping al loopback (<code>127.0.0.1</code>), després al gateway, finalment a <code>8.8.8.8</code> i a <code>google.com</code>.</li>
+          <li><strong>Diagnostica un escenari simulat:</strong> desactiva la interfície (<code>ip link set ens33 down</code> / <code>Disable-NetAdapter</code>), comprova quin missatge dona el ping, i torna-la a activar.</li>
+          <li><strong>Escriu un procediment de diagnosi</strong> de 5 passos ordenats per detectar per quina capa hi ha un problema (sense IP, sense gateway, sense DNS, sense Internet, sense servei específic).</li>
+        </ul>
+        <div class="lab-entrega"><strong>📋 Documenta:</strong> Captura de <code>ip addr show</code> / <code>Get-NetIPConfiguration</code> amb la IP estàtica activa. Captura de <code>ping google.com</code> funcionant. Procediment de diagnosi de 5 passos.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     T6 — RESOLUCIÓ DE NOMS DNS
+═══════════════════════════════════════════ -->
+<section id="dns" class="s-ubuntu">
+  <div class="container">
+    <div class="ra-banner ra-ubuntu fi">
+      <div class="ra-num">6</div>
+      <div>
+        <h2>Configuració de la resolució de noms</h2>
+        <p>DNS, fitxers hosts, NSS (Name Service Switch), resolució local i proves de diagnosi.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-ubuntu fi">El sistema DNS</div>
+    <h2 class="fi">Com funciona la resolució de noms?</h2>
+    <p class="lead fi">Quan escrivim <code>www.google.com</code>, el sistema ha de traduir aquest nom a una adreça IP per poder enviar paquets. Aquest procés s'anomena <strong>resolució de noms</strong> i segueix un ordre de consulta definit per la configuració del sistema.</p>
+
+    <!-- Diagrama del flux de resolució DNS -->
+    <div class="arch-diagram fi">
+      <div class="arch-layer al-app">
+        1. Aplicació sol·licita resolució de "www.google.com"
+        <div class="layer-desc">El navegador, ping, curl... fan una crida al sistema</div>
+      </div>
+      <div class="arch-layer al-shell">
+        2. Consulta la caché DNS local del sistema
+        <div class="layer-desc">Windows: ipconfig /displaydns · Linux: systemd-resolve --statistics</div>
+      </div>
+      <div class="arch-layer al-api">
+        3. Consulta el fitxer /etc/hosts (o C:\Windows\System32\drivers\etc\hosts)
+        <div class="layer-desc">Resolució estàtica local — sempre té prioritat sobre DNS</div>
+      </div>
+      <div class="arch-layer al-kernel">
+        4. Consulta els servidors DNS configurats (8.8.8.8, etc.)
+        <div class="layer-desc">Resolució recursiva: DNS local → DNS arrel → TLD → autoritatiu</div>
+      </div>
+      <div class="arch-layer al-hw">
+        5. Resposta: 142.250.185.14 → l'aplicació es connecta a aquesta IP
+        <div class="layer-desc">El resultat es guarda a la caché local per futures consultes</div>
+      </div>
+    </div>
+
+    <div class="grid g2 fi" style="margin-top:2rem">
+      <div class="card bl-asix">
+        <div class="card-icon" style="background:#f5f3ff">📋</div>
+        <h3>El fitxer /etc/hosts</h3>
+        <p style="margin-bottom:.75rem">Fitxer de resolució local estàtica. <strong>Té prioritat sobre DNS</strong> (per defecte). Usat per a: redirigir dominis, bloquejar publicitat, definir hostnames locals.</p>
+        <div class="terminal" style="margin-top:.5rem">
+          <div class="term-bar">
+            <span class="term-dot" style="background:#ff5f57"></span>
+            <span class="term-title">/etc/hosts — Linux o C:\Windows\System32\drivers\etc\hosts</span>
+            <span class="term-os term-os-both">🔀 Ambdós</span>
+          </div>
+          <div class="term-body" style="font-size:.76rem">
+            <div><span class="comment"># Format: IP    hostname    aliases</span></div>
+            <div><span class="val">127.0.0.1</span>   <span class="cmd">localhost</span></div>
+            <div><span class="val">127.0.1.1</span>   <span class="cmd">asix-ubuntu</span></div>
+            <div><span class="val">192.168.1.10</span> <span class="cmd">servidor1.local servidor1</span></div>
+            <div><span class="val">192.168.1.20</span> <span class="cmd">impresora.local printer</span></div>
+            <div><span class="comment"># Bloquejar un domini (redirigir al loopback)</span></div>
+            <div><span class="val">0.0.0.0</span>     <span class="cmd">ads.example.com</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="card bl-ubuntu">
+        <div class="card-icon" style="background:#fff5f1">⚙️</div>
+        <h3>NSS i /etc/nsswitch.conf (Linux)</h3>
+        <p style="margin-bottom:.75rem">El fitxer <code>/etc/nsswitch.conf</code> defineix l'<strong>ordre de consulta</strong> per a cada tipus de resolució:</p>
+        <div class="terminal" style="margin-top:.5rem">
+          <div class="term-bar">
+            <span class="term-dot" style="background:#ff5f57"></span>
+            <span class="term-title">/etc/nsswitch.conf</span>
+            <span class="term-os term-os-ubuntu">🐧 Ubuntu</span>
+          </div>
+          <div class="term-body" style="font-size:.76rem">
+            <div><span class="comment"># Resolució de noms d'host</span></div>
+            <div><span class="val">hosts:</span> <span class="cmd">files dns mdns4_minimal [NOTFOUND=return]</span></div>
+            <div><span class="comment"># files = /etc/hosts, dns = servidor DNS, mdns = mDNS (Bonjour)</span></div>
+            <div style="margin-top:.3rem"><span class="comment"># Resolució de comptes d'usuari</span></div>
+            <div><span class="val">passwd:</span> <span class="cmd">files systemd</span></div>
+            <div><span class="val">group:</span>  <span class="cmd">files systemd</span></div>
+            <div style="margin-top:.3rem"><span class="comment"># Si es treballa en domini LDAP:</span></div>
+            <div><span class="val">passwd:</span> <span class="cmd">files ldap systemd</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Eines de diagnosi DNS -->
+    <div class="section-tag tag-ubuntu fi" style="margin-top:3rem">Eines de diagnosi DNS</div>
+    <h2 class="fi">Diagnosi de problemes de resolució de noms</h2>
+
+    <div class="terminal fi">
+      <div class="term-bar">
+        <span class="term-dot" style="background:#ff5f57"></span>
+        <span class="term-dot" style="background:#febc2e"></span>
+        <span class="term-dot" style="background:#28c840"></span>
+        <span class="term-title">Eines de diagnosi DNS — nslookup, dig, host</span>
+        <span class="term-os term-os-both">🔀 Ambdós</span>
+      </div>
+      <div class="term-body">
+        <div><span class="comment">═══ WINDOWS ═══</span></div>
+        <div><span class="prompt-win">C:\></span> <span class="cmd">nslookup google.com</span></div>
+        <div><span class="out">Server:  dns.google</span></div>
+        <div><span class="out">Address:  8.8.8.8</span></div>
+        <div><span class="out">Non-authoritative answer:</span></div>
+        <div><span class="out">Name:    google.com</span></div>
+        <div><span class="out">Addresses: 142.250.185.14</span></div>
+        <div style="margin-top:.5rem"><span class="prompt-win">C:\></span> <span class="cmd">nslookup google.com 1.1.1.1</span>  <span class="comment"># Usar un DNS específic (Cloudflare)</span></div>
+        <div style="margin-top:.5rem"><span class="comment"># Netejar caché DNS a Windows</span></div>
+        <div><span class="prompt-win">C:\></span> <span class="cmd">ipconfig /flushdns</span></div>
+        <div><span class="ok">Successfully flushed the DNS Resolver Cache.</span></div>
+        <div><span class="prompt-win">C:\></span> <span class="cmd">ipconfig /displaydns | Select-String "google"</span>  <span class="comment"># Veure caché</span></div>
+        <div style="margin-top:.75rem"><span class="comment">═══ UBUNTU ═══</span></div>
+        <div><span class="prompt-ub">asix@ubuntu:~$</span> <span class="cmd">dig google.com</span></div>
+        <div><span class="out">;; ANSWER SECTION:</span></div>
+        <div><span class="out">google.com. 299 IN A 142.250.185.14</span></div>
+        <div style="margin-top:.5rem"><span class="prompt-ub">asix@ubuntu:~$</span> <span class="cmd">dig google.com MX</span>      <span class="comment"># Registres de correu</span></div>
+        <div><span class="prompt-ub">asix@ubuntu:~$</span> <span class="cmd">dig -x 8.8.8.8</span>           <span class="comment"># DNS invers (IP → nom)</span></div>
+        <div><span class="prompt-ub">asix@ubuntu:~$</span> <span class="cmd">host google.com 1.1.1.1</span>  <span class="comment"># Resolució via Cloudflare</span></div>
+        <div style="margin-top:.5rem"><span class="comment"># systemd-resolved (Ubuntu modern)</span></div>
+        <div><span class="prompt-ub">asix@ubuntu:~$</span> <span class="cmd">resolvectl status</span>         <span class="comment"># DNS actuals per interfície</span></div>
+        <div><span class="prompt-ub">asix@ubuntu:~$</span> <span class="cmd">sudo systemd-resolve --flush-caches</span>  <span class="comment"># Netejar caché</span></div>
+        <div><span class="prompt-ub">asix@ubuntu:~$</span> <span class="cmd">resolvectl query google.com</span>  <span class="comment"># Resolució via systemd</span></div>
+      </div>
+    </div>
+
+    <div class="lab-card fi">
+      <div class="lab-header">
+        <span class="lab-icon">🧪</span>
+        <div class="lab-title-block">
+          <h4>Lab 6.1 — Manipulació del fitxer hosts i diagnosi DNS</h4>
+          <p>Resolució estàtica, bloqueig de dominis i diagnosi de problemes DNS</p>
+        </div>
+        <div class="lab-os-tags">
+          <span class="os-tag os-both">🔀 Ambdós</span>
+        </div>
+      </div>
+      <div class="lab-body">
+        <ul class="lab-steps">
+          <li><strong>Edita el fitxer hosts</strong> per afegir les entrades: <code>192.168.1.10 servidor.asix.local</code> i <code>0.0.0.0 www.example-ads.com</code>. Verifica que <code>ping servidor.asix.local</code> resol correctament i que <code>ping www.example-ads.com</code> falla (bloquejat).</li>
+          <li><strong>Diagnosi DNS per passos:</strong> (a) Verifica que tens DNS configurat (<code>ipconfig /all</code> / <code>resolvectl status</code>). (b) Comprova que el servidor DNS respon (<code>nslookup 8.8.8.8 8.8.8.8</code>). (c) Resol un domini (<code>nslookup google.com 8.8.8.8</code>). (d) Compara la resolució de <code>google.com</code> usant dos servidors DNS: 8.8.8.8 i 1.1.1.1. Anotat el temps de resposta.</li>
+          <li><strong>Registres DNS avançats:</strong> Usa <code>dig</code> per obtenir els registres MX (correu), TXT (SPF/DKIM) i NS (servidors de noms) del domini <code>ioc.cat</code>.</li>
+          <li><strong>Escenari de problema:</strong> Configura temporalment un DNS incorrecte (<code>192.168.1.254</code>). Observa el que passa amb la resolució DNS. Quin missatge d'error apareix? Quant triga a fallar? Restaura el DNS correcte.</li>
+        </ul>
+        <div class="lab-entrega"><strong>📋 Documenta:</strong> Contingut del fitxer hosts amb les entrades afegides. Sortida de <code>dig ioc.cat MX</code> interpretada (explica el significat de cada camp). Captura del missatge d'error amb DNS incorrecte.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     T7 — FITXERS DE CONFIGURACIÓ DE XARXA
+═══════════════════════════════════════════ -->
+<section id="xarxa-config" class="s-asix">
+  <div class="container">
+    <div class="ra-banner ra-asix fi">
+      <div class="ra-num">7</div>
+      <div>
+        <h2>Fitxers de configuració de xarxa</h2>
+        <p>Netplan, NetworkManager, /etc/resolv.conf, netplan YAML, connexions Wi-Fi, bonding i VLANs.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-ubuntu fi">Linux — Evolució de la configuració de xarxa</div>
+    <h2 class="fi">Arquitectura de xarxa a Linux modern (Ubuntu 18+)</h2>
+    <p class="lead fi">Ubuntu ha evolucionat els seus mecanismes de configuració de xarxa. Entendre la cadena <strong>Netplan → NetworkManager/systemd-networkd → kernel</strong> és essencial per configurar xarxes complexes.</p>
+
+    <div class="arch-diagram fi">
+      <div class="arch-layer al-app">
+        Netplan (/etc/netplan/*.yaml)
+        <div class="layer-desc">Capa d'abstracció declarativa. L'administrador escriu YAML; Netplan genera la config per al backend.</div>
+      </div>
+      <div class="arch-layer al-shell">
+        Backend: NetworkManager (desktop) o systemd-networkd (servidor)
+        <div class="layer-desc">Gestiona les connexions, DHCP, Wi-Fi, VPN. Ubuntu desktop: NetworkManager. Server: systemd-networkd.</div>
+      </div>
+      <div class="arch-layer al-api">
+        /etc/resolv.conf → systemd-resolved
+        <div class="layer-desc">Resolució DNS. A Ubuntu modern, /etc/resolv.conf és un symlink a la caché de systemd-resolved.</div>
+      </div>
+      <div class="arch-layer al-kernel">
+        Kernel de Linux — subsistema de xarxa
+        <div class="layer-desc">Implementa TCP/IP, gestiona les interfícies físiques i virtuals.</div>
+      </div>
+      <div class="arch-layer al-hw">
+        Hardware: NIC Ethernet, Wi-Fi, loopback
+        <div class="layer-desc">Les interfícies físiques. Noms moderns: ens33, enp2s0, wlan0, lo...</div>
+      </div>
+    </div>
+
+    <!-- Netplan -->
+    <div class="section-tag tag-ubuntu fi" style="margin-top:3rem">Netplan — configuració YAML</div>
+    <h2 class="fi">Configuració avançada amb Netplan</h2>
+
+    <div class="terminal fi">
+      <div class="term-bar">
+        <span class="term-dot" style="background:#ff5f57"></span>
+        <span class="term-dot" style="background:#febc2e"></span>
+        <span class="term-dot" style="background:#28c840"></span>
+        <span class="term-title">/etc/netplan/01-network-config.yaml — Exemples avançats</span>
+        <span class="term-os term-os-ubuntu">🐧 Ubuntu</span>
+      </div>
+      <div class="term-body">
+        <div><span class="comment">─── Exemple 1: IP estàtica simple ───</span></div>
+        <div><span class="val">network:</span></div>
+        <div>  <span class="val">version:</span> <span class="cmd">2</span></div>
+        <div>  <span class="val">renderer:</span> <span class="cmd">NetworkManager</span>  <span class="comment"># o systemd-networkd</span></div>
+        <div>  <span class="val">ethernets:</span></div>
+        <div>    <span class="val">ens33:</span></div>
+        <div>      <span class="val">dhcp4:</span> <span class="cmd">no</span></div>
+        <div>      <span class="val">addresses:</span> <span class="cmd">[192.168.1.100/24]</span></div>
+        <div>      <span class="val">gateway4:</span> <span class="cmd">192.168.1.1</span></div>
+        <div>      <span class="val">nameservers:</span></div>
+        <div>        <span class="val">addresses:</span> <span class="cmd">[8.8.8.8, 8.8.4.4]</span></div>
+        <div>        <span class="val">search:</span> <span class="cmd">[empresa.local]</span></div>
+        <div style="margin-top:.75rem"><span class="comment">─── Exemple 2: Bonding (agregació de NICs per alta disponibilitat) ───</span></div>
+        <div><span class="val">network:</span></div>
+        <div>  <span class="val">version:</span> <span class="cmd">2</span></div>
+        <div>  <span class="val">bonds:</span></div>
+        <div>    <span class="val">bond0:</span></div>
+        <div>      <span class="val">interfaces:</span> <span class="cmd">[ens33, ens38]</span></div>
+        <div>      <span class="val">addresses:</span> <span class="cmd">[10.0.0.10/24]</span></div>
+        <div>      <span class="val">parameters:</span></div>
+        <div>        <span class="val">mode:</span> <span class="cmd">active-backup</span>  <span class="comment"># ens33 actiu, ens38 de backup</span></div>
+        <div>        <span class="val">mii-monitor-interval:</span> <span class="cmd">100</span></div>
+        <div style="margin-top:.75rem"><span class="comment">─── Exemple 3: VLAN ───</span></div>
+        <div><span class="val">  vlans:</span></div>
+        <div>    <span class="val">vlan100:</span>  <span class="comment"># VLAN ID 100</span></div>
+        <div>      <span class="val">id:</span> <span class="cmd">100</span></div>
+        <div>      <span class="val">link:</span> <span class="cmd">ens33</span></div>
+        <div>      <span class="val">addresses:</span> <span class="cmd">[10.0.100.1/24]</span></div>
+        <div style="margin-top:.75rem"><span class="comment"># Aplicar la configuració</span></div>
+        <div><span class="prompt-ub">asix@ubuntu:~$</span> <span class="cmd">sudo netplan try</span>    <span class="comment"># Prova amb rollback automàtic als 120s</span></div>
+        <div><span class="prompt-ub">asix@ubuntu:~$</span> <span class="cmd">sudo netplan apply</span>  <span class="comment"># Aplica definitivament</span></div>
+        <div><span class="prompt-ub">asix@ubuntu:~$</span> <span class="cmd">sudo netplan generate</span>  <span class="comment"># Genera fitxers de backend sense aplicar</span></div>
+      </div>
+    </div>
+
+    <!-- Windows: registre i fitxers -->
+    <div class="section-tag tag-win fi" style="margin-top:3rem">Windows — configuració de xarxa</div>
+    <h2 class="fi">Configuració de xarxa a Windows: fitxers i registre</h2>
+
+    <div class="grid g2 fi">
+      <div class="card bl-win">
+        <div class="card-icon" style="background:#f0f7ff">📂</div>
+        <h3>Fitxers de xarxa a Windows</h3>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">📄 <strong style="color:var(--ink)">hosts:</strong> <code>C:\Windows\System32\drivers\etc\hosts</code></li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">📄 <strong style="color:var(--ink)">lmhosts:</strong> <code>...etc\lmhosts.sam</code> — resolució NetBIOS (legacy)</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">📄 <strong style="color:var(--ink)">networks:</strong> <code>...etc\networks</code> — noms de xarxa (rarament usat)</li>
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted)">🗝️ <strong style="color:var(--ink)">Registre:</strong> <code>HKLM\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces\{GUID}</code> — configuració IP per interfície</li>
+        </ul>
+      </div>
+      <div class="card bl-green">
+        <div class="card-icon" style="background:#f0fdf4">🔧</div>
+        <h3>Eines avançades Windows</h3>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)"><code>netsh interface ip show config</code> — config completa de totes les interfícies</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)"><code>netsh wlan show profiles</code> — perfils Wi-Fi guardats</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)"><code>Get-NetRoute</code> — taula de rutes</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)"><code>Test-NetConnection -Port 443 google.com</code> — prova connectivitat a port concret</li>
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted)"><code>Get-NetFirewallRule -Enabled True</code> — regles de tallafocs actives</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- LAB 7: Fitxers de xarxa -->
+    <div class="lab-card fi">
+      <div class="lab-header">
+        <span class="lab-icon">🧪</span>
+        <div class="lab-title-block">
+          <h4>Lab 7.1 — Configuració avançada amb Netplan i netsh</h4>
+          <p>Configura múltiples escenaris de xarxa usant fitxers de configuració</p>
+        </div>
+        <div class="lab-os-tags">
+          <span class="os-tag os-ubuntu">🐧 Ubuntu</span>
+          <span class="os-tag os-win">🪟 Windows</span>
+        </div>
+      </div>
+      <div class="lab-body">
+        <ul class="lab-steps">
+          <li><strong>Ubuntu — Crea un fitxer Netplan</strong> <code>/etc/netplan/99-asix.yaml</code> amb IP estàtica, dos servidors DNS (8.8.8.8 i 1.1.1.1) i el domini de cerca <code>asix.local</code>. Usa <code>netplan try</code> (no <code>apply</code>) per provar-ho de forma segura.</li>
+          <li><strong>Ubuntu — Inspecciona /etc/resolv.conf:</strong> Executa <code>cat /etc/resolv.conf</code>. Comprova si és un symlink (<code>ls -la /etc/resolv.conf</code>). A Ubuntu modern, apunta a <code>/run/systemd/resolve/stub-resolv.conf</code>. Per quin motiu no s'hauria d'editar directament?</li>
+          <li><strong>Windows — Exporta la configuració:</strong> Executa <code>netsh interface ip show config > config_xarxa.txt</code> i <code>Get-NetIPConfiguration | Export-Csv xarxa.csv</code>. Obre els fitxers i interpreta el contingut.</li>
+          <li><strong>Windows — Prova de connectivitat avançada:</strong> Usa <code>Test-NetConnection -ComputerName google.com -Port 443</code> i <code>Test-NetConnection -ComputerName 192.168.1.1 -Port 80</code>. Interpreta el resultat (TcpTestSucceeded).</li>
+        </ul>
+        <div class="lab-entrega"><strong>📋 Documenta:</strong> Contingut del fitxer Netplan creat. Captura de <code>resolvectl status</code> mostrant els DNS actius. Interpretació del fitxer CSV exportat a Windows amb la configuració de xarxa.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     T8 — PORTÀTILS I ARXIUS SENSE CONNEXIÓ
+═══════════════════════════════════════════ -->
+<section id="portatils" class="s-cream">
+  <div class="container">
+    <div class="ra-banner ra-both fi">
+      <div class="ra-num">8</div>
+      <div>
+        <h2>Optimització per a portàtils i arxius sense connexió</h2>
+        <p>Gestió d'energia, Offline Files, sincronització de carpetes i mobilitat en entorns professionals.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-win fi">Gestió d'energia a Windows</div>
+    <h2 class="fi">Plans d'energia i configuració per a portàtils</h2>
+    <p class="lead fi">Els ordinadors portàtils requereixen una gestió d'energia específica per equilibrar rendiment i autonomia. Windows ofereix <strong>plans d'energia</strong> configurables i modes d'estalvi que afecten el comportament de la CPU, la pantalla i la connectivitat de xarxa.</p>
+
+    <div class="grid g3 fi">
+      <div class="card bl-win">
+        <div class="card-icon" style="background:#f0f7ff">⚡</div>
+        <h3>Plans d'energia de Windows</h3>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">⚡ <strong style="color:var(--ink)">Màxim rendiment:</strong> CPU al 100%, sense limitació. Per a treballs intensius. Bateria: molt baixa.</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">⚖️ <strong style="color:var(--ink)">Equilibrat (recomanat):</strong> ajusta automàticament CPU i pantalla. Bon equilibri rendiment/bateria.</li>
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted)">🌱 <strong style="color:var(--ink)">Estalvi d'energia:</strong> CPU limitada, pantalla obscura. Màxima autonomia per a tasques lleugeres.</li>
+        </ul>
+      </div>
+      <div class="card bl-asix">
+        <div class="card-icon" style="background:#f5f3ff">😴</div>
+        <h3>Estats de suspensió</h3>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">💤 <strong style="color:var(--ink)">Suspensió (Sleep/S3):</strong> RAM amb corrent (estat conservat). Reanudació instant. Bateria: consumeix poc.</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">❄️ <strong style="color:var(--ink)">Hibernació (Hibernate/S4):</strong> contingut de RAM al disc (hiberfil.sys). Equip completament apagat. Reanudació en 15-30s.</li>
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted)">🔋 <strong style="color:var(--ink)">Suspensió híbrida:</strong> combina S3 i S4. Si la bateria s'esgota durant la suspensió, el sistema es recupera de disc.</li>
+        </ul>
+      </div>
+      <div class="card bl-ubuntu">
+        <div class="card-icon" style="background:#fff5f1">🐧</div>
+        <h3>Gestió d'energia a Ubuntu</h3>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">⚡ <strong style="color:var(--ink)">TLP:</strong> eina per a gestió d'energia avançada en portàtils Linux. <code>sudo apt install tlp</code>.</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--muted)">📊 <strong style="color:var(--ink)">powertop:</strong> analitza consums i suggereix optimitzacions. <code>sudo powertop</code>.</li>
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted)">🔋 <strong style="color:var(--ink)">upower:</strong> daemon de gestió de bateria. <code>upower -i /org/freedesktop/UPower/devices/battery_BAT0</code>.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Offline Files -->
+    <div class="section-tag tag-win fi" style="margin-top:3rem">Arxius sense connexió (Offline Files)</div>
+    <h2 class="fi">Carpetes de xarxa disponibles sense connexió</h2>
+    <p class="lead fi">La funcionalitat <strong>Offline Files</strong> (arxius fora de línia) permet que els usuaris d'un portàtil continuïn treballant amb arxius de carpetes compartides de xarxa quan no hi ha connexió disponible. Els canvis es sincronitzen automàticament quan es recupera la connexió.</p>
+
+    <div class="grid g2 fi">
+      <div class="card bl-win">
+        <div class="card-icon" style="background:#f0f7ff">🔄</div>
+        <h3>Com funciona Offline Files</h3>
+        <ol style="padding-left:1.2rem;font-size:.9rem;color:var(--muted)">
+          <li style="margin-bottom:.5rem">L'administrador comparteix una carpeta al servidor i habilita la caché del costat del client.</li>
+          <li style="margin-bottom:.5rem">L'usuari marca la carpeta de xarxa per a ús fora de línia (<em>Clic dret → Sempre disponible fora de línia</em>).</li>
+          <li style="margin-bottom:.5rem">Windows sincronitza una còpia local a <code>%SystemRoot%\CSC</code> (Client-Side Cache).</li>
+          <li style="margin-bottom:.5rem">Quan l'usuari treballa sense xarxa, treballa sobre la còpia local sense notar cap diferència.</li>
+          <li>En reconnectar-se, Windows sincronitza automàticament els canvis (ambdues direccions).</li>
+        </ol>
+      </div>
+      <div>
+        <div class="card bl-amber" style="margin-bottom:1rem">
+          <div class="card-icon" style="background:#fffbeb">⚠️</div>
+          <h3>Conflictes de sincronització</h3>
+          <p>Si un fitxer és modificat tant localment (usuari en itinerància) com al servidor (un company), es produeix un <strong>conflicte</strong>. Windows avisa i demana a l'usuari quina versió conservar: la local, la del servidor, o ambdues amb noms diferents.</p>
+        </div>
+        <div class="card bl-green">
+          <div class="card-icon" style="background:#f0fdf4">🔁</div>
+          <h3>Alternativa Linux: rsync i sshfs</h3>
+          <p>A Linux, la sincronització offline es pot implementar amb <code>rsync</code> (còpia diferencial) o <code>unison</code> (sincronització bidireccional). <code>sshfs</code> munta carpetes remotes via SSH. <code>rclone</code> sincronitza amb núvol (Google Drive, S3, etc.).</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="terminal fi">
+      <div class="term-bar">
+        <span class="term-dot" style="background:#ff5f57"></span>
+        <span class="term-dot" style="background:#febc2e"></span>
+        <span class="term-dot" style="background:#28c840"></span>
+        <span class="term-title">Gestió d'energia i Offline Files — PowerShell i Ubuntu</span>
+        <span class="term-os term-os-both">🔀 Ambdós</span>
+      </div>
+      <div class="term-body">
+        <div><span class="comment">═══ WINDOWS — Plans d'energia ═══</span></div>
+        <div><span class="prompt-win">C:\></span> <span class="cmd">powercfg /list</span>           <span class="comment"># Llistar plans d'energia</span></div>
+        <div><span class="out">Existing Power Schemes (* Active)</span></div>
+        <div><span class="out">Power Scheme GUID: 381b4222-... (Balanced) *</span></div>
+        <div><span class="out">Power Scheme GUID: 8c5e7fda-... (High performance)</span></div>
+        <div><span class="prompt-win">C:\></span> <span class="cmd">powercfg /setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c</span></div>
+        <div><span class="prompt-win">C:\></span> <span class="cmd">powercfg /batteryreport /output C:\battery_report.html</span></div>
+        <div><span class="prompt-win">C:\></span> <span class="cmd">powercfg /sleepstudy /output C:\sleep_report.html</span></div>
+        <div style="margin-top:.5rem"><span class="comment"># Offline Files — activar via PowerShell</span></div>
+        <div><span class="prompt-win">PS C:\></span> <span class="cmd">Get-Service -Name CscService</span>  <span class="comment"># Offline Files service (Client Side Cache)</span></div>
+        <div><span class="prompt-win">PS C:\></span> <span class="cmd">Enable-OfflineFiles</span>              <span class="comment"># Habilitar Offline Files (requereix reinici)</span></div>
+        <div style="margin-top:.75rem"><span class="comment">═══ UBUNTU — Gestió energia i sincronització ═══</span></div>
+        <div><span class="prompt-ub">asix@ubuntu:~$</span> <span class="cmd">sudo apt install tlp powertop -y</span></div>
+        <div><span class="prompt-ub">asix@ubuntu:~$</span> <span class="cmd">sudo tlp start</span></div>
+        <div><span class="prompt-ub">asix@ubuntu:~$</span> <span class="cmd">tlp-stat -s</span>               <span class="comment"># Estat general de TLP</span></div>
+        <div><span class="prompt-ub">asix@ubuntu:~$</span> <span class="cmd">upower -i $(upower -e | grep BAT)</span>  <span class="comment"># Info bateria</span></div>
+        <div style="margin-top:.5rem"><span class="comment"># Sincronització offline amb rsync</span></div>
+        <div><span class="prompt-ub">asix@ubuntu:~$</span> <span class="cmd">rsync -avz --delete /home/asix/documents/ servidor:/shared/asix/</span></div>
+        <div><span class="comment"># -a=arxiu, -v=verbose, -z=compressió, --delete=elimina fitxers esborrats</span></div>
+        <div style="margin-top:.5rem"><span class="comment"># Muntar carpeta remota via SSHFS</span></div>
+        <div><span class="prompt-ub">asix@ubuntu:~$</span> <span class="cmd">sudo apt install sshfs</span></div>
+        <div><span class="prompt-ub">asix@ubuntu:~$</span> <span class="cmd">sshfs usuari@servidor:/shared /mnt/servidor_remote</span></div>
+      </div>
+    </div>
+
+    <div class="lab-card fi">
+      <div class="lab-header">
+        <span class="lab-icon">🧪</span>
+        <div class="lab-title-block">
+          <h4>Lab 8.1 — Gestió d'energia i sincronització offline</h4>
+          <p>Configura plans d'energia, genera informes i implementa sincronització de carpetes</p>
+        </div>
+        <div class="lab-os-tags">
+          <span class="os-tag os-win">🪟 Windows</span>
+          <span class="os-tag os-ubuntu">🐧 Ubuntu</span>
+        </div>
+      </div>
+      <div class="lab-body">
+        <ul class="lab-steps">
+          <li><strong>Windows — Analitza el consum:</strong> Genera un <code>powercfg /batteryreport</code> i obre el HTML resultant. Identifica: cicles de bateria, capacitat actual vs disseny, i les aplicacions que més bateria consumeixen. Si treballes en VM, fes l'anàlisi teòrica.</li>
+          <li><strong>Windows — Crea un pla personalitzat:</strong> Obre <em>Opcions d'energia</em> i crea un nou pla basat en "Equilibrat". Configura: pantalla apagada als 5 minuts (bateria) / 10 minuts (endoll), suspensió als 15 minuts (bateria) / mai (endoll).</li>
+          <li><strong>Ubuntu — Instal·la TLP:</strong> Instal·la <code>tlp</code> i executa <code>tlp-stat -b</code> per analitzar la bateria. Explora el fitxer <code>/etc/tlp.conf</code> i identifica quins paràmetres controlen la limitació de càrrega de la bateria.</li>
+          <li><strong>Ubuntu — rsync de pràctica:</strong> Crea dues carpetes (<code>~/font</code> i <code>~/backup</code>). Afegeix 3 fitxers a <code>font/</code>. Sincronitza amb <code>rsync -avz ~/font/ ~/backup/</code>. Esborra un fitxer de <code>font/</code> i sincronitza amb <code>--delete</code>. Comprova el resultat.</li>
+          <li><strong>Reflexió:</strong> En quin escenari professional és imprescindible Offline Files? Descriu un cas d'ús on un técnic IT treballa al camp sense connexió i necessita accedir a documentació emmagatzemada al servidor de l'empresa.</li>
+        </ul>
+        <div class="lab-entrega"><strong>📋 Documenta:</strong> Captura de <code>powercfg /list</code> amb el pla personalitzat creat. Sortida de <code>tlp-stat -s</code>. Sortida de <code>rsync</code> amb i sense <code>--delete</code> mostrant la diferència.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     PRÀCTICA FINAL INTEGRADA
+═══════════════════════════════════════════ -->
+<section id="practica-final" class="s-dark">
+  <div class="container">
+    <div class="section-tag tag-asix fi">Pràctica Final Integradora</div>
+    <h2 class="fi">Posada en producció d'una estació de treball ASIX</h2>
+    <p class="lead fi">Pràctica completa que integra tots els continguts del RA2: des de la creació d'usuaris i grups fins a la configuració de xarxa i l'optimització del sistema.</p>
+
+    <div class="lab-card fi">
+      <div class="lab-header">
+        <span class="lab-icon">🏆</span>
+        <div class="lab-title-block">
+          <h4>Pràctica Integradora — Configuració completa d'una estació de treball corporativa</h4>
+          <p>Escenari real: configures un nou equip per al departament IT de "TechCorp S.L." · Durada estimada: 3–4 hores · Nivell avançat CFGS</p>
+        </div>
+        <div class="lab-os-tags">
+          <span class="os-tag os-both">🔀 Ambdós</span>
+        </div>
+      </div>
+      <div class="lab-body">
+        <p>L'empresa TechCorp S.L. t'ha contractat per configurar una nova estació de treball. El responsable IT t'ha lliurat els requisits següents. Has de completar-los documentant cada pas.</p>
+
+        <h5>📋 FASE 1 — Estructura d'identitats (ambdós SO)</h5>
+        <ul class="lab-steps">
+          <li><strong>Crea l'estructura d'usuaris:</strong> <code>admin_techcorp</code> (Administrador local), <code>tec_suport</code> (standard), <code>tec_xarxa</code> (standard), <code>auditor</code> (standard, sense shell interactiu a Linux). Omple el camp de nom complet i descripció per a cada usuari.</li>
+          <li><strong>Crea els grups:</strong> <code>TECHCORP_Admins</code>, <code>TECHCORP_Support</code>, <code>TECHCORP_Network</code>, <code>TECHCORP_Audit</code>. Assigna cada usuari al grup corresponent. <code>tec_suport</code> ha de pertànyer tant a <code>TECHCORP_Support</code> com a <code>TECHCORP_Audit</code>.</li>
+          <li><strong>Política de seguretat:</strong> Configura mínima longitud 14, historial 8, caducitat 60 dies, bloqueig a 5 intents (desbloqueig 30min). Força canvi de contrasenya en el proper login per a tots els usuaris (excepte <code>admin_techcorp</code>).</li>
+        </ul>
+
+        <h5>📋 FASE 2 — Configuració de xarxa</h5>
+        <ul class="lab-steps">
+          <li><strong>Configura IP estàtica:</strong> IP <code>10.0.1.50/24</code>, gateway <code>10.0.1.1</code>, DNS primari <code>10.0.1.10</code> (DNS intern de l'empresa), DNS secundari <code>8.8.8.8</code>. A Ubuntu: usa Netplan. A Windows: usa PowerShell.</li>
+          <li><strong>Configura /etc/hosts</strong> (Linux) / hosts (Windows) per a: <code>10.0.1.10 dc01.techcorp.local dc01</code>, <code>10.0.1.20 fileserver.techcorp.local files</code>, <code>10.0.1.30 printserver.techcorp.local print</code>.</li>
+          <li><strong>Verifica la connectivitat</strong> per capes: loopback → gateway → DNS intern → Internet. Usa <code>ping</code>, <code>nslookup</code>/<code>dig</code> i <code>traceroute</code>/<code>tracert</code>. Documenta el resultat de cada prova.</li>
+        </ul>
+
+        <h5>📋 FASE 3 — Perfils i variables d'entorn</h5>
+        <ul class="lab-steps">
+          <li><strong>Configura variables d'entorn del sistema:</strong> <code>EMPRESA=TechCorp</code>, <code>DEPT=IT</code>, <code>SERVIDOR_FILES=\\fileserver\shared</code> (Windows) / <code>/mnt/files</code> (Linux). Han de persistir per a tots els usuaris.</li>
+          <li><strong>Ubuntu — Configura el directori home</strong> de cada usuari a <code>/srv/techcorp/homes/&lt;nom_usuari&gt;</code> en lloc del predeterminat <code>/home</code>. Usa <code>usermod -d -m</code> per a cada usuari.</li>
+          <li><strong>Crea un script d'inici de sessió</strong> (<code>/etc/profile.d/techcorp.sh</code> a Linux / GPO Logon Script equivalent a Windows) que mostri un missatge de benvinguda amb l'empresa, l'usuari, la data i la IP de l'equip en cada login.</li>
+        </ul>
+
+        <h5>📋 FASE 4 — Optimització del portàtil (Windows)</h5>
+        <ul class="lab-steps">
+          <li><strong>Crea un pla d'energia "TechCorp_IT"</strong>: pantalla apagada 10 min (bateria) / 30 min (endoll), suspensió 20 min (bateria) / mai (endoll). Hiberna si queda per sota del 10% de bateria.</li>
+          <li><strong>Activa Offline Files</strong> per a la carpeta compartida del servidor de fitxers. Configura la sincronització per a cada login/logout.</li>
+          <li><strong>Ubuntu — Configura TLP</strong> per limitar la càrrega de la bateria al 80% (START_CHARGE=75, STOP_CHARGE=80 a <code>/etc/tlp.conf</code>). Verifica el límit actiu.</li>
+        </ul>
+
+        <h5>📋 FASE 5 — Documentació tècnica</h5>
+        <ul class="lab-steps">
+          <li><strong>Redacta un document tècnic</strong> (mínim 2 pàgines) que inclogui: diagrama d'usuaris i grups, configuració de xarxa (taula de paràmetres), política de seguretat aplicada, variables d'entorn configurades i un procediment de diagnosi de 5 passos per a problemes de xarxa.</li>
+          <li><strong>Elabora un script de desplegament:</strong> PowerShell (.ps1) per a Windows i Bash (.sh) per a Ubuntu que automatitzi tota la Fase 1 (creació d'usuaris, grups i política de seguretat) i pugui executar-se en un sistema nou sense interacció manual.</li>
+        </ul>
+
+        <div class="lab-entrega">
+          <strong>📦 Lliurament complet:</strong><br>
+          • Script PowerShell de desplegament d'usuaris i grups<br>
+          • Script Bash de desplegament per a Ubuntu<br>
+          • Document tècnic (PDF o .docx) amb diagrama, taules i procediments<br>
+          • Captures de pantalla de cada fase completada a ambdós sistemes<br>
+          • Captura del fitxer Netplan aplicat i la sortida de <code>ip addr show</code><br>
+          • Captura del fitxer hosts i prova de resolució de noms interns
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     PREGUNTES TEÒRIQUES
+═══════════════════════════════════════════ -->
+<section id="preguntes" class="s-cream">
+  <div class="container">
+    <div class="ra-banner ra-preguntes fi">
+      <div class="ra-num">?</div>
+      <div>
+        <h2>Preguntes teòriques — RA2</h2>
+        <p>10 preguntes de nivell CFGS per avaluar la comprensió dels continguts. Sense resposta — per a reflexió, estudi i preparació d'examen.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-pregs fi">Identitats i seguretat</div>
+    <h2 class="fi">Preguntes sobre usuaris, grups i seguretat</h2>
+    <div class="grid fi" style="gap:.9rem;margin-bottom:3rem">
+
+      <div class="q-card">
+        <div class="q-num">1</div>
+        <div class="q-body">
+          <h4>Explica la diferència entre el <em>SID</em> de Windows i el <em>UID/GID</em> de Linux com a identificadors de compte. Per quin motiu Windows usa el SID internament en lloc del nom d'usuari per als permisos NTFS? Quina implicació té això quan s'esborren i es re-creen comptes amb el mateix nom (per exemple, en una migració)?</h4>
+          <p>Relaciona el concepte de SID amb la seguretat de la base de dades SAM i explica per quin motiu és difícil extreure contrasenyes del SAM mentre Windows és en execució.</p>
+          <span class="q-tag qt-asix">SID/UID</span><span class="q-tag qt-win">SAM</span><span class="q-tag qt-sec">Seguretat</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">2</div>
+        <div class="q-body">
+          <h4>Un administrador vol implementar la política de contrasenyes recomanada pel NIST SP 800-63B, que s'allunya del model tradicional de canvis periòdics forçats. Explica quins canvis recomanaria el NIST, per quin motiu el canvi periòdic de contrasenyes pot ser contraproduent i com implementaries una política equivalent a Windows (<code>secpol.msc</code>) i a Linux (PAM + <code>chage</code>).</h4>
+          <p>Descriu tres atacs específics que una política de contrasenyes robusta ajuda a mitigar, i explica quin paràmetre concret de la política contrarestar cada atac.</p>
+          <span class="q-tag qt-sec">Política</span><span class="q-tag qt-both">NIST</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">3</div>
+        <div class="q-body">
+          <h4>Distingeix entre els tres tipus de perfils d'usuari de Windows: <em>local</em>, <em>itinerant (roaming)</em> i <em>obligatori</em>. Per a cada tipus, descriu: on s'emmagatzema, quan es carrega/desa, en quin entorn s'usa i quines subcarpetes de <code>AppData</code> es sincronitzen (si s'escau) amb el servidor. Quins problemes de rendiment pot provocar un perfil itinerant molt gran?</h4>
+          <p>Com configuraries un perfil obligatori en un entorn de domini per a una aula d'informàtica on els alumnes no han de poder desar canvis permanents?</p>
+          <span class="q-tag qt-win">Perfils</span><span class="q-tag qt-asix">AD</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">4</div>
+        <div class="q-body">
+          <h4>Compara el funcionament del mòdul PAM (<em>Pluggable Authentication Modules</em>) de Linux amb el sistema d'autenticació de Windows (LSASS + SAM/Kerberos). Explica com PAM permet integrar Linux en un domini Active Directory (<em>pam-krb5</em> o <em>SSSD</em>) de manera que els comptes es validen al controlador de domini en lloc del fitxer <code>/etc/shadow</code> local.</h4>
+          <p>Quins fitxers de PAM s'han de modificar per implementar un límit de sessions simultànies per usuari a Ubuntu (pam_limits)?</p>
+          <span class="q-tag qt-ubuntu">PAM</span><span class="q-tag qt-sec">Autenticació</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-tag tag-pregs fi">Xarxa TCP/IP i DNS</div>
+    <h2 class="fi">Preguntes sobre xarxa i resolució de noms</h2>
+    <div class="grid fi" style="gap:.9rem;margin-bottom:3rem">
+
+      <div class="q-card">
+        <div class="q-num">5</div>
+        <div class="q-body">
+          <h4>Un equip de la xarxa <code>192.168.10.0/24</code> obté l'adreça <code>169.254.45.12</code>. Explica detalladament el procés DORA de DHCP i per quin motiu ha fallat en aquest cas. Descriu el procediment de diagnosi pas a pas que seguiries per identificar si el problema és al cable físic, a la configuració del servidor DHCP, o a la configuració del client. Especifica les comandes exactes a cada sistema.</h4>
+          <p>Per quin motiu dues màquines de la mateixa xarxa amb adreces APIPA sí que es poden comunicar entre elles, però no amb Internet ni amb la resta de la xarxa corporativa?</p>
+          <span class="q-tag qt-net">DHCP</span><span class="q-tag qt-both">APIPA</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">6</div>
+        <div class="q-body">
+          <h4>Explica el procés de resolució de noms DNS complet per a la consulta <code>www.ioc.cat</code>, des que l'aplicació fa la petició fins que rep la IP. Descriu el paper de: la caché local, el fitxer <em>hosts</em>, el resolver recursiu (el del ISP o 8.8.8.8), els servidors arrel (root servers), els servidors TLD (<code>.cat</code>) i el servidor DNS autoritatiu d'<code>ioc.cat</code>. Per quin motiu hi ha 13 clústers de servidors arrel globals?</h4>
+          <p>Quina és la diferència entre un registre DNS de tipus A, AAAA, CNAME, MX i TXT? Dona un exemple d'ús professional de cada un.</p>
+          <span class="q-tag qt-net">DNS</span><span class="q-tag qt-both">Resolució</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">7</div>
+        <div class="q-body">
+          <h4>Descriu l'arquitectura de configuració de xarxa a Ubuntu modern: <strong>Netplan → NetworkManager → systemd-networkd → kernel</strong>. Per quin motiu s'ha introduït aquesta capa d'abstracció Netplan? Quines diferències hi ha en el backend recomanat per a un servidor Ubuntu (sense interfície gràfica) respecte d'un Ubuntu Desktop? Explica per quin motiu <code>/etc/resolv.conf</code> és un symlink a Ubuntu 20.04+ i quines implicacions té editar-lo directament.</h4>
+          <p>Com configuraries amb Netplan una interfície amb dues adreces IPv4 estàtiques i una adreça IPv6 simultàniament?</p>
+          <span class="q-tag qt-ubuntu">Netplan</span><span class="q-tag qt-net">Xarxa</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">8</div>
+        <div class="q-body">
+          <h4>Un equip pot fer <code>ping 8.8.8.8</code> però no pot accedir a <code>www.google.com</code> al navegador. Diagnosifica metòdicament el problema: (a) quin component ha fallat?, (b) quines comandes concretes executaries per confirmar el diagnòstic a Windows i a Linux?, (c) quines causes podrien provocar aquest simptoma específic (llista almenys 3 causes possibles), i (d) com resoldries cada causa.</h4>
+          <p>Existeix el cas invers: pot <code>ping google.com</code> funcionar però no la navegació web? Explica un escenari on això passaria.</p>
+          <span class="q-tag qt-net">Diagnosi</span><span class="q-tag qt-sec">DNS</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-tag tag-pregs fi">Avançat i integrador</div>
+    <h2 class="fi">Preguntes avançades i de síntesi</h2>
+    <div class="grid fi" style="gap:.9rem">
+
+      <div class="q-card">
+        <div class="q-num">9</div>
+        <div class="q-body">
+          <h4>Compara el mecanisme d'<strong>Offline Files</strong> de Windows amb la sincronització amb <strong>rsync/unison</strong> a Linux per a un escenari de treball mòbil. Per a cada solució, descriu: com es configura, com es resolen els conflictes, quines limitacions té i quines garanties ofereix sobre la integritat de les dades. En quin escenari recomanaries cada solució i per quin motiu?</h4>
+          <p>Quines implicacions de seguretat té tenir carpetes de xarxa sincronitzades localment en un portàtil que pot ser robat? Quines mesures complementaries caldria implementar?</p>
+          <span class="q-tag qt-win">Offline Files</span><span class="q-tag qt-ubuntu">rsync</span><span class="q-tag qt-sec">Seguretat</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">10</div>
+        <div class="q-body">
+          <h4>Dissenya l'arquitectura completa de gestió d'identitats per a una empresa de 50 treballadors amb equips Windows i Ubuntu. Ha d'incloure: estructura d'usuaris i grups (amb justificació), política de seguretat de comptes, gestió de perfils (local vs. itinerant), integració de Linux al domini Windows, configuració de xarxa (DHCP vs. estàtica per a cada rol d'equip) i resolució DNS interna. Justifica cada decisió de disseny amb criteris tècnics i de seguretat.</h4>
+          <p>Com escalaria el disseny per a 500 treballadors amb seus a 3 edificis? Quines tecnologies afegiries (LDAP, Kerberos, RADIUS, NFS, Samba) i per a quina funció?</p>
+          <span class="q-tag qt-asix">Disseny</span><span class="q-tag qt-both">Integrador</span><span class="q-tag qt-sec">Seguretat</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESUM FINAL -->
+<section class="s-cream">
+  <div class="container fi">
+    <div class="section-tag tag-asix">Resum del RA2</div>
+    <h2>El que heu après</h2>
+    <p class="lead">Repàs dels conceptes clau del RA2 i la seva aplicació professional com a tècnics ASIX.</p>
+    <div class="grid g4 fi">
+      <div class="card bl-asix">
+        <div class="card-icon" style="background:#f5f3ff">👥</div>
+        <h3>Identitats</h3>
+        <p><strong>Windows:</strong> SID, SAM, Get-LocalUser, New-LocalUser, comptes predeterminats. <strong>Linux:</strong> UID/GID, /etc/passwd, /etc/shadow, useradd, usermod. <strong>Clau:</strong> el SID no canvia en reanomenar un compte.</p>
+      </div>
+      <div class="card bl-red">
+        <div class="card-icon" style="background:#fff5f5">🔒</div>
+        <h3>Seguretat</h3>
+        <p><strong>Windows:</strong> net accounts, secpol.msc, Disable-LocalUser. <strong>Linux:</strong> PAM + pwquality, chage, faillock, usermod -L/-U. <strong>Clau:</strong> bloqueig ≠ desactivació. NIST recomana 12+ car. i sense canvi periòdic forçat.</p>
+      </div>
+      <div class="card bl-green">
+        <div class="card-icon" style="background:#f0fdf4">🌐</div>
+        <h3>Xarxa TCP/IP</h3>
+        <p><strong>Windows:</strong> New-NetIPAddress, Set-DnsClientServerAddress, ipconfig/all, tracert. <strong>Linux:</strong> ip addr, nmcli, Netplan YAML, dig, resolvectl. <strong>Clau:</strong> 169.254.x.x = DHCP fallat. Diagnosi per capes.</p>
+      </div>
+      <div class="card bl-amber">
+        <div class="card-icon" style="background:#fffbeb">💻</div>
+        <h3>Portàtils</h3>
+        <p><strong>Windows:</strong> powercfg, Offline Files (CSC), plans d'energia. <strong>Linux:</strong> TLP, powertop, rsync, sshfs. <strong>Clau:</strong> Offline Files sincronitza automàticament. rsync és l'equivalent Linux per a sincronització diferencial.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p><strong>RA2 — Configuració del Programari de Base · ASIX · MP0369 · Implantació de Sistemes Operatius</strong></p>
+  <p style="margin-top:.4rem">Usuaris · Grups · Seguretat · Perfils · TCP/IP · DNS · Netplan · Offline Files · TLP</p>
+  <p style="margin-top:.4rem">Departament d'Informàtica · Administració de Sistemes Informàtics en Xarxa</p>
+</footer>
+
+<script>
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+}, { threshold: 0.06, rootMargin: '0px 0px -30px 0px' });
+document.querySelectorAll('.fi').forEach(el => io.observe(el));
+</script>
+</body>
+</html>

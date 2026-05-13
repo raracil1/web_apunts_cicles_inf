@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PT3 — NixOS: Administració Declarativa · M0374</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0d0f1a;--paper:#f4f2ed;--cream:#eceae3;--navy:#1a1f4e;
+    --cobalt:#2d3bb5;--accent:#5e35b1;--accentd:#3d1f7a;--accentl:#9c6fe4;
+    --green:#0ea472;--red:#dc2626;--teal:#0891b2;--orange:#e07b20;
+    --muted:#6b6f85;--border:#d6d2c9;--card:#ffffff;--terminal:#0d1117;
+    --radius:16px;--radius-sm:8px;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);font-size:16px;line-height:1.7;overflow-x:hidden;}
+
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(244,242,237,0.95);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:62px;}
+  .nav-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;color:var(--navy);letter-spacing:-0.02em;}
+  .nav-logo span{color:var(--accent);}
+  .nav-pills{display:flex;gap:.5rem;list-style:none;flex-wrap:wrap;}
+  .nav-pills a{text-decoration:none;font-size:0.78rem;font-weight:600;padding:.3rem .85rem;border-radius:100px;color:var(--muted);transition:all .2s;border:1px solid transparent;}
+  .nav-pills a:hover{color:var(--accent);border-color:var(--accent);background:rgba(94,53,177,0.07);}
+
+  .hero{min-height:100vh;display:grid;place-items:center;background:var(--navy);color:white;position:relative;overflow:hidden;padding:8rem 2rem 5rem;}
+  .hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 55% 45% at 80% 20%,rgba(94,53,177,0.4) 0%,transparent 65%),radial-gradient(ellipse 50% 40% at 15% 75%,rgba(14,164,114,0.18) 0%,transparent 65%),radial-gradient(ellipse 40% 35% at 55% 95%,rgba(8,145,178,0.15) 0%,transparent 60%);}
+  .hero-dots{position:absolute;inset:0;opacity:0.06;background-image:radial-gradient(rgba(255,255,255,.7) 1px,transparent 1px);background-size:28px 28px;}
+  .hero-content{position:relative;z-index:1;text-align:center;max-width:860px;}
+  .pt-badge{display:inline-flex;align-items:center;gap:.75rem;background:rgba(94,53,177,0.2);border:1px solid rgba(156,111,228,0.4);color:#ce93d8;font-family:'JetBrains Mono',monospace;font-size:0.78rem;font-weight:700;letter-spacing:0.1em;padding:.45rem 1.2rem;border-radius:100px;margin-bottom:1.5rem;}
+  .pt-badge .dot{width:8px;height:8px;border-radius:50%;background:#ce93d8;animation:blink 1.4s ease-in-out infinite;}
+  @keyframes blink{0%,100%{opacity:.3}50%{opacity:1}}
+  .hero h1{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(2.5rem,6vw,4.8rem);line-height:1.05;letter-spacing:-0.03em;margin-bottom:1.25rem;}
+  .hero h1 .hi{color:#ce93d8;}
+  .hero h1 .lo{color:rgba(255,255,255,.45);font-size:0.65em;display:block;font-weight:600;margin-top:.3rem;letter-spacing:-.01em;}
+  .hero-sub{font-size:1.05rem;color:rgba(255,255,255,0.55);max-width:600px;margin:0 auto 2rem;}
+  .ra-pills{display:flex;justify-content:center;gap:.75rem;flex-wrap:wrap;margin-bottom:2.5rem;}
+  .ra-pill{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);padding:.35rem 1rem;border-radius:100px;font-size:0.78rem;font-weight:600;color:rgba(255,255,255,.75);font-family:'JetBrains Mono',monospace;}
+  .ra-pill.active{background:rgba(94,53,177,0.25);border-color:rgba(156,111,228,0.5);color:#ce93d8;}
+  .hero-meta{display:flex;justify-content:center;gap:2rem;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,0.1);padding-top:2rem;margin-top:2rem;}
+  .meta-item .label{font-size:0.68rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:.2rem;}
+  .meta-item .value{font-size:0.95rem;font-weight:600;color:rgba(255,255,255,0.85);}
+  .scroll-hint{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.4rem;color:rgba(255,255,255,0.25);font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;}
+  .scroll-hint::after{content:'';display:block;width:1px;height:38px;background:linear-gradient(to bottom,rgba(255,255,255,.3),transparent);animation:pulse 2s ease-in-out infinite;}
+  @keyframes pulse{0%,100%{opacity:.2}50%{opacity:.9}}
+
+  section{padding:5.5rem 2rem;}
+  .container{max-width:1060px;margin:0 auto;}
+  .section-tag{font-size:0.7rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;display:flex;align-items:center;gap:.5rem;margin-bottom:.85rem;}
+  .section-tag::before{content:'';display:block;width:20px;height:2px;}
+  .tag-purple{color:var(--accent);}.tag-purple::before{background:var(--accent);}
+  .tag-blue{color:var(--cobalt);}.tag-blue::before{background:var(--cobalt);}
+  .tag-green{color:var(--green);}.tag-green::before{background:var(--green);}
+  .tag-teal{color:var(--teal);}.tag-teal::before{background:var(--teal);}
+  .tag-orange{color:var(--orange);}.tag-orange::before{background:var(--orange);}
+
+  h2{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(1.65rem,3.5vw,2.5rem);line-height:1.1;letter-spacing:-0.025em;color:var(--navy);margin-bottom:.85rem;}
+  h3{font-family:'Syne',sans-serif;font-weight:700;font-size:1.12rem;color:var(--navy);margin-bottom:.6rem;}
+  h4{font-family:'Syne',sans-serif;font-weight:700;font-size:0.95rem;color:var(--navy);margin-bottom:.4rem;}
+  .lead{font-size:1.02rem;color:var(--muted);max-width:700px;margin-bottom:2.8rem;line-height:1.75;}
+
+  .grid{display:grid;gap:1.2rem;}
+  .g2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr));}
+  .g3{grid-template-columns:repeat(auto-fit,minmax(230px,1fr));}
+
+  .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.65rem;transition:transform .2s,box-shadow .2s;}
+  .card:hover{transform:translateY(-3px);box-shadow:0 12px 32px rgba(26,31,78,0.09);}
+  .card p{color:var(--muted);font-size:0.91rem;}
+  .card-icon{width:42px;height:42px;border-radius:10px;display:grid;place-items:center;font-size:1.25rem;margin-bottom:.85rem;}
+  .bl-purple{border-left:3px solid var(--accent);}
+  .bl-blue{border-left:3px solid var(--cobalt);}
+  .bl-green{border-left:3px solid var(--green);}
+  .bl-teal{border-left:3px solid var(--teal);}
+  .bl-orange{border-left:3px solid var(--orange);}
+
+  .terminal{background:var(--terminal);border-radius:var(--radius);overflow:hidden;margin:1.25rem 0;border:1px solid rgba(255,255,255,0.06);box-shadow:0 8px 32px rgba(0,0,0,0.35);}
+  .terminal-bar{background:#1c2128;padding:.65rem 1rem;display:flex;align-items:center;gap:.5rem;border-bottom:1px solid rgba(255,255,255,0.06);}
+  .t-dot{width:12px;height:12px;border-radius:50%;}
+  .t-red{background:#ff5f57;}.t-yellow{background:#febc2e;}.t-green-d{background:#28c840;}
+  .terminal-label{margin-left:.5rem;font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:rgba(255,255,255,.3);}
+  .terminal-body{padding:1.25rem 1.5rem;font-family:'JetBrains Mono',monospace;font-size:0.8rem;line-height:1.85;color:#c9d1d9;}
+  .t-prompt{color:#3fb950;}.t-cmd{color:#79c0ff;}.t-arg{color:#ffa657;}.t-cmt{color:#6e7681;}.t-key{color:#d2a8ff;}.t-val{color:#a5d6ff;}.t-str{color:#57e3b0;}
+
+  .callout{border-radius:var(--radius);padding:1.75rem 2rem;margin:1.25rem 0;display:flex;gap:1rem;align-items:flex-start;}
+  .callout-icon{font-size:1.35rem;flex-shrink:0;margin-top:.05rem;}
+  .callout p,.callout li{font-size:0.91rem;}
+  .callout ul{padding-left:1.2rem;}
+  .callout li{margin-bottom:.25rem;}
+  .cl-blue{background:rgba(74,108,247,0.08);border:1px solid rgba(74,108,247,0.2);}
+  .cl-purple{background:rgba(94,53,177,0.07);border:1px solid rgba(94,53,177,0.22);}
+  .cl-green{background:rgba(14,164,114,0.07);border:1px solid rgba(14,164,114,0.2);}
+  .cl-amber{background:rgba(251,188,4,0.08);border:1px solid rgba(251,188,4,0.28);}
+  .cl-red{background:rgba(220,38,38,0.07);border:1px solid rgba(220,38,38,0.2);}
+  .cl-teal{background:rgba(8,145,178,0.07);border:1px solid rgba(8,145,178,0.2);}
+
+  .ex{background:var(--cream);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.9rem 1.15rem;margin:.6rem 0;}
+  .ex-lbl{font-size:0.67rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.28rem;color:var(--accent);}
+  .ex p{font-size:0.86rem;color:var(--ink);}
+
+  .badge{display:inline-block;padding:.15rem .55rem;border-radius:100px;font-size:0.7rem;font-weight:700;font-family:'Syne',sans-serif;}
+  .b-purple{background:rgba(94,53,177,0.12);color:var(--accentd);}
+  .b-blue{background:rgba(74,108,247,0.12);color:var(--cobalt);}
+  .b-green{background:rgba(14,164,114,0.12);color:#077a52;}
+  .b-red{background:rgba(220,38,38,0.12);color:#991b1b;}
+  .b-teal{background:rgba(8,145,178,0.12);color:#065f79;}
+  .b-amber{background:rgba(251,188,4,0.15);color:#8a6500;}
+  .b-orange{background:rgba(224,123,32,0.12);color:#7a3e00;}
+
+  .s-dark{background:var(--navy);color:white;}
+  .s-dark h2,.s-dark h3,.s-dark h4{color:white;}
+  .s-dark .lead{color:rgba(255,255,255,.55);}
+  .s-dark .card{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.1);}
+  .s-dark .card h3,.s-dark .card h4{color:white;}
+  .s-dark .card p{color:rgba(255,255,255,.6);}
+  .s-dark .ex{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.1);}
+  .s-dark .ex p{color:rgba(255,255,255,.75);}
+  .s-cream{background:var(--cream);}
+  .s-purple{background:#f5f3ff;}
+
+  .task-list{display:flex;flex-direction:column;gap:1.1rem;}
+  .task{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem 1.75rem;display:flex;gap:1.25rem;align-items:flex-start;transition:box-shadow .2s;}
+  .task:hover{box-shadow:0 6px 24px rgba(26,31,78,0.08);}
+  .task-num{flex-shrink:0;width:36px;height:36px;border-radius:50%;background:var(--navy);color:white;display:grid;place-items:center;font-family:'Syne',sans-serif;font-weight:800;font-size:0.85rem;}
+  .task-num.amp{background:linear-gradient(135deg,#0d6e6e,#0ea472);}
+  .task-body h4{margin-bottom:.4rem;}
+  .task-body p{color:var(--muted);font-size:0.91rem;}
+  .task-tags{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.6rem;}
+
+  /* Comparativa table */
+  .ptable{width:100%;border-collapse:collapse;font-size:0.87rem;}
+  .ptable th,.ptable td{padding:.8rem 1rem;text-align:left;border-bottom:1px solid var(--border);}
+  .ptable th{background:var(--navy);color:white;font-family:'Syne',sans-serif;font-weight:700;font-size:0.82rem;}
+  .ptable th:first-child{border-radius:8px 0 0 0;}.ptable th:last-child{border-radius:0 8px 0 0;}
+  .ptable tr:hover td{background:var(--cream);}
+
+  .rubric-table{width:100%;border-collapse:collapse;font-size:0.84rem;}
+  .rubric-table th,.rubric-table td{padding:.75rem .9rem;border:1px solid var(--border);vertical-align:top;}
+  .rubric-table th{background:var(--navy);color:white;font-family:'Syne',sans-serif;font-weight:700;font-size:0.8rem;text-align:center;}
+  .rubric-table td:first-child{font-weight:600;color:var(--navy);background:var(--cream);}
+  .col-ex{background:rgba(14,164,114,0.05);}.col-be{background:rgba(74,108,247,0.04);}.col-ok{background:rgba(251,188,4,0.05);}.col-no{background:rgba(220,38,38,0.04);}
+
+  .q-list{display:flex;flex-direction:column;gap:.85rem;}
+  .q-item{display:flex;gap:1rem;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem 1.5rem;align-items:flex-start;}
+  .q-num{font-family:'Syne',sans-serif;font-weight:800;font-size:1.5rem;color:var(--border);line-height:1;flex-shrink:0;padding-top:.1rem;}
+  .q-item p{color:var(--ink);font-size:0.92rem;}
+  .q-item .hint{color:var(--muted);font-size:0.83rem;margin-top:.4rem;}
+
+  /* Checklist */
+  .checklist{list-style:none;display:flex;flex-direction:column;gap:.5rem;}
+  .checklist li{display:flex;gap:.7rem;align-items:flex-start;padding:.65rem .9rem;border-radius:var(--radius-sm);background:var(--cream);font-size:0.89rem;}
+  .checklist li::before{content:'□';font-size:1rem;color:var(--muted);flex-shrink:0;}
+
+  .fi{opacity:0;transform:translateY(20px);transition:opacity .5s ease,transform .5s ease;}
+  .fi.in{opacity:1;transform:translateY(0);}
+  footer{background:var(--ink);color:rgba(255,255,255,.4);text-align:center;padding:2.5rem 2rem;font-size:0.82rem;}
+  footer strong{color:rgba(255,255,255,.7);}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">M0374 · ASIX <span>PT3</span></div>
+  <ul class="nav-pills">
+    <li><a href="#context">Context</a></li>
+    <li><a href="#teoria">Teoria</a></li>
+    <li><a href="#tasques">Tasques</a></li>
+    <li><a href="#reproductibilitat">Reproductibilitat</a></li>
+    <li><a href="#rubrica">Rúbrica</a></li>
+    <li><a href="#reflexio">Reflexió</a></li>
+  </ul>
+</nav>
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-dots"></div>
+  <div class="hero-content">
+    <div class="pt-badge"><span class="dot"></span>Pràctica PT3 · M0374</div>
+    <h1>
+      <span class="hi">NixOS</span>
+      <span class="lo">Administració Declarativa · Flakes · Home-Manager · Codeberg</span>
+    </h1>
+    <p class="hero-sub">Descobreix un paradigma completament diferent d'administrar sistemes: en lloc d'executar comandes, <em>descrius</em> l'estat que vols que tingui el sistema i NixOS l'aconsegueix.</p>
+    <div class="ra-pills">
+      <div class="ra-pill active">RA2 · Instal·lació de SO</div>
+      <div class="ra-pill active">RA6 · Administració del sistema</div>
+      <div class="ra-pill">NixOS</div>
+      <div class="ra-pill">Flakes</div>
+      <div class="ra-pill">Home-Manager</div>
+      <div class="ra-pill">Git · Codeberg</div>
+    </div>
+    <div class="hero-meta">
+      <div class="meta-item"><div class="label">Mòdul</div><div class="value">M0374 · Sistemes Operatius</div></div>
+      <div class="meta-item"><div class="label">Curs</div><div class="value">ASIX · 1r</div></div>
+      <div class="meta-item"><div class="label">Durada estimada</div><div class="value">5–6 hores</div></div>
+      <div class="meta-item"><div class="label">Format</div><div class="value">Individual + col·laboratiu</div></div>
+    </div>
+  </div>
+  <div class="scroll-hint">Desplaça</div>
+</section>
+
+<!-- CONTEXT -->
+<section id="context">
+  <div class="container">
+    <div class="section-tag tag-purple fi">Context de la pràctica</div>
+    <h2 class="fi">Per a quin motiu és rellevant aquesta pràctica?</h2>
+    <p class="lead fi">La gestió de sistemes ha evolucionat cap a la infraestructura com a codi (IaC). NixOS porta aquest concepte al sistema operatiu complet: un únic fitxer de text descriu <em>tot</em> el sistema. Aprendre-ho et prepara per a entorns de DevOps, SRE i administració de sistemes moderna.</p>
+
+    <div class="grid g3 fi">
+      <div class="card bl-purple">
+        <div class="card-icon" style="background:#f5f3ff">📋</div>
+        <h3>El problema tradicional</h3>
+        <p>En un Linux tradicional (Ubuntu, Debian), per replicar un servidor en un altre equip cal recordar totes les comandes executades, els fitxers editats i les dependències instal·lades. En la pràctica, és gairebé impossible fer-ho exactament igual.</p>
+      </div>
+      <div class="card bl-purple">
+        <div class="card-icon" style="background:#f5f3ff">🔁</div>
+        <h3>La solució declarativa</h3>
+        <p>NixOS descriu l'estat desitjat del sistema en fitxers <code>.nix</code>. Pots copiar el fitxer a qualsevol altre equip i obtenir <strong>exactament el mateix sistema</strong>. Sense sorpreses, sense "a mi em funciona".</p>
+      </div>
+      <div class="card bl-purple">
+        <div class="card-icon" style="background:#f5f3ff">⏪</div>
+        <h3>Reversibilitat total</h3>
+        <p>Cada canvi crea una nova "generació". Si una actualització trenca el sistema, pots arrencar en 30 segons amb la versió anterior des del menú de GRUB. <strong>Gairebé impossible fer malbé el sistema definitivament.</strong></p>
+      </div>
+    </div>
+
+    <div style="overflow-x:auto;margin-top:2rem" class="fi">
+      <table class="ptable">
+        <thead><tr><th>Característica</th><th>Linux Tradicional (Ubuntu, Arch)</th><th>NixOS</th></tr></thead>
+        <tbody>
+          <tr><td>Instal·lació de paquets</td><td>Imperativa: <code>apt install</code></td><td>Declarativa: modifica el fitxer .nix</td></tr>
+          <tr><td>Estat del sistema</td><td>Mutable (canvia amb l'ús)</td><td>Immutable (es reconstrueix)</td></tr>
+          <tr><td>Actualitzacions fallides</td><td>Poden deixar el sistema trencat</td><td>Atòmiques i reversibles</td></tr>
+          <tr><td>Replicabilitat</td><td>Difícil i imprecisa</td><td>Perfecta: copies el fitxer .nix</td></tr>
+          <tr><td>Directoris del sistema</td><td>Estàndard FHS (/usr, /bin…)</td><td>Tot a /nix/store amb hashes únics</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout cl-purple fi" style="margin-top:2rem">
+      <span class="callout-icon">🎯</span>
+      <div>
+        <h4>Objectiu de la pràctica</h4>
+        <p>Instal·lar NixOS en una màquina virtual, aprendre a gestionar el sistema de forma declarativa amb <code>configuration.nix</code>, activar els Flakes i Home-Manager per a una gestió per usuari, sincronitzar la configuració a Codeberg, i demostrar la reproductibilitat clonant la configuració d'un company a la teva pròpia màquina.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TEORIA -->
+<section id="teoria" class="s-dark">
+  <div class="container">
+    <div class="section-tag tag-purple fi" style="color:rgba(206,147,216,.9)">Conceptes teòrics previs</div>
+    <h2 class="fi">El que has de comprendre abans de començar</h2>
+    <p class="lead fi">NixOS és conceptualment diferent de qualsevol Linux que hagis vist. Llegeix aquests conceptes amb atenció: si no els entens, la pràctica serà una successió de comandes sense sentit.</p>
+
+    <h3 class="fi" style="color:white;margin-bottom:1rem">Nix: el gestor de paquets i el llenguatge</h3>
+    <div class="grid g2 fi">
+      <div class="card">
+        <h4>El /nix/store: aïllament total</h4>
+        <p>A diferència de Linux tradicional on els paquets s'instal·len a <code>/usr/lib</code>, <code>/usr/bin</code>, etc. (barrejats tots), Nix instal·la cada paquet en una ruta única amb un hash: <code>/nix/store/abc123xyz-firefox-120.0/</code>. Dos versions del mateix paquet coexisteixen sense conflicte. Desinstal·lar un paquet no pot trencar un altre.</p>
+      </div>
+      <div class="card">
+        <h4>El llenguatge Nix</h4>
+        <p>El fitxer <code>configuration.nix</code> està escrit en el <strong>llenguatge Nix</strong>, un llenguatge funcional pur dissenyat per descriure paquets i sistemes. No és un script Bash: és una descripció declarativa. La corba d'aprenentatge pot ser pronunciada al principi.</p>
+        <div class="ex" style="background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.1);margin-top:.65rem">
+          <div class="ex-lbl" style="color:#ce93d8">Exemple conceptual</div>
+          <p style="color:rgba(255,255,255,.75);font-family:'JetBrains Mono',monospace;font-size:.8rem">environment.systemPackages = with pkgs; [ git vim ];</p>
+          <p style="color:rgba(255,255,255,.6);font-size:.83rem;margin-top:.3rem">Això <em>declara</em> que vols git i vim. NixOS s'encarrega de com aconseguir-los.</p>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="fi" style="color:white;margin-bottom:1rem;margin-top:2.5rem">Flakes: reproductibilitat total</h3>
+    <div class="grid g2 fi">
+      <div class="card">
+        <h4>Per a quin motiu calen els Flakes?</h4>
+        <p>Sense Flakes, <code>nixos-rebuild</code> usa els canals (<em>channels</em>) de Nix, que no garanteixen que les versions dels paquets siguin exactament les mateixes en tots els equips. Amb Flakes, les versions exactes de totes les dependències es fixen en un fitxer <code>flake.lock</code>: <strong>reproductibilitat total garantida</strong>.</p>
+      </div>
+      <div class="card">
+        <h4>L'estructura d'un Flake</h4>
+        <p>Un <code>flake.nix</code> té dues parts: <code>inputs</code> (d'on venen els paquets: Nixpkgs, Home-Manager, etc.) i <code>outputs</code> (el que el Flake produeix: configuració del sistema, paquets, etc.). El fitxer <code>flake.lock</code> fixja els hashes exactes de cada input.</p>
+      </div>
+    </div>
+
+    <h3 class="fi" style="color:white;margin-bottom:1rem;margin-top:2.5rem">Home-Manager: gestió de l'usuari sense root</h3>
+    <div class="grid g2 fi">
+      <div class="card">
+        <h4>Separació sistema / usuari</h4>
+        <p><code>configuration.nix</code> gestiona el sistema (accessible a tots els usuaris). <strong>Home-Manager</strong> permet gestionar el <em>home</em> de cada usuari (paquets personals, configuració de bash, variables d'entorn) sense permisos de root. Cada usuari pot tenir el seu entorn personalitzat i reproduïble.</p>
+      </div>
+      <div class="card">
+        <h4><code>home.nix</code>: el fitxer de l'usuari</h4>
+        <p>El fitxer <code>home.nix</code> declara els paquets i la configuració de l'entorn de l'usuari. Com <code>configuration.nix</code> per al sistema, <code>home.nix</code> descriu exactament com vol l'usuari el seu entorn. Canviar-lo i aplicar-ho (<code>nixos-rebuild switch --flake .#nixos</code>) reconstrueix l'entorn de l'usuari.</p>
+      </div>
+    </div>
+
+    <h3 class="fi" style="color:white;margin-bottom:1rem;margin-top:2.5rem">Git i Codeberg: control de versions de la configuració</h3>
+    <div class="grid g3 fi">
+      <div class="card">
+        <h4>Per a quin motiu usar Git amb NixOS?</h4>
+        <p>Si la configuració NixOS és el "plànol" del sistema, Git és la <strong>màquina del temps</strong> d'aquest plànol. Cada canvi a <code>configuration.nix</code> pot fer-se un commit: tens l'historial complet de com ha evolucionat el teu sistema i pots tornar a qualsevol versió anterior.</p>
+      </div>
+      <div class="card">
+        <h4>Codeberg: l'alternativa lliure a GitHub</h4>
+        <p>Codeberg és una forja de codi obert basada en Gitea, allotjada a Alemanya sota lleis europees de privacitat. Funcionalment és similar a GitHub però sense propietari corporatiu. En aquesta pràctica usem Codeberg per allotjar la configuració NixOS.</p>
+      </div>
+      <div class="card">
+        <h4>Atenció: el hardware-configuration.nix</h4>
+        <p>El fitxer <code>hardware-configuration.nix</code> és específic de cada màquina (discs, particions, controladors). <strong>No s'ha de pujar a Codeberg</strong>: si un company clona la teva config i usa el teu <code>hardware-configuration.nix</code>, el sistema no arrencarà a la seva màquina.</p>
+      </div>
+    </div>
+
+    <div class="callout cl-teal fi" style="margin-top:2rem">
+      <span class="callout-icon">📺</span>
+      <div>
+        <h4>Recurs recomanat: Vimenjoyer a YouTube</h4>
+        <p>La sèrie de vídeos de "Vimenjoyer" sobre NixOS és una excel·lent introducció visual als conceptes d'aquesta pràctica. El professor recomana veure'ls <strong>abans</strong> de la sessió pràctica per familiaritzar-te amb la terminologia i el flux de treball. Busca-la a YouTube per "NixOS Vimenjoyer".</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TASQUES -->
+<section id="tasques" class="s-purple">
+  <div class="container">
+    <div class="section-tag tag-purple fi">Enunciat · Tasques principals</div>
+    <h2 class="fi">Tasques a realitzar</h2>
+    <p class="lead fi">Segueix les fases en ordre. Cada pas ha de quedar documentat amb captures de pantalla. El producte final (la configuració Nix) s'ha de poder reproduir en una altra màquina: és el criteri principal d'avaluació.</p>
+
+    <h3 class="fi" style="margin-bottom:1rem">🔧 Fase 1 — Instal·lació i configuració inicial</h3>
+    <div class="task-list fi">
+      <div class="task">
+        <div class="task-num">1</div>
+        <div class="task-body">
+          <h4>Instal·lació de NixOS en màquina virtual</h4>
+          <p>Descarrega la ISO de NixOS (versió amb entorn d'escriptori: Plasma Desktop o GNOME, a la teva elecció) de la web oficial. Crea una màquina virtual (VirtualBox o VMware) i instal·la NixOS. Durant la instal·lació, <strong>activa l'opció "Allow unfree software"</strong>: sense ella, no podràs instal·lar paquets amb llicències no lliures (com VSCode o certs drivers). Documenta per a quin motiu existeix aquesta distinció a NixOS i per quina raó els paquets "unfree" no s'activen per defecte.</p>
+          <div class="task-tags"><span class="badge b-purple">NixOS ISO</span><span class="badge b-blue">VM</span><span class="badge b-amber">Unfree software</span></div>
+        </div>
+      </div>
+      <div class="task">
+        <div class="task-num">2</div>
+        <div class="task-body">
+          <h4>Primera modificació declarativa del sistema</h4>
+          <p>Un cop instal·lat, explora el fitxer <code>/etc/nixos/configuration.nix</code>. Localitza la secció <code>environment.systemPackages</code> i afegeix almenys els paquets <code>git</code> i <code>vim</code>. Aplica els canvis amb la comanda adequada de <code>nixos-rebuild</code>. Verifica que els paquets s'han instal·lat correctament. Reflexiona i documenta: quina diferència conceptual hi ha entre <code>sudo apt install git</code> i el que acabes de fer? Ambdós tenen el mateix resultat final, però el procés és radicalment diferent. Per a quin motiu?</p>
+          <div class="task-tags"><span class="badge b-purple">configuration.nix</span><span class="badge b-green">nixos-rebuild</span></div>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="fi" style="margin:2.5rem 0 1rem">⚗️ Fase 2 — Flakes i Home-Manager</h3>
+    <div class="task-list fi">
+      <div class="task">
+        <div class="task-num">3</div>
+        <div class="task-body">
+          <h4>Activació dels Flakes i preparació de l'estructura</h4>
+          <p>Els Flakes són una funcionalitat experimental (però molt estable a la pràctica) de NixOS. Per activar-los, has de modificar <code>configuration.nix</code> per afegir la configuració de <code>nix.settings.experimental-features</code>. Un cop activats, crea una carpeta al teu home (<code>~/nixos_asixX</code>, on X és el teu grup) i copia-hi els fitxers <code>.nix</code> de <code>/etc/nixos/</code>. Documenta per a quin motiu fas servir la teva carpeta personal en comptes d'editar directament <code>/etc/nixos/</code>.</p>
+          <div class="task-tags"><span class="badge b-purple">Flakes</span><span class="badge b-teal">Experimental features</span></div>
+        </div>
+      </div>
+      <div class="task">
+        <div class="task-num">4</div>
+        <div class="task-body">
+          <h4>Creació del <code>flake.nix</code> amb Home-Manager</h4>
+          <p>Crea el fitxer <code>flake.nix</code> dins de la teva carpeta. Aquest fitxer ha de declarar com a <em>inputs</em>: <code>nixpkgs</code> (repositori de paquets de NixOS) i <code>home-manager</code>. Com a <em>output</em>, ha de generar la configuració del sistema (<code>nixosConfigurations</code>) integrant <code>configuration.nix</code> i Home-Manager. <strong>Substitueix EL_TEU_USUARI pel teu nom d'usuari real.</strong> El professor t'explicarà l'estructura del fitxer durant la sessió. Documenta cada secció del <code>flake.nix</code> explicant amb les teves paraules per a quin motiu és necessària.</p>
+          <div class="task-tags"><span class="badge b-purple">flake.nix</span><span class="badge b-blue">inputs · outputs</span></div>
+        </div>
+      </div>
+      <div class="task">
+        <div class="task-num">5</div>
+        <div class="task-body">
+          <h4>Creació del <code>home.nix</code> per a l'usuari</h4>
+          <p>Crea el fitxer <code>home.nix</code> que gestiona el teu entorn d'usuari. Ha de declarar el teu nom d'usuari, el directori home, la versió de Home-Manager i almenys tres paquets per a l'usuari (com <code>htop</code>, <code>vscode</code>, <code>fastfetch</code>). Aplica la configuració usant <code>nixos-rebuild switch --flake .#nixos</code> (nota la diferència amb la comanda sense Flakes). Verifica que els paquets declarats a <code>home.nix</code> estan disponibles al teu usuari.</p>
+          <div class="task-tags"><span class="badge b-purple">home.nix</span><span class="badge b-green">Home-Manager</span></div>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="fi" style="margin:2.5rem 0 1rem">🌐 Fase 3 — Sincronització a Codeberg</h3>
+    <div class="task-list fi">
+      <div class="task">
+        <div class="task-num">6</div>
+        <div class="task-body">
+          <h4>Publicació de la configuració a Codeberg</h4>
+          <p>Crea un compte a <strong>Codeberg.org</strong> (si no en tens) i crea un repositori nou anomenat <code>nixos_asixX</code>. Des del terminal de NixOS, inicialitza un repositori Git a la teva carpeta <code>~/nixos_asixX</code>, afegeix tots els fitxers (excepte <code>hardware-configuration.nix</code>), fes el primer commit amb un missatge descriptiu i puja la configuració a Codeberg. Documenta la URL del teu repositori i verifica que el contingut és accessible des d'un navegador. Per a quin motiu és important <strong>no pujar</strong> el fitxer <code>hardware-configuration.nix</code> al repositori?</p>
+          <div class="task-tags"><span class="badge b-teal">Git</span><span class="badge b-blue">Codeberg</span><span class="badge b-orange">hardware-config.nix</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REPRODUCTIBILITAT -->
+<section id="reproductibilitat">
+  <div class="container">
+    <div class="section-tag tag-green fi">Fase col·laborativa</div>
+    <h2 class="fi">Reproductibilitat: clona la config d'un company</h2>
+    <p class="lead fi">Aquesta és la fase que demostra la proposta de valor real de NixOS: si la configuració és correcta, qualsevol pot reproduir el teu entorn en qualsevol màquina. Ho provareu entre companys.</p>
+
+    <div class="callout cl-amber fi">
+      <span class="callout-icon">⚠️</span>
+      <div>
+        <h4>Abans de clonar la config d'un company</h4>
+        <p>Verifica que el company <strong>no ha pujat</strong> el seu <code>hardware-configuration.nix</code> a Codeberg. Si l'ha pujat, hauràs d'ignorar-lo i usar el teu propi. Si no l'ha pujat (recomanat), simplement afegiràs el teu <code>hardware-configuration.nix</code> a la seva configuració clonada.</p>
+      </div>
+    </div>
+
+    <div class="task-list fi">
+      <div class="task">
+        <div class="task-num">7</div>
+        <div class="task-body">
+          <h4>Clonar la configuració d'un company i adaptar-la</h4>
+          <p>Tria un company de classe i clona el seu repositori Codeberg a una carpeta temporal (<code>~/configuracio_company</code>). Un cop clonat, has de fer dos retocs imprescindibles per que funcioni a la teva màquina: (a) substituir el <code>hardware-configuration.nix</code> pel teu propi i (b) modificar el nom d'usuari al <code>flake.nix</code> i <code>home.nix</code> per que coincideixi amb el teu. Explica per a quin motiu cal fer cada un d'aquests dos retocs.</p>
+          <div class="task-tags"><span class="badge b-green">Git clone</span><span class="badge b-teal">Adaptació</span></div>
+        </div>
+      </div>
+      <div class="task">
+        <div class="task-num">8</div>
+        <div class="task-body">
+          <h4>Aplicar la configuració del company i verificar</h4>
+          <p>Aplica la configuració del company amb <code>nixos-rebuild switch --flake .#nixos</code>. Un cop aplicada, omple la checklist de verificació i documenta el resultat. Si el sistema no arrenca o hi ha errors, documenta l'error complet i la teva anàlisi de la causa. Al final, <strong>torna a la teva pròpia configuració</strong> per verificar que NixOS permet revertir canvis fàcilment.</p>
+          <div class="task-tags"><span class="badge b-green">nixos-rebuild</span><span class="badge b-purple">Verificació</span></div>
+          <ul class="checklist" style="margin-top:.85rem">
+            <li>El sistema ha arrencat sense errors.</li>
+            <li>Tinc els paquets del company al PATH (prova: executa <code>fastfetch</code> o el paquet que hagi declarat).</li>
+            <li>El fitxer <code>home.nix</code> del company s'ha aplicat correctament.</li>
+            <li>He pogut tornar a la meva pròpia configuració sense problemes.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="task">
+        <div class="task-num">9</div>
+        <div class="task-body">
+          <h4>Test final: desplegament a Proxmox</h4>
+          <p>Ara que has comprovat que les configuracions NixOS són reproductibles entre PCs, el professor us proposarà preparar una VM nova al servidor Proxmox del vostre grup, instal·lar NixOS i provar de configurar-la amb les 3 configuracions que heu creat a classe (la teva i les de dos companys). Documenta el procés i els resultats. Quines diferències has observat entre aplicar una configuració en local i en una VM al servidor?</p>
+          <div class="task-tags"><span class="badge b-green">Proxmox</span><span class="badge b-purple">Multi-config</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RÚBRICA -->
+<section id="rubrica" class="s-cream">
+  <div class="container">
+    <div class="section-tag tag-green fi">Criteris d'avaluació</div>
+    <h2 class="fi">Rúbrica de la pràctica PT3</h2>
+    <p class="lead fi">El criteri principal és la reproductibilitat: la configuració ha de poder aplicar-se en una altra màquina. Una configuració que "funciona al meu PC" però no es pot reproduir no compleix l'objectiu de NixOS.</p>
+    <div style="overflow-x:auto" class="fi">
+      <table class="rubric-table">
+        <thead>
+          <tr><th style="width:22%">Criteri</th><th style="width:8%">Pes</th>
+          <th class="col-ex" style="width:17%">🟢 Excel·lent (10)</th>
+          <th class="col-be" style="width:17%">🔵 Bé (7)</th>
+          <th class="col-ok" style="width:17%">🟡 Suficient (5)</th>
+          <th class="col-no" style="width:19%">🔴 Insuficient (0–3)</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>NixOS instal·lat i operatiu</td><td style="text-align:center;font-weight:700">10%</td><td class="col-ex">Sistema funcional, unfree activat, instal·lació documentada amb justificació de decisions.</td><td class="col-be">Funcional però sense justificació de decisions.</td><td class="col-ok">Instal·lat amb errors menors documentats.</td><td class="col-no">No instal·lat o no funcional.</td></tr>
+          <tr><td>Modificació declarativa i nixos-rebuild</td><td style="text-align:center;font-weight:700">20%</td><td class="col-ex">Paquets afegits declarativament, aplicats i verificats. Diferència amb apt explicada correctament.</td><td class="col-be">Paquets afegits i aplicats sense explicació conceptual.</td><td class="col-ok">Paquets afegits però no aplicats correctament.</td><td class="col-no">No completat.</td></tr>
+          <tr><td>Flakes + Home-Manager funcionals</td><td style="text-align:center;font-weight:700">25%</td><td class="col-ex">flake.nix i home.nix creats i comentats. nixos-rebuild switch --flake funcional. Paquets verificats.</td><td class="col-be">Funcionals però sense comentaris explicatius.</td><td class="col-ok">Flakes activats però home.nix no aplicat correctament.</td><td class="col-no">No configurats.</td></tr>
+          <tr><td>Codeberg: repositori publicat</td><td style="text-align:center;font-weight:700">15%</td><td class="col-ex">Repositori públic, hardware-config.nix absent, commits amb missatges descriptius.</td><td class="col-be">Publicat però hardware-config.nix inclòs o commits poc descriptius.</td><td class="col-ok">Publicat però incomplet.</td><td class="col-no">No publicat.</td></tr>
+          <tr><td>Reproductibilitat verificada</td><td style="text-align:center;font-weight:700">20%</td><td class="col-ex">Config del company aplicada, checklist completada, retorn a config pròpia documentat.</td><td class="col-be">Config clonada i aplicada però sense checklist formal.</td><td class="col-ok">Clonat però errors no resolts.</td><td class="col-no">No intentat.</td></tr>
+          <tr><td>Qualitat de la memòria</td><td style="text-align:center;font-weight:700">10%</td><td class="col-ex">Captures de tots els passos, explicació de conceptes, errors documentats, reflexions pròpies.</td><td class="col-be">Captures dels resultats, poques explicacions.</td><td class="col-ok">Memòria incompleta.</td><td class="col-no">Sense memòria.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout cl-blue fi" style="margin-top:2rem">
+      <span class="callout-icon">📦</span>
+      <div><h4>Lliurament</h4><p>ZIP amb la memòria en PDF i l'URL del repositori Codeberg (ha d'estar públic). Nom: <strong>PT3_cognom_nom.zip</strong>. Data límit: indicada a l'aula virtual.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- REFLEXIÓ -->
+<section id="reflexio">
+  <div class="container">
+    <div class="section-tag tag-blue fi">Preguntes de reflexió</div>
+    <h2 class="fi">Demostra la teva comprensió</h2>
+    <p class="lead fi">Respon a la memòria. S'avalua el raonament, no la memorització.</p>
+    <div class="q-list fi">
+      <div class="q-item"><div class="q-num">1</div><div><p>Explica amb les teves paraules la diferència entre gestió imperativa (Ubuntu/Arch) i gestió declarativa (NixOS). En quins escenaris professionals el model declaratiu suposa un avantatge clar? Hi ha escenaris on el model imperatiu pot ser més adequat?</p><p class="hint">Pensa en entorns de DevOps, infraestructura com a codi (IaC), Ansible, Terraform...</p></div></div>
+      <div class="q-item"><div class="q-num">2</div><div><p>Per a quin motiu NixOS garanteix que el sistema es pot "trencar" molt difícilment amb una actualització? Quin mecanisme tècnic concret permet tornar a la versió anterior des del menú de GRUB?</p><p class="hint">Pensa en el concepte de "generació" de NixOS i com s'emmagatzemen les generacions al /nix/store.</p></div></div>
+      <div class="q-item"><div class="q-num">3</div><div><p>Quin és el propòsit del fitxer <code>flake.lock</code> que es genera automàticament quan uses Flakes? Quina informació conté i per a quin motiu és important incloure'l al repositori Git?</p><p class="hint">Reflexiona sobre la diferència entre "usa la versió de nixpkgs d'avui" i "usa exactament la versió de nixpkgs identificada per aquest hash".</p></div></div>
+      <div class="q-item"><div class="q-num">4</div><div><p>Quina diferència hi ha entre instal·lar un paquet a <code>environment.systemPackages</code> (configuration.nix) i instal·lar-lo a <code>home.packages</code> (home.nix)? En quin cas usaries cadascuna de les dues opcions?</p><p class="hint">Pensa en permisos, en quins usuaris del sistema tindran accés al paquet i en qui pot fer el canvi (root vs. usuari normal).</p></div></div>
+      <div class="q-item"><div class="q-num">5</div><div><p>Has pogut reproduir exactament l'entorn del teu company a la teva màquina amb <code>nixos-rebuild switch</code>? Si hi ha hagut diferències, per a quin motiu creus que han aparegut? Si tot ha funcionat perfectament, explica quin impacte podria tenir aquesta capacitat en un equip de desenvolupament de 10 programadors.</p><p class="hint">Pensa en el problema del "a mi em funciona" (it works on my machine) en el context del desenvolupament de programari.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p><strong>PT3 — NixOS: Administració Declarativa · M0374 Sistemes Operatius</strong></p>
+  <p style="margin-top:.4rem">NixOS · Flakes · Home-Manager · Git · Codeberg · Reproductibilitat · /nix/store</p>
+  <p style="margin-top:.4rem">Departament d'Informàtica · ASIX</p>
+</footer>
+
+<script>
+  const io=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in');});},{threshold:0.06,rootMargin:'0px 0px -40px 0px'});
+  document.querySelectorAll('.fi').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>

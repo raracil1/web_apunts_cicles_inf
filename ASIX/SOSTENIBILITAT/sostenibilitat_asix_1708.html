@@ -1,0 +1,1647 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>1708 Sostenibilitat Aplicada · ASIX</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;0,900;1,700;1,800&family=Cabinet+Grotesk:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --forest:   #1a3a2a;
+  --moss:     #2d5a3d;
+  --sage:     #4a7c5a;
+  --fern:     #6aab78;
+  --leaf:     #9dcca8;
+  --mist:     #d4ebd9;
+  --paper:    #f5f0e8;
+  --cream:    #faf7f0;
+  --earth:    #8b6914;
+  --sand:     #d4a843;
+  --terracot: #c26b3a;
+  --sky:      #2a7ab5;
+  --coral:    #e05a3a;
+  --ink:      #1a1a18;
+  --muted:    #6b7060;
+  --border:   #c8d4c0;
+  --white:    #ffffff;
+  --r: 16px; --rs: 8px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Cabinet Grotesk', sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  font-size: 16px;
+  line-height: 1.72;
+  overflow-x: hidden;
+}
+
+/* ─── NAV ─── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  background: rgba(26,58,42,0.97);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  padding: 0 2rem;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 60px;
+}
+.nav-brand { display: flex; align-items: center; gap: .6rem; }
+.nav-brand .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--fern); }
+.nav-brand span { font-family: 'Playfair Display', serif; font-size: 1rem; color: white; font-style: italic; }
+.nav-links { display: flex; gap: .4rem; list-style: none; }
+.nav-links a {
+  font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+  text-decoration: none; color: rgba(255,255,255,0.55);
+  padding: .3rem .7rem; border-radius: 100px;
+  transition: all .2s;
+}
+.nav-links a:hover { color: white; background: rgba(255,255,255,0.1); }
+
+/* ─── HERO ─── */
+.hero {
+  min-height: 100vh;
+  background: var(--forest);
+  display: flex; align-items: center;
+  position: relative; overflow: hidden;
+  padding: 7rem 2rem 4rem;
+}
+.hero-leaves {
+  position: absolute; inset: 0; pointer-events: none;
+}
+.hero-content { position: relative; z-index: 2; max-width: 1080px; margin: 0 auto; width: 100%; }
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: .6rem;
+  background: rgba(106,171,120,0.2); border: 1px solid rgba(106,171,120,0.35);
+  color: var(--leaf); font-size: 0.75rem; font-weight: 700;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  padding: .35rem 1rem; border-radius: 100px; margin-bottom: 2rem;
+}
+.hero h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(3rem, 7vw, 6rem);
+  line-height: 1.03; letter-spacing: -0.02em;
+  color: white; margin-bottom: 1.5rem;
+}
+.hero h1 em { font-style: italic; color: var(--fern); }
+.hero-sub {
+  font-size: 1.1rem; color: rgba(255,255,255,0.6);
+  max-width: 540px; margin-bottom: 3rem; line-height: 1.7;
+}
+.hero-ras {
+  display: flex; flex-wrap: wrap; gap: .6rem;
+}
+.hero-ra {
+  background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.8); padding: .4rem 1rem; border-radius: 8px;
+  font-size: 0.82rem; font-weight: 500;
+}
+.hero-ra strong { color: var(--fern); }
+
+/* ─── SECTIONS ─── */
+section { padding: 6rem 2rem; }
+.container { max-width: 1080px; margin: 0 auto; }
+
+.sec-tag {
+  display: flex; align-items: center; gap: .5rem;
+  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--sage); margin-bottom: .9rem;
+}
+.sec-tag::before { content: ''; display: block; width: 22px; height: 2px; background: var(--sage); }
+
+h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.9rem, 4vw, 3rem); line-height: 1.1;
+  letter-spacing: -0.02em; color: var(--forest);
+  margin-bottom: 1rem;
+}
+h3 { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: var(--forest); margin-bottom: .65rem; }
+h4 { font-weight: 700; font-size: 0.95rem; color: var(--forest); margin-bottom: .4rem; }
+.lead { font-size: 1.05rem; color: var(--muted); max-width: 680px; margin-bottom: 3rem; }
+
+/* ─── RA BANNER ─── */
+.ra-banner {
+  border-radius: var(--r); padding: 2rem 2.5rem;
+  display: flex; align-items: flex-start; gap: 1.5rem;
+  margin-bottom: 3.5rem; color: white; position: relative; overflow: hidden;
+}
+.ra-banner::after {
+  content: attr(data-ra);
+  position: absolute; right: -10px; top: -20px;
+  font-family: 'Playfair Display', serif; font-size: 8rem;
+  font-weight: 900; opacity: 0.08; line-height: 1; pointer-events: none;
+}
+.ra-n {
+  flex-shrink: 0; font-family: 'Playfair Display', serif;
+  font-size: 3.5rem; font-weight: 900; opacity: .22; line-height: 1;
+}
+.ra-banner h2 { color: white; font-size: 1.5rem; margin-bottom: .3rem; }
+.ra-banner p  { color: rgba(255,255,255,.7); font-size: .9rem; }
+.ra1-bg { background: linear-gradient(135deg, #1a3a2a, #2d5a3d); }
+.ra2-bg { background: linear-gradient(135deg, #1a3010, #3a6020); }
+.ra3-bg { background: linear-gradient(135deg, #0d3a3a, #1a6050); }
+.ra4-bg { background: linear-gradient(135deg, #3a2a0d, #7a5010); }
+.ra5-bg { background: linear-gradient(135deg, #1a2a3a, #1a5070); }
+.ra6-bg { background: linear-gradient(135deg, #3a1a2a, #7a2050); }
+
+/* ─── CARDS ─── */
+.grid { display: grid; gap: 1.25rem; }
+.g2 { grid-template-columns: repeat(auto-fit, minmax(290px,1fr)); }
+.g3 { grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); }
+.g4 { grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); }
+
+.card {
+  background: white; border: 1px solid var(--border);
+  border-radius: var(--r); padding: 1.75rem;
+  transition: transform .2s, box-shadow .2s;
+}
+.card:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(26,58,42,.1); }
+.card p { color: var(--muted); font-size: .92rem; }
+.card-icon { width: 48px; height: 48px; border-radius: 12px; display: grid; place-items: center; font-size: 1.4rem; margin-bottom: 1rem; }
+.cl { border-left: 3px solid var(--fern); }
+.cl-earth { border-left: 3px solid var(--earth); }
+.cl-sky   { border-left: 3px solid var(--sky); }
+.cl-coral { border-left: 3px solid var(--coral); }
+
+/* ─── VISUAL BOXES ─── */
+.vbox {
+  background: var(--mist); border: 1px solid rgba(74,124,90,.2);
+  border-radius: var(--r); padding: 1.5rem 2rem; margin: 1rem 0;
+}
+.vbox .vb-label {
+  font-size: .7rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--sage); margin-bottom: .5rem;
+}
+.vbox p { font-size: .9rem; color: var(--ink); }
+
+.vbox-earth { background: #fdf6e8; border-color: rgba(212,168,67,.3); }
+.vbox-earth .vb-label { color: var(--earth); }
+.vbox-sky   { background: #eaf4fc; border-color: rgba(42,122,181,.2); }
+.vbox-sky   .vb-label { color: var(--sky); }
+.vbox-coral { background: #fdf0ec; border-color: rgba(194,107,58,.25); }
+.vbox-coral .vb-label { color: var(--terracot); }
+.vbox-dark  { background: var(--forest); border-color: transparent; }
+.vbox-dark .vb-label { color: var(--leaf); }
+.vbox-dark p { color: rgba(255,255,255,.8); }
+
+/* ─── CALLOUT ─── */
+.callout {
+  border-radius: var(--rs); padding: 1.4rem 1.75rem;
+  display: flex; gap: 1rem; align-items: flex-start; margin: 1rem 0;
+}
+.callout-icon { font-size: 1.3rem; flex-shrink: 0; margin-top: .1rem; }
+.callout p, .callout li { font-size: .91rem; }
+.callout ul { padding-left: 1.1rem; }
+.callout li { margin-bottom: .2rem; }
+.ca-green { background: rgba(74,124,90,.09); border: 1px solid rgba(74,124,90,.2); }
+.ca-earth { background: rgba(212,168,67,.1); border: 1px solid rgba(212,168,67,.25); }
+.ca-sky   { background: rgba(42,122,181,.08); border: 1px solid rgba(42,122,181,.2); }
+.ca-coral { background: rgba(224,90,58,.07); border: 1px solid rgba(224,90,58,.2); }
+
+/* ─── SVG DIAGRAMS ─── */
+.diagram-wrap {
+  background: white; border: 1px solid var(--border);
+  border-radius: var(--r); padding: 1.5rem;
+  margin: 2rem 0; overflow-x: auto; text-align: center;
+}
+.diagram-wrap svg { max-width: 100%; height: auto; }
+
+/* ─── PILLARS VISUAL ─── */
+.pillars {
+  display: flex; gap: 0; border-radius: var(--r);
+  overflow: hidden; margin: 2rem 0; min-height: 180px;
+}
+.pillar {
+  flex: 1; padding: 1.5rem 1rem; display: flex; flex-direction: column;
+  justify-content: flex-end; gap: .3rem; position: relative;
+  transition: flex .3s ease;
+}
+.pillar:hover { flex: 1.5; }
+.pillar-label {
+  font-family: 'Playfair Display', serif; font-weight: 700;
+  font-size: 1rem; color: white; line-height: 1.2;
+}
+.pillar-sub { font-size: .75rem; color: rgba(255,255,255,.65); }
+.pillar-icon { font-size: 2rem; margin-bottom: auto; }
+.p-env  { background: linear-gradient(180deg, #1a5a30, #2d8040); }
+.p-soc  { background: linear-gradient(180deg, #1a4a7a, #2060a0); }
+.p-gov  { background: linear-gradient(180deg, #6a3a10, #9a5a20); }
+
+/* ─── ODS GRID ─── */
+.ods-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(70px,1fr)); gap: .5rem; margin: 1.5rem 0; }
+.ods-item {
+  border-radius: 8px; aspect-ratio: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: .15rem;
+  cursor: default; transition: transform .2s;
+}
+.ods-item:hover { transform: scale(1.08); }
+.ods-num { font-family: 'Playfair Display', serif; font-weight: 900; font-size: 1.2rem; color: white; line-height: 1; }
+.ods-name { font-size: .52rem; font-weight: 700; color: rgba(255,255,255,.85); text-align: center; line-height: 1.2; }
+.o1{background:#e5243b} .o2{background:#dda63a} .o3{background:#4c9f38}
+.o4{background:#c5192d} .o5{background:#ff3a21} .o6{background:#26bde2}
+.o7{background:#fcc30b} .o8{background:#a21942} .o9{background:#fd6925}
+.o10{background:#dd1367} .o11{background:#fd9d24} .o12{background:#bf8b2e}
+.o13{background:#3f7e44} .o14{background:#0a97d9} .o15{background:#56c02b}
+.o16{background:#00689d} .o17{background:#19486a}
+
+/* ─── TIMELINE ─── */
+.timeline { position: relative; padding-left: 2rem; }
+.timeline::before { content:''; position:absolute; left:.5rem; top:0; bottom:0; width:2px; background: var(--border); }
+.tl-item { position: relative; margin-bottom: 2rem; }
+.tl-item::before {
+  content:''; position:absolute; left:-1.625rem; top:.35rem;
+  width:13px; height:13px; border-radius:50%;
+  background: var(--fern); border: 3px solid var(--paper);
+  box-shadow: 0 0 0 2px var(--fern);
+}
+.tl-year { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--sage); margin-bottom: .2rem; }
+.tl-item h4 { font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--forest); margin-bottom: .3rem; }
+.tl-item p  { font-size: .9rem; color: var(--muted); }
+
+/* ─── CIRCULAR ECONOMY ─── */
+.circ-diagram { position: relative; width: 100%; max-width: 520px; margin: 2rem auto; }
+
+/* ─── DARK SECTION ─── */
+.s-dark { background: var(--forest); }
+.s-dark h2, .s-dark h3 { color: white; }
+.s-dark .lead { color: rgba(255,255,255,.6); }
+.s-dark .sec-tag { color: var(--leaf); }
+.s-dark .sec-tag::before { background: var(--leaf); }
+.s-dark .card { background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.1); }
+.s-dark .card h3, .s-dark .card h4 { color: white; }
+.s-dark .card p { color: rgba(255,255,255,.6); }
+
+.s-mist { background: var(--mist); }
+.s-cream { background: var(--cream); }
+.s-earth { background: #fdf6e8; }
+
+/* ─── STEPS ─── */
+.steps { counter-reset: st; list-style: none; display: flex; flex-direction: column; gap: .75rem; }
+.steps li {
+  counter-increment: st;
+  display: flex; gap: .85rem; align-items: flex-start;
+  background: white; border: 1px solid var(--border);
+  border-radius: var(--rs); padding: .9rem 1.1rem; font-size: .9rem;
+}
+.steps li::before {
+  content: counter(st);
+  flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%;
+  background: var(--moss); color: white;
+  display: grid; place-items: center;
+  font-weight: 700; font-size: .8rem; font-family: 'Playfair Display', serif;
+}
+
+/* ─── DEBATE CARD ─── */
+.debate-card {
+  background: var(--forest); border-radius: var(--r); overflow: hidden;
+  margin-top: 4rem; color: white;
+}
+.debate-header {
+  background: rgba(0,0,0,.25); padding: 1.5rem 2rem;
+  display: flex; align-items: center; gap: 1.25rem;
+}
+.debate-badge {
+  background: var(--fern); color: white;
+  font-family: 'Playfair Display', serif; font-weight: 700;
+  font-size: 1.8rem; width: 56px; height: 56px;
+  border-radius: 50%; display: grid; place-items: center; flex-shrink: 0;
+}
+.debate-header h3 { color: white; font-size: 1.25rem; margin-bottom: .2rem; }
+.debate-header p  { color: rgba(255,255,255,.65); font-size: .85rem; }
+.debate-body { padding: 2rem; }
+.debate-question {
+  font-family: 'Playfair Display', serif; font-style: italic;
+  font-size: 1.4rem; color: var(--leaf);
+  border-left: 4px solid var(--fern); padding-left: 1.25rem;
+  margin-bottom: 2rem; line-height: 1.5;
+}
+.debate-sides { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 2rem; }
+.side {
+  border-radius: var(--rs); padding: 1.5rem;
+}
+.side-a { background: rgba(106,171,120,.15); border: 1px solid rgba(106,171,120,.3); }
+.side-b { background: rgba(194,107,58,.12); border: 1px solid rgba(194,107,58,.3); }
+.side-label {
+  font-size: .72rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+  margin-bottom: .75rem;
+}
+.side-a .side-label { color: var(--fern); }
+.side-b .side-label { color: var(--sand); }
+.side h4 { color: white; font-size: 1rem; margin-bottom: .6rem; }
+.side ul { padding-left: 1.1rem; }
+.side li { font-size: .87rem; color: rgba(255,255,255,.75); margin-bottom: .25rem; }
+.debate-rules {
+  background: rgba(255,255,255,.05); border-radius: var(--rs);
+  padding: 1.25rem 1.5rem;
+}
+.debate-rules h4 { color: var(--leaf); margin-bottom: .75rem; }
+.debate-rules .rule { display: flex; gap: .75rem; align-items: flex-start; margin-bottom: .5rem; font-size: .88rem; color: rgba(255,255,255,.7); }
+.rule-icon { flex-shrink: 0; font-size: 1rem; }
+
+/* ─── STAT BOXES ─── */
+.stats { display: flex; flex-wrap: wrap; gap: 1rem; margin: 2rem 0; }
+.stat {
+  background: white; border: 1px solid var(--border);
+  border-radius: var(--r); padding: 1.25rem 1.5rem; flex: 1; min-width: 140px;
+  text-align: center;
+}
+.stat-num {
+  font-family: 'Playfair Display', serif; font-size: 2.2rem;
+  font-weight: 900; line-height: 1; margin-bottom: .3rem;
+}
+.stat-label { font-size: .8rem; color: var(--muted); }
+.st-green .stat-num { color: var(--moss); }
+.st-earth .stat-num { color: var(--earth); }
+.st-coral .stat-num { color: var(--coral); }
+.st-sky   .stat-num { color: var(--sky); }
+
+/* ─── QUOTE ─── */
+.quote {
+  border-left: 4px solid var(--fern); padding: 1.25rem 1.75rem;
+  margin: 1.5rem 0; background: white; border-radius: 0 var(--rs) var(--rs) 0;
+}
+.quote p { font-family: 'Playfair Display', serif; font-style: italic; font-size: 1.1rem; color: var(--forest); margin-bottom: .4rem; }
+.quote cite { font-size: .82rem; color: var(--muted); }
+
+/* ─── PILLS ─── */
+.pills { display: flex; flex-wrap: wrap; gap: .4rem; margin: .65rem 0; }
+.pill { padding: .22rem .75rem; border-radius: 100px; font-size: .78rem; border: 1px solid var(--border); background: var(--mist); color: var(--forest); }
+.p-g { background: rgba(74,124,90,.12); border-color: rgba(74,124,90,.3); color: var(--moss); }
+.p-e { background: rgba(212,168,67,.12); border-color: rgba(212,168,67,.3); color: var(--earth); }
+.p-s { background: rgba(42,122,181,.1); border-color: rgba(42,122,181,.25); color: var(--sky); }
+
+/* ─── DIVIDER ─── */
+hr { border: none; border-top: 1px solid var(--border); margin: 3rem 0; }
+
+/* ─── FOOTER ─── */
+footer { background: var(--forest); color: rgba(255,255,255,.4); padding: 3rem 2rem; text-align: center; font-size: .85rem; }
+footer strong { color: white; }
+
+/* ─── ANIMATIONS ─── */
+.fi { opacity: 0; transform: translateY(20px); transition: opacity .6s ease, transform .6s ease; }
+.fi.in { opacity: 1; transform: none; }
+
+@media (max-width: 700px) {
+  .nav-links { display: none; }
+  .pillars { flex-direction: column; }
+  .debate-sides { grid-template-columns: 1fr; }
+  .ods-grid { grid-template-columns: repeat(auto-fill, minmax(60px,1fr)); }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">
+    <div class="dot"></div>
+    <span>Sostenibilitat · ASIX</span>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#ra1">RA1</a></li>
+    <li><a href="#ra2">RA2</a></li>
+    <li><a href="#ra3">RA3</a></li>
+    <li><a href="#ra4">RA4</a></li>
+    <li><a href="#ra5">RA5</a></li>
+    <li><a href="#ra6">RA6</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <!-- SVG leaves decoration -->
+  <div class="hero-leaves">
+    <svg width="100%" height="100%" viewBox="0 0 1400 800" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+      <g opacity="0.12">
+        <ellipse cx="1200" cy="150" rx="180" ry="60" fill="#4a7c5a" transform="rotate(-30 1200 150)"/>
+        <ellipse cx="1150" cy="220" rx="140" ry="45" fill="#6aab78" transform="rotate(-45 1150 220)"/>
+        <ellipse cx="100" cy="650" rx="160" ry="50" fill="#4a7c5a" transform="rotate(20 100 650)"/>
+        <ellipse cx="200" cy="700" rx="120" ry="38" fill="#6aab78" transform="rotate(35 200 700)"/>
+        <circle cx="1300" cy="600" r="80" fill="#2d5a3d" opacity=".5"/>
+        <circle cx="80" cy="200" r="60" fill="#2d5a3d" opacity=".4"/>
+      </g>
+      <g opacity="0.06">
+        <path d="M900 0 Q1000 100 950 200 Q900 300 1000 400" stroke="#9dcca8" stroke-width="3" fill="none"/>
+        <path d="M1100 100 Q1200 200 1150 350 Q1100 500 1200 600" stroke="#9dcca8" stroke-width="2" fill="none"/>
+      </g>
+    </svg>
+  </div>
+
+  <div class="hero-content">
+    <div class="hero-eyebrow">🌱 Mòdul 1708 · ASIX · 33 hores</div>
+    <h1>Sostenibilitat<br><em>Aplicada</em><br>al Sistema Productiu</h1>
+    <p class="hero-sub">Fonaments ASG, reptes globals, economia circular i plans de sostenibilitat aplicats al sector IT. Apunts dinàmics amb esquemes, dades i activitats de debat.</p>
+    <div class="hero-ras">
+      <div class="hero-ra"><strong>RA1</strong> Fonaments i ASG</div>
+      <div class="hero-ra"><strong>RA2</strong> Reptes ambientals i socials</div>
+      <div class="hero-ra"><strong>RA3</strong> ODS i acció professional</div>
+      <div class="hero-ra"><strong>RA4</strong> Productes responsables</div>
+      <div class="hero-ra"><strong>RA5</strong> Activitats sostenibles</div>
+      <div class="hero-ra"><strong>RA6</strong> Pla de sostenibilitat</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     RA 1 — FONAMENTS DE LA SOSTENIBILITAT
+══════════════════════════════════════════ -->
+<section id="ra1">
+  <div class="container">
+    <div class="ra-banner ra1-bg fi" data-ra="RA1">
+      <div class="ra-n">01</div>
+      <div>
+        <h2>Fonaments de la Sostenibilitat i ASG</h2>
+        <p>Identifica els aspectes ambientals, socials i de governança relatius a la sostenibilitat tenint en compte el concepte de desenvolupament sostenible i els marcs internacionals.</p>
+      </div>
+    </div>
+
+    <!-- QUÈ ÉS SOSTENIBILITAT -->
+    <div class="sec-tag fi">Concepte fonamental</div>
+    <h2 class="fi">Sostenibilitat: la triple perspectiva</h2>
+    <p class="lead fi">La sostenibilitat és la capacitat de satisfer les necessitats del present sense comprometre la capacitat de les generacions futures de satisfer les seves pròpies necessitats. (Informe Brundtland, 1987)</p>
+
+    <div class="pillars fi">
+      <div class="pillar p-env">
+        <div class="pillar-icon">🌿</div>
+        <div class="pillar-label">Ambiental</div>
+        <div class="pillar-sub">Protecció dels ecosistemes, clima i biodiversitat</div>
+      </div>
+      <div class="pillar p-soc">
+        <div class="pillar-icon">👥</div>
+        <div class="pillar-label">Social</div>
+        <div class="pillar-sub">Equitat, drets humans, inclusió i benestar</div>
+      </div>
+      <div class="pillar p-gov">
+        <div class="pillar-icon">⚖️</div>
+        <div class="pillar-label">Governança</div>
+        <div class="pillar-sub">Transparència, ètica i bon govern corporatiu</div>
+      </div>
+    </div>
+
+    <!-- EVOLUCIÓ TIMELINE -->
+    <div class="sec-tag fi" style="margin-top:3rem">Evolució històrica</div>
+    <h2 class="fi">Del concepte a l'acció global</h2>
+    <div class="grid g2 fi">
+      <div class="timeline fi">
+        <div class="tl-item">
+          <div class="tl-year">1972</div>
+          <h4>Conferència d'Estocolm</h4>
+          <p>Primera cimera internacional sobre medi ambient. Es crea el PNUMA (Programa de Nacions Unides per al Medi Ambient).</p>
+        </div>
+        <div class="tl-item">
+          <div class="tl-year">1987</div>
+          <h4>Informe Brundtland</h4>
+          <p>"El nostre futur comú": es defineix per primera vegada el concepte de <em>desenvolupament sostenible</em>.</p>
+        </div>
+        <div class="tl-item">
+          <div class="tl-year">1992</div>
+          <h4>Rio de Janeiro — Cimera de la Terra</h4>
+          <p>S'adopta el Conveni Marc sobre el Canvi Climàtic i el Conveni de Biodiversitat Biològica.</p>
+        </div>
+        <div class="tl-item">
+          <div class="tl-year">1997</div>
+          <h4>Protocol de Kyoto</h4>
+          <p>Primer acord vinculant de reducció d'emissions de gasos d'efecte hivernacle per als països industrialitzats.</p>
+        </div>
+        <div class="tl-item">
+          <div class="tl-year">2015</div>
+          <h4>Agenda 2030 + Acord de París</h4>
+          <p>193 països adopten els 17 ODS. L'Acord de París limita l'escalfament global a 1,5°C. Marc vigent fins avui.</p>
+        </div>
+        <div class="tl-item">
+          <div class="tl-year">2023–25</div>
+          <h4>CSRD — Directiva europea de reporting</h4>
+          <p>Les grans empreses europees estan obligades a reportar l'acompliment en sostenibilitat (ESG reporting). S'estén progressivament a pimes.</p>
+        </div>
+      </div>
+      <div>
+        <div class="vbox">
+          <div class="vb-label">📊 Marc ASG — Aspectes Ambientals, Socials i de Governança</div>
+          <p>El marc ASG (o ESG en anglès) és el conjunt de criteris que permeten avaluar com una organització gestiona els seus impactes i riscos en tres dimensions:</p>
+        </div>
+        <div class="grid g3" style="margin-top:1rem">
+          <div class="card cl">
+            <div class="card-icon" style="background:#e8f5ec">🌍</div>
+            <h4>Ambiental (A)</h4>
+            <p>Emissions CO₂, consum d'energia, gestió de residus, biodiversitat, petjada hídrica, economia circular.</p>
+          </div>
+          <div class="card cl-sky">
+            <div class="card-icon" style="background:#eaf4fc">👥</div>
+            <h4>Social (S)</h4>
+            <p>Condicions laborals, igualtat de gènere, drets humans, seguretat laboral, relació amb la comunitat local.</p>
+          </div>
+          <div class="card cl-earth">
+            <div class="card-icon" style="background:#fdf6e8">⚖️</div>
+            <h4>Governança (G)</h4>
+            <p>Transparència, composició del consell, anticorrupció, remuneració executiva, gestió de riscos.</p>
+          </div>
+        </div>
+
+        <div class="callout ca-green fi" style="margin-top:1.5rem">
+          <span class="callout-icon">💡</span>
+          <div>
+            <strong>ASG en el sector IT:</strong>
+            <ul>
+              <li>Consum energètic dels CPDs (Ambiental)</li>
+              <li>Diversitat en equips de tecnologia (Social)</li>
+              <li>Privacitat i seguretat de dades dels usuaris (Governança)</li>
+              <li>E-waste: residus electrònics (Ambiental)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ODS -->
+    <div class="sec-tag fi" style="margin-top:4rem">Agenda 2030</div>
+    <h2 class="fi">Els 17 Objectius de Desenvolupament Sostenible (ODS)</h2>
+    <p class="lead fi">Adoptats per 193 països el 2015, els ODS són el full de ruta global per a un futur sostenible. Cada sector productiu contribueix a uns ODS específics.</p>
+
+    <div class="ods-grid fi">
+      <div class="ods-item o1"><div class="ods-num">1</div><div class="ods-name">Fi de la pobresa</div></div>
+      <div class="ods-item o2"><div class="ods-num">2</div><div class="ods-name">Fam zero</div></div>
+      <div class="ods-item o3"><div class="ods-num">3</div><div class="ods-name">Salut i benestar</div></div>
+      <div class="ods-item o4"><div class="ods-num">4</div><div class="ods-name">Educació de qualitat</div></div>
+      <div class="ods-item o5"><div class="ods-num">5</div><div class="ods-name">Igualtat de gènere</div></div>
+      <div class="ods-item o6"><div class="ods-num">6</div><div class="ods-name">Aigua neta</div></div>
+      <div class="ods-item o7"><div class="ods-num">7</div><div class="ods-name">Energia neta</div></div>
+      <div class="ods-item o8"><div class="ods-num">8</div><div class="ods-name">Treball digne</div></div>
+      <div class="ods-item o9"><div class="ods-num">9</div><div class="ods-name">Indústria i innovació</div></div>
+      <div class="ods-item o10"><div class="ods-num">10</div><div class="ods-name">Reducció desigualtats</div></div>
+      <div class="ods-item o11"><div class="ods-num">11</div><div class="ods-name">Ciutats sostenibles</div></div>
+      <div class="ods-item o12"><div class="ods-num">12</div><div class="ods-name">Producció responsable</div></div>
+      <div class="ods-item o13"><div class="ods-num">13</div><div class="ods-name">Acció climàtica</div></div>
+      <div class="ods-item o14"><div class="ods-num">14</div><div class="ods-name">Vida submarina</div></div>
+      <div class="ods-item o15"><div class="ods-num">15</div><div class="ods-name">Vida terrestre</div></div>
+      <div class="ods-item o16"><div class="ods-num">16</div><div class="ods-name">Pau i justícia</div></div>
+      <div class="ods-item o17"><div class="ods-num">17</div><div class="ods-name">Aliances globals</div></div>
+    </div>
+
+    <!-- ESTÀNDARDS MÈTRIQUES -->
+    <div class="sec-tag fi" style="margin-top:4rem">Estàndards de mesura</div>
+    <h2 class="fi">Com es mesura la sostenibilitat?</h2>
+    <div class="grid g2 fi">
+      <div class="card cl">
+        <div class="card-icon" style="background:#e8f5ec">📋</div>
+        <h3>GRI — Global Reporting Initiative</h3>
+        <p>L'estàndard de reporting de sostenibilitat més usat al món. Defineix indicadors per a cada àmbit ASG: emissions, diversitat, anticorrupció. <strong>Usat pel 73% de les 250 empreses més grans del món.</strong></p>
+      </div>
+      <div class="card cl-earth">
+        <div class="card-icon" style="background:#fdf6e8">🌡️</div>
+        <h3>TCFD — Informació climàtica financera</h3>
+        <p>Marc per reportar riscos i oportunitats relacionats amb el canvi climàtic en els informes financers. Cada vegada més obligatori per als reguladors europeus i nord-americans.</p>
+      </div>
+      <div class="card cl-sky">
+        <div class="card-icon" style="background:#eaf4fc">🇪🇺</div>
+        <h3>ESRS — Estàndards europeus (CSRD)</h3>
+        <p>Estàndards de reporting de sostenibilitat de la UE. Obligatoris des de 2024 per a grans empreses. S'estendran progressivament a les pimes. La CSRD substituirà la NFRD.</p>
+      </div>
+      <div class="card cl">
+        <div class="card-icon" style="background:#e8f5ec">🏆</div>
+        <h3>Índexs de sostenibilitat</h3>
+        <p>Dow Jones Sustainability Index (DJSI), MSCI ESG Ratings, Sustainalytics. Analitzen i puntuen les empreses per als inversors socialment responsables (ISR). <strong>El mercat ISR supera els 30 bilions de dòlars globals.</strong></p>
+      </div>
+    </div>
+
+    <div class="stats fi">
+      <div class="stat st-green">
+        <div class="stat-num">93%</div>
+        <div class="stat-label">de les 250 empreses més grans reporta sostenibilitat</div>
+      </div>
+      <div class="stat st-earth">
+        <div class="stat-num">30T$</div>
+        <div class="stat-label">d'actius sota gestió ESG a nivell global</div>
+      </div>
+      <div class="stat st-coral">
+        <div class="stat-num">1,5°C</div>
+        <div class="stat-label">objectiu màxim d'escalfament global (Acord de París)</div>
+      </div>
+      <div class="stat st-sky">
+        <div class="stat-num">2050</div>
+        <div class="stat-label">any objectiu de neutralitat climàtica a la UE</div>
+      </div>
+    </div>
+
+    <!-- DEBAT RA1 -->
+    <div class="debate-card fi">
+      <div class="debate-header">
+        <div class="debate-badge">💬</div>
+        <div>
+          <h3>Activitat de Debat — RA1</h3>
+          <p>Durada: 45–60 min · Grups de 4–5 persones · Moderador/a rotatori</p>
+        </div>
+      </div>
+      <div class="debate-body">
+        <div class="debate-question">
+          "Les empreses tecnològiques hauries d'estar <em>legalment obligades</em> a reportar els seus indicadors ASG (emissions, residus electrònics, bretxa de gènere), o n'hi ha prou amb la voluntarietat i la pressió del mercat?"
+        </div>
+        <div class="debate-sides">
+          <div class="side side-a">
+            <div class="side-label">✅ Postura A — Regulació obligatòria</div>
+            <h4>Arguments a favor</h4>
+            <ul>
+              <li>La voluntarietat ha demostrat ser insuficient: moltes empreses fan "greenwashing" (fingir sostenibilitat)</li>
+              <li>Crea un camp de joc equitatiu: les empreses responsables no queden en desavantatge competitiu</li>
+              <li>Dades comparables i fiables per als inversors i la societat</li>
+              <li>La UE ja ho fa amb la CSRD: les regulades no perden competitivitat vs no regulades fora de la UE?</li>
+            </ul>
+          </div>
+          <div class="side side-b">
+            <div class="side-label">⚠️ Postura B — Voluntarietat i mercat</div>
+            <h4>Arguments en contra</h4>
+            <ul>
+              <li>La regulació genera burocracia i costos especialment per a pimes tecnològiques</li>
+              <li>El mercat i els consumidors ja pressionen: les empreses sostenibles atrauen més talent i inversors</li>
+              <li>La innovació en sostenibilitat floreix millor sense regulació estricta</li>
+              <li>Risc de "compliment mínim": es fa el just per complir, no per millorar realment</li>
+            </ul>
+          </div>
+        </div>
+        <div class="debate-rules">
+          <h4>📋 Dinàmica del debat</h4>
+          <div class="rule"><span class="rule-icon">1️⃣</span><span>El professor/a assigna aleatòriament la postura A o B a cada grup (independentment de l'opinió personal).</span></div>
+          <div class="rule"><span class="rule-icon">2️⃣</span><span>Cada grup té 10 minuts per preparar 3 arguments sòlids per a la seva postura, amb exemples reals d'empreses IT.</span></div>
+          <div class="rule"><span class="rule-icon">3️⃣</span><span>Debat obert de 20 minuts: cada grup exposa i respon als contraarguments de l'altre.</span></div>
+          <div class="rule"><span class="rule-icon">4️⃣</span><span>Reflexió final individual (5 min): cada alumne/a escriu la seva opinió personal, argumentada, un cop sentits tots els arguments.</span></div>
+          <div class="rule"><span class="rule-icon">🎯</span><span><strong>Cas concret a investigar:</strong> Compareu el nivell de reporting ASG d'Apple, Google i una pime tecnològica catalana. Quines diferències hi ha? Per quin motiu?</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     RA 2 — REPTES AMBIENTALS I SOCIALS
+══════════════════════════════════════════ -->
+<section id="ra2" class="s-mist">
+  <div class="container">
+    <div class="ra-banner ra2-bg fi" data-ra="RA2">
+      <div class="ra-n">02</div>
+      <div>
+        <h2>Reptes Ambientals i Socials</h2>
+        <p>Caracteritza els reptes als quals s'enfronta la societat, descrivint els impactes sobre les persones i els sectors productius i proposant accions per minimitzar-los.</p>
+      </div>
+    </div>
+
+    <div class="sec-tag fi">El gran escenari</div>
+    <h2 class="fi">Els reptes que definiran el segle XXI</h2>
+    <p class="lead fi">No podem parlar de tecnologia sense parlar del context planetari en el qual opera. Cada decisió tecnològica té un impacte ambiental i social mesurable.</p>
+
+    <!-- CANVI CLIMÀTIC -->
+    <div class="grid g2 fi">
+      <div>
+        <div class="vbox">
+          <div class="vb-label">🌡️ Canvi Climàtic — L'emergència principal</div>
+          <p>L'activitat humana ha augmentat la temperatura global 1,1°C des de l'era preindustrial. Si no s'actua, s'espera un augment de 2,7°C fins a finals del segle, amb conseqüències catastròfiques.</p>
+        </div>
+        <div class="diagram-wrap" style="margin-top:1rem">
+          <svg viewBox="0 0 480 240" xmlns="http://www.w3.org/2000/svg" width="480" height="240">
+            <defs>
+              <linearGradient id="tempGrad" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#2d5a3d"/>
+                <stop offset="60%" stop-color="#d4a843"/>
+                <stop offset="100%" stop-color="#c26b3a"/>
+              </linearGradient>
+            </defs>
+            <!-- Background -->
+            <rect width="480" height="240" fill="#f5f0e8" rx="8"/>
+            <!-- Grid lines -->
+            <line x1="60" y1="180" x2="440" y2="180" stroke="#c8d4c0" stroke-width="1"/>
+            <line x1="60" y1="140" x2="440" y2="140" stroke="#c8d4c0" stroke-width="1" stroke-dasharray="4,4"/>
+            <line x1="60" y1="100" x2="440" y2="100" stroke="#c8d4c0" stroke-width="1" stroke-dasharray="4,4"/>
+            <line x1="60" y1="60" x2="440" y2="60" stroke="#c8d4c0" stroke-width="1" stroke-dasharray="4,4"/>
+            <!-- Y labels -->
+            <text x="50" y="183" text-anchor="end" font-size="11" fill="#6b7060">0°C</text>
+            <text x="50" y="143" text-anchor="end" font-size="11" fill="#6b7060">+1°C</text>
+            <text x="50" y="103" text-anchor="end" font-size="11" fill="#6b7060">+2°C</text>
+            <text x="50" y="63" text-anchor="end" font-size="11" fill="#6b7060">+3°C</text>
+            <!-- Temperature curve (historical + projection) -->
+            <polyline points="60,178 110,175 160,172 200,170 240,167 280,163 310,160 330,155" 
+                      fill="none" stroke="#2d5a3d" stroke-width="2.5"/>
+            <!-- Projection area -->
+            <path d="M330,155 Q370,140 400,110 Q430,80 440,60" fill="none" stroke="#c26b3a" stroke-width="2.5" stroke-dasharray="6,3"/>
+            <!-- Markers -->
+            <line x1="330" y1="50" x2="330" y2="190" stroke="#6b7060" stroke-width="1" stroke-dasharray="3,3"/>
+            <text x="332" y="45" font-size="10" fill="#6b7060">Avui</text>
+            <!-- 1.5°C target line -->
+            <line x1="60" y1="120" x2="440" y2="120" stroke="#4a7c5a" stroke-width="1.5" stroke-dasharray="8,4"/>
+            <text x="442" y="124" font-size="10" fill="#4a7c5a">1,5°C</text>
+            <!-- Paris target -->
+            <text x="240" y="225" text-anchor="middle" font-size="11" font-weight="bold" fill="#1a3a2a">Evolució temperatura global (1900 → 2100 proj.)</text>
+          </svg>
+        </div>
+      </div>
+      <div>
+        <div class="vbox vbox-coral">
+          <div class="vb-label">⚡ Impacte del sector IT en el clima</div>
+          <p>Les TIC representen entre el 2% i el 4% de les emissions globals de CO₂, equiparable a l'aviació comercial. I creix amb la IA i els CPDs.</p>
+        </div>
+        <div class="grid g2" style="margin-top:.75rem">
+          <div class="card">
+            <div class="card-icon" style="background:#fdf0ec">🏭</div>
+            <h4>CPDs i Cloud</h4>
+            <p>Un CPD de grandària mitja consumeix tanta energia com 25.000 llars. El consum elèctric global dels CPDs supera el de molts països.</p>
+          </div>
+          <div class="card">
+            <div class="card-icon" style="background:#fdf0ec">📱</div>
+            <h4>Dispositius finals</h4>
+            <p>El 80% de la petjada de carboni d'un mòbil es produeix durant la seva <em>fabricació</em>, no durant el seu ús. Recanviar cada 2 anys és molt costós en emissions.</p>
+          </div>
+          <div class="card">
+            <div class="card-icon" style="background:#fdf0ec">🤖</div>
+            <h4>IA generativa</h4>
+            <p>Entrenar GPT-4 va generar ~300 tones de CO₂. Una cerca amb IA consumeix ~10× més energia que una cerca web convencional.</p>
+          </div>
+          <div class="card">
+            <div class="card-icon" style="background:#e8f5ec">🌱</div>
+            <h4>Oportunitats IT</h4>
+            <p>La digitalització pot reduir el 20% de les emissions globals optimitzant transport, energia i processos industrials. La IT és part del problema i de la solució.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- REPTES SOCIALS -->
+    <div class="sec-tag fi" style="margin-top:4rem">Dimensió social</div>
+    <h2 class="fi">Reptes socials i el sector tecnològic</h2>
+
+    <div class="grid g3 fi">
+      <div class="card cl">
+        <div class="card-icon" style="background:#e8f5ec">🌍</div>
+        <h3>Bretxa digital global</h3>
+        <p>2.700 milions de persones no tenen accés a Internet. La digitalització accelerada aprofundeix les desigualtats si no s'actua activament per reduir la bretxa digital.</p>
+        <div class="pills">
+          <span class="pill p-g">ODS 10</span>
+          <span class="pill p-g">ODS 4</span>
+        </div>
+      </div>
+      <div class="card cl-earth">
+        <div class="card-icon" style="background:#fdf6e8">👷</div>
+        <h3>Condicions laborals en la cadena de valor</h3>
+        <p>El cobalt dels mòbils ve majoritàriament de mines del Congo amb treball infantil. El tàntal dels condensadors de mines amb conflictes armats. La supply chain tecnològica és opaca i problemàtica.</p>
+        <div class="pills">
+          <span class="pill p-e">ODS 8</span>
+          <span class="pill p-e">ODS 16</span>
+        </div>
+      </div>
+      <div class="card cl-sky">
+        <div class="card-icon" style="background:#eaf4fc">♀️</div>
+        <h3>Bretxa de gènere en IT</h3>
+        <p>Només el 22% dels treballadors IT a nivell global són dones. La bretxa salarial de gènere en tecnologia és del 15-25% a Espanya. La diversitat en equips millora la innovació i redueix biaixos algorítmics.</p>
+        <div class="pills">
+          <span class="pill p-s">ODS 5</span>
+          <span class="pill p-s">ODS 8</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ALIANCES -->
+    <div class="callout ca-green fi" style="margin-top:2rem">
+      <span class="callout-icon">🤝</span>
+      <div>
+        <strong>Per quin motiu cal treballar de forma transversal i en aliances?</strong>
+        <p style="margin-top:.4rem">Cap empresa ni govern pot resoldre els reptes ambientals i socials sol. Calen aliances públic-privades, col·laboració intersectorial i sinèrgies. Exemples: Microsoft i governs europeus per a competències digitals inclusives, iniciatives de reciclatge de mòbils entre fabricants i ajuntaments, clouds energèticament neutres via energies renovables contractades col·lectivament.</p>
+      </div>
+    </div>
+
+    <!-- DEBAT RA2 -->
+    <div class="debate-card fi">
+      <div class="debate-header">
+        <div class="debate-badge">💬</div>
+        <div>
+          <h3>Activitat de Debat — RA2</h3>
+          <p>Durada: 50 min · Format: Dos grups grans + panel de jurats · Material: Dades reals cercades prèviament</p>
+        </div>
+      </div>
+      <div class="debate-body">
+        <div class="debate-question">
+          "La intel·ligència artificial és, en termes globals, <em>una solució</em> als reptes ambientals del planeta, o un <em>nou problema</em> que els agreuja?"
+        </div>
+        <div class="debate-sides">
+          <div class="side side-a">
+            <div class="side-label">✅ IA com a SOLUCIÓ ambiental</div>
+            <h4>Arguments a explorar</h4>
+            <ul>
+              <li>DeepMind va reduir el consum energètic del refredament dels CPDs de Google en un 40% amb IA</li>
+              <li>Models de predicció climàtica millorats per IA permeten respostes més ràpides a desastres naturals</li>
+              <li>Xarxes elèctriques intel·ligents (smart grids) amb IA optimitzen l'ús de renovables</li>
+              <li>Agricultura de precisió: la IA redueix el consum d'aigua i pesticides fins a un 30%</li>
+            </ul>
+          </div>
+          <div class="side side-b">
+            <div class="side-label">⚠️ IA com a PROBLEMA ambiental</div>
+            <h4>Arguments a explorar</h4>
+            <ul>
+              <li>Entrenar un model LLM gran equival a les emissions de 5 cotxes durant la seva vida útil</li>
+              <li>La proliferació de dispositius IA augmenta el volum de residus electrònics (e-waste)</li>
+              <li>Els CPDs necessaris per a la IA creixent demanen quantitats d'energia i d'aigua sense precedents</li>
+              <li>El "rebot tecnològic": cada millora d'eficiència provoca un augment del consum total (paradoxa de Jevons)</li>
+            </ul>
+          </div>
+        </div>
+        <div class="debate-rules">
+          <h4>📋 Dinàmica del debat</h4>
+          <div class="rule"><span class="rule-icon">🔍</span><span><strong>Fase prèvia (deures):</strong> cada grup busca 2 notícies o estudis recents que donin suport a la seva postura. Es comparteixen a l'aula virtual.</span></div>
+          <div class="rule"><span class="rule-icon">🗣️</span><span>Torn d'exposició (5 min per grup) + ronda de preguntes creuades (15 min) + resposta als atacs (5 min per grup).</span></div>
+          <div class="rule"><span class="rule-icon">⚖️</span><span>Un tercer grup actua de "jurat" i avalua la qualitat dels arguments (no qui té raó, sinó qui argumenta millor).</span></div>
+          <div class="rule"><span class="rule-icon">🎯</span><span><strong>Pregunta de síntesi:</strong> És possible un sector IT que creixi i alhora redueixi el seu impacte ambiental absolut? Quines condicions caldrien?</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     RA 3 — ODS I ACCIÓ PROFESSIONAL
+══════════════════════════════════════════ -->
+<section id="ra3">
+  <div class="container">
+    <div class="ra-banner ra3-bg fi" data-ra="RA3">
+      <div class="ra-n">03</div>
+      <div>
+        <h2>ODS i Acció Professional</h2>
+        <p>Estableix l'aplicació de criteris de sostenibilitat en l'acompliment professional i personal, identificant els elements necessaris.</p>
+      </div>
+    </div>
+
+    <div class="sec-tag fi">Del global al local</div>
+    <h2 class="fi">Els ODS més rellevants per a l'ASIX</h2>
+    <p class="lead fi">Com a tècnic/a en Administració de Sistemes Informàtics en Xarxa, la teva feina quotidiana s'interconnecta directament amb diversos ODS. Identificar-los és el primer pas per actuar.</p>
+
+    <div class="grid g2 fi">
+      <div>
+        <div class="diagram-wrap">
+          <svg viewBox="0 0 460 340" xmlns="http://www.w3.org/2000/svg" width="460" height="340">
+            <rect width="460" height="340" fill="#faf7f0" rx="10"/>
+            <!-- Central circle -->
+            <circle cx="230" cy="170" r="55" fill="#1a3a2a"/>
+            <text x="230" y="163" text-anchor="middle" font-size="11" font-weight="bold" fill="#9dcca8">TÈCNIC/A</text>
+            <text x="230" y="178" text-anchor="middle" font-size="11" font-weight="bold" fill="#9dcca8">ASIX</text>
+            <!-- Connecting lines -->
+            <line x1="175" y1="130" x2="110" y2="80" stroke="#c8d4c0" stroke-width="1.5"/>
+            <line x1="230" y1="115" x2="230" y2="48" stroke="#c8d4c0" stroke-width="1.5"/>
+            <line x1="285" y1="130" x2="350" y2="80" stroke="#c8d4c0" stroke-width="1.5"/>
+            <line x1="285" y1="175" x2="390" y2="175" stroke="#c8d4c0" stroke-width="1.5"/>
+            <line x1="285" y1="220" x2="350" y2="270" stroke="#c8d4c0" stroke-width="1.5"/>
+            <line x1="175" y1="220" x2="110" y2="270" stroke="#c8d4c0" stroke-width="1.5"/>
+            <line x1="175" y1="175" x2="70" y2="175" stroke="#c8d4c0" stroke-width="1.5"/>
+            <!-- ODS nodes -->
+            <!-- ODS 9 -->
+            <circle cx="80" cy="170" r="32" fill="#fd6925"/>
+            <text x="80" y="166" text-anchor="middle" font-size="14" font-weight="bold" fill="white">9</text>
+            <text x="80" y="179" text-anchor="middle" font-size="7" fill="rgba(255,255,255,.85)">Innovació</text>
+            <!-- ODS 13 -->
+            <circle cx="90" cy="75" r="32" fill="#3f7e44"/>
+            <text x="90" y="71" text-anchor="middle" font-size="14" font-weight="bold" fill="white">13</text>
+            <text x="90" y="84" text-anchor="middle" font-size="7" fill="rgba(255,255,255,.85)">Clima</text>
+            <!-- ODS 4 -->
+            <circle cx="230" cy="36" r="32" fill="#c5192d"/>
+            <text x="230" y="32" text-anchor="middle" font-size="14" font-weight="bold" fill="white">4</text>
+            <text x="230" y="45" text-anchor="middle" font-size="7" fill="rgba(255,255,255,.85)">Educació</text>
+            <!-- ODS 10 -->
+            <circle cx="370" cy="75" r="32" fill="#dd1367"/>
+            <text x="370" y="71" text-anchor="middle" font-size="14" font-weight="bold" fill="white">10</text>
+            <text x="370" y="84" text-anchor="middle" font-size="7" fill="rgba(255,255,255,.85)">Desigualtats</text>
+            <!-- ODS 8 -->
+            <circle cx="395" cy="170" r="32" fill="#a21942"/>
+            <text x="395" y="166" text-anchor="middle" font-size="14" font-weight="bold" fill="white">8</text>
+            <text x="395" y="179" text-anchor="middle" font-size="7" fill="rgba(255,255,255,.85)">Treball</text>
+            <!-- ODS 12 -->
+            <circle cx="370" cy="270" r="32" fill="#bf8b2e"/>
+            <text x="370" y="266" text-anchor="middle" font-size="14" font-weight="bold" fill="white">12</text>
+            <text x="370" y="279" text-anchor="middle" font-size="7" fill="rgba(255,255,255,.85)">Producció</text>
+            <!-- ODS 16 -->
+            <circle cx="90" cy="270" r="32" fill="#00689d"/>
+            <text x="90" y="266" text-anchor="middle" font-size="14" font-weight="bold" fill="white">16</text>
+            <text x="90" y="279" text-anchor="middle" font-size="7" fill="rgba(255,255,255,.85)">Pau i justícia</text>
+            <text x="230" y="325" text-anchor="middle" font-size="11" fill="#6b7060">ODS directament relacionats amb l'ASIX</text>
+          </svg>
+        </div>
+      </div>
+      <div class="grid g2" style="align-content:start; gap:1rem">
+        <div class="card cl">
+          <h4>ODS 9 — Indústria i Innovació</h4>
+          <p>Dissenyar infraestructures resilients i promoure la innovació sostenible. Com a ASIX, cada arquitectura de xarxa que dissenyes pot ser més o menys eficient energèticament.</p>
+        </div>
+        <div class="card cl-earth">
+          <h4>ODS 13 — Acció Climàtica</h4>
+          <p>Reduir la petjada de carboni dels sistemes que gestionem: apagar servidors inactius, virtualitzar, triar proveïdors cloud amb energies renovables.</p>
+        </div>
+        <div class="card cl-sky">
+          <h4>ODS 4 — Educació de Qualitat</h4>
+          <p>Contribuir a la formació digital de l'entorn. El coneixement tècnic és un recurs que cal compartir i democratitzar, no acumular.</p>
+        </div>
+        <div class="card cl">
+          <h4>ODS 16 — Pau i Justícia</h4>
+          <p>Protecció de dades, ciberseguretat ètica, accés just a la informació. Un sistema mal protegit és una amenaça als drets fonamentals.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- RISCOS I OPORTUNITATS ODS -->
+    <div class="sec-tag fi" style="margin-top:4rem">Anàlisi estratègica</div>
+    <h2 class="fi">Riscos i Oportunitats dels ODS per a una empresa IT</h2>
+
+    <div style="overflow-x:auto" class="fi">
+      <table style="width:100%;border-collapse:collapse;font-size:.88rem;background:white;border-radius:12px;overflow:hidden;border:1px solid var(--border)">
+        <thead>
+          <tr style="background:var(--forest);color:white">
+            <th style="padding:.85rem 1rem;text-align:left;font-family:'Playfair Display',serif">ODS</th>
+            <th style="padding:.85rem 1rem;text-align:left">Risc si s'ignora</th>
+            <th style="padding:.85rem 1rem;text-align:left">Oportunitat si s'actua</th>
+            <th style="padding:.85rem 1rem;text-align:left">Acció concreta ASIX</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom:1px solid var(--border)">
+            <td style="padding:.8rem 1rem;font-weight:700;color:#fd6925">ODS 9</td>
+            <td style="padding:.8rem 1rem;color:var(--muted)">Infraestructures obsoletes i ineficients que generen costos i emissions</td>
+            <td style="padding:.8rem 1rem;color:var(--moss)">Posicionament com a proveïdor d'infraestructura sostenible i eficient</td>
+            <td style="padding:.8rem 1rem">Virtualització, apagat automàtic servidors, CPD verd</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border);background:#fafaf8">
+            <td style="padding:.8rem 1rem;font-weight:700;color:#3f7e44">ODS 13</td>
+            <td style="padding:.8rem 1rem;color:var(--muted)">Costos creixents d'energia, regulació climàtica que penalitza grans emissors</td>
+            <td style="padding:.8rem 1rem;color:var(--moss)">Estalvi de costos energètics, accés a fons verds europeus</td>
+            <td style="padding:.8rem 1rem">Mesurar PUE del CPD, contractar energia renovable, compensació de CO₂</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border)">
+            <td style="padding:.8rem 1rem;font-weight:700;color:#00689d">ODS 16</td>
+            <td style="padding:.8rem 1rem;color:var(--muted)">Multes GDPR, pèrdua de confiança clients, vulnerabilitats explotades</td>
+            <td style="padding:.8rem 1rem;color:var(--moss)">Diferenciació per ciberseguretat responsable, certificacions (ISO 27001)</td>
+            <td style="padding:.8rem 1rem">Auditories de seguretat, gestió de dades mínima necessària, formació interna</td>
+          </tr>
+          <tr style="background:#fafaf8">
+            <td style="padding:.8rem 1rem;font-weight:700;color:#bf8b2e">ODS 12</td>
+            <td style="padding:.8rem 1rem;color:var(--muted)">Costos creixents de hardware, impacte reputacional per e-waste</td>
+            <td style="padding:.8rem 1rem;color:var(--moss)">Mercat de hardware recondicionat, reducció de costos, imatge responsable</td>
+            <td style="padding:.8rem 1rem">Política de reciclatge RAEE, allargament vida útil equips, thin clients</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ACCIÓ PERSONAL I PROFESSIONAL -->
+    <div class="callout ca-earth fi" style="margin-top:2rem">
+      <span class="callout-icon">🎯</span>
+      <div>
+        <strong>De l'ODS a l'acció concreta: el teu dia a dia com a tècnic/a ASIX</strong>
+        <ul style="margin-top:.4rem">
+          <li>Apagar els monitors i equips de prova al final del torn (petita acció, gran impacte agregat).</li>
+          <li>Proposar la virtualització de servidors infrautilitzats en el proper projecte.</li>
+          <li>Documentar correctament els sistemes (ODS 4: el coneixement és un bé comú).</li>
+          <li>Reportar vulnerabilitats de seguretat que afectin la privacitat dels usuaris (ODS 16).</li>
+          <li>Recomanar al client l'ampliació de RAM en lloc de renovar l'equip sencer (ODS 12).</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- DEBAT RA3 -->
+    <div class="debate-card fi">
+      <div class="debate-header">
+        <div class="debate-badge">💬</div>
+        <div>
+          <h3>Activitat de Debat — RA3</h3>
+          <p>Durada: 40 min · Format: Plenari guiat pel professor/a · Reflexió personal escrita posterior</p>
+        </div>
+      </div>
+      <div class="debate-body">
+        <div class="debate-question">
+          "Com a futur/a tècnic/a ASIX, tens <em>responsabilitat moral individual</em> pels impactes ambientals dels sistemes que mantens, o la responsabilitat recau exclusivament en l'empresa que et contracta?"
+        </div>
+        <div class="debate-sides">
+          <div class="side side-a">
+            <div class="side-label">✅ Responsabilitat individual del tècnic</div>
+            <h4>Arguments a explorar</h4>
+            <ul>
+              <li>El coneixement tècnic implica responsabilitat: saps l'impacte, tens el poder d'actuar</li>
+              <li>L'objecció de consciència professional: un enginyer pot negar-se a fer una feina antiètia</li>
+              <li>La suma d'accions individuals crea canvi sistèmic: "si tots ho fan, passa"</li>
+              <li>Codi d'ètica professional: ACM i IEEE tenen codis deontològics que inclouen sostenibilitat</li>
+            </ul>
+          </div>
+          <div class="side side-b">
+            <div class="side-label">⚠️ Responsabilitat de l'empresa i el sistema</div>
+            <h4>Arguments a explorar</h4>
+            <ul>
+              <li>Un tècnic junior no pot canviar les decisions de compra ni la política energètica de l'empresa</li>
+              <li>Sense incentius sistèmics (regulació, costos), la responsabilitat individual és insuficient</li>
+              <li>El "guilt individual" és una estratègia corporativa per desviar l'atenció de les grans decisions estructurals</li>
+              <li>Les 100 empreses més grans generen el 71% de les emissions globals: l'individu és irrellevant</li>
+            </ul>
+          </div>
+        </div>
+        <div class="debate-rules">
+          <h4>📋 Dinàmica del debat</h4>
+          <div class="rule"><span class="rule-icon">🎭</span><span>Format de dilema: cada alumne/a tria una postura <em>personal</em> i l'argumeta en 2 minuts davant del grup. No hi ha postures assignades.</span></div>
+          <div class="rule"><span class="rule-icon">🔄</span><span>Ronda de canvi: pots canviar de postura si algú t'ha convençut, però has d'explicar per quin argument has canviat d'opinió.</span></div>
+          <div class="rule"><span class="rule-icon">✍️</span><span><strong>Entregable individual:</strong> redactat de 200 paraules: "Quina serà la meva acció sostenible concreta en el primer mes de feina?"</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     RA 4 — PRODUCTES I SERVEIS RESPONSABLES
+══════════════════════════════════════════ -->
+<section id="ra4" class="s-earth">
+  <div class="container">
+    <div class="ra-banner ra4-bg fi" data-ra="RA4">
+      <div class="ra-n">04</div>
+      <div>
+        <h2>Productes i Serveis Responsables</h2>
+        <p>Proposa productes i serveis responsables tenint en compte els principis de l'economia circular, l'ecodisseny i el cicle de vida del producte.</p>
+      </div>
+    </div>
+
+    <div class="sec-tag fi">Del lineal al circular</div>
+    <h2 class="fi">L'economia circular com a model IT</h2>
+    <p class="lead fi">El model "comprar-usar-llençar" és insostenible en el sector tecnològic, que consumeix materials crítics escassos. L'economia circular proposa tancar el cicle de vida dels productes.</p>
+
+    <!-- DIAGRAMA ECONOMIA CIRCULAR -->
+    <div class="diagram-wrap fi">
+      <svg viewBox="0 0 600 340" xmlns="http://www.w3.org/2000/svg" width="600" height="340">
+        <rect width="600" height="340" fill="#faf7f0" rx="10"/>
+        <!-- Central circle -->
+        <circle cx="300" cy="170" r="60" fill="#1a3a2a"/>
+        <text x="300" y="162" text-anchor="middle" font-size="11" font-weight="bold" fill="#9dcca8">ECONOMIA</text>
+        <text x="300" y="177" text-anchor="middle" font-size="11" font-weight="bold" fill="#9dcca8">CIRCULAR</text>
+        <!-- Circular arrows -->
+        <path d="M 300 110 A 60 60 0 0 1 360 170" fill="none" stroke="#4a7c5a" stroke-width="3" marker-end="url(#arr)"/>
+        <path d="M 360 170 A 60 60 0 0 1 300 230" fill="none" stroke="#6aab78" stroke-width="3" marker-end="url(#arr)"/>
+        <path d="M 300 230 A 60 60 0 0 1 240 170" fill="none" stroke="#9dcca8" stroke-width="3" marker-end="url(#arr)"/>
+        <path d="M 240 170 A 60 60 0 0 1 300 110" fill="none" stroke="#d4ebd9" stroke-width="3" marker-end="url(#arr)"/>
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L9,3 z" fill="#4a7c5a"/>
+          </marker>
+        </defs>
+        <!-- Nodes -->
+        <!-- Dissenyar -->
+        <circle cx="300" cy="45" r="38" fill="#2d5a3d"/>
+        <text x="300" y="40" text-anchor="middle" font-size="10" font-weight="bold" fill="white">🎨</text>
+        <text x="300" y="54" text-anchor="middle" font-size="9" fill="rgba(255,255,255,.9)">Ecodisseny</text>
+        <!-- Produir -->
+        <circle cx="490" cy="170" r="38" fill="#4a7c5a"/>
+        <text x="490" y="165" text-anchor="middle" font-size="10" font-weight="bold" fill="white">🏭</text>
+        <text x="490" y="179" text-anchor="middle" font-size="9" fill="rgba(255,255,255,.9)">Producció</text>
+        <!-- Usar -->
+        <circle cx="300" cy="295" r="38" fill="#6aab78"/>
+        <text x="300" y="290" text-anchor="middle" font-size="10" font-weight="bold" fill="white">💻</text>
+        <text x="300" y="304" text-anchor="middle" font-size="9" fill="#1a3a2a">Ús / Mant.</text>
+        <!-- Recuperar -->
+        <circle cx="110" cy="170" r="38" fill="#d4a843"/>
+        <text x="110" y="165" text-anchor="middle" font-size="10" font-weight="bold" fill="white">♻️</text>
+        <text x="110" y="179" text-anchor="middle" font-size="9" fill="#1a3a2a">Recuperar</text>
+        <!-- Lines to center -->
+        <line x1="300" y1="83" x2="300" y2="110" stroke="#c8d4c0" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <line x1="452" y1="170" x2="360" y2="170" stroke="#c8d4c0" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <line x1="300" y1="257" x2="300" y2="230" stroke="#c8d4c0" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <line x1="148" y1="170" x2="240" y2="170" stroke="#c8d4c0" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <text x="300" y="335" text-anchor="middle" font-size="10" fill="#6b7060">Model circular: cada fi és un nou inici</text>
+      </svg>
+    </div>
+
+    <!-- ECONOMIA LINEAL VS CIRCULAR IT -->
+    <div class="grid g2 fi" style="margin-top:2rem">
+      <div class="card" style="border-top:3px solid var(--coral)">
+        <div class="card-icon" style="background:#fdf0ec">🗑️</div>
+        <h3>Economia Lineal en IT</h3>
+        <p>Comprar → Usar → Llençar. Servidors físics per a cada servei. Portàtils renovats cada 2-3 anys. Hardware llençat al contenidor (o al passadís). Impressores amb bateria no reemplaçable.</p>
+        <div class="callout ca-coral" style="margin-top:.75rem;padding:.9rem">
+          <span class="callout-icon">⚠️</span>
+          <p><strong>Impacte:</strong> 53,6 milions de tones de residus electrònics el 2019 a nivell global. Creix un 3-5% anual. Menys del 20% es recicla correctament.</p>
+        </div>
+      </div>
+      <div class="card" style="border-top:3px solid var(--moss)">
+        <div class="card-icon" style="background:#e8f5ec">♻️</div>
+        <h3>Economia Circular en IT</h3>
+        <p>Virtualitzar servidors. Allargar la vida dels equips. Comprar hardware recondicionat (Back Market, Certideal). Donar equips usats a entitats socials. Gestió RAEE certificada.</p>
+        <div class="callout ca-green" style="margin-top:.75rem;padding:.9rem">
+          <span class="callout-icon">✅</span>
+          <p><strong>Exemple:</strong> Apple recupera or, coure i cobalt amb el robot "Daisy": 1,2 milions de telèfons/hora. El 2022 va recuperar material per valor de 100M$.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ECODISSENY I CICLE DE VIDA -->
+    <div class="sec-tag fi" style="margin-top:4rem">Disseny responsable</div>
+    <h2 class="fi">Ecodisseny i Anàlisi del Cicle de Vida (ACV)</h2>
+
+    <div class="grid g3 fi">
+      <div class="card cl">
+        <div class="card-icon" style="background:#e8f5ec">🎨</div>
+        <h3>Ecodisseny</h3>
+        <p>Incorporar criteris ambientals <strong>des del primer moment del disseny</strong> d'un producte o servei. No és una capa afegida al final, sinó una perspectiva que guia tot el procés.</p>
+        <div class="vbox" style="margin-top:.75rem">
+          <div class="vb-label">Principis clau</div>
+          <p>Durabilitat màxima · Reparabilitat fàcil · Modularitat · Materials reciclables · Eficiència energètica en ús · Empaquetament mínim</p>
+        </div>
+      </div>
+      <div class="card cl-earth">
+        <div class="card-icon" style="background:#fdf6e8">🔄</div>
+        <h3>ACV — Anàlisi del Cicle de Vida</h3>
+        <p>Metodologia que avalua l'impacte ambiental d'un producte en <strong>totes les seves fases</strong>: extracció de matèries, fabricació, distribució, ús i fi de vida.</p>
+        <div class="vbox vbox-earth" style="margin-top:.75rem">
+          <div class="vb-label">Les 4 fases de l'ACV</div>
+          <p>1. Matèries primeres · 2. Fabricació · 3. Ús i manteniment · 4. Fi de vida (reciclatge/abocador)</p>
+        </div>
+      </div>
+      <div class="card cl-sky">
+        <div class="card-icon" style="background:#eaf4fc">📊</div>
+        <h3>Certificacions ASG per productes IT</h3>
+        <p>Els productes i serveis IT poden obtenir certificacions que acrediten la seva sostenibilitat davant de clients i organismes públics.</p>
+        <div class="pills" style="margin-top:.75rem">
+          <span class="pill p-s">EPEAT (hardware)</span>
+          <span class="pill p-s">Energy Star</span>
+          <span class="pill p-g">ISO 14001</span>
+          <span class="pill p-g">TCO Certified</span>
+          <span class="pill p-e">Cradle to Cradle</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- DEBAT RA4 -->
+    <div class="debate-card fi">
+      <div class="debate-header">
+        <div class="debate-badge">💬</div>
+        <div>
+          <h3>Activitat de Debat — RA4</h3>
+          <p>Durada: 50 min · Format: Grup d'experts + roda de premsa · Ús de casos reals de mercat</p>
+        </div>
+      </div>
+      <div class="debate-body">
+        <div class="debate-question">
+          "L'obsolescència programada dels dispositius tecnològics hauria de ser <em>il·legal a la Unió Europea</em>, o els fabricants han de tenir llibertat per decidir el cicle de vida dels seus productes?"
+        </div>
+        <div class="debate-sides">
+          <div class="side side-a">
+            <div class="side-label">✅ Prohibir l'obsolescència programada</div>
+            <h4>Arguments a explorar</h4>
+            <ul>
+              <li>La UE ja obliga des de 2027 a bateries reemplaçables en mòbils: és un primer pas que ha de continuar</li>
+              <li>El consumidor paga dues vegades: el producte i les seves externalitats ambientals</li>
+              <li>Dret a la reparació (Right to Repair): els fabricants han de subministrar recanvis durant almenys 7 anys</li>
+              <li>Models com Fairphone demostren que és possible fer mòbils durables i rendibles</li>
+            </ul>
+          </div>
+          <div class="side side-b">
+            <div class="side-label">⚠️ Llibertat de mercat i innovació</div>
+            <h4>Arguments a explorar</h4>
+            <ul>
+              <li>La innovació tecnològica accelerada beneficia els consumidors: cada generació de producte és millor i més eficient</li>
+              <li>Definir legalment l'"obsolescència programada" és extremadament complex (quan és planificada vs natural?)</li>
+              <li>El mercat ja premia la durabilitat: Apple ven "longevitat" com a valor de marca</li>
+              <li>La regulació podria frenar la innovació europea respecte als competidors asiàtics no regulats</li>
+            </ul>
+          </div>
+        </div>
+        <div class="debate-rules">
+          <h4>📋 Dinàmica: Roda de premsa</h4>
+          <div class="rule"><span class="rule-icon">👔</span><span>Grup A juga el rol de "Comissió Europea de Medi Ambient" defensant la regulació. Grup B juga el rol de "Lobby de fabricants de tecnologia".</span></div>
+          <div class="rule"><span class="rule-icon">📰</span><span>Un tercer grup (3-4 persones) actua de "periodistes": fan preguntes incòmodes a ambdós grups durant 15 minuts.</span></div>
+          <div class="rule"><span class="rule-icon">🎯</span><span><strong>Cas concret:</strong> Analitzeu la política de reparació d'Apple vs. la de Fairphone. Quines diferències hi ha? Quin model és més sostenible? Quin és més rentable?</span></div>
+          <div class="rule"><span class="rule-icon">✍️</span><span><strong>Entregable:</strong> Cada grup redacta un "comunicat de premsa" de 150 paraules defensant la seva postura amb dades.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     RA 5 — ACTIVITATS SOSTENIBLES
+══════════════════════════════════════════ -->
+<section id="ra5" class="s-dark">
+  <div class="container">
+    <div class="ra-banner ra5-bg fi" data-ra="RA5">
+      <div class="ra-n">05</div>
+      <div>
+        <h2>Activitats Sostenibles en la Pràctica</h2>
+        <p>Realitza activitats sostenibles minimitzant l'impacte de les mateixes en el medi ambient, aplicant l'economia circular, estratègies sostenibles i la normativa ambiental.</p>
+      </div>
+    </div>
+
+    <div class="sec-tag fi" style="color:var(--leaf)">D'allò teòric a allò pràctic</div>
+    <h2 class="fi">Com mesurar i minimitzar l'impacte en IT</h2>
+    <p class="lead fi">No n'hi ha prou d'entendre la sostenibilitat: cal mesurar l'impacte real de les nostres accions i aplicar estratègies concretes de millora.</p>
+
+    <!-- MÉTRIQUES AMBIENTALS IT -->
+    <div class="grid g2 fi">
+      <div>
+        <div class="vbox vbox-dark">
+          <div class="vb-label">📊 Mètriques clau per a CPDs i infraestructura</div>
+          <p><strong style="color:var(--leaf)">PUE (Power Usage Effectiveness):</strong> quanta de l'energia total del CPD va realment al còmput. Un CPD excel·lent té PUE de 1,1. Un CPD mediocre, 2,0 (la meitat de l'energia es perd en refrigeració i auxiliars).</p>
+        </div>
+        <div class="diagram-wrap" style="margin-top:1rem;background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.1)">
+          <svg viewBox="0 0 380 180" xmlns="http://www.w3.org/2000/svg" width="380" height="180">
+            <rect width="380" height="180" fill="#1a3a2a" rx="8"/>
+            <!-- Barres PUE -->
+            <rect x="40" y="20" width="50" height="120" rx="4" fill="#4a7c5a"/>
+            <rect x="110" y="50" width="50" height="90" rx="4" fill="#6aab78"/>
+            <rect x="180" y="80" width="50" height="60" rx="4" fill="#9dcca8"/>
+            <rect x="250" y="100" width="50" height="40" rx="4" fill="#d4ebd9"/>
+            <!-- Labels -->
+            <text x="65" y="155" text-anchor="middle" font-size="10" fill="rgba(255,255,255,.7)">Vell CPD</text>
+            <text x="65" y="14" text-anchor="middle" font-size="12" font-weight="bold" fill="white">2,5</text>
+            <text x="135" y="155" text-anchor="middle" font-size="10" fill="rgba(255,255,255,.7)">Mig</text>
+            <text x="135" y="44" text-anchor="middle" font-size="12" font-weight="bold" fill="white">2,0</text>
+            <text x="205" y="155" text-anchor="middle" font-size="10" fill="rgba(255,255,255,.7)">Bo</text>
+            <text x="205" y="74" text-anchor="middle" font-size="12" font-weight="bold" fill="white">1,5</text>
+            <text x="275" y="155" text-anchor="middle" font-size="10" fill="rgba(255,255,255,.7)">Excel·lent</text>
+            <text x="275" y="94" text-anchor="middle" font-size="12" font-weight="bold" fill="#d4ebd9">1,1</text>
+            <!-- Google label -->
+            <text x="290" y="155" text-anchor="start" font-size="9" fill="#9dcca8">↑ Google</text>
+            <text x="320" y="155" text-anchor="start" font-size="9" fill="#9dcca8">avg.</text>
+            <text x="190" y="170" text-anchor="middle" font-size="10" fill="rgba(255,255,255,.5)">PUE — Power Usage Effectiveness</text>
+          </svg>
+        </div>
+      </div>
+      <div class="grid g2" style="align-content:start;gap:1rem">
+        <div class="card" style="background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.12)">
+          <h4 style="color:var(--leaf)">🌡️ Petjada de Carboni IT</h4>
+          <p>Mesura les emissions de CO₂ equivalents generades pels sistemes. Inclou consum energètic, viatges de negocis i fabricació dels equips. Calculable amb eines com el Carbon Calculator d'AWS.</p>
+        </div>
+        <div class="card" style="background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.12)">
+          <h4 style="color:var(--leaf)">💧 Petjada Hídrica</h4>
+          <p>Els CPDs necessiten molta aigua per al refredament. Un gran CPD pot consumir milions de litres d'aigua al dia. Microsoft experimenta amb CPDs submarines per aprofitar l'aigua del mar.</p>
+        </div>
+        <div class="card" style="background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.12)">
+          <h4 style="color:var(--leaf)">♻️ Taxa de Reciclatge RAEE</h4>
+          <p>Percentatge d'equips electrònics gestionats per gestors autoritzats (Directiva RAEE/WEEE). Obligatori per llei. El tècnic IT ha de conèixer el circuit de recollida del seu municipi.</p>
+        </div>
+        <div class="card" style="background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.12)">
+          <h4 style="color:var(--leaf)">📦 Consum de Recursos Minerals</h4>
+          <p>Coltan, liti, cobalt, neodimi, indium: materials crítics als nostres dispositius. La mineria d'aquests materials té enormes impactes ambientals i socials. La reutilització n'és l'alternativa.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- NORMATIVA AMBIENTAL -->
+    <div class="sec-tag fi" style="margin-top:4rem;color:var(--leaf)">Normativa</div>
+    <h2 class="fi">Marc normatiu ambiental aplicable a IT</h2>
+
+    <div class="grid g3 fi">
+      <div class="card" style="background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.12);border-left:3px solid var(--fern)">
+        <h4 style="color:var(--leaf)">🇪🇺 Directiva RAEE (2012/19/UE)</h4>
+        <p>Regulació europea sobre residus d'equips elèctrics i electrònics. Obliga fabricants i distribuïdors a gestionar el retorn i reciclatge dels productes. Trasposada a Espanya per RD 110/2015.</p>
+      </div>
+      <div class="card" style="background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.12);border-left:3px solid var(--fern)">
+        <h4 style="color:var(--leaf)">⚡ Directiva d'Ecoeficiència (ErP)</h4>
+        <p>Estableix requisits d'ecodisseny per a equips elèctrics. Marca els estàndards mínims d'eficiència energètica. Relacionada amb l'etiquetatge Energy Star i l'eficiència dels CPDs.</p>
+      </div>
+      <div class="card" style="background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.12);border-left:3px solid var(--fern)">
+        <h4 style="color:var(--leaf)">🔒 GDPR com a sostenibilitat (Governança)</h4>
+        <p>El Reglament General de Protecció de Dades és una norma de governança de dades que limita la recopilació excessiva ("minimització"). Menys dades = menys emmagatzematge = menys energia.</p>
+      </div>
+    </div>
+
+    <!-- ESTRATÈGIES SOSTENIBLES IT -->
+    <div class="sec-tag fi" style="margin-top:3rem;color:var(--leaf)">Estratègies pràctiques</div>
+    <h2 class="fi">Green IT: estratègies sostenibles per al tècnic ASIX</h2>
+
+    <ol class="steps fi">
+      <li><p><strong>Virtualització i consolidació de servidors:</strong> convertir 10 servidors físics al 15% de CPU en 2 servidors físics amb 10 VMs. Reducció del 80% del hardware i del consum elèctric associat.</p></li>
+      <li><p><strong>Apagat automàtic d'entorns de proves:</strong> amb scripts o eines cloud (AWS Lambda, Azure Automation), els servidors de dev/staging s'apaguen fora d'horari laboral. Estalvi mitjà del 30-40% del cost mensual.</p></li>
+      <li><p><strong>Thin clients i terminals lleugers:</strong> en comptes de renovar 50 PC potents cada 4 anys, implementar thin clients (vida útil de 10+ anys) connectats a servidors centralitzats.</p></li>
+      <li><p><strong>Proveïdors cloud verds:</strong> AWS, Azure i Google Cloud ofereixen regions amb energia 100% renovable. Seleccionar-les no té cost addicional. AWS "us-west-2" o Azure "North Europe" (Irlanda, energia renovable).</p></li>
+      <li><p><strong>Gestió del cicle de vida dels actius (ITAM):</strong> inventari detallat de tots els equips amb data de compra i vida útil prevista. Planificació de renovació escalonada i venda/donació dels equips retirats.</p></li>
+      <li><p><strong>Reciclatge RAEE certificat:</strong> mai llençar hardware a la brossa general. Contactar amb gestors RAEE autoritzats (llista al Ministeri de Transició Ecològica). L'empresa pot obtenir un certificat de reciclatge per al seu informe de sostenibilitat.</p></li>
+    </ol>
+
+    <!-- DEBAT RA5 -->
+    <div class="debate-card fi">
+      <div class="debate-header">
+        <div class="debate-badge">💬</div>
+        <div>
+          <h3>Activitat de Debat — RA5</h3>
+          <p>Durada: 45 min · Format: World Café (rotació de grups) · Material: Calculadores de carboni online</p>
+        </div>
+      </div>
+      <div class="debate-body">
+        <div class="debate-question">
+          "Treballar en remot des de casa és, en termes de petjada de carboni global, <em>més sostenible</em> que anar cada dia a l'oficina... o no?"
+        </div>
+        <div class="debate-sides">
+          <div class="side side-a">
+            <div class="side-label">✅ El teletreball és MÉS sostenible</div>
+            <h4>Arguments a explorar</h4>
+            <ul>
+              <li>Elimina o redueix els desplaçaments: el transport és el 25% de les emissions de la UE</li>
+              <li>Redueix el consum dels edificis d'oficines (llum, calefacció, aire condicionat)</li>
+              <li>Permet viure lluny de les grans ciutats: descarbonitza la mobilitat urbana</li>
+              <li>Google i Microsoft han calculat que el teletreball redueix les emissions per empleat entre un 20-50%</li>
+            </ul>
+          </div>
+          <div class="side side-b">
+            <div class="side-label">⚠️ El teletreball NO és sempre més sostenible</div>
+            <h4>Arguments a explorar</h4>
+            <ul>
+              <li>L'escalfament i la refrigeració de milers de cases individuals és menys eficient que un edifici centralitzat</li>
+              <li>El tràfic de dades disparat (videoconferències HD tot el dia) augmenta el consum dels CPDs</li>
+              <li>Cada treballador a casa necessita el seu propi equip (més hardware, més e-waste)</li>
+              <li>Efecte rebot: la comoditat del teletreball porta a acceptar feines més lluny que exigiran desplaçaments ocasionals en avió</li>
+            </ul>
+          </div>
+        </div>
+        <div class="debate-rules">
+          <h4>📋 Dinàmica: World Café amb dades</h4>
+          <div class="rule"><span class="rule-icon">🧮</span><span><strong>Fase 1 (15 min):</strong> Cada grup usa una calculadora de petjada de carboni (footprintcalculator.org o similar) per comparar: un dia d'oficina típic vs un dia de teletreball. Quines variables incloeu? Quines no?</span></div>
+          <div class="rule"><span class="rule-icon">🔄</span><span><strong>Fase 2 (20 min):</strong> Rotació World Café: cada grup passa per les altres taules i aporta el seu argument més fort. Al final, es vota: "El teletreball és NET més sostenible, sí o no?"</span></div>
+          <div class="rule"><span class="rule-icon">🎯</span><span><strong>Conclusió:</strong> "No hi ha resposta universal". Identifiqueu quines variables fan que la resposta canviï (país, tipus de transport, tipus d'habitatge, tipus de feina).</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     RA 6 — PLA DE SOSTENIBILITAT
+══════════════════════════════════════════ -->
+<section id="ra6">
+  <div class="container">
+    <div class="ra-banner ra6-bg fi" data-ra="RA6">
+      <div class="ra-n">06</div>
+      <div>
+        <h2>Pla de Sostenibilitat Empresarial</h2>
+        <p>Analitza un pla de sostenibilitat, identificant els grups d'interès, els aspectes ASG materials i justificant accions per a la seva gestió i mesurament.</p>
+      </div>
+    </div>
+
+    <div class="sec-tag fi">El producte final del mòdul</div>
+    <h2 class="fi">Estructura d'un pla de sostenibilitat IT</h2>
+    <p class="lead fi">Un pla de sostenibilitat és el document estratègic que formalitza els compromisos d'una organització amb els seus grups d'interès en matèria ASG. Per a una empresa IT, inclou tots els elements que hem vist als RA anteriors.</p>
+
+    <!-- GRUPS D'INTERÈS -->
+    <div class="sec-tag fi">Pas 1</div>
+    <h2 class="fi">Mapa de Grups d'Interès (Stakeholders)</h2>
+
+    <div class="diagram-wrap fi">
+      <svg viewBox="0 0 580 320" xmlns="http://www.w3.org/2000/svg" width="580" height="320">
+        <rect width="580" height="320" fill="#faf7f0" rx="10"/>
+        <!-- Central -->
+        <ellipse cx="290" cy="160" rx="70" ry="50" fill="#1a3a2a"/>
+        <text x="290" y="155" text-anchor="middle" font-size="11" font-weight="bold" fill="white">EMPRESA</text>
+        <text x="290" y="170" text-anchor="middle" font-size="11" font-weight="bold" fill="#9dcca8">IT / ASIX</text>
+        <!-- Stakeholder circles -->
+        <!-- Clients -->
+        <circle cx="130" cy="80" r="42" fill="#2d5a3d"/>
+        <text x="130" y="76" text-anchor="middle" font-size="10" font-weight="bold" fill="white">👥</text>
+        <text x="130" y="89" text-anchor="middle" font-size="9" fill="rgba(255,255,255,.9)">Clients</text>
+        <line x1="168" y1="104" x2="222" y2="130" stroke="#4a7c5a" stroke-width="1.5"/>
+        <!-- Empleats -->
+        <circle cx="450" cy="80" r="42" fill="#4a7c5a"/>
+        <text x="450" y="76" text-anchor="middle" font-size="10" font-weight="bold" fill="white">👷</text>
+        <text x="450" y="89" text-anchor="middle" font-size="9" fill="rgba(255,255,255,.9)">Empleats</text>
+        <line x1="412" y1="104" x2="358" y2="130" stroke="#4a7c5a" stroke-width="1.5"/>
+        <!-- Inversors -->
+        <circle cx="80" cy="210" r="42" fill="#d4a843"/>
+        <text x="80" y="206" text-anchor="middle" font-size="10" font-weight="bold" fill="white">💰</text>
+        <text x="80" y="219" text-anchor="middle" font-size="9" fill="#1a3a2a">Inversors</text>
+        <line x1="121" y1="200" x2="222" y2="175" stroke="#d4a843" stroke-width="1.5"/>
+        <!-- Reguladors -->
+        <circle cx="500" cy="210" r="42" fill="#2a7ab5"/>
+        <text x="500" y="206" text-anchor="middle" font-size="10" font-weight="bold" fill="white">⚖️</text>
+        <text x="500" y="219" text-anchor="middle" font-size="9" fill="rgba(255,255,255,.9)">Reguladors</text>
+        <line x1="459" y1="200" x2="358" y2="175" stroke="#2a7ab5" stroke-width="1.5"/>
+        <!-- Proveïdors -->
+        <circle cx="180" cy="280" r="38" fill="#6aab78"/>
+        <text x="180" y="276" text-anchor="middle" font-size="10" font-weight="bold" fill="white">🏭</text>
+        <text x="180" y="289" text-anchor="middle" font-size="9" fill="#1a3a2a">Proveïdors</text>
+        <line x1="204" y1="244" x2="258" y2="207" stroke="#6aab78" stroke-width="1.5"/>
+        <!-- Societat -->
+        <circle cx="400" cy="280" r="38" fill="#c26b3a"/>
+        <text x="400" y="276" text-anchor="middle" font-size="10" font-weight="bold" fill="white">🌍</text>
+        <text x="400" y="289" text-anchor="middle" font-size="9" fill="rgba(255,255,255,.9)">Societat</text>
+        <line x1="376" y1="244" x2="322" y2="207" stroke="#c26b3a" stroke-width="1.5"/>
+        <text x="290" y="312" text-anchor="middle" font-size="10" fill="#6b7060">Mapa de stakeholders d'una empresa IT</text>
+      </svg>
+    </div>
+
+    <!-- MATRIU DE MATERIALITAT -->
+    <div class="sec-tag fi" style="margin-top:3rem">Pas 2</div>
+    <h2 class="fi">Matriu de Materialitat — Quins aspectes ASG importen?</h2>
+    <p class="lead fi">L'anàlisi de materialitat identifica quins aspectes ASG són <strong>rellevants alhora</strong> per als grups d'interès i per als objectius estratègics de l'empresa. Els aspectes "materials" són els que cal prioritzar i reportar.</p>
+
+    <div class="diagram-wrap fi">
+      <svg viewBox="0 0 500 360" xmlns="http://www.w3.org/2000/svg" width="500" height="360">
+        <rect width="500" height="360" fill="#faf7f0" rx="10"/>
+        <!-- Axes -->
+        <line x1="60" y1="310" x2="460" y2="310" stroke="#1a3a2a" stroke-width="2"/>
+        <line x1="60" y1="310" x2="60" y2="30" stroke="#1a3a2a" stroke-width="2"/>
+        <!-- Arrow tips -->
+        <polygon points="460,307 460,313 468,310" fill="#1a3a2a"/>
+        <polygon points="57,30 63,30 60,22" fill="#1a3a2a"/>
+        <!-- Axis labels -->
+        <text x="264" y="335" text-anchor="middle" font-size="11" fill="#1a3a2a" font-weight="bold">Importància per als grups d'interès →</text>
+        <text x="22" y="170" text-anchor="middle" font-size="11" fill="#1a3a2a" font-weight="bold" transform="rotate(-90 22 170)">Importància per a l'empresa →</text>
+        <!-- Quadrant fills -->
+        <rect x="60" y="190" width="190" height="120" fill="rgba(212,168,67,.08)"/>
+        <rect x="250" y="190" width="210" height="120" fill="rgba(106,171,120,.12)"/>
+        <rect x="250" y="30" width="210" height="160" fill="rgba(42,124,90,.2)"/>
+        <rect x="60" y="30" width="190" height="160" fill="rgba(200,212,192,.1)"/>
+        <!-- Quadrant labels -->
+        <text x="155" y="256" text-anchor="middle" font-size="9" fill="#d4a843">Monitorejar</text>
+        <text x="355" y="256" text-anchor="middle" font-size="9" fill="#4a7c5a">Gestionar activament</text>
+        <text x="355" y="100" text-anchor="middle" font-size="10" font-weight="bold" fill="#1a3a2a">⭐ MATERIAL</text>
+        <text x="155" y="100" text-anchor="middle" font-size="9" fill="#6b7060">Comunicar</text>
+        <!-- Bubbles - material issues -->
+        <circle cx="380" cy="70" r="22" fill="#1a3a2a" opacity=".85"/>
+        <text x="380" y="66" text-anchor="middle" font-size="8" fill="white">Seguretat</text>
+        <text x="380" y="78" text-anchor="middle" font-size="8" fill="white">dades</text>
+        <circle cx="350" cy="110" r="19" fill="#2d5a3d" opacity=".85"/>
+        <text x="350" y="114" text-anchor="middle" font-size="8" fill="white">Clima/CO₂</text>
+        <circle cx="410" cy="140" r="16" fill="#4a7c5a" opacity=".85"/>
+        <text x="410" y="144" text-anchor="middle" font-size="8" fill="white">E-waste</text>
+        <!-- Secondary -->
+        <circle cx="310" cy="220" r="15" fill="#6aab78" opacity=".8"/>
+        <text x="310" y="224" text-anchor="middle" font-size="7.5" fill="white">Diversitat</text>
+        <circle cx="370" cy="240" r="14" fill="#d4a843" opacity=".8"/>
+        <text x="370" y="244" text-anchor="middle" font-size="7.5" fill="#1a3a2a">Energia</text>
+        <!-- Low priority -->
+        <circle cx="140" cy="260" r="12" fill="#c8d4c0" opacity=".7"/>
+        <text x="140" y="264" text-anchor="middle" font-size="7" fill="#6b7060">Transports</text>
+        <circle cx="180" cy="220" r="13" fill="#c8d4c0" opacity=".7"/>
+        <text x="180" y="224" text-anchor="middle" font-size="7" fill="#6b7060">Packaging</text>
+        <text x="264" y="22" text-anchor="middle" font-size="11" fill="#1a3a2a" font-weight="bold">Matriu de materialitat — Empresa IT exemple</text>
+      </svg>
+    </div>
+
+    <!-- INDICADORS I MÈTRIQUES -->
+    <div class="sec-tag fi" style="margin-top:3rem">Pas 3</div>
+    <h2 class="fi">Indicadors i Mètriques per a l'Informe de Sostenibilitat</h2>
+
+    <div style="overflow-x:auto" class="fi">
+      <table style="width:100%;border-collapse:collapse;font-size:.87rem;background:white;border-radius:12px;overflow:hidden;border:1px solid var(--border)">
+        <thead>
+          <tr style="background:var(--forest);color:white">
+            <th style="padding:.85rem 1rem;text-align:left;font-family:'Playfair Display',serif">Àmbit</th>
+            <th style="padding:.85rem 1rem;text-align:left">Indicador GRI</th>
+            <th style="padding:.85rem 1rem;text-align:left">Mètrica concreta per a IT</th>
+            <th style="padding:.85rem 1rem;text-align:left">Objectiu exemple</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom:1px solid var(--border)">
+            <td style="padding:.8rem 1rem;font-weight:700;color:var(--moss)">🌍 Ambiental</td>
+            <td style="padding:.8rem 1rem">GRI 302 – Energia</td>
+            <td style="padding:.8rem 1rem">kWh consumits per CPD i oficines / any</td>
+            <td style="padding:.8rem 1rem">Reduir 15% en 2 anys</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border);background:#fafaf8">
+            <td style="padding:.8rem 1rem;font-weight:700;color:var(--moss)">🌍 Ambiental</td>
+            <td style="padding:.8rem 1rem">GRI 305 – Emissions</td>
+            <td style="padding:.8rem 1rem">Tones CO₂ eq. (Scopes 1, 2 i 3)</td>
+            <td style="padding:.8rem 1rem">Neutralitat carboni 2030</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border)">
+            <td style="padding:.8rem 1rem;font-weight:700;color:var(--moss)">🌍 Ambiental</td>
+            <td style="padding:.8rem 1rem">GRI 306 – Residus</td>
+            <td style="padding:.8rem 1rem">Kg de residus electrònics (RAEE) gestionats</td>
+            <td style="padding:.8rem 1rem">100% RAEE certificat</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border);background:#fafaf8">
+            <td style="padding:.8rem 1rem;font-weight:700;color:var(--sky)">👥 Social</td>
+            <td style="padding:.8rem 1rem">GRI 405 – Diversitat</td>
+            <td style="padding:.8rem 1rem">% dones en rols tècnics / de lideratge</td>
+            <td style="padding:.8rem 1rem">40% dones en tècnics el 2027</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border)">
+            <td style="padding:.8rem 1rem;font-weight:700;color:var(--sky)">👥 Social</td>
+            <td style="padding:.8rem 1rem">GRI 403 – Salut laboral</td>
+            <td style="padding:.8rem 1rem">Índex d'accidents laborals / hores treballades</td>
+            <td style="padding:.8rem 1rem">Zero accidents greus</td>
+          </tr>
+          <tr style="background:#fafaf8">
+            <td style="padding:.8rem 1rem;font-weight:700;color:var(--earth)">⚖️ Governança</td>
+            <td style="padding:.8rem 1rem">GRI 418 – Privacitat</td>
+            <td style="padding:.8rem 1rem">Nombre d'incidents de seguretat de dades / any</td>
+            <td style="padding:.8rem 1rem">0 incidents reportables GDPR</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout ca-green fi" style="margin-top:2rem">
+      <span class="callout-icon">📋</span>
+      <div>
+        <strong>Estructura d'un informe de sostenibilitat complet (GRI Standards):</strong>
+        <ul style="margin-top:.4rem">
+          <li><strong>Carta del CEO/Direcció:</strong> compromís estratègic amb la sostenibilitat.</li>
+          <li><strong>Perfil de l'organització:</strong> activitat, abast, cadena de valor.</li>
+          <li><strong>Mapa de stakeholders i procés d'identificació de materialitat.</strong></li>
+          <li><strong>Aspectes materials ASG:</strong> riscos, oportunitats, accions i resultats per a cada un.</li>
+          <li><strong>Indicadors GRI:</strong> dades quantitatives verificables per a cada indicador material.</li>
+          <li><strong>Verificació externa:</strong> idealment, una tercera part independent verifica les dades.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- DEBAT FINAL RA6 -->
+    <div class="debate-card fi">
+      <div class="debate-header">
+        <div class="debate-badge">💬</div>
+        <div>
+          <h3>Activitat de Debat Final — RA6</h3>
+          <p>Durada: 60 min · Format: Simulació de consell d'administració · Avaluació integrada del mòdul</p>
+        </div>
+      </div>
+      <div class="debate-body">
+        <div class="debate-question">
+          "TecnoCloud S.L., una empresa de serveis cloud de 200 empleats, ha de decidir si inverteix 500.000€ en reduir a zero les seves emissions de CO₂ el 2026, o si prefereix créixer: contractar 20 tècnics nous i obrir 2 oficines noves. <em>Quin camí trieu i per quin motiu?</em>"
+        </div>
+        <div class="debate-sides">
+          <div class="side side-a">
+            <div class="side-label">🌱 Opció A — Inversió en sostenibilitat</div>
+            <h4>Raonament estratègic</h4>
+            <ul>
+              <li>CPD 100% renovable: reducció PUE 2,1 → 1,3 (estalvi energètic que amortitzarà la inversió en 4 anys)</li>
+              <li>Certificació GHG Protocol + ISO 14001: accés a contractació pública europea (exigeix criteris ASG)</li>
+              <li>Atracció de talent jove: el 73% dels millennials prefereix empreses amb valors ambientals</li>
+              <li>Anticipació regulatòria: CSRD obligarà a reportar en 3 anys. Qui comença ara té avantatge</li>
+            </ul>
+          </div>
+          <div class="side side-b">
+            <div class="side-label">📈 Opció B — Creixement i ocupació</div>
+            <h4>Raonament estratègic</h4>
+            <ul>
+              <li>20 llocs de treball nous = impacte social directe i immediat (ODS 8)</li>
+              <li>Major facturació → major capacitat futura d'invertir en sostenibilitat</li>
+              <li>Compensació de carboni (carbon offsets) mentre es creix: menys costós i igual de vàlid?</li>
+              <li>Dues noves oficines poden ser en ubicacions estratègiques per a clients que exigeixen presencialitat</li>
+            </ul>
+          </div>
+        </div>
+        <div class="debate-rules">
+          <h4>📋 Dinàmica: Simulació de consell d'administració</h4>
+          <div class="rule"><span class="rule-icon">👔</span><span>Es formen 5 grups que representen: Direcció General, Director Financer (CFO), Director de Sostenibilitat (CSO), Representant dels empleats, i Inversors institucionals ESG.</span></div>
+          <div class="rule"><span class="rule-icon">🗣️</span><span>Cada grup prepara (10 min) la seva postura des del rol assignat. No des de l'opinió personal, sinó des dels interessos del rol.</span></div>
+          <div class="rule"><span class="rule-icon">⚖️</span><span>Reunió de consell (25 min): tots els grups exposen i negocien. Al final, cal arribar a un acord o votar. Queda reflectit en acta.</span></div>
+          <div class="rule"><span class="rule-icon">📊</span><span><strong>Entregable de grup:</strong> un "Pla de Sostenibilitat simplificat" per a TecnoCloud S.L. d'1 pàgina: 3 aspectes materials ASG, 3 accions concretes, 3 indicadors amb objectiu numèric i termini. <em>Integra tot el que heu après al llarg del mòdul.</em></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESUM FINAL -->
+<section class="s-mist">
+  <div class="container fi">
+    <div class="sec-tag">Síntesi del mòdul</div>
+    <h2>Tot el que heu après: 1708 en 6 blocs</h2>
+    <p class="lead">Un mòdul que connecta el global amb el local, la teoria amb l'acció, i els valors amb les competències professionals.</p>
+    <div class="grid g3 fi">
+      <div class="card cl">
+        <div class="card-icon" style="background:#e8f5ec">🌍</div>
+        <h3>RA1 — Fonaments ASG</h3>
+        <p>Agenda 2030, 17 ODS, marc ASG (Ambiental, Social, Governança), estàndards GRI/ESRS/TCFD, inversió socialment responsable i la CSRD europea.</p>
+      </div>
+      <div class="card cl-earth">
+        <div class="card-icon" style="background:#fdf6e8">⚠️</div>
+        <h3>RA2 — Reptes globals</h3>
+        <p>Canvi climàtic, biodiversitat, equitat social, bretxa digital, e-waste, condicions laborals en la cadena de valor IT. Impacte real i mesurable del sector tecnològic.</p>
+      </div>
+      <div class="card cl-sky">
+        <div class="card-icon" style="background:#eaf4fc">🎯</div>
+        <h3>RA3 — ODS i acció pro.</h3>
+        <p>ODS rellevants per a l'ASIX (9, 13, 16, 4, 12). Riscos i oportunitats estratègiques. Del global a l'acció personal i professional concreta i mesurable.</p>
+      </div>
+      <div class="card cl">
+        <div class="card-icon" style="background:#e8f5ec">♻️</div>
+        <h3>RA4 — Economia Circular</h3>
+        <p>Lineal vs circular en IT. Ecodisseny, ACV (Anàlisi del Cicle de Vida), certificacions (EPEAT, TCO, Energy Star). Obsolescència programada i dret a la reparació.</p>
+      </div>
+      <div class="card cl-earth">
+        <div class="card-icon" style="background:#fdf6e8">⚡</div>
+        <h3>RA5 — Activitats sostenibles</h3>
+        <p>PUE, petjada de carboni, RAEE. Estratègies Green IT: virtualització, apagat automàtic, thin clients, cloud verd. Normativa RAEE, ErP i GDPR com a sostenibilitat.</p>
+      </div>
+      <div class="card" style="background:var(--forest);border-color:var(--forest)">
+        <div class="card-icon" style="background:rgba(255,255,255,.1)">📋</div>
+        <h3 style="color:white">RA6 — Pla de Sostenibilitat</h3>
+        <p style="color:rgba(255,255,255,.7)">Stakeholders, matriu de materialitat ASG, indicadors GRI, estructura de l'informe de sostenibilitat. El producte final: un pla real i aplicable.</p>
+      </div>
+    </div>
+    <div class="quote fi" style="margin-top:3rem">
+      <p>"La sostenibilitat no és un cost: és la condició de possibilitat del negoci a llarg termini. I el sector IT, que més ràpidament creix i més recursos consumeix, té la responsabilitat i la capacitat de liderar el canvi."</p>
+      <cite>— Síntesi del mòdul 1708</cite>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p><strong>Mòdul 1708 — Sostenibilitat Aplicada al Sistema Productiu · ASIX</strong></p>
+  <p style="margin-top:.4rem">33 hores · 3 ECTS · 6 Resultats d'Aprenentatge · 6 Activitats de Debat</p>
+  <p style="margin-top:.4rem">Departament d'Informàtica</p>
+</footer>
+
+<script>
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+  }, { threshold: 0.06, rootMargin: '0px 0px -30px 0px' });
+  document.querySelectorAll('.fi').forEach(el => io.observe(el));
+</script>
+</body>
+</html>

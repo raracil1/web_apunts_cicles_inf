@@ -1,0 +1,1592 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RA5 — Administració de l'Accés a Dominis · ASIX · MP0369</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0d0f1a;--paper:#f4f2ed;--cream:#eceae3;--navy:#1a1f4e;
+  --asix:#6d28d9;--asix-l:#7c3aed;--asix-d:#4c1d95;
+  --win:#0078d4;--win-d:#005a9e;
+  --ubuntu:#e95420;--ubuntu-d:#c2440e;
+  --green:#059669;--amber:#d97706;--red:#dc2626;
+  --teal:#0891b2;--teal-d:#0e7490;
+  --samba:#ff6b35;--nfs:#2d6a4f;
+  --muted:#6b6f85;--border:#d6d2c9;--card:#ffffff;
+  --term:#0f111a;--term2:#161b2e;
+  --radius:16px;--radius-sm:8px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);font-size:16px;line-height:1.7;overflow-x:hidden;}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(244,242,237,.94);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:62px;}
+.nav-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:.95rem;color:var(--navy);letter-spacing:-.02em;}
+.nav-logo span{color:var(--asix-l);}
+.nav-pills{display:flex;gap:.3rem;list-style:none;flex-wrap:wrap;}
+.nav-pills a{text-decoration:none;font-size:.7rem;font-weight:600;padding:.22rem .6rem;border-radius:100px;color:var(--muted);transition:all .2s;border:1px solid transparent;}
+.nav-pills a:hover,.nav-pills a.act{color:var(--asix-l);border-color:var(--asix-l);background:rgba(109,40,217,.07);}
+
+.hero{min-height:100vh;display:grid;place-items:center;background:var(--navy);color:white;position:relative;overflow:hidden;padding:8rem 2rem 4rem;}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 70% 55% at 80% 20%,rgba(109,40,217,.42) 0%,transparent 60%),radial-gradient(ellipse 55% 45% at 15% 75%,rgba(0,120,212,.3) 0%,transparent 60%),radial-gradient(ellipse 45% 35% at 50% 95%,rgba(8,145,178,.18) 0%,transparent 55%);}
+.hero-dots{position:absolute;inset:0;opacity:.06;background-image:radial-gradient(rgba(255,255,255,.7) 1px,transparent 1px);background-size:28px 28px;}
+.hero-grid{position:absolute;inset:0;opacity:.04;background-image:linear-gradient(rgba(255,255,255,.4) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.4) 1px,transparent 1px);background-size:48px 48px;}
+.hero-content{position:relative;z-index:1;text-align:center;max-width:900px;}
+.hero-badge{display:inline-flex;align-items:center;gap:.5rem;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.85);font-size:.78rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:.35rem 1rem;border-radius:100px;margin-bottom:1.5rem;}
+.hero h1{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(2.4rem,6vw,4.8rem);line-height:1.05;letter-spacing:-.03em;margin-bottom:1.5rem;}
+.hero h1 .a{color:#c084fc;}.hero h1 .b{color:#60adf0;}.hero h1 .c{color:#6ee7b7;}
+.hero p{font-size:1.05rem;color:rgba(255,255,255,.6);max-width:640px;margin:0 auto 2.5rem;}
+.hero-pills-row{display:flex;justify-content:center;gap:.6rem;flex-wrap:wrap;margin-bottom:2rem;}
+.hero-pill{display:inline-flex;align-items:center;gap:.5rem;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);padding:.45rem 1rem;border-radius:10px;font-size:.8rem;font-weight:500;color:white;text-decoration:none;transition:all .25s;}
+.hero-pill:hover{background:rgba(255,255,255,.15);transform:translateY(-2px);}
+.hero-pill .dot{width:9px;height:9px;border-radius:50%;}
+.scroll-hint{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.4rem;color:rgba(255,255,255,.3);font-size:.72rem;letter-spacing:.1em;}
+.scroll-hint::after{content:'';display:block;width:1px;height:36px;background:linear-gradient(to bottom,rgba(255,255,255,.35),transparent);animation:pulse 2s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:.3}50%{opacity:1}}
+
+section{padding:5.5rem 2rem;}
+.container{max-width:1100px;margin:0 auto;}
+.section-tag{font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;display:flex;align-items:center;gap:.5rem;margin-bottom:.9rem;}
+.section-tag::before{content:'';display:block;width:20px;height:2px;}
+.tag-asix{color:var(--asix-l);}.tag-asix::before{background:var(--asix-l);}
+.tag-win{color:var(--win);}.tag-win::before{background:var(--win);}
+.tag-ubuntu{color:var(--ubuntu);}.tag-ubuntu::before{background:var(--ubuntu);}
+.tag-green{color:var(--green);}.tag-green::before{background:var(--green);}
+.tag-amber{color:var(--amber);}.tag-amber::before{background:var(--amber);}
+.tag-teal{color:var(--teal);}.tag-teal::before{background:var(--teal);}
+.tag-samba{color:var(--samba);}.tag-samba::before{background:var(--samba);}
+.tag-nfs{color:var(--nfs);}.tag-nfs::before{background:var(--nfs);}
+.tag-red{color:var(--red);}.tag-red::before{background:var(--red);}
+.tag-pregs{color:#92400e;}.tag-pregs::before{background:#92400e;}
+
+h2{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(1.65rem,3.5vw,2.5rem);line-height:1.1;letter-spacing:-.025em;color:var(--navy);margin-bottom:.9rem;}
+h3{font-family:'Syne',sans-serif;font-weight:700;font-size:1.12rem;color:var(--navy);margin-bottom:.6rem;}
+h4{font-family:'Syne',sans-serif;font-weight:700;font-size:.93rem;color:var(--navy);margin-bottom:.4rem;}
+.lead{font-size:1.02rem;color:var(--muted);max-width:740px;margin-bottom:2.5rem;line-height:1.75;}
+
+.grid{display:grid;gap:1.2rem;}
+.g2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr));}
+.g3{grid-template-columns:repeat(auto-fit,minmax(230px,1fr));}
+.g4{grid-template-columns:repeat(auto-fit,minmax(200px,1fr));}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.65rem;transition:transform .2s,box-shadow .2s;}
+.card:hover{transform:translateY(-3px);box-shadow:0 12px 32px rgba(26,31,78,.1);}
+.card p{color:var(--muted);font-size:.91rem;}
+.card-icon{width:42px;height:42px;border-radius:10px;display:grid;place-items:center;font-size:1.25rem;margin-bottom:.85rem;}
+.bl-asix{border-left:3px solid var(--asix-l);}.bl-win{border-left:3px solid var(--win);}
+.bl-ubuntu{border-left:3px solid var(--ubuntu);}.bl-green{border-left:3px solid var(--green);}
+.bl-amber{border-left:3px solid var(--amber);}.bl-red{border-left:3px solid var(--red);}
+.bl-teal{border-left:3px solid var(--teal);}.bl-samba{border-left:3px solid var(--samba);}
+.bl-nfs{border-left:3px solid var(--nfs);}
+
+.ra-banner{border-radius:var(--radius);padding:1.4rem 2rem;display:flex;align-items:center;gap:1.2rem;margin-bottom:2.5rem;color:white;}
+.ra-num{font-family:'Syne',sans-serif;font-weight:800;font-size:2.2rem;opacity:.22;flex-shrink:0;line-height:1;}
+.ra-banner h2{color:white;font-size:1.3rem;margin-bottom:.15rem;}
+.ra-banner p{color:rgba(255,255,255,.68);font-size:.86rem;}
+.ra-asix{background:linear-gradient(135deg,var(--asix-d),var(--asix-l));}
+.ra-win{background:linear-gradient(135deg,var(--win-d),var(--win));}
+.ra-ubuntu{background:linear-gradient(135deg,var(--ubuntu-d),var(--ubuntu));}
+.ra-green{background:linear-gradient(135deg,#064e3b,var(--green));}
+.ra-teal{background:linear-gradient(135deg,var(--teal-d),var(--teal));}
+.ra-samba{background:linear-gradient(135deg,#7f2b0e,var(--samba));}
+.ra-nfs{background:linear-gradient(135deg,#064e3b,var(--nfs));}
+.ra-preguntes{background:linear-gradient(135deg,#92400e,#d97706);}
+.ra-both{background:linear-gradient(135deg,var(--asix-d),var(--win));}
+.ra-gpo{background:linear-gradient(135deg,#1e3a5f,var(--win));}
+
+.callout{border-radius:var(--radius);padding:1.4rem 1.65rem;margin:1.4rem 0;display:flex;gap:.9rem;align-items:flex-start;}
+.callout-icon{font-size:1.35rem;flex-shrink:0;margin-top:.1rem;}
+.callout p,.callout li{font-size:.91rem;}
+.callout ul{padding-left:1.15rem;}.callout li{margin-bottom:.22rem;}
+.cl-asix{background:rgba(109,40,217,.07);border:1px solid rgba(109,40,217,.2);}
+.cl-blue{background:rgba(0,120,212,.07);border:1px solid rgba(0,120,212,.2);}
+.cl-green{background:rgba(5,150,105,.07);border:1px solid rgba(5,150,105,.2);}
+.cl-amber{background:rgba(251,188,4,.1);border:1px solid rgba(251,188,4,.3);}
+.cl-red{background:rgba(220,38,38,.07);border:1px solid rgba(220,38,38,.2);}
+.cl-teal{background:rgba(8,145,178,.07);border:1px solid rgba(8,145,178,.2);}
+.cl-ubuntu{background:rgba(233,84,32,.07);border:1px solid rgba(233,84,32,.2);}
+.cl-samba{background:rgba(255,107,53,.07);border:1px solid rgba(255,107,53,.2);}
+
+.terminal{background:var(--term);border-radius:var(--radius-sm);overflow:hidden;margin:.75rem 0;font-family:'JetBrains Mono',monospace;font-size:.79rem;}
+.term-bar{background:var(--term2);padding:.5rem 1rem;display:flex;align-items:center;gap:.5rem;border-bottom:1px solid rgba(255,255,255,.06);}
+.term-dot{width:11px;height:11px;border-radius:50%;}
+.term-title{color:rgba(255,255,255,.4);font-size:.7rem;letter-spacing:.05em;margin-left:.25rem;flex:1;}
+.term-os{font-size:.67rem;font-weight:600;padding:.1rem .45rem;border-radius:4px;margin-left:auto;}
+.term-os-win{background:rgba(0,120,212,.25);color:#60adf0;}
+.term-os-ubuntu{background:rgba(233,84,32,.25);color:#f4956a;}
+.term-os-both{background:rgba(109,40,217,.25);color:#c084fc;}
+.term-os-samba{background:rgba(255,107,53,.25);color:#ffa07a;}
+.term-os-nfs{background:rgba(45,106,79,.25);color:#52b788;}
+.term-body{padding:.9rem 1.2rem;line-height:1.75;}
+.term-body .prompt-win{color:#60adf0;}.term-body .prompt-ub{color:#f4956a;}
+.term-body .cmd{color:#e2e8f0;}.term-body .out{color:#94a3b8;}
+.term-body .comment{color:#475569;}.term-body .ok{color:#6ee7b7;}
+.term-body .err{color:#fca5a5;}.term-body .path{color:#fbbf24;}
+.term-body .flag{color:#c084fc;}.term-body .val{color:#86efac;}.term-body .hi{color:#f0abfc;}
+
+.lab-card{background:linear-gradient(135deg,#0f111a,#161b2e);border:1px solid rgba(255,255,255,.08);border-radius:var(--radius);overflow:hidden;margin:2rem 0;}
+.lab-header{padding:.95rem 1.5rem;display:flex;align-items:center;gap:.9rem;border-bottom:1px solid rgba(255,255,255,.07);}
+.lab-icon{font-size:1.45rem;flex-shrink:0;}
+.lab-title-block h4{font-family:'Syne',sans-serif;font-weight:700;font-size:.98rem;color:white;margin:0 0 .1rem;}
+.lab-title-block p{font-size:.76rem;color:rgba(255,255,255,.5);margin:0;}
+.lab-os-tags{display:flex;gap:.35rem;margin-left:auto;}
+.os-tag{font-size:.66rem;font-weight:700;padding:.18rem .6rem;border-radius:100px;letter-spacing:.04em;white-space:nowrap;}
+.os-win{background:rgba(0,120,212,.3);color:#60adf0;border:1px solid rgba(0,120,212,.4);}
+.os-ubuntu{background:rgba(233,84,32,.3);color:#f4956a;border:1px solid rgba(233,84,32,.4);}
+.os-both{background:rgba(109,40,217,.3);color:#c084fc;border:1px solid rgba(109,40,217,.4);}
+.os-samba{background:rgba(255,107,53,.3);color:#ffa07a;border:1px solid rgba(255,107,53,.4);}
+.lab-body{padding:1.4rem;}
+.lab-body p{color:rgba(255,255,255,.7);font-size:.88rem;margin-bottom:.7rem;}
+.lab-body h5{font-family:'Syne',sans-serif;font-weight:700;font-size:.83rem;color:rgba(255,255,255,.9);margin:.7rem 0 .38rem;}
+.lab-steps{counter-reset:ls;list-style:none;padding:0;display:flex;flex-direction:column;gap:.45rem;}
+.lab-steps li{counter-increment:ls;display:flex;gap:.7rem;align-items:flex-start;font-size:.86rem;color:rgba(255,255,255,.65);}
+.lab-steps li::before{content:counter(ls);flex-shrink:0;width:23px;height:23px;border-radius:50%;background:rgba(109,40,217,.5);color:#c084fc;display:grid;place-items:center;font-family:'Syne',sans-serif;font-weight:700;font-size:.7rem;}
+.lab-steps li strong{color:rgba(255,255,255,.9);}
+.lab-entrega{background:rgba(109,40,217,.15);border:1px solid rgba(109,40,217,.3);border-radius:var(--radius-sm);padding:.8rem 1rem;margin-top:.9rem;font-size:.82rem;color:rgba(255,255,255,.7);}
+.lab-entrega strong{color:#c084fc;}
+
+.ptable{width:100%;border-collapse:collapse;font-size:.86rem;}
+.ptable th,.ptable td{padding:.78rem .95rem;text-align:left;border-bottom:1px solid var(--border);}
+.ptable th{background:var(--navy);color:white;font-family:'Syne',sans-serif;font-weight:700;}
+.ptable th:first-child{border-radius:8px 0 0 0;}.ptable th:last-child{border-radius:0 8px 0 0;}
+.ptable tr:hover td{background:var(--cream);}
+.badge{display:inline-block;padding:.13rem .5rem;border-radius:100px;font-size:.71rem;font-weight:700;font-family:'Syne',sans-serif;}
+.b-asix{background:rgba(109,40,217,.12);color:var(--asix-l);}
+.b-win{background:rgba(0,120,212,.12);color:var(--win);}
+.b-ubuntu{background:rgba(233,84,32,.12);color:var(--ubuntu);}
+.b-green{background:rgba(5,150,105,.12);color:var(--green);}
+.b-amber{background:rgba(217,119,6,.15);color:#92400e;}
+.b-red{background:rgba(220,38,38,.1);color:var(--red);}
+.b-teal{background:rgba(8,145,178,.12);color:var(--teal);}
+.b-samba{background:rgba(255,107,53,.12);color:var(--samba);}
+
+.ex{background:var(--cream);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.9rem 1.15rem;margin:.6rem 0;}
+.ex .ex-lbl{font-size:.67rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.28rem;}
+.ex p{font-size:.86rem;color:var(--ink);}
+.ex-asix .ex-lbl{color:var(--asix-l);}.ex-win .ex-lbl{color:var(--win);}
+.ex-ubuntu .ex-lbl{color:var(--ubuntu);}.ex-green .ex-lbl{color:var(--green);}
+.ex-amber .ex-lbl{color:var(--amber);}.ex-red .ex-lbl{color:var(--red);}
+.ex-samba .ex-lbl{color:var(--samba);}
+
+.pills{display:flex;flex-wrap:wrap;gap:.38rem;margin:.6rem 0;}
+.pill{padding:.2rem .7rem;border-radius:100px;font-size:.77rem;border:1px solid var(--border);background:var(--cream);color:var(--ink);}
+.pill-a{background:rgba(109,40,217,.1);border-color:rgba(109,40,217,.3);color:var(--asix-l);}
+.pill-w{background:rgba(0,120,212,.1);border-color:rgba(0,120,212,.3);color:var(--win);}
+.pill-u{background:rgba(233,84,32,.1);border-color:rgba(233,84,32,.3);color:var(--ubuntu);}
+.pill-g{background:rgba(5,150,105,.1);border-color:rgba(5,150,105,.3);color:var(--green);}
+.pill-r{background:rgba(220,38,38,.1);border-color:rgba(220,38,38,.3);color:var(--red);}
+.pill-t{background:rgba(8,145,178,.1);border-color:rgba(8,145,178,.3);color:var(--teal);}
+.pill-s{background:rgba(255,107,53,.1);border-color:rgba(255,107,53,.3);color:var(--samba);}
+
+.s-cream{background:var(--cream);}.s-asix{background:#f5f3ff;}
+.s-win{background:#f0f7ff;}.s-ubuntu{background:#fff5f1;}
+.s-green{background:#f0fdf4;}.s-teal{background:#ecfeff;}
+.s-samba{background:#fff4f0;}.s-nfs{background:#f0fdf4;}
+.s-dark{background:var(--navy);color:white;}
+.s-dark h2,.s-dark h3,.s-dark h4{color:white;}
+.s-dark .lead{color:rgba(255,255,255,.6);}
+.s-dark .card{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.1);}
+.s-dark .card h3,.s-dark .card h4{color:white;}
+.s-dark .card p{color:rgba(255,255,255,.6);}
+.s-dark .ptable th{background:rgba(255,255,255,.1);}
+.s-dark .ptable td{border-color:rgba(255,255,255,.1);color:rgba(255,255,255,.8);}
+.s-dark .ptable tr:hover td{background:rgba(255,255,255,.05);}
+
+/* AD Hierarchy diagram */
+.ad-tree{font-family:'JetBrains Mono',monospace;font-size:.82rem;background:var(--term);border-radius:var(--radius-sm);padding:1.2rem 1.5rem;color:#94a3b8;line-height:1.9;}
+.ad-tree .forest{color:#c084fc;font-weight:700;}
+.ad-tree .domain{color:#60adf0;font-weight:700;}
+.ad-tree .ou{color:#6ee7b7;}
+.ad-tree .obj{color:#fbbf24;}
+.ad-tree .gpo{color:#fca5a5;}
+.ad-tree .link{color:#475569;}
+
+/* GPO diagram */
+.gpo-flow{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin:1.2rem 0;justify-content:center;}
+.gpo-box{border-radius:var(--radius-sm);padding:.65rem 1.1rem;text-align:center;font-family:'Syne',sans-serif;font-weight:700;font-size:.8rem;min-width:80px;}
+.gpo-arrow{color:var(--muted);font-size:1.1rem;flex-shrink:0;}
+.gpo-site{background:rgba(109,40,217,.12);border:1px solid rgba(109,40,217,.3);color:var(--asix-l);}
+.gpo-domain{background:rgba(0,120,212,.12);border:1px solid rgba(0,120,212,.3);color:var(--win);}
+.gpo-ou{background:rgba(5,150,105,.12);border:1px solid rgba(5,150,105,.3);color:var(--green);}
+.gpo-local{background:rgba(217,119,6,.12);border:1px solid rgba(217,119,6,.3);color:#92400e;}
+.gpo-override{background:rgba(220,38,38,.1);border:1px solid rgba(220,38,38,.3);color:var(--red);font-size:.7rem;padding:.3rem .6rem;}
+
+/* Permission matrix */
+.perm-matrix{display:grid;grid-template-columns:1fr repeat(6,auto);gap:0;border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;font-size:.8rem;}
+.perm-matrix .ph{background:var(--navy);color:white;font-family:'Syne',sans-serif;font-weight:700;padding:.5rem .75rem;text-align:center;}
+.perm-matrix .ph:first-child{text-align:left;}
+.perm-matrix .pr{background:var(--cream);padding:.5rem .75rem;border-bottom:1px solid var(--border);}
+.perm-matrix .pv{padding:.5rem .75rem;text-align:center;border-bottom:1px solid var(--border);border-left:1px solid var(--border);}
+.perm-matrix .pv.yes{color:var(--green);font-size:1rem;}
+.perm-matrix .pv.no{color:var(--red);font-size:.85rem;}
+.perm-matrix .pv.inh{color:var(--amber);font-size:.85rem;}
+
+.steps{counter-reset:st;list-style:none;display:flex;flex-direction:column;gap:.75rem;}
+.steps li{counter-increment:st;display:flex;gap:.85rem;align-items:flex-start;padding:.85rem 1.05rem;background:var(--cream);border-radius:var(--radius-sm);font-size:.89rem;}
+.steps li::before{content:counter(st);flex-shrink:0;width:27px;height:27px;border-radius:50%;background:var(--asix-l);color:white;display:grid;place-items:center;font-family:'Syne',sans-serif;font-weight:700;font-size:.78rem;}
+.steps li p{color:var(--ink);margin:0;}.steps li strong{color:var(--navy);}
+
+.q-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.4rem 1.85rem;display:flex;gap:1.15rem;align-items:flex-start;transition:transform .2s,box-shadow .2s;}
+.q-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.08);}
+.q-num{flex-shrink:0;width:34px;height:34px;border-radius:50%;background:var(--cream);border:2px solid var(--border);display:grid;place-items:center;font-family:'Syne',sans-serif;font-weight:800;font-size:.86rem;color:var(--asix-l);}
+.q-body h4{margin-bottom:.3rem;color:var(--navy);font-size:.93rem;}
+.q-body p{color:var(--muted);font-size:.84rem;font-style:italic;}
+.q-tag{display:inline-block;padding:.13rem .55rem;border-radius:100px;font-size:.69rem;font-weight:700;margin-top:.45rem;margin-right:.28rem;}
+.qt-asix{background:rgba(109,40,217,.1);color:var(--asix-l);}
+.qt-win{background:rgba(0,120,212,.1);color:var(--win);}
+.qt-ubuntu{background:rgba(233,84,32,.1);color:var(--ubuntu);}
+.qt-green{background:rgba(5,150,105,.1);color:var(--green);}
+.qt-samba{background:rgba(255,107,53,.1);color:var(--samba);}
+.qt-sec{background:rgba(220,38,38,.1);color:var(--red);}
+.qt-both{background:rgba(109,40,217,.1);color:var(--asix-l);}
+.qt-gpo{background:rgba(0,120,212,.1);color:var(--win);}
+
+hr{border:none;border-top:1px solid var(--border);margin:2.5rem 0;}
+footer{background:var(--ink);color:rgba(255,255,255,.4);padding:3rem 2rem;text-align:center;font-size:.84rem;}
+footer strong{color:white;}
+.fi{opacity:0;transform:translateY(18px);transition:opacity .55s ease,transform .55s ease;}
+.fi.in{opacity:1;transform:none;}
+@media(max-width:640px){.nav-pills{display:none;}.lab-os-tags{display:none;}.perm-matrix{font-size:.72rem;}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">ASIX · <span>MP0369 RA5</span> · Implantació SO</div>
+  <ul class="nav-pills">
+    <li><a href="#domini">Domini AD</a></li>
+    <li><a href="#permisos">Permisos</a></li>
+    <li><a href="#samba">Samba</a></li>
+    <li><a href="#nfs">NFS</a></li>
+    <li><a href="#xarxa-perm">Permisos Xarxa</a></li>
+    <li><a href="#delegacio">Delegació</a></li>
+    <li><a href="#gpo">GPO</a></li>
+    <li><a href="#preguntes" class="act">Preguntes</a></li>
+  </ul>
+</nav>
+
+<section class="hero" id="top">
+  <div class="hero-bg"></div><div class="hero-dots"></div><div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-badge">🔐 ASIX · Implantació de Sistemes Operatius · MP0369 · RA5</div>
+    <h1><span class="a">Administració</span> de<br>l'<span class="b">Accés</span> a <span class="c">Dominis</span></h1>
+    <p>Active Directory, Samba, NFS, permisos de xarxa i locals, herència, delegació, ACLs i Directives de Grup (GPO). Teoria de nivell CFGS amb exercicis pràctics incrustats a Windows Server i Ubuntu.</p>
+    <div class="hero-pills-row">
+      <a href="#domini" class="hero-pill"><span class="dot" style="background:#c084fc"></span>Active Directory</a>
+      <a href="#permisos" class="hero-pill"><span class="dot" style="background:var(--win)"></span>Permisos NTFS</a>
+      <a href="#samba" class="hero-pill"><span class="dot" style="background:var(--samba)"></span>Samba / SMB</a>
+      <a href="#nfs" class="hero-pill"><span class="dot" style="background:var(--nfs)"></span>NFS</a>
+      <a href="#delegacio" class="hero-pill"><span class="dot" style="background:var(--teal)"></span>Delegació</a>
+      <a href="#gpo" class="hero-pill"><span class="dot" style="background:var(--green)"></span>GPO</a>
+      <a href="#preguntes" class="hero-pill"><span class="dot" style="background:#f59e0b"></span>10 Preguntes</a>
+    </div>
+  </div>
+  <div class="scroll-hint">DESPLAÇA</div>
+</section>
+
+<!-- INTRO -->
+<section class="s-cream" id="intro">
+  <div class="container fi">
+    <div class="section-tag tag-asix">Resultat d'Aprenentatge 5 · MP0369</div>
+    <h2>Administra l'accés a dominis</h2>
+    <p class="lead">Analitzant i respectant requeriments de seguretat. El RA5 cobreix la gestió centralitzada d'identitats amb Active Directory, l'accés a recursos de xarxa (Samba/SMB i NFS), el model complet de permisos (locals + xarxa + efectius) i les Directives de Grup (GPO) per a l'administració de polítiques a escala.</p>
+    <div class="grid g4 fi">
+      <div class="card bl-asix">
+        <div class="card-icon" style="background:#f5f3ff">🌐</div>
+        <h3>Domini Active Directory</h3>
+        <p>Estructura jeràrquica: forest, domini, OU. Objectes AD. Equips al domini. Kerberos i LDAP.</p>
+        <div class="pills" style="margin-top:.6rem"><span class="pill pill-a">T1</span></div>
+      </div>
+      <div class="card bl-win">
+        <div class="card-icon" style="background:#f0f7ff">🔑</div>
+        <h3>Permisos i ACLs</h3>
+        <p>NTFS, permisos locals, permisos de xarxa (SMB), herència, permisos efectius i delegació.</p>
+        <div class="pills" style="margin-top:.6rem"><span class="pill pill-w">T2–T5</span></div>
+      </div>
+      <div class="card bl-samba">
+        <div class="card-icon" style="background:#fff4f0">🦷</div>
+        <h3>Samba i NFS</h3>
+        <p>Compartir recursos entre Windows i Linux. SMB/CIFS (Samba) i NFS per a entorns Unix/Linux.</p>
+        <div class="pills" style="margin-top:.6rem"><span class="pill pill-s">T3</span></div>
+      </div>
+      <div class="card bl-green">
+        <div class="card-icon" style="background:#f0fdf4">📋</div>
+        <h3>Directives de Grup (GPO)</h3>
+        <p>GPO: creació, vinculació, àmbit, herència, excepcions i plantilles. Auditoria i drets d'usuari.</p>
+        <div class="pills" style="margin-top:.6rem"><span class="pill pill-g">T6</span></div>
+      </div>
+    </div>
+    <div class="callout cl-asix fi" style="margin-top:1.5rem">
+      <span class="callout-icon">🔬</span>
+      <div><strong>Llegenda:</strong> <span style="color:var(--win);font-weight:600">🪟 Windows Server / PowerShell</span>, <span style="color:var(--ubuntu);font-weight:600">🐧 Ubuntu</span>, <span style="color:var(--samba);font-weight:600">🦷 Samba</span>, <span style="color:var(--nfs);font-weight:600">📂 NFS</span>. Els labs amb fons fosc indiquen exercicis pràctics immediats a l'ordinador.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════
+     T1 — ACTIVE DIRECTORY I DOMINI
+═══════════════════════════════════ -->
+<section id="domini" class="s-asix">
+  <div class="container">
+    <div class="ra-banner ra-asix fi">
+      <div class="ra-num">1</div>
+      <div>
+        <h2>Active Directory i estructura del domini</h2>
+        <p>Forest, domini, OU, objectes AD, Kerberos, LDAP i integració d'equips al domini.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-asix fi">Arquitectura d'Active Directory</div>
+    <h2 class="fi">Estructura jeràrquica d'Active Directory</h2>
+    <p class="lead fi"><strong>Active Directory Domain Services (AD DS)</strong> és el servei de directori de Microsoft que centralitza la gestió d'identitats, ordinadors, recursos i polítiques en una xarxa corporativa. Entendre la seva jerarquia és fonamental per administrar permisos a escala.</p>
+
+    <div class="grid g2 fi">
+      <div>
+        <h3>Jerarquia d'objectes AD</h3>
+        <div class="ad-tree">
+          <div><span class="forest">🌍 Forest: techcorp.com</span></div>
+          <div><span class="link">├─</span> <span class="domain">🏢 Domini: techcorp.com (domini arrel)</span></div>
+          <div><span class="link">│  ├─ 📦 OU: Usuaris</span></div>
+          <div><span class="link">│  │  ├─</span> <span class="obj">👤 Usuari: joan.garcia</span> <span class="gpo">← GPO: Pol_Usuaris</span></div>
+          <div><span class="link">│  │  └─</span> <span class="obj">👤 Usuari: anna.puig</span></div>
+          <div><span class="link">│  ├─ 📦 OU: Equips</span></div>
+          <div><span class="link">│  │  ├─</span> <span class="obj">💻 Equip: PC-IT-001</span> <span class="gpo">← GPO: Pol_Equips_IT</span></div>
+          <div><span class="link">│  │  └─</span> <span class="obj">💻 Equip: PC-RRHH-001</span></div>
+          <div><span class="link">│  ├─ 📦 OU: Grups</span></div>
+          <div><span class="link">│  │  ├─</span> <span class="obj">👥 Grup: G_IT_Admins (Seguretat Global)</span></div>
+          <div><span class="link">│  │  └─</span> <span class="obj">👥 Grup: G_Lectura_Docs (Distribució)</span></div>
+          <div><span class="link">│  └─ 📦 OU: Servidors</span></div>
+          <div><span class="link">│     └─</span> <span class="obj">🖥️ Servidor: SRV-FILE-01</span> <span class="gpo">← GPO: Pol_Servidors</span></div>
+          <div><span class="link">└─</span> <span class="domain">🏢 Domini fill: barcelona.techcorp.com</span></div>
+        </div>
+      </div>
+      <div>
+        <div class="card bl-asix" style="margin-bottom:1rem">
+          <div class="card-icon" style="background:#f5f3ff">🌍</div>
+          <h3>Forest i Domini</h3>
+          <p style="margin-bottom:.5rem"><strong>Forest:</strong> col·lecció de dominis AD que comparteixen esquema i catàleg global. La frontera de seguretat màxima.</p>
+          <p><strong>Domini:</strong> unitat administrativa amb la seva pròpia base de dades AD (NTDS.dit), controladors de domini (DC) i polítiques. Els comptes d'un domini no accedeixen automàticament als recursos d'un altre.</p>
+        </div>
+        <div class="card bl-win">
+          <div class="card-icon" style="background:#f0f7ff">📦</div>
+          <h3>OU — Unitat Organitzativa</h3>
+          <p style="margin-bottom:.5rem">Les <strong>OU</strong> (Organizational Units) son contenidors dins d'un domini per organitzar objectes (usuaris, equips, grups, servidors). Permeten:</p>
+          <ul style="list-style:none;padding:0">
+            <li style="font-size:.87rem;padding:.2rem 0;color:var(--muted)">🎯 Aplicar GPO de forma granular a subconjunts d'objectes</li>
+            <li style="font-size:.87rem;padding:.2rem 0;color:var(--muted)">🔑 Delegar permisos d'administració per OU</li>
+            <li style="font-size:.87rem;padding:.2rem 0;color:var(--muted)">🗂️ Reflectir l'estructura organitzativa de l'empresa</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tipus de grups AD -->
+    <div class="section-tag tag-asix fi" style="margin-top:3.5rem">Grups d'Active Directory</div>
+    <h2 class="fi">Tipus i àmbits de grups AD: AGDLP</h2>
+    <p class="lead fi">AD defineix grups per <strong>tipus</strong> (Seguretat vs Distribució) i per <strong>àmbit</strong> (Local de Domini, Global, Universal). L'estratègia <strong>AGDLP</strong> és la millor pràctica per assignar accés a recursos.</p>
+
+    <div style="overflow-x:auto" class="fi">
+      <table class="ptable">
+        <thead><tr><th>Àmbit</th><th>Membres acceptats</th><th>Pot ser membre de</th><th>Assignació de permisos</th><th>Ús típic</th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge b-asix">Global (GG)</span></td><td>Usuaris/equips/grups globals del <em>mateix domini</em></td><td>GG o DL de qualsevol domini del forest</td><td>Qualsevol domini del forest</td><td>Agrupar usuaris per funció: G_IT, G_RRHH</td></tr>
+          <tr><td><span class="badge b-win">Local de Domini (DL)</span></td><td>Usuaris/grups de qualsevol domini del forest</td><td>Sols grups DL del mateix domini</td><td>Sols al domini local</td><td>Controlar accés a un recurs concret: DL_Lectura_Docs</td></tr>
+          <tr><td><span class="badge b-teal">Universal (UG)</span></td><td>Qualsevol objecte de qualsevol domini del forest</td><td>Grups DL o UG de qualsevol domini</td><td>Qualsevol domini del forest</td><td>Grups multi-domini: UG_Admins_Global</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout cl-blue fi">
+      <span class="callout-icon">💡</span>
+      <div>
+        <strong>Estratègia AGDLP (Account → Global → Domain Local → Permission):</strong>
+        <p style="margin-top:.4rem">Millor pràctica per assignar permisos en entorns de domini: <strong>A</strong>fegir el compte d'usuari a un <strong>G</strong>rup Global, afegir el grup global a un grup de <strong>D</strong>omini <strong>L</strong>ocal, i assignar el <strong>P</strong>ermís al grup de domini local sobre el recurs. Exemple: Joan.Garcia → G_IT_Admins → DL_Escriptura_Projectes → Permís NTFS sobre \\srv\projectes</p>
+      </div>
+    </div>
+
+    <!-- Afegir equip al domini -->
+    <div class="section-tag tag-win fi" style="margin-top:3rem">Equips al domini</div>
+    <h2 class="fi">Afegir i gestionar equips al domini</h2>
+
+    <div class="terminal fi">
+      <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">Unir equip al domini — Windows i Ubuntu (SSSD)</span><span class="term-os term-os-both">🔀 Ambdós</span></div>
+      <div class="term-body">
+        <div><span class="comment">═══ WINDOWS — Unir al domini ═══</span></div>
+        <div><span class="comment"># Via PowerShell (recomanat per a desplegament massiu)</span></div>
+        <div><span class="prompt-win">PS></span> <span class="cmd">Add-Computer -DomainName "techcorp.com" -OUPath "OU=Equips,DC=techcorp,DC=com" -Credential (Get-Credential) -Restart</span></div>
+        <div style="margin-top:.4rem"><span class="comment"># Verificar que l'equip és al domini</span></div>
+        <div><span class="prompt-win">PS></span> <span class="cmd">(Get-WmiObject Win32_ComputerSystem).PartOfDomain</span></div>
+        <div><span class="out">True</span></div>
+        <div><span class="prompt-win">PS></span> <span class="cmd">(Get-WmiObject Win32_ComputerSystem).Domain</span></div>
+        <div><span class="out">techcorp.com</span></div>
+        <div style="margin-top:.4rem"><span class="comment"># Desunir del domini (en cas necessari)</span></div>
+        <div><span class="prompt-win">PS></span> <span class="cmd">Remove-Computer -UnJoinDomainCredential (Get-Credential) -WorkgroupName "WORKGROUP" -Restart -Force</span></div>
+        <div style="margin-top:.4rem"><span class="comment"># Gestió AD des de PowerShell (mòdul RSAT)</span></div>
+        <div><span class="prompt-win">PS></span> <span class="cmd">Install-WindowsFeature RSAT-AD-PowerShell</span></div>
+        <div><span class="prompt-win">PS></span> <span class="cmd">Get-ADComputer -Filter * -SearchBase "OU=Equips,DC=techcorp,DC=com" | Select Name,OperatingSystem,LastLogonDate</span></div>
+        <div><span class="prompt-win">PS></span> <span class="cmd">Move-ADObject -Identity "CN=PC-IT-001,OU=Equips,DC=techcorp,DC=com" -TargetPath "OU=Servidors,DC=techcorp,DC=com"</span></div>
+        <div style="margin-top:.75rem"><span class="comment">═══ UBUNTU — Unir a domini AD (SSSD + realm) ═══</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">sudo apt install realmd sssd sssd-tools adcli samba-common-bin -y</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">realm discover techcorp.com</span>    <span class="comment"># Descobrir el domini</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">sudo realm join -U Administrator techcorp.com</span>  <span class="comment"># Unir-se al domini</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">realm list</span>                        <span class="comment"># Verificar unió</span></div>
+        <div style="margin-top:.4rem"><span class="comment"># Configurar login d'usuaris de domini (sense @techcorp.com)</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">sudo nano /etc/sssd/sssd.conf</span></div>
+        <div><span class="val">use_fully_qualified_names = False</span>  <span class="comment"># login: joan.garcia en lloc de joan.garcia@techcorp.com</span></div>
+        <div><span class="val">fallback_homedir = /home/%u</span>        <span class="comment"># Crea home automàticament</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">sudo systemctl restart sssd</span></div>
+        <div style="margin-top:.4rem"><span class="comment"># Permetre a membres d'un grup AD usar sudo</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">sudo realm permit -g 'G_IT_Admins@techcorp.com'</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">echo '%G_IT_Admins@techcorp.com ALL=(ALL) ALL' | sudo tee /etc/sudoers.d/it_admins</span></div>
+      </div>
+    </div>
+
+    <!-- Kerberos i autenticació -->
+    <div class="section-tag tag-asix fi" style="margin-top:3rem">Protocol d'autenticació</div>
+    <h2 class="fi">Kerberos: autenticació al domini sense enviar contrasenyes</h2>
+    <p class="lead fi"><strong>Kerberos</strong> és el protocol d'autenticació de Windows i Active Directory. En lloc d'enviar la contrasenya per la xarxa (com feia NTLM), usa un sistema de tiquets criptogràfics que permet l'autenticació sense revelar credencials.</p>
+
+    <div class="grid g3 fi">
+      <div class="card bl-asix" style="grid-column:span 3">
+        <h3>Flux d'autenticació Kerberos (simplificat)</h3>
+        <div class="gpo-flow" style="margin-top:1rem">
+          <div class="gpo-box gpo-local">1. L'usuari introdueix la contrasenya al PC client</div>
+          <span class="gpo-arrow">→</span>
+          <div class="gpo-box gpo-domain">2. El client sol·licita un TGT (Ticket Granting Ticket) al KDC (Domain Controller)</div>
+          <span class="gpo-arrow">→</span>
+          <div class="gpo-box gpo-ou">3. El KDC verifica les credencials i emet el TGT (xifrat, vàlid 10h)</div>
+          <span class="gpo-arrow">→</span>
+          <div class="gpo-box gpo-site">4. Per accedir a un recurs, el client presenta el TGT i rep un Service Ticket específic</div>
+          <span class="gpo-arrow">→</span>
+          <div class="gpo-box gpo-domain">5. El servidor verifica el Service Ticket i atorga accés. La contrasenya mai surt del client.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="terminal fi">
+      <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-title">Kerberos — diagnosi i gestió de tiquets</span><span class="term-os term-os-both">🔀 Ambdós</span></div>
+      <div class="term-body">
+        <div><span class="comment">═══ WINDOWS ═══</span></div>
+        <div><span class="prompt-win">></span> <span class="cmd">klist</span>                    <span class="comment"># Llistar tiquets Kerberos actuals</span></div>
+        <div><span class="out">Current LogonId is 0:0x3a5c8</span></div>
+        <div><span class="out">Cached Tickets: (3)</span></div>
+        <div><span class="out">#0> Client: joan.garcia @ TECHCORP.COM</span></div>
+        <div><span class="out">    Server: krbtgt/TECHCORP.COM @ TECHCORP.COM  ← TGT</span></div>
+        <div><span class="out">    KerbTicket Encryption Type: AES-256</span></div>
+        <div><span class="out">    End Time: 6/1/2025 18:00:00</span></div>
+        <div><span class="prompt-win">></span> <span class="cmd">klist purge</span>            <span class="comment"># Eliminar tots els tiquets (forçar re-autenticació)</span></div>
+        <div style="margin-top:.5rem"><span class="comment">═══ UBUNTU (kinit/klist) ═══</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">kinit joan.garcia@TECHCORP.COM</span>   <span class="comment"># Obtenir TGT manualment</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">klist</span>                                <span class="comment"># Veure tiquets actuals</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">kdestroy</span>                             <span class="comment"># Eliminar tots els tiquets</span></div>
+      </div>
+    </div>
+
+    <div class="lab-card fi">
+      <div class="lab-header">
+        <span class="lab-icon">🧪</span>
+        <div class="lab-title-block">
+          <h4>Lab 1.1 — Estructura AD: crear OU, usuaris, grups i afegir equip al domini</h4>
+          <p>Construeix l'estructura jeràrquica d'AD per a TechCorp i afegeix un Ubuntu al domini</p>
+        </div>
+        <div class="lab-os-tags"><span class="os-tag os-win">🪟 Win Server</span><span class="os-tag os-ubuntu">🐧 Ubuntu</span></div>
+      </div>
+      <div class="lab-body">
+        <p>Necessiteu un Windows Server amb AD DS instal·lat. Si no en teniu, podeu usar una VM amb Windows Server Evaluation (gratuïta 180 dies) o un lab Azure gratuït.</p>
+        <h5>🪟 Windows Server — PowerShell</h5>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-title">Crear estructura AD completa</span><span class="term-os term-os-win">🪟 Windows Server</span></div>
+          <div class="term-body">
+            <div><span class="comment"># Import mòdul AD</span></div>
+            <div><span class="prompt-win">PS></span> <span class="cmd">Import-Module ActiveDirectory</span></div>
+            <div style="margin-top:.4rem"><span class="comment"># Crear estructura d'OUs</span></div>
+            <div><span class="prompt-win">PS></span> <span class="cmd">New-ADOrganizationalUnit -Name "TechCorp" -Path "DC=techcorp,DC=com"</span></div>
+            <div><span class="prompt-win">PS></span> <span class="cmd">@("Usuaris","Equips","Grups","Servidors") | ForEach-Object { New-ADOrganizationalUnit -Name $_ -Path "OU=TechCorp,DC=techcorp,DC=com" }</span></div>
+            <div style="margin-top:.4rem"><span class="comment"># Crear usuaris</span></div>
+            <div><span class="prompt-win">PS></span> <span class="cmd">$pass = ConvertTo-SecureString "P@ssw0rd2025!" -AsPlainText -Force</span></div>
+            <div><span class="prompt-win">PS></span> <span class="cmd">New-ADUser -Name "Joan Garcia" -SamAccountName "joan.garcia" -UserPrincipalName "joan.garcia@techcorp.com" -Path "OU=Usuaris,OU=TechCorp,DC=techcorp,DC=com" -AccountPassword $pass -Enabled $true -Department "IT" -Title "Tècnic ASIX"</span></div>
+            <div style="margin-top:.4rem"><span class="comment"># Crear grups i afegir membres (estratègia AGDLP)</span></div>
+            <div><span class="prompt-win">PS></span> <span class="cmd">New-ADGroup -Name "G_IT_Admins" -GroupScope Global -GroupCategory Security -Path "OU=Grups,OU=TechCorp,DC=techcorp,DC=com"</span></div>
+            <div><span class="prompt-win">PS></span> <span class="cmd">New-ADGroup -Name "DL_Escriptura_Projectes" -GroupScope DomainLocal -GroupCategory Security -Path "OU=Grups,OU=TechCorp,DC=techcorp,DC=com"</span></div>
+            <div><span class="prompt-win">PS></span> <span class="cmd">Add-ADGroupMember -Identity "G_IT_Admins" -Members "joan.garcia"</span></div>
+            <div><span class="prompt-win">PS></span> <span class="cmd">Add-ADGroupMember -Identity "DL_Escriptura_Projectes" -Members "G_IT_Admins"</span></div>
+            <div style="margin-top:.4rem"><span class="comment"># Verificar estructura (LDAP query)</span></div>
+            <div><span class="prompt-win">PS></span> <span class="cmd">Get-ADUser -Filter * -SearchBase "OU=Usuaris,OU=TechCorp,DC=techcorp,DC=com" -Properties Department,Title | Format-Table Name,SamAccountName,Department</span></div>
+          </div>
+        </div>
+        <ul class="lab-steps">
+          <li><strong>Crea l'estructura completa:</strong> Crea les OU i un mínim de 6 usuaris (2 per departament: IT, RRHH, Finances). Assigna atributs (Departament, Títol, Telèfon).</li>
+          <li><strong>Implementa AGDLP:</strong> Crea grups Globals (G_IT, G_RRHH, G_Finances) i grups Domain Local per a cada nivell d'accés (DL_Lectura, DL_Escriptura, DL_Control_Total). Vincula seguint AGDLP.</li>
+          <li><strong>Ubuntu al domini:</strong> Uneix una VM Ubuntu al domini usant <code>realm join</code>. Comprova que pots fer <code>su - joan.garcia@techcorp.com</code> i iniciar sessió amb les credencials AD.</li>
+          <li><strong>Verifica els tiquets Kerberos:</strong> Executa <code>klist</code> a Windows i a Ubuntu després del login. Comprova que hi ha un TGT vàlid i interpreta els camps (Principal, Server, End Time, Flags).</li>
+        </ul>
+        <div class="lab-entrega"><strong>📋 Documenta:</strong> Captura de l'estructura AD des de "Usuaris i equips d'Active Directory". Sortida de <code>Get-ADUser -Filter *</code> i <code>Get-ADGroup -Filter *</code>. Captura de <code>klist</code> a Ubuntu mostrant el TGT del domini.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════
+     T2 — PERMISOS NTFS I LOCALS
+═══════════════════════════════════ -->
+<section id="permisos" class="s-win">
+  <div class="container">
+    <div class="ra-banner ra-win fi">
+      <div class="ra-num">2</div>
+      <div>
+        <h2>Permisos locals NTFS, herència i permisos efectius</h2>
+        <p>Model complet de permisos NTFS, herència, acumulació, permisos explícits vs heretats i càlcul de permisos efectius.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-win fi">Model de permisos NTFS</div>
+    <h2 class="fi">Permisos NTFS avançats: estàndard i especials</h2>
+    <p class="lead fi">NTFS ofereix dos nivells de permisos: els <strong>permisos estàndard</strong> (combinacions predefinides fàcils d'usar) i els <strong>permisos especials</strong> (14 permisos atòmics que formen la base de tots els altres). Entendre els especials permet configurar exactament l'accés necessari.</p>
+
+    <div class="grid g2 fi">
+      <div>
+        <h3>Permisos estàndard NTFS</h3>
+        <div class="perm-matrix" style="margin-top:1rem">
+          <div class="ph">Permís estàndard</div>
+          <div class="ph">Llistar</div>
+          <div class="ph">Llegir</div>
+          <div class="ph">Escriure</div>
+          <div class="ph">Executar</div>
+          <div class="ph">Esborrar</div>
+          <div class="ph">Canv.perm</div>
+          <div class="pr">Control total (F)</div>
+          <div class="pv yes">✓</div><div class="pv yes">✓</div><div class="pv yes">✓</div><div class="pv yes">✓</div><div class="pv yes">✓</div><div class="pv yes">✓</div>
+          <div class="pr">Modificar (M)</div>
+          <div class="pv yes">✓</div><div class="pv yes">✓</div><div class="pv yes">✓</div><div class="pv yes">✓</div><div class="pv yes">✓</div><div class="pv no">✗</div>
+          <div class="pr">Lectura i Execució (RX)</div>
+          <div class="pv yes">✓</div><div class="pv yes">✓</div><div class="pv no">✗</div><div class="pv yes">✓</div><div class="pv no">✗</div><div class="pv no">✗</div>
+          <div class="pr">Llistar contingut (LC)</div>
+          <div class="pv yes">✓</div><div class="pv no">✗</div><div class="pv no">✗</div><div class="pv inh">➕</div><div class="pv no">✗</div><div class="pv no">✗</div>
+          <div class="pr">Lectura (R)</div>
+          <div class="pv yes">✓</div><div class="pv yes">✓</div><div class="pv no">✗</div><div class="pv no">✗</div><div class="pv no">✗</div><div class="pv no">✗</div>
+          <div class="pr">Escriptura (W)</div>
+          <div class="pv no">✗</div><div class="pv no">✗</div><div class="pv yes">✓</div><div class="pv no">✗</div><div class="pv no">✗</div><div class="pv no">✗</div>
+        </div>
+        <p style="font-size:.75rem;color:var(--muted);margin-top:.4rem">➕ = Sols fitxers heretats del directori pare · ✓ = Inclòs · ✗ = No inclòs</p>
+      </div>
+      <div>
+        <div class="card bl-win">
+          <div class="card-icon" style="background:#f0f7ff">📜</div>
+          <h3>Regles clau dels permisos NTFS</h3>
+          <ul style="list-style:none;padding:0">
+            <li style="padding:.35rem 0;border-bottom:1px solid var(--border);font-size:.87rem;color:var(--muted)">➕ <strong style="color:var(--ink)">Acumulació:</strong> els permisos de múltiples grups s'ACUMULEN (OR). Si ets membre de G1 (Lectura) i G2 (Escriptura), tens Lectura + Escriptura.</li>
+            <li style="padding:.35rem 0;border-bottom:1px solid var(--border);font-size:.87rem;color:var(--muted)">🚫 <strong style="color:var(--ink)">Denegar té prioritat:</strong> un permís "Denegar" explícit anul·la qualsevol "Permetre", independentment de quin grup l'atorga. Usa-ho amb precaució.</li>
+            <li style="padding:.35rem 0;border-bottom:1px solid var(--border);font-size:.87rem;color:var(--muted)">📋 <strong style="color:var(--ink)">Explícit > Heretat:</strong> un permís assignat directament a un objecte (explícit) té prioritat sobre el permís heretat del pare, fins i tot si el heretat és "Denegar".</li>
+            <li style="padding:.35rem 0;font-size:.87rem;color:var(--muted)">👑 <strong style="color:var(--ink)">Propietari del fitxer:</strong> el propietari (NTFS Owner) sempre pot canviar els permisos del seu propi objecte, fins i tot si no té "Control Total".</li>
+          </ul>
+        </div>
+        <div class="callout cl-red" style="margin-top:.75rem">
+          <span class="callout-icon">⚠️</span>
+          <div>
+            <strong>Trampa del "Denegar":</strong>
+            <p style="margin-top:.3rem">Afegir un usuari al grup "Tots" amb permís Denegar bloquejarà fins i tot als Administradors. En lloc de Denegar, és millor simplement NO afegir el permís de Permetre.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Herència -->
+    <div class="section-tag tag-win fi" style="margin-top:3rem">Herència de permisos</div>
+    <h2 class="fi">Herència: com es propaguen els permisos als subdirectoris</h2>
+    <p class="lead fi">Per defecte, els permisos NTFS <strong>s'hereten</strong> cap als subdirectoris i fitxers fills. Això simplifica l'administració però pot causar problemes si no s'entén correctament. Saber quan trencar l'herència és una habilitat clau.</p>
+
+    <div class="grid g3 fi">
+      <div class="card bl-win">
+        <div class="card-icon" style="background:#f0f7ff">🔽</div>
+        <h3>Indicadors d'herència (icacls)</h3>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)"><code style="color:var(--win)">(OI)</code> Object Inherit — Els fitxers fills hereten el permís</li>
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)"><code style="color:var(--win)">(CI)</code> Container Inherit — Els subdirectoris hereten</li>
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)"><code style="color:var(--win)">(IO)</code> Inherit Only — Sols per a fils, no aplica al directori actual</li>
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)"><code style="color:var(--win)">(NP)</code> No Propagate — No propaga als néts</li>
+          <li style="padding:.25rem 0;font-size:.85rem;color:var(--muted)"><code style="color:var(--win)">(I)</code> Inherited — Aquest permís és heretat del pare</li>
+        </ul>
+      </div>
+      <div class="card bl-amber">
+        <div class="card-icon" style="background:#fffbeb">✂️</div>
+        <h3>Trencar l'herència</h3>
+        <p style="margin-bottom:.6rem">Quan trenquem l'herència d'un directori, els permisos del pare deixen de propagar-se. Podem triar:</p>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)">📋 <strong style="color:var(--ink)">Convertir en explícits:</strong> els permisos heretats es copien com a explícits (pots modificar-los).</li>
+          <li style="padding:.25rem 0;font-size:.85rem;color:var(--muted)">🗑️ <strong style="color:var(--ink)">Eliminar heretats:</strong> comença sense permisos i en configures de nous des de zero.</li>
+        </ul>
+        <div class="ex ex-amber" style="margin-top:.5rem">
+          <div class="ex-lbl">Quan trencar l'herència</div>
+          <p>Directori que necessita restriccions molt més estrictes que el seu pare. Ex: <code>C:\Empresa\RRHH\Nomines</code> — el pare permet lectura a tots els empleats, però Nòmines ha de ser solo per a RRHH.</p>
+        </div>
+      </div>
+      <div class="card bl-green">
+        <div class="card-icon" style="background:#f0fdf4">🔍</div>
+        <h3>Permisos efectius</h3>
+        <p style="margin-bottom:.6rem">El <strong>permís efectiu</strong> és el resultat final de combinar: permisos explícits + heretats, de tots els grups, tenint en compte les denegacions.</p>
+        <div class="terminal" style="margin-top:.5rem">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-title">Calcular permisos efectius</span><span class="term-os term-os-win">🪟</span></div>
+          <div class="term-body" style="font-size:.74rem">
+            <div><span class="comment"># PowerShell — permisos efectius</span></div>
+            <div><span class="prompt-win">PS></span> <span class="cmd">Get-Acl C:\Empresa\RRHH | Format-List</span></div>
+            <div style="margin-top:.3rem"><span class="comment"># GUI: clic dret → Propietats → Seguretat → Avançat → Accés efectiu</span></div>
+            <div style="margin-top:.3rem"><span class="comment"># icacls</span></div>
+            <div><span class="prompt-win">></span> <span class="cmd">icacls C:\Empresa\RRHH</span></div>
+            <div><span class="out">TECHCORP\G_RRHH:(OI)(CI)(M)</span></div>
+            <div><span class="out">BUILTIN\Administrators:(OI)(CI)(F)</span></div>
+            <div><span class="out">TECHCORP\joan.garcia:(I)(R)</span> <span class="comment">← Heretat</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="lab-card fi">
+      <div class="lab-header">
+        <span class="lab-icon">🧪</span>
+        <div class="lab-title-block">
+          <h4>Lab 2.1 — Permisos NTFS avançats: herència, trencament i permisos efectius</h4>
+          <p>Configura una estructura de permisos complexa per a l'empresa TechCorp i verifica els permisos efectius</p>
+        </div>
+        <div class="lab-os-tags"><span class="os-tag os-win">🪟 Windows</span></div>
+      </div>
+      <div class="lab-body">
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-title">Configuració de permisos NTFS complexos</span><span class="term-os term-os-win">🪟 Windows</span></div>
+          <div class="term-body">
+            <div><span class="comment"># Crear estructura</span></div>
+            <div><span class="prompt-win">PS></span> <span class="cmd">New-Item -ItemType Directory -Path C:\Empresa\{RRHH,IT,Finances,Comú}</span></div>
+            <div><span class="prompt-win">PS></span> <span class="cmd">New-Item -ItemType Directory -Path C:\Empresa\RRHH\Nomines</span></div>
+            <div style="margin-top:.4rem"><span class="comment"># Treure herència de C:\Empresa\RRHH\Nomines (és molt sensible)</span></div>
+            <div><span class="prompt-win">PS></span> <span class="cmd">$acl = Get-Acl "C:\Empresa\RRHH\Nomines"</span></div>
+            <div><span class="prompt-win">PS></span> <span class="cmd">$acl.SetAccessRuleProtection($true, $false)</span>  <span class="comment"># Trencar herència, eliminar heretats</span></div>
+            <div><span class="prompt-win">PS></span> <span class="cmd">Set-Acl "C:\Empresa\RRHH\Nomines" $acl</span></div>
+            <div style="margin-top:.4rem"><span class="comment"># Assignar permisos específics a Nomines (SOLS RRHH)</span></div>
+            <div><span class="prompt-win">PS></span> <span class="cmd">icacls "C:\Empresa\RRHH\Nomines" /grant "TECHCORP\G_RRHH:(OI)(CI)(F)" /grant "BUILTIN\Administrators:(OI)(CI)(F)"</span></div>
+            <div style="margin-top:.4rem"><span class="comment"># Verificar: joan.garcia (G_IT) no hauria de veure Nomines</span></div>
+            <div><span class="prompt-win">PS></span> <span class="cmd">icacls "C:\Empresa\RRHH\Nomines" /verify</span></div>
+            <div style="margin-top:.4rem"><span class="comment"># Permís especial: G_IT pot llistar C:\Empresa\RRHH però no accedir a Nomines</span></div>
+            <div><span class="prompt-win">PS></span> <span class="cmd">icacls "C:\Empresa\RRHH" /grant "TECHCORP\G_IT:(OI)(CI)(R)"</span></div>
+          </div>
+        </div>
+        <ul class="lab-steps">
+          <li><strong>Configura l'estructura:</strong> C:\Empresa (tots llegeixen), C:\Empresa\RRHH (R per a tothom, M per a G_RRHH), C:\Empresa\RRHH\Nomines (F sols per a G_RRHH, sense herència).</li>
+          <li><strong>Comprova permisos efectius:</strong> Per a l'usuari joan.garcia (membre de G_IT): quins permisos té a C:\Empresa\RRHH? I a C:\Empresa\RRHH\Nomines? Usa la pestanya "Accés efectiu" de la GUI.</li>
+          <li><strong>Simula l'accés:</strong> Com a joan.garcia, intenta llegir, escriure i crear fitxers a cada directori. Documenta quines operacions funcionen i quines fallen.</li>
+          <li><strong>Herència profunda:</strong> Crea un subdirectori a C:\Empresa\RRHH\Nomines. Els permisos s'hereten des de Nomines? Per quin motiu? Comprova-ho amb <code>icacls</code> al nou subdirectori.</li>
+        </ul>
+        <div class="lab-entrega"><strong>📋 Documenta:</strong> Sortida de <code>icacls</code> per a cada directori. Taula de permisos efectius per usuari i directori. Captures dels errors quan joan.garcia intenta accedir a Nòmines.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════
+     T3 — SAMBA
+═══════════════════════════════════ -->
+<section id="samba" class="s-samba">
+  <div class="container">
+    <div class="ra-banner ra-samba fi">
+      <div class="ra-num">3</div>
+      <div>
+        <h2>Samba — Interoperabilitat Windows/Linux via SMB</h2>
+        <p>Servidor Samba, compartir carpetes, autenticació, integració amb AD i gestió de permisos SMB+NTFS.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-samba fi">Protocol SMB i Samba</div>
+    <h2 class="fi">Samba: el pont entre Linux i Windows</h2>
+    <p class="lead fi"><strong>Samba</strong> és la implementació de codi obert del protocol <strong>SMB/CIFS</strong> (Server Message Block / Common Internet File System) per a Linux. Permet que un servidor Linux comparteixi fitxers i impressores amb clients Windows (i viceversa), i fins i tot actuar com a Controlador de Domini Active Directory (Samba 4).</p>
+
+    <div class="grid g3 fi">
+      <div class="card bl-samba">
+        <div class="card-icon" style="background:#fff4f0">🦷</div>
+        <h3>Modes de Samba</h3>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.87rem;color:var(--muted)">📂 <strong style="color:var(--ink)">Servidor de fitxers (Standalone):</strong> comparteix carpetes sense domini. Autenticació pròpia (smbpasswd).</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.87rem;color:var(--muted)">👥 <strong style="color:var(--ink)">Membre de domini (Domain Member):</strong> s'uneix a un domini AD Windows. Usa les credencials d'AD per autenticar. El més comú en entorns mixtos.</li>
+          <li style="padding:.3rem 0;font-size:.87rem;color:var(--muted)">🏢 <strong style="color:var(--ink)">Controlador de domini (Samba 4 AD DC):</strong> Samba actua com a DC d'Active Directory pur. Compatible amb clients Windows.</li>
+        </ul>
+      </div>
+      <div class="card bl-ubuntu">
+        <div class="card-icon" style="background:#fff5f1">📦</div>
+        <h3>Instal·lació i estructura</h3>
+        <div class="terminal" style="margin-top:.5rem">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-title">Instal·lació Samba</span><span class="term-os term-os-ubuntu">🐧 Ubuntu</span></div>
+          <div class="term-body" style="font-size:.75rem">
+            <div><span class="prompt-ub">$</span> <span class="cmd">sudo apt install samba samba-common -y</span></div>
+            <div style="margin-top:.3rem"><span class="comment"># Fitxers importants:</span></div>
+            <div><span class="out">/etc/samba/smb.conf  ← Configuració principal</span></div>
+            <div><span class="out">/var/lib/samba/      ← Bases de dades</span></div>
+            <div><span class="out">/var/log/samba/      ← Logs</span></div>
+            <div style="margin-top:.3rem"><span class="prompt-ub">$</span> <span class="cmd">sudo systemctl enable --now smbd nmbd</span></div>
+            <div><span class="prompt-ub">$</span> <span class="cmd">sudo smbstatus</span>   <span class="comment"># Connexions actives</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="card bl-win">
+        <div class="card-icon" style="background:#f0f7ff">🪟</div>
+        <h3>Versions del protocol SMB</h3>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)"><span class="badge b-red">SMBv1</span> Obsolet i INSEGUR. Vulnerabilitat EternalBlue (WannaCry). Deshabilitar SEMPRE.</li>
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)"><span class="badge b-amber">SMBv2</span> Windows Vista+. Millores de rendiment. Acceptable però preferir v3.</li>
+          <li style="padding:.25rem 0;font-size:.85rem;color:var(--muted)"><span class="badge b-green">SMBv3</span> Windows 8/Server 2012+. Xifrat de dades en trànsit. Recomanat.</li>
+        </ul>
+        <div class="ex ex-win" style="margin-top:.5rem">
+          <div class="ex-lbl">🔒 Deshabilitar SMBv1</div>
+          <p><code>Set-SmbServerConfiguration -EnableSMB1Protocol $false</code></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Configuració smb.conf -->
+    <div class="section-tag tag-samba fi" style="margin-top:3rem">Configuració de smb.conf</div>
+    <h2 class="fi">El fitxer smb.conf: seccions i paràmetres clau</h2>
+
+    <div class="terminal fi">
+      <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">/etc/samba/smb.conf — Configuració completa comentada</span><span class="term-os term-os-samba">🦷 Samba</span></div>
+      <div class="term-body">
+        <div><span class="comment">######################## SECCIÓ [global] ########################</span></div>
+        <div><span class="val">[global]</span></div>
+        <div>   <span class="val">workgroup</span> = <span class="cmd">TECHCORP</span>         <span class="comment"># Nom del grup de treball o domini NT</span></div>
+        <div>   <span class="val">server string</span> = <span class="cmd">Servidor Samba TechCorp</span></div>
+        <div>   <span class="val">netbios name</span> = <span class="cmd">SRV-SAMBA</span>    <span class="comment"># Nom NetBIOS del servidor</span></div>
+        <div>   <span class="val">security</span> = <span class="cmd">ads</span>               <span class="comment"># ads=domain AD, user=standalone, share=públic</span></div>
+        <div>   <span class="val">realm</span> = <span class="cmd">TECHCORP.COM</span>          <span class="comment"># Domini Kerberos (en mode ads)</span></div>
+        <div>   <span class="val">log file</span> = <span class="cmd">/var/log/samba/%m.log</span></div>
+        <div>   <span class="val">max log size</span> = <span class="cmd">1000</span></div>
+        <div>   <span class="val">min protocol</span> = <span class="cmd">SMB2</span>         <span class="comment"># ⚠️ DESHABILITAR SMBv1!</span></div>
+        <div>   <span class="val">server signing</span> = <span class="cmd">mandatory</span>  <span class="comment"># Signatura digital obligatòria (anti-MitM)</span></div>
+        <div>   <span class="val">smb encrypt</span> = <span class="cmd">required</span>     <span class="comment"># Xifrat SMBv3 obligatori</span></div>
+        <div style="margin-top:.5rem"><span class="comment">#################### CARPETA PÚBLICA (tothom lliu i) ####################</span></div>
+        <div><span class="val">[public]</span></div>
+        <div>   <span class="val">path</span> = <span class="cmd">/srv/samba/public</span></div>
+        <div>   <span class="val">browseable</span> = <span class="cmd">yes</span></div>
+        <div>   <span class="val">read only</span> = <span class="cmd">yes</span></div>
+        <div>   <span class="val">guest ok</span> = <span class="cmd">yes</span>              <span class="comment"># Accés sense autenticació</span></div>
+        <div style="margin-top:.5rem"><span class="comment">#################### CARPETA DEPARTAMENT IT ####################</span></div>
+        <div><span class="val">[it_dept]</span></div>
+        <div>   <span class="val">path</span> = <span class="cmd">/srv/samba/it</span></div>
+        <div>   <span class="val">browseable</span> = <span class="cmd">yes</span></div>
+        <div>   <span class="val">read only</span> = <span class="cmd">no</span></div>
+        <div>   <span class="val">valid users</span> = <span class="cmd">@G_IT_Admins, @G_IT_Support</span>  <span class="comment"># @ = grup Samba/AD</span></div>
+        <div>   <span class="val">write list</span> = <span class="cmd">@G_IT_Admins</span>          <span class="comment"># Sols admins poden escriure</span></div>
+        <div>   <span class="val">create mask</span> = <span class="cmd">0660</span>              <span class="comment"># Permisos dels nous fitxers</span></div>
+        <div>   <span class="val">directory mask</span> = <span class="cmd">0770</span>          <span class="comment"># Permisos dels nous directoris</span></div>
+        <div>   <span class="val">force group</span> = <span class="cmd">+it_admins</span>        <span class="comment"># Tots els fitxers creats pertanyen a aquest grup</span></div>
+        <div style="margin-top:.5rem"><span class="comment">#################### HOME DIRECTORIES ####################</span></div>
+        <div><span class="val">[homes]</span></div>
+        <div>   <span class="val">browseable</span> = <span class="cmd">no</span>               <span class="comment"># No apareix a la llista de compartits</span></div>
+        <div>   <span class="val">read only</span> = <span class="cmd">no</span></div>
+        <div>   <span class="val">valid users</span> = <span class="cmd">%S</span>               <span class="comment"># %S = nom del share (= nom d'usuari)</span></div>
+        <div style="margin-top:.5rem"><span class="comment"># Verificar configuració</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">testparm</span>               <span class="comment"># Valida el smb.conf sense errors</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">testparm -s | grep -A5 "\[it_dept\]"</span></div>
+      </div>
+    </div>
+
+    <!-- Gestió d'usuaris Samba -->
+    <div class="section-tag tag-samba fi" style="margin-top:3rem">Usuaris i accés des del client</div>
+    <h2 class="fi">Gestió d'usuaris Samba i accés des de clients</h2>
+
+    <div class="terminal fi">
+      <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">Usuaris Samba i accés client</span><span class="term-os term-os-both">🔀 Ambdós</span></div>
+      <div class="term-body">
+        <div><span class="comment">═══ SERVIDOR SAMBA — Gestió d'usuaris ═══</span></div>
+        <div><span class="comment"># Afegir usuari Samba (l'usuari ha d'existir al sistema Linux primer)</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">sudo useradd -M -s /usr/sbin/nologin joan.garcia</span>  <span class="comment"># Usuari Linux sense home ni login</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">sudo smbpasswd -a joan.garcia</span>  <span class="comment"># Afegir a la base de dades Samba</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">sudo smbpasswd -e joan.garcia</span>  <span class="comment"># Habilitar (enable)</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">sudo pdbedit -L -v</span>              <span class="comment"># Llistar usuaris Samba amb detalls</span></div>
+        <div style="margin-top:.5rem"><span class="comment"># Veure shares disponibles</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">smbclient -L //localhost -U joan.garcia</span></div>
+        <div><span class="out">Sharename  Type  Comment</span></div>
+        <div><span class="out">---------  ----  -------</span></div>
+        <div><span class="out">public     Disk  Carpeta pública</span></div>
+        <div><span class="out">it_dept    Disk</span></div>
+        <div><span class="out">joan.garcia Disk  Home</span></div>
+        <div style="margin-top:.5rem"><span class="comment"># Connectar a un share des de Linux</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">smbclient //srv-samba/it_dept -U joan.garcia</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">sudo mount -t cifs //srv-samba/it_dept /mnt/it -o user=joan.garcia,password=P@ss,uid=1000,gid=1000,vers=3.0</span></div>
+        <div style="margin-top:.4rem"><span class="comment"># Muntar persistent al fstab</span></div>
+        <div><span class="val">//srv-samba/it_dept /mnt/it cifs credentials=/etc/samba/creds.txt,vers=3.0,uid=1000 0 0</span></div>
+        <div style="margin-top:.5rem"><span class="comment">═══ CLIENT WINDOWS ═══</span></div>
+        <div><span class="prompt-win">PS></span> <span class="cmd">net use Z: \\srv-samba\it_dept /user:TECHCORP\joan.garcia</span></div>
+        <div><span class="prompt-win">PS></span> <span class="cmd">New-SmbMapping -LocalPath Z: -RemotePath \\srv-samba\it_dept -UserName joan.garcia</span></div>
+        <div><span class="prompt-win">PS></span> <span class="cmd">Get-SmbMapping</span>  <span class="comment"># Veure unitats mapejades</span></div>
+      </div>
+    </div>
+
+    <div class="lab-card fi">
+      <div class="lab-header">
+        <span class="lab-icon">🧪</span>
+        <div class="lab-title-block">
+          <h4>Lab 3.1 — Servidor Samba amb autenticació i permisos per departament</h4>
+          <p>Configura Samba en mode standalone amb compartits per a 3 departaments i users específics</p>
+        </div>
+        <div class="lab-os-tags"><span class="os-tag os-samba">🦷 Samba</span><span class="os-tag os-both">🔀 Clients</span></div>
+      </div>
+      <div class="lab-body">
+        <ul class="lab-steps">
+          <li><strong>Prepara l'estructura:</strong> A l'Ubuntu server, crea els directoris <code>/srv/samba/{public,it,rrhh,finances}</code>. Crea els grups Linux <code>it_grp</code>, <code>rrhh_grp</code>, <code>finances_grp</code>. Crea 6 usuaris (2 per departament). Configura permisos Linux (POSIX) correctes.</li>
+          <li><strong>Configura smb.conf:</strong> Crea 4 seccions al smb.conf: <code>[public]</code> (lectura per a tothom, sense autenticació), <code>[it_dept]</code> (escriptura per a it_grp), <code>[rrhh]</code> (escriptura per a rrhh_grp, ocult als altres), <code>[homes]</code>. Activa <code>min protocol = SMB2</code> i desactiva SMBv1.</li>
+          <li><strong>Gestiona usuaris Samba:</strong> Afegeix tots els usuaris a la base de dades Samba amb <code>smbpasswd -a</code>. Verifica amb <code>pdbedit -L</code>.</li>
+          <li><strong>Prova des de clients:</strong> Des d'un client Windows, mapeja les unitats amb <code>net use</code>. Des d'un client Ubuntu, munta els shares amb <code>mount -t cifs</code>. Comprova que els permisos funcionen correctament (cada usuari sols pot accedir al seu departament).</li>
+          <li><strong>Analitza els logs:</strong> Comprova <code>/var/log/samba/smbd.log</code>. Quan un usuari no autoritzat intenta accedir, quin missatge apareix al log?</li>
+        </ul>
+        <div class="lab-entrega"><strong>📋 Documenta:</strong> Contingut del smb.conf. Sortida de <code>testparm</code>. Sortida de <code>smbstatus</code> amb connexions actives. Captures de les proves d'accés (autoritzat i no autoritzat).</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════
+     T3b — NFS
+═══════════════════════════════════ -->
+<section id="nfs" class="s-nfs">
+  <div class="container">
+    <div class="ra-banner ra-nfs fi">
+      <div class="ra-num">4</div>
+      <div>
+        <h2>NFS — Network File System</h2>
+        <p>Compartir sistemes de fitxers entre màquines Linux/Unix. NFS4, exports, permisos i seguretat.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-nfs fi">NFS vs Samba</div>
+    <h2 class="fi">NFS: el protocol de fitxers de xarxa per a Unix/Linux</h2>
+    <p class="lead fi"><strong>NFS (Network File System)</strong> és el protocol estàndard per compartir sistemes de fitxers en entorns Linux/Unix. A diferència de Samba (dissenyat per a interoperabilitat amb Windows), NFS és natiu de Linux i ofereix millor integració amb els permisos POSIX i millor rendiment en entorns homogenis.</p>
+
+    <div class="grid g2 fi">
+      <div style="overflow-x:auto">
+        <table class="ptable">
+          <thead><tr><th>Característica</th><th>NFS</th><th>Samba (SMB)</th></tr></thead>
+          <tbody>
+            <tr><td>Plataforma nativa</td><td>Linux/Unix</td><td>Windows</td></tr>
+            <tr><td>Interoperabilitat</td><td>Linux↔Linux (Windows amb client NFS)</td><td>Linux↔Windows (tots els SO)</td></tr>
+            <tr><td>Autenticació</td><td>Per IP/host (NFSv3) o Kerberos (NFSv4)</td><td>Usuari/contrasenya o AD</td></tr>
+            <tr><td>Permisos</td><td>POSIX natiu (UID/GID)</td><td>ACLs NTFS o POSIX</td></tr>
+            <tr><td>Rendiment LAN</td><td>⚡ Excel·lent (menys overhead)</td><td>⚡ Bon</td></tr>
+            <tr><td>Seguretat per defecte</td><td>⚠️ Bàsica (v3), bona (v4+Kerberos)</td><td>✅ Bona (SMBv3 + xifrat)</td></tr>
+            <tr><td>Ús típic</td><td>Compartir homes, dades entre servidors</td><td>Fitxers empresa, impressores</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <div class="callout cl-amber">
+          <span class="callout-icon">⚠️</span>
+          <div>
+            <strong>Problema de UID/GID amb NFS:</strong>
+            <p style="margin-top:.3rem">NFS basa els permisos en l'UID i GID del client. Si l'usuari <code>joan</code> té UID 1001 al servidor però UID 1003 al client, el servidor li negarà l'accés o li donarà accés incorrecte. Solucions: (a) sincronitzar UID/GID (LDAP/AD), (b) usar NFSv4 + Kerberos amb mapeig d'identitats, (c) NIS (obsolet).</p>
+          </div>
+        </div>
+        <div class="callout cl-green" style="margin-top:1rem">
+          <span class="callout-icon">🔒</span>
+          <div>
+            <strong>NFSv4: millores de seguretat clau</strong>
+            <ul style="margin-top:.3rem">
+              <li>Suport natiu per a Kerberos (sec=krb5)</li>
+              <li>Pseudo-sistema de fitxers unificat</li>
+              <li>Suport per ACLs POSIX i NFSv4</li>
+              <li>Millor gestió de la delegació de fitxers</li>
+              <li>Un sol port (2049/TCP) vs NFSv3 multipuerto</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Configuració NFS -->
+    <div class="section-tag tag-nfs fi" style="margin-top:3rem">Configuració de NFS</div>
+    <h2 class="fi">/etc/exports: el fitxer de configuració NFS</h2>
+
+    <div class="terminal fi">
+      <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">NFS Server i Client — Ubuntu</span><span class="term-os term-os-nfs">📂 NFS</span></div>
+      <div class="term-body">
+        <div><span class="comment">═══ SERVIDOR NFS ═══</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">sudo apt install nfs-kernel-server -y</span></div>
+        <div style="margin-top:.4rem"><span class="comment"># /etc/exports — Format: directori  host(opcions)</span></div>
+        <div><span class="val">/srv/nfs/homes</span>    <span class="cmd">192.168.1.0/24(rw,sync,no_subtree_check,no_root_squash)</span></div>
+        <div><span class="val">/srv/nfs/public</span>   <span class="cmd">*(ro,sync,no_subtree_check)</span>  <span class="comment"># * = qualsevol host</span></div>
+        <div><span class="val">/srv/nfs/backups</span>  <span class="cmd">192.168.1.50(rw,sync,no_subtree_check,all_squash,anonuid=1001,anongid=1001)</span></div>
+        <div style="margin-top:.5rem"><span class="comment"># Explicació de les opcions clau:</span></div>
+        <div><span class="comment"># rw/ro          → lectura/escriptura o sols lectura</span></div>
+        <div><span class="comment"># sync           → confirma escriptures al disc (segur) vs async (ràpid però pot perdre dades)</span></div>
+        <div><span class="comment"># no_subtree_check → millora fiabilitat, recomanat sempre</span></div>
+        <div><span class="comment"># root_squash     → DEFAULT: root al client = nobody al servidor (SEGURETAT!)</span></div>
+        <div><span class="comment"># no_root_squash  → root al client = root al servidor (PERILLÓS, sols per a backups)</span></div>
+        <div><span class="comment"># all_squash      → tots els usuaris mapen a anonuid/anongid</span></div>
+        <div style="margin-top:.4rem"><span class="comment"># Aplicar canvis al /etc/exports</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">sudo exportfs -rav</span>              <span class="comment"># Recarrega exports</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">sudo exportfs -v</span>                <span class="comment"># Veure exports actius</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">sudo systemctl enable --now nfs-kernel-server</span></div>
+        <div style="margin-top:.75rem"><span class="comment">═══ CLIENT NFS ═══</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">sudo apt install nfs-common -y</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">showmount -e 192.168.1.10</span>       <span class="comment"># Descobrir exports del servidor</span></div>
+        <div><span class="out">Export list for 192.168.1.10:</span></div>
+        <div><span class="out">/srv/nfs/homes   192.168.1.0/24</span></div>
+        <div><span class="out">/srv/nfs/public  *</span></div>
+        <div style="margin-top:.4rem"><span class="comment"># Muntar NFS temporalment</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">sudo mount -t nfs4 192.168.1.10:/srv/nfs/homes /mnt/homes</span></div>
+        <div style="margin-top:.4rem"><span class="comment"># fstab per a muntatge permanent (NFSv4)</span></div>
+        <div><span class="val">192.168.1.10:/srv/nfs/homes /mnt/homes nfs4 defaults,_netdev,timeo=14,intr 0 0</span></div>
+        <div><span class="comment"># _netdev: esperar la xarxa; timeo: timeout; intr: permet interrompre si el server cau</span></div>
+        <div style="margin-top:.4rem"><span class="comment"># Diagnosi NFS</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">nfsstat -c</span>              <span class="comment"># Estadístiques del client NFS</span></div>
+        <div><span class="prompt-ub">$</span> <span class="cmd">cat /proc/mounts | grep nfs</span></div>
+      </div>
+    </div>
+
+    <div class="lab-card fi">
+      <div class="lab-header">
+        <span class="lab-icon">🧪</span>
+        <div class="lab-title-block">
+          <h4>Lab 4.1 — Servidor NFS amb accés per xarxa i control de permisos</h4>
+          <p>Configura NFS, controla l'accés per IP i comprova root_squash i all_squash</p>
+        </div>
+        <div class="lab-os-tags"><span class="os-tag os-ubuntu">🐧 Ubuntu</span></div>
+      </div>
+      <div class="lab-body">
+        <ul class="lab-steps">
+          <li><strong>Configura el servidor NFS:</strong> Crea 3 exports: <code>/srv/nfs/homes</code> (rw per a la teva subxarxa, root_squash), <code>/srv/nfs/public</code> (ro per a qualsevol), <code>/srv/nfs/backups</code> (rw sols per a la IP del servidor de backup, no_root_squash). Usa <code>exportfs -rav</code> per aplicar.</li>
+          <li><strong>Prova root_squash:</strong> Des del client, munta <code>/srv/nfs/homes</code>. Intenta crear un fitxer com a root (<code>sudo touch /mnt/homes/test_root</code>). Quin usuari apareix al servidor com a propietari? Per quin motiu root_squash és una mesura de seguretat essencial?</li>
+          <li><strong>Prova el control per IP:</strong> Intenta muntar <code>/srv/nfs/backups</code> des d'una IP no autoritzada. Quin error reps? Comprova el log del servidor (<code>journalctl -u nfs-kernel-server</code>).</li>
+          <li><strong>Muntatge persistent:</strong> Afegeix l'entrada a <code>/etc/fstab</code> per al share <code>homes</code>. Reinicia la VM i comprova que es munta automàticament.</li>
+          <li><strong>Benchmark:</strong> Usa <code>dd</code> per comparar la velocitat d'escriptura local vs NFS: <code>dd if=/dev/zero of=/mnt/homes/test bs=1M count=100</code>. Quina diferència observes?</li>
+        </ul>
+        <div class="lab-entrega"><strong>📋 Documenta:</strong> Contingut del /etc/exports. Sortida de <code>exportfs -v</code>. Prova del root_squash amb el propietari del fitxer al servidor. Benchmark local vs NFS.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════
+     T4-T5 — PERMISOS DE XARXA + HERÈNCIA + EFECTIUS
+═══════════════════════════════════ -->
+<section id="xarxa-perm" class="s-teal">
+  <div class="container">
+    <div class="ra-banner ra-teal fi">
+      <div class="ra-num">5</div>
+      <div>
+        <h2>Permisos de xarxa, locals i permisos efectius</h2>
+        <p>Com interactuen els permisos de compartit (Share Permissions) amb els permisos NTFS locals. Càlcul del permís efectiu final.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-teal fi">Permisos de compartit vs NTFS</div>
+    <h2 class="fi">El model de dos nivells: Share Permissions + NTFS</h2>
+    <p class="lead fi">Quan un usuari accedeix a un recurs compartit per xarxa a Windows, el sistema aplica <strong>dos filtres de permisos en sèrie</strong>: primer els <strong>Share Permissions</strong> (permisos del recurs compartit, a nivell de xarxa) i després els <strong>permisos NTFS</strong> (a nivell de fitxer). El permís final efectiu és la <strong>intersecció més restrictiva</strong> dels dos.</p>
+
+    <div class="grid g3 fi">
+      <div class="card bl-teal">
+        <div class="card-icon" style="background:#ecfeff">🌐</div>
+        <h3>Share Permissions (Permisos de xarxa)</h3>
+        <p style="margin-bottom:.6rem">S'apliquen <strong>sols quan s'accedeix per xarxa</strong>. Si accedeixes localment al servidor, no s'apliquen.</p>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)">👁️ <strong>Lectura:</strong> llistar i llegir fitxers</li>
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)">✏️ <strong>Canvi:</strong> llegir + escriure + eliminar</li>
+          <li style="padding:.25rem 0;font-size:.85rem;color:var(--muted)">👑 <strong>Control Total:</strong> tot + canviar permisos de share</li>
+        </ul>
+        <div class="ex ex-teal" style="margin-top:.5rem">
+          <div class="ex-lbl">Millor pràctica</div>
+          <p>Dona "Control Total" a "Tots" als Share Permissions. Controla l'accés detallat exclusivament amb NTFS. Menys confusió, un sol punt de control.</p>
+        </div>
+      </div>
+      <div class="card bl-asix" style="grid-column:span 2">
+        <div class="card-icon" style="background:#f5f3ff">🔢</div>
+        <h3>Càlcul del permís efectiu final (xarxa)</h3>
+        <p style="margin-bottom:.75rem"><strong>Permís efectiu final = min(Share Permissions, NTFS Permissions)</strong></p>
+        <div style="overflow-x:auto">
+          <table class="ptable" style="font-size:.82rem">
+            <thead><tr><th>Escenari</th><th>Share Permission</th><th>NTFS Permission</th><th>Permís Efectiu Final</th></tr></thead>
+            <tbody>
+              <tr><td>Cas 1</td><td>Control Total</td><td>Lectura</td><td><span class="badge b-amber">Lectura ← NTFS és el limitant</span></td></tr>
+              <tr><td>Cas 2</td><td>Lectura</td><td>Control Total</td><td><span class="badge b-amber">Lectura ← Share és el limitant</span></td></tr>
+              <tr><td>Cas 3</td><td>Canvi</td><td>Modificar</td><td><span class="badge b-green">Modificar (equivalent)</span></td></tr>
+              <tr><td>Cas 4</td><td>Control Total</td><td>Control Total</td><td><span class="badge b-green">Control Total</span></td></tr>
+              <tr><td>Cas 5 ⚠️</td><td>Control Total "Tots"</td><td>Denegar a "joan"</td><td><span class="badge b-red">Denegar — el Denegar NTFS guanya sempre</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout cl-teal" style="margin-top:.75rem">
+          <span class="callout-icon">💡</span>
+          <div>
+            <p><strong>Accés local vs accés per xarxa:</strong> quan l'Administrador accedeix directament al servidor (sessió local o RDP), els Share Permissions NO s'apliquen. Sols els NTFS. Per això un admin local té accés complert tot i que el Share Permission li doni sols "Lectura".</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="terminal fi">
+      <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">Share Permissions i permisos SMB — PowerShell</span><span class="term-os term-os-win">🪟 Windows Server</span></div>
+      <div class="term-body">
+        <div><span class="comment"># Crear un share amb Share Permissions i NTFS configurades</span></div>
+        <div><span class="prompt-win">PS></span> <span class="cmd">New-SmbShare -Name "Projectes" -Path "C:\Empresa\Projectes" -Description "Projectes empresa" -FullAccess "Administrators" -ChangeAccess "TECHCORP\G_IT_Admins" -ReadAccess "TECHCORP\Domain Users"</span></div>
+        <div style="margin-top:.4rem"><span class="comment"># Veure Share Permissions d'un recurs compartit</span></div>
+        <div><span class="prompt-win">PS></span> <span class="cmd">Get-SmbShareAccess -Name "Projectes"</span></div>
+        <div><span class="out">Name       AccountName              AccessControlType  AccessRight</span></div>
+        <div><span class="out">----       -----------              -----------------  -----------</span></div>
+        <div><span class="out">Projectes  BUILTIN\Administrators   Allow              Full</span></div>
+        <div><span class="out">Projectes  TECHCORP\G_IT_Admins     Allow              Change</span></div>
+        <div><span class="out">Projectes  TECHCORP\Domain Users    Allow              Read</span></div>
+        <div style="margin-top:.4rem"><span class="comment"># Modificar Share Permissions</span></div>
+        <div><span class="prompt-win">PS></span> <span class="cmd">Grant-SmbShareAccess -Name "Projectes" -AccountName "TECHCORP\G_RRHH" -AccessRight Read -Force</span></div>
+        <div><span class="prompt-win">PS></span> <span class="cmd">Revoke-SmbShareAccess -Name "Projectes" -AccountName "TECHCORP\G_RRHH" -Force</span></div>
+        <div style="margin-top:.4rem"><span class="comment"># Llistar tots els recursos compartits</span></div>
+        <div><span class="prompt-win">PS></span> <span class="cmd">Get-SmbShare | Where-Object {$_.Name -notlike '*$'} | Format-Table Name,Path,Description</span></div>
+        <div style="margin-top:.4rem"><span class="comment"># Veure connexions actives al share</span></div>
+        <div><span class="prompt-win">PS></span> <span class="cmd">Get-SmbSession | Format-Table ClientUserName,ClientComputerName,NumOpens</span></div>
+        <div><span class="prompt-win">PS></span> <span class="cmd">Get-SmbOpenFile | Where-Object {$_.ShareRelativePath -like "*Projectes*"}</span></div>
+      </div>
+    </div>
+
+    <div class="lab-card fi">
+      <div class="lab-header">
+        <span class="lab-icon">🧪</span>
+        <div class="lab-title-block">
+          <h4>Lab 5.1 — Calcular i verificar permisos efectius en accés de xarxa</h4>
+          <p>Implementa escenaris on Share Permissions i NTFS entren en conflicte i verifica el resultat</p>
+        </div>
+        <div class="lab-os-tags"><span class="os-tag os-win">🪟 Windows Server</span></div>
+      </div>
+      <div class="lab-body">
+        <ul class="lab-steps">
+          <li><strong>Crea el share "Laboratori":</strong> Share Permissions: "Tots" → Canvi. NTFS: G_IT → Modificar, G_RRHH → Lectura, joan.garcia → Denegar Escriptura (explícit).</li>
+          <li><strong>Preveu el resultat:</strong> Abans de provar-ho, calcula teòricament el permís efectiu de joan.garcia (membre de G_IT i G_RRHH) en accés per xarxa i en accés local. Escriu la teva predicció.</li>
+          <li><strong>Verifica amb la GUI:</strong> A Propietats → Seguretat → Avançat → Accés efectiu, selecciona joan.garcia. Coincideix amb la teva predicció?</li>
+          <li><strong>Prova pràctica:</strong> Com a joan.garcia, connecta per xarxa (<code>\\servidor\Laboratori</code>). Intenta llegir, escriure i esborrar fitxers. Documenta els resultats. Ara connecta localment al servidor (si és possible). El comportament és diferent?</li>
+          <li><strong>Millor pràctica:</strong> Reconfigura el share posant Share Permissions = "Tots → Control Total" i controla tot des de NTFS. Verifica que el comportament és idèntic però la gestió és més clara.</li>
+        </ul>
+        <div class="lab-entrega"><strong>📋 Documenta:</strong> Taula de prediccions vs resultats reals. Captura de l'eina "Accés efectiu". Justificació de per quin motiu la millor pràctica és "Tots → Control Total" als Share Permissions.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════
+     T5b — DELEGACIÓ DE PERMISOS
+═══════════════════════════════════ -->
+<section id="delegacio" class="s-green">
+  <div class="container">
+    <div class="ra-banner ra-green fi">
+      <div class="ra-num">6</div>
+      <div>
+        <h2>Delegació de permisos</h2>
+        <p>Delegació de control en Active Directory: administrar per OU sense ser Domain Admin. Principi de mínim privilegi.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-green fi">Delegació en AD</div>
+    <h2 class="fi">Delegar tasques d'administració sense donar privilegis de Domain Admin</h2>
+    <p class="lead fi">La <strong>delegació de control</strong> permet assignar a usuaris o grups la capacitat d'administrar objectes específics d'Active Directory (una OU, un tipus d'objecte, un atribut concret) sense necessitar el grup privilegiat <em>Domain Admins</em>. És la implementació del principi de mínim privilegi a escala de directori.</p>
+
+    <div class="grid g2 fi">
+      <div class="card bl-green">
+        <div class="card-icon" style="background:#f0fdf4">🎯</div>
+        <h3>Casos d'ús de la delegació</h3>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.87rem;color:var(--muted)">👤 <strong style="color:var(--ink)">HelpDesk:</strong> pot restablir contrasenyes a la OU d'Usuaris, però no crear ni eliminar comptes.</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.87rem;color:var(--muted)">🏢 <strong style="color:var(--ink)">Administrador de dept.:</strong> gestiona els equips i usuaris de la seva OU (ex: OU=Barcelona), sense tocar la OU de Madrid.</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.87rem;color:var(--muted)">📧 <strong style="color:var(--ink)">Operador de grups:</strong> pot afegir/eliminar membres de grups de distribució, sense poder crear ni eliminar grups.</li>
+          <li style="padding:.3rem 0;font-size:.87rem;color:var(--muted)">📋 <strong style="color:var(--ink)">Actualitzar atributs:</strong> l'equip de RRHH pot actualitzar el número de telèfon i departament dels usuaris, sense accés a contrasenyes ni permisos.</li>
+        </ul>
+      </div>
+      <div>
+        <div class="terminal">
+          <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-title">Delegació de control — PowerShell AD</span><span class="term-os term-os-win">🪟 Windows Server</span></div>
+          <div class="term-body" style="font-size:.76rem">
+            <div><span class="comment"># Delegar "Restablir contrasenyes" al grup G_HelpDesk</span></div>
+            <div><span class="comment"># sobre la OU Usuaris</span></div>
+            <div><span class="prompt-win">PS></span> <span class="cmd">$ouDN = "OU=Usuaris,OU=TechCorp,DC=techcorp,DC=com"</span></div>
+            <div><span class="prompt-win">PS></span> <span class="cmd">$group = Get-ADGroup "G_HelpDesk"</span></div>
+            <div style="margin-top:.3rem"><span class="comment"># GUID del dret "Reset Password" a AD</span></div>
+            <div><span class="prompt-win">PS></span> <span class="cmd">$guidResetPwd = [GUID]"00299570-246d-11d0-a768-00aa006e0529"</span></div>
+            <div><span class="prompt-win">PS></span> <span class="cmd">$ace = New-Object System.DirectoryServices.ActiveDirectoryAccessRule($group.SID, "ExtendedRight", "Allow", $guidResetPwd, "Descendents", [GUID]"bf967aba-0de6-11d0-a285-00aa003049e2")</span></div>
+            <div><span class="prompt-win">PS></span> <span class="cmd">$acl = Get-Acl "AD:\$ouDN"</span></div>
+            <div><span class="prompt-win">PS></span> <span class="cmd">$acl.AddAccessRule($ace)</span></div>
+            <div><span class="prompt-win">PS></span> <span class="cmd">Set-Acl "AD:\$ouDN" $acl</span></div>
+            <div style="margin-top:.3rem"><span class="comment"># Alternativa: Wizard gràfic</span></div>
+            <div><span class="comment"># ADUC → clic dret sobre OU → "Delegar control..."</span></div>
+          </div>
+        </div>
+        <div class="callout cl-amber" style="margin-top:.75rem">
+          <span class="callout-icon">⚠️</span>
+          <div>
+            <strong>La delegació no és visible fàcilment</strong>
+            <p style="margin-top:.3rem">Les delegacions en AD s'emmagatzemen a les ACLs dels objectes AD (no als grups). Usa l'eina <code>dsacls</code> o <em>ADSI Edit</em> per auditar qui té quins permisos delegats.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="lab-card fi">
+      <div class="lab-header">
+        <span class="lab-icon">🧪</span>
+        <div class="lab-title-block">
+          <h4>Lab 6.1 — Delegació de control al HelpDesk i verificació de permisos mínims</h4>
+          <p>Delega restabliment de contrasenyes i gestió d'equips sense Domain Admin</p>
+        </div>
+        <div class="lab-os-tags"><span class="os-tag os-win">🪟 Windows Server</span></div>
+      </div>
+      <div class="lab-body">
+        <ul class="lab-steps">
+          <li><strong>Crea el grup G_HelpDesk</strong> i afegeix-hi un usuari de prova (ex: <code>helpdesk01</code>). Comprova que helpdesk01 NO és Domain Admin.</li>
+          <li><strong>Delegació via wizard:</strong> A "Usuaris i equips d'AD", clic dret sobre <code>OU=Usuaris</code> → "Delegar control". Selecciona G_HelpDesk. Tria "Restablir les contrasenyes d'usuari i obligar el canvi de contrasenya en el pròxim inici de sessió".</li>
+          <li><strong>Verifica la delegació:</strong> Com a helpdesk01, obre la consola ADUC (necessita RSAT instal·lat). Intenta restablir la contrasenya de joan.garcia. Funciona? Ara intenta eliminar joan.garcia. Funciona? (No ha de funcionar).</li>
+          <li><strong>Delegació de gestió d'equips:</strong> Delega al grup G_IT_Support la capacitat d'unir equips al domini a la OU=Equips. Verifica que un membre de G_IT_Support pot executar <code>Add-Computer -DomainName techcorp.com</code> en un client.</li>
+          <li><strong>Auditoria de delegacions:</strong> Executa <code>dsacls "OU=Usuaris,OU=TechCorp,DC=techcorp,DC=com" | Select-String "HelpDesk"</code> per veure les delegacions actives.</li>
+        </ul>
+        <div class="lab-entrega"><strong>📋 Documenta:</strong> Captures del wizard de delegació. Prova que helpdesk01 pot restablir contrasenya però no eliminar usuaris. Sortida de <code>dsacls</code> mostrant la delegació. Reflexió sobre el principi de mínim privilegi.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════
+     T6 — DIRECTIVES DE GRUP (GPO)
+═══════════════════════════════════ -->
+<section id="gpo" class="s-dark">
+  <div class="container">
+    <div class="ra-banner ra-gpo fi">
+      <div class="ra-num">7</div>
+      <div>
+        <h2>Directives de Grup (GPO)</h2>
+        <p>Group Policy Objects: creació, vinculació, herència, àmbit, filtratge, drets d'usuari, directives de seguretat i plantilles administratives.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-win fi">Fonaments de GPO</div>
+    <h2 class="fi">Què és una GPO i com s'aplica?</h2>
+    <p class="lead fi">Un <strong>Group Policy Object (GPO)</strong> és un conjunt de configuracions del sistema operatiu (usuari i/o equip) que s'aplica automàticament als objectes d'AD (usuaris, equips) dins l'àmbit vinculat. Permet administrar centenars d'equips de forma centralitzada.</p>
+
+    <!-- Ordre d'aplicació GPO -->
+    <div class="section-tag tag-win fi">Ordre d'aplicació: LSDOU</div>
+    <h2 class="fi">LSDOU: l'ordre d'aplicació de les GPO</h2>
+    <p class="lead fi">Les GPO s'apliquen en un ordre determinat. L'ordre importa perquè les GPO aplicades <strong>LAST WIN</strong> (les últimes sobreescriuen les anteriors, excepte en cas de conflicte o Enforce).</p>
+
+    <div class="gpo-flow fi">
+      <div style="text-align:center">
+        <div class="gpo-box gpo-local">1. LOCAL<br><small>GPO local de l'equip</small></div>
+        <div style="font-size:.72rem;color:rgba(255,255,255,.4);margin-top:.2rem">Menys prioritat</div>
+      </div>
+      <span class="gpo-arrow" style="color:rgba(255,255,255,.4)">→</span>
+      <div class="gpo-box gpo-site">2. SITE<br><small>Lloc d'AD (Site)</small></div>
+      <span class="gpo-arrow" style="color:rgba(255,255,255,.4)">→</span>
+      <div class="gpo-box gpo-domain">3. DOMAIN<br><small>Domini (tot el domini)</small></div>
+      <span class="gpo-arrow" style="color:rgba(255,255,255,.4)">→</span>
+      <div class="gpo-box gpo-ou">4. OU (pare)<br><small>OU del contenidor pare</small></div>
+      <span class="gpo-arrow" style="color:rgba(255,255,255,.4)">→</span>
+      <div class="gpo-box gpo-ou" style="background:rgba(5,150,105,.2);border-color:rgba(5,150,105,.5)">5. OU (fill)<br><small>OU directa de l'objecte</small></div>
+      <span class="gpo-arrow" style="color:rgba(255,255,255,.4)">→</span>
+      <div style="text-align:center">
+        <div class="gpo-override">🏆 Últim<br>guanya</div>
+        <div style="font-size:.72rem;color:rgba(255,255,255,.4);margin-top:.2rem">Màxima prioritat</div>
+      </div>
+    </div>
+
+    <div class="grid g3 fi" style="margin-top:2rem">
+      <div class="card">
+        <div class="card-icon" style="background:#f5f3ff">🔒</div>
+        <h3>Enforce (No Override)</h3>
+        <p>Marca una GPO com a "Enforce". Impedeix que les GPO d'OUs fills la sobreescriguin. Útil per a polítiques de seguretat corporatives que <em>cap OU filla pot relaxar</em> (ex: política de contrasenyes, bloqueig de panell de control).</p>
+        <div class="ex ex-win" style="margin-top:.5rem">
+          <div class="ex-lbl">Exemple</div>
+          <p>GPO "Pol_Seguretat_Global" vinculada al Domini amb Enforce: bloqueja el CMD i el Panell de Control per a tots els usuaris, independentment de les GPO de les OUs filles.</p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#f0fdf4">🛑</div>
+        <h3>Block Inheritance</h3>
+        <p>Una OU pot "bloquejar" l'herència de GPO dels seus pares. Les GPO del Domini i les OUs pare no s'apliquen a aquesta OU. <strong>Excepció:</strong> les GPO amb Enforce s'apliquen igualment.</p>
+        <div class="ex ex-green" style="margin-top:.5rem">
+          <div class="ex-lbl">Cas d'ús</div>
+          <p>OU=Kioscos: bloqueja l'herència per tenir configuració completament diferent a la resta del domini.</p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#ecfeff">🔍</div>
+        <h3>Security Filtering</h3>
+        <p>Per defecte, una GPO s'aplica a "Authenticated Users" (tots). Pots filtrar per un grup específic: la GPO sols s'aplica als membres d'aquell grup. Permet una granularitat molt fina.</p>
+        <div class="ex ex-teal" style="margin-top:.5rem">
+          <div class="ex-lbl">Exemple avançat</div>
+          <p>GPO "Restriccions_Usuaris_Normals": vinculada al Domini, però filtre de seguretat = G_Usuaris_Estàndard. No s'aplica a G_IT_Admins.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Configuració GPO -->
+    <div class="section-tag tag-win fi" style="margin-top:3rem">Creació i gestió de GPOs</div>
+    <h2 class="fi">Crear, configurar i vincular GPOs: casos d'ús reals</h2>
+
+    <div class="terminal fi">
+      <div class="term-bar"><span class="term-dot" style="background:#ff5f57"></span><span class="term-dot" style="background:#febc2e"></span><span class="term-dot" style="background:#28c840"></span><span class="term-title">GPO — PowerShell i GPMC</span><span class="term-os term-os-win">🪟 Windows Server</span></div>
+      <div class="term-body">
+        <div><span class="comment"># Instal·lar mòdul de GPO</span></div>
+        <div><span class="prompt-win">PS></span> <span class="cmd">Install-WindowsFeature GPMC</span></div>
+        <div><span class="prompt-win">PS></span> <span class="cmd">Import-Module GroupPolicy</span></div>
+        <div style="margin-top:.5rem"><span class="comment"># ─── Crear GPOs ───</span></div>
+        <div><span class="prompt-win">PS></span> <span class="cmd">New-GPO -Name "Pol_Seguretat_Global" -Domain "techcorp.com" -Comment "Política de seguretat corporativa"</span></div>
+        <div><span class="prompt-win">PS></span> <span class="cmd">New-GPO -Name "Pol_Escriptori_Usuaris" -Domain "techcorp.com"</span></div>
+        <div style="margin-top:.4rem"><span class="comment"># ─── Vincular GPO a una OU ───</span></div>
+        <div><span class="prompt-win">PS></span> <span class="cmd">New-GPLink -Name "Pol_Seguretat_Global" -Target "DC=techcorp,DC=com" -Enforced Yes</span></div>
+        <div><span class="prompt-win">PS></span> <span class="cmd">New-GPLink -Name "Pol_Escriptori_Usuaris" -Target "OU=Usuaris,OU=TechCorp,DC=techcorp,DC=com"</span></div>
+        <div style="margin-top:.4rem"><span class="comment"># ─── Configurar ajustos via GPO Registry ───</span></div>
+        <div><span class="comment"># Desactivar CMD per a usuaris</span></div>
+        <div><span class="prompt-win">PS></span> <span class="cmd">Set-GPRegistryValue -Name "Pol_Seguretat_Global" -Key "HKCU\Software\Policies\Microsoft\Windows\System" -ValueName "DisableCMD" -Type DWord -Value 1</span></div>
+        <div><span class="comment"># Configurar fons d'escriptori corporatiu</span></div>
+        <div><span class="prompt-win">PS></span> <span class="cmd">Set-GPRegistryValue -Name "Pol_Escriptori_Usuaris" -Key "HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\System" -ValueName "Wallpaper" -Type String -Value "\\srv-file\public\wallpaper.jpg"</span></div>
+        <div style="margin-top:.4rem"><span class="comment"># ─── Security Filtering ───</span></div>
+        <div><span class="comment"># Eliminar "Authenticated Users" (per defecte) i afegir sols G_Usuaris_Estàndard</span></div>
+        <div><span class="prompt-win">PS></span> <span class="cmd">Set-GPPermissions -Name "Pol_Escriptori_Usuaris" -PermissionLevel None -TargetName "Authenticated Users" -TargetType Group</span></div>
+        <div><span class="prompt-win">PS></span> <span class="cmd">Set-GPPermissions -Name "Pol_Escriptori_Usuaris" -PermissionLevel GpoApply -TargetName "G_Usuaris_Estàndard" -TargetType Group</span></div>
+        <div style="margin-top:.4rem"><span class="comment"># ─── Diagnosi ───</span></div>
+        <div><span class="prompt-win">></span> <span class="cmd">gpupdate /force</span>            <span class="comment"># Forçar actualització de GPO al client</span></div>
+        <div><span class="prompt-win">></span> <span class="cmd">gpresult /R</span>               <span class="comment"># RSoP: quines GPO s'apliquen a l'usuari actual</span></div>
+        <div><span class="prompt-win">></span> <span class="cmd">gpresult /H gporeport.html</span>  <span class="comment"># Informe HTML detallat (Resultant Set of Policy)</span></div>
+        <div><span class="prompt-win">PS></span> <span class="cmd">Get-GPResultantSetOfPolicy -ReportType Html -Path C:\gpo_report.html</span></div>
+      </div>
+    </div>
+
+    <!-- Drets d'usuari i directives de seguretat -->
+    <div class="section-tag tag-win fi" style="margin-top:3rem">Drets d'usuari i Directives de Seguretat</div>
+    <h2 class="fi">User Rights Assignment i Security Settings</h2>
+    <p class="lead fi">Dins d'una GPO, la secció <strong>Configuració de Windows → Configuració de Seguretat → Directrius Locals</strong> conté dues seccions crítiques: els <strong>Drets d'Usuari</strong> (User Rights Assignment) i les <strong>Opcions de Seguretat</strong>.</p>
+
+    <div class="grid g2 fi">
+      <div class="card bl-win">
+        <div class="card-icon" style="background:#f0f7ff">🎫</div>
+        <h3>Drets d'usuari (User Rights Assignment)</h3>
+        <p style="margin-bottom:.6rem">Controlen el que un compte pot fer al sistema, independentment dels permisos d'objecte:</p>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)">🖥️ <strong style="color:var(--ink)">Iniciar sessió localment:</strong> qui pot fer login físic a l'equip.</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)">🔌 <strong style="color:var(--ink)">Accés per xarxa a l'equip:</strong> qui pot connectar-se per xarxa.</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)">🔧 <strong style="color:var(--ink)">Gestionar el registre d'auditoria:</strong> qui pot netejar els logs d'esdeveniments.</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)">🚀 <strong style="color:var(--ink)">Canviar la zona horària:</strong> útil per a quioscos (impedeix canviar-la).</li>
+          <li style="padding:.3rem 0;font-size:.85rem;color:var(--muted)">💾 <strong style="color:var(--ink)">Fer còpies de seguretat:</strong> qui pot usar l'API de backup sense permisos de fitxer.</li>
+        </ul>
+      </div>
+      <div class="card bl-asix">
+        <div class="card-icon" style="background:#f5f3ff">⚙️</div>
+        <h3>Opcions de seguretat importants</h3>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)">🔒 <strong style="color:var(--ink)">Compte: Reanomenar Administrador:</strong> canvia el nom del compte Administrator (menys evident per a atacants).</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)">🖥️ <strong style="color:var(--ink)">Inici interactiu: No mostrar últim nom d'usuari:</strong> no mostra el darrer usuari al login.</li>
+          <li style="padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)">🔐 <strong style="color:var(--ink)">Xarxa: Nivell d'autenticació LAN Manager:</strong> forçar NTLMv2 o Kerberos, rebutjar LM i NTLM.</li>
+          <li style="padding:.3rem 0;font-size:.85rem;color:var(--muted)">📵 <strong style="color:var(--ink)">Dispositius: Impedir que els usuaris instal·lin impressores:</strong> seguretat als equips compartits.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Plantilles administratives -->
+    <div class="section-tag tag-win fi" style="margin-top:3rem">Plantilles administratives</div>
+    <h2 class="fi">Plantilles administratives (ADMX/ADML): configuració del registre via GPO</h2>
+    <p class="lead fi">Les <strong>plantilles administratives</strong> (fitxers ADMX) permeten gestionar configuracions de Windows i aplicacions (Office, Chrome, Firefox...) via GPO sense editar el registre manualment. S'apliquen escrivint valors al registre de Windows als clients.</p>
+
+    <div class="grid g3 fi">
+      <div class="card bl-asix">
+        <div class="card-icon" style="background:#f5f3ff">📄</div>
+        <h3>Plantilles ADMX incorporades</h3>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)">🔒 <strong>Windows Update:</strong> forçar actualitzacions automàtiques des del servidor WSUS intern.</li>
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)">🛡️ <strong>Windows Defender:</strong> configurar la protecció anti-malware centralment.</li>
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)">🔐 <strong>BitLocker:</strong> forçar el xifrat de disc i gestionar les claus de recuperació a AD.</li>
+          <li style="padding:.25rem 0;font-size:.85rem;color:var(--muted)">📡 <strong>Remote Desktop:</strong> habilitar/deshabilitar RDP, forçar autenticació NLA.</li>
+        </ul>
+      </div>
+      <div class="card bl-green">
+        <div class="card-icon" style="background:#f0fdf4">🌐</div>
+        <h3>Plantilles de tercers (Chrome, Firefox, Office)</h3>
+        <p style="margin-bottom:.5rem">Moltes aplicacions proporcionen plantilles ADMX pròpies:</p>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)">🌐 <strong>Google Chrome ADMX:</strong> forçar pàgina d'inici, extensions permeses, deshabilitar incògnit.</li>
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)">📊 <strong>Office 365 ADMX:</strong> configurar macro security, aplicar plantilles, deshabilitar telemetria.</li>
+          <li style="padding:.25rem 0;font-size:.85rem;color:var(--muted)">🦊 <strong>Firefox ADMX:</strong> configurar proxy, certificats, pàgina d'inici corporativa.</li>
+        </ul>
+      </div>
+      <div class="card bl-win">
+        <div class="card-icon" style="background:#f0f7ff">💻</div>
+        <h3>Scripts via GPO</h3>
+        <p style="margin-bottom:.5rem">GPO permet executar scripts automàticament:</p>
+        <ul style="list-style:none;padding:0">
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)">🚀 <strong>Inici de sessió (Logon):</strong> muntar unitats de xarxa, sincronitzar fitxers, actualitzar configuració.</li>
+          <li style="padding:.25rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)">🔌 <strong>Tancament de sessió (Logoff):</strong> desar perfil, desconnectar unitats, auditoria.</li>
+          <li style="padding:.25rem 0;font-size:.85rem;color:var(--muted)">🖥️ <strong>Inici/Apagada de l'equip:</strong> instal·lar/desinstal·lar programari, actualitzar inventari.</li>
+        </ul>
+        <div class="ex ex-win" style="margin-top:.5rem">
+          <div class="ex-lbl">Script Logon típic</div>
+          <p><code>net use Z: \\srv-file\%USERNAME% /persistent:yes</code><br>Mapeja la carpeta personal de l'usuari.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="lab-card fi">
+      <div class="lab-header">
+        <span class="lab-icon">🧪</span>
+        <div class="lab-title-block">
+          <h4>Lab 7.1 — GPO completa: seguretat, escriptori i scripts per a TechCorp</h4>
+          <p>Crea una infraestructura GPO completa amb polítiques de seguretat, personalització i scripts de logon</p>
+        </div>
+        <div class="lab-os-tags"><span class="os-tag os-win">🪟 Windows Server</span></div>
+      </div>
+      <div class="lab-body">
+        <p>Implementareu 3 GPOs que cobriran les necessitats de TechCorp: seguretat global, configuració de treballadors i configuració d'administradors.</p>
+        <h5>GPO 1 — Pol_Seguretat_Global (vinculada al Domini, Enforced)</h5>
+        <ul class="lab-steps">
+          <li><strong>Configuració de seguretat:</strong> Política de contrasenyes (min 12 caràcters, complexitat, historial 10, caducitat 90 dies). Bloqueig de compte (5 intents, 30 min). Auditoria d'inici de sessió (reeixida i fallada).</li>
+          <li><strong>Opcions de seguretat:</strong> Deshabilita SMBv1 (Registre: <code>HKLM\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters\SMB1 = 0</code>). No mostrar l'últim usuari al login. Forçar NTLMv2 (rebutjar LM i NTLMv1).</li>
+        </ul>
+        <h5>GPO 2 — Pol_Usuaris_Estandard (vinculada a OU=Usuaris)</h5>
+        <ul class="lab-steps">
+          <li><strong>Restriccions:</strong> Deshabilita el Panell de Control (Tauler de control). Deshabilita el CMD i PowerShell. Deshabilita el Gestor de tasques (Task Manager). Impedeix l'accés a la configuració del navegador.</li>
+          <li><strong>Personalització:</strong> Fons d'escriptori corporatiu (<code>\\srv-file\public\wallpaper.jpg</code>). Pàgina d'inici del navegador (<code>https://intranet.techcorp.com</code>). Mapes d'unitats: Z: → <code>\\srv-file\homes\%USERNAME%</code>, W: → <code>\\srv-file\public</code>.</li>
+        </ul>
+        <h5>GPO 3 — Pol_Equips_IT (vinculada a OU=Equips)</h5>
+        <ul class="lab-steps">
+          <li><strong>Windows Update:</strong> Configura WSUS intern (<code>http://srv-wsus:8530</code>), actualitzacions automàtiques diàries a les 03:00, reinici si cal (fora d'hores de treball).</li>
+          <li><strong>Scripts d'inici d'equip:</strong> Crea un script PowerShell que escriu al log <code>C:\Windows\Logs\boot_log.txt</code> el nom de l'equip, la data i l'hora d'inici. Vincula'l a "Configuració de l'equip → Windows Settings → Scripts → Startup".</li>
+          <li><strong>Verifica:</strong> Executa <code>gpresult /H C:\gpo_report.html</code> a un equip client. Obre l'HTML i comprova quines GPOs s'apliquen i en quin ordre. Usa <code>gpupdate /force</code> i verifica que les restriccions de la GPO 2 estan actives per als usuaris normals.</li>
+        </ul>
+        <div class="lab-entrega"><strong>📋 Documenta:</strong> Captures de cada GPO al GPMC (arbre i configuració). Sortida de <code>gpresult /R</code> per a un usuari normal i un admin. Informe HTML de <code>gpresult /H</code>. Prova que les restriccions s'apliquen a usuaris normals però no als admins (Security Filtering).</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PRÀCTICA FINAL ═══ -->
+<section class="s-asix">
+  <div class="container">
+    <div class="section-tag tag-asix fi">Pràctica Final Integradora</div>
+    <h2 class="fi">Infraestructura d'accés completa per a TechCorp S.L.</h2>
+    <p class="lead fi">Integra tots els continguts del RA5: AD, Samba, NFS, permisos, delegació i GPO en un entorn de producció simulat.</p>
+
+    <div class="lab-card fi">
+      <div class="lab-header">
+        <span class="lab-icon">🏆</span>
+        <div class="lab-title-block">
+          <h4>Pràctica Integradora — Administració completa de l'accés al domini de TechCorp</h4>
+          <p>Windows Server + Ubuntu + Samba + NFS + AD + GPO · Durada estimada: 5–6h · Nivell CFGS avançat</p>
+        </div>
+        <div class="lab-os-tags"><span class="os-tag os-both">🔀 Ambdós + Samba + NFS</span></div>
+      </div>
+      <div class="lab-body">
+        <p>TechCorp S.L. t'ha encarregat la implementació completa de la infraestructura d'accés. Disposes d'un Windows Server 2022 (DC), un Ubuntu Server (servidor de fitxers Samba/NFS) i clients Windows i Ubuntu.</p>
+
+        <h5>📋 FASE 1 — Estructura Active Directory</h5>
+        <ul class="lab-steps">
+          <li><strong>Estructura d'OUs:</strong> TechCorp → {Usuaris/{IT, RRHH, Finances}, Equips/{Portàtils, Escriptoris}, Servidors, Grups/{Seguretat, Distribució}, Servei_Comptes}.</li>
+          <li><strong>Comptes:</strong> 2 usuaris per departament + 1 compte de servei per Samba (<code>svc_samba</code>) + grup G_IT, G_RRHH, G_Finances + grups DL per a cada nivell d'accés.</li>
+          <li><strong>AGDLP complet:</strong> implementa l'estratègia per als recursos de xarxa. Documenta el diagrama de relació Usuaris → GG → DL → Recurs.</li>
+        </ul>
+
+        <h5>📋 FASE 2 — Servidor de fitxers Samba integrat amb AD</h5>
+        <ul class="lab-steps">
+          <li><strong>Uneix l'Ubuntu Server al domini</strong> com a membre (security = ads). Configura SSSD per a autenticació AD.</li>
+          <li><strong>Shares Samba:</strong> [it_dept] (G_IT → RW, autenticació AD), [rrhh] (G_RRHH → RW, ocult), [finances] (G_Finances → RW), [public] (tothom → RO, guest ok), [homes] (cada usuari el seu).</li>
+          <li><strong>Verifica l'accés:</strong> Des de clients Windows, munta les unitats amb <code>net use</code>. Des de clients Ubuntu, munta amb <code>mount -t cifs</code>. Comprova que els permisos AD es respecten.</li>
+        </ul>
+
+        <h5>📋 FASE 3 — Servidor NFS per als servidors Linux</h5>
+        <ul class="lab-steps">
+          <li><strong>Exports NFS:</strong> /srv/nfs/homes (tota la subxarxa 192.168.1.0/24, rw, root_squash), /srv/nfs/backups (sols IP del servidor de backup, rw, no_root_squash), /srv/nfs/iso (qualsevol, ro, all_squash).</li>
+          <li><strong>Automatitza el muntatge</strong> als clients Ubuntu amb fstab (NFSv4, _netdev). Comprova que es munta a l'arrencada.</li>
+        </ul>
+
+        <h5>📋 FASE 4 — Permisos, herència i delegació</h5>
+        <ul class="lab-steps">
+          <li><strong>NTFS + Share:</strong> Per al share it_dept: Share = Tots → CT. NTFS = G_IT_Admins → Control Total (heredat), G_IT_Support → Lectura i Execució. Subdirectori /it_dept/Confidencial: trenca herència, sols G_IT_Admins.</li>
+          <li><strong>Delegació:</strong> G_HelpDesk → Restablir contrasenyes a OU=Usuaris. G_IT_Support → Unir equips al domini. G_RRHH_Leads → Gestionar usuaris a OU=RRHH (crear, modificar, no eliminar).</li>
+          <li><strong>Verifica els permisos efectius</strong> de 3 usuaris de perfils diferent i documenta la matriu completa de "qui pot fer què a cada recurs".</li>
+        </ul>
+
+        <h5>📋 FASE 5 — GPO corporativa completa</h5>
+        <ul class="lab-steps">
+          <li><strong>3 GPOs:</strong> Pol_Seguretat_Global (Domini, Enforced), Pol_Usuaris_Estàndard (OU Usuaris, filtrat per G_Usuaris), Pol_Servidors (OU Servidors, forçar auditoria i deshabilitar serveis innecessaris).</li>
+          <li><strong>Script Logon:</strong> Munta Z: = home personal, W: = Públic. Crea un log de sessions a <code>\\srv-file\it_dept\login_audit.log</code> amb data, hora i nom d'usuari.</li>
+          <li><strong>RSoP complet:</strong> Genera un informe HTML per a cada tipus d'usuari (usuari normal, admin IT, usuari RRHH). Analitza les diferències.</li>
+        </ul>
+
+        <h5>📋 FASE 6 — Documentació tècnica</h5>
+        <ul class="lab-steps">
+          <li><strong>Diagrama d'arquitectura:</strong> Esquema visual de tota la infraestructura: AD (DC), servidor Samba, servidor NFS, clients, xarxa. Inclou protocols (SMB, NFS, Kerberos, LDAP).</li>
+          <li><strong>Matriu de permisos:</strong> Taula completa (usuaris × recursos) amb els permisos efectius de cada combinació.</li>
+          <li><strong>Informe de seguretat:</strong> Llista de mesures de seguretat implementades (SMBv1 deshabilitat, NTLMv2 forçat, root_squash NFS, Enforce GPO, delegació mínima) amb la justificació de cada una.</li>
+        </ul>
+
+        <div class="lab-entrega">
+          <strong>📦 Lliurament complet:</strong><br>
+          • Script PowerShell per crear tota l'estructura AD (usuaris, grups, OUs, AGDLP)<br>
+          • Fitxer smb.conf comentat per al servidor Samba<br>
+          • Fitxer /etc/exports comentat per al servidor NFS<br>
+          • Backup de les GPOs exportat (GPMC → Backup All GPOs)<br>
+          • Informe HTML de <code>gpresult /H</code> per a 3 tipus d'usuari<br>
+          • Matriu de permisos (usuari × recurs × tipus d'accés)<br>
+          • Diagrama d'arquitectura + informe de seguretat
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PREGUNTES ═══ -->
+<section id="preguntes" class="s-cream">
+  <div class="container">
+    <div class="ra-banner ra-preguntes fi">
+      <div class="ra-num">?</div>
+      <div>
+        <h2>Preguntes teòriques — RA5</h2>
+        <p>10 preguntes de nivell CFGS. Sense resposta — per a reflexió i preparació d'examen.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-pregs fi">Active Directory i autenticació</div>
+    <h2 class="fi">Preguntes sobre AD, Kerberos i estructura de domini</h2>
+    <div class="grid fi" style="gap:.9rem;margin-bottom:3rem">
+
+      <div class="q-card">
+        <div class="q-num">1</div>
+        <div class="q-body">
+          <h4>Explica l'estratègia AGDLP per a l'assignació de permisos en un entorn de domini Active Directory de múltiples dominis. Descriu per quin motiu és superior a assignar permisos directament als usuaris o a grups globals. Proposa l'estructura AGDLP completa per al següent cas: 3 departaments (IT, RRHH, Finances) amb 3 nivells d'accés cadascun (Lectura, Escriptura, Control Total) sobre una carpeta compartida al servidor de fitxers.</h4>
+          <p>Quina diferència hi ha entre un grup de Seguretat i un grup de Distribució en AD? Per quin motiu sols els grups de Seguretat poden assignar permisos NTFS?</p>
+          <span class="q-tag qt-asix">AD</span><span class="q-tag qt-both">AGDLP</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">2</div>
+        <div class="q-body">
+          <h4>Descriu el flux d'autenticació Kerberos complet des que un usuari prem "Inici de sessió" fins que accedeix a un recurs de xarxa compartit. Explica el paper del KDC, el TGT i el Service Ticket. Per quin motiu Kerberos és més segur que NTLM? Quins atacs específics prevé Kerberos que NTLM no prevé? Descriu l'atac "Pass-the-Hash" (PtH) i com Kerberos el mitiga.</h4>
+          <p>Quin impacte té la dessincronització del rellotge entre un client i el controlador de domini en l'autenticació Kerberos? Per quin motiu hi ha una finestra de tolerància de 5 minuts?</p>
+          <span class="q-tag qt-asix">Kerberos</span><span class="q-tag qt-sec">Seguretat</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">3</div>
+        <div class="q-body">
+          <h4>Explica per quin motiu integrar clients Ubuntu en un domini Active Directory és útil en entorns empresarials mixtos. Descriu el procés tècnic de l'eina <code>realm join</code> i el paper de SSSD, PAM, Kerberos i Winbind en la integració. Quins fitxers del sistema s'han de modificar? Quin és el problema del UID/GID quan un usuari AD inicia sessió en un client Linux i com es pot resoldre amb ID Mapping?</h4>
+          <p>Si un usuari AD té UID 1234 al domain controller, quin UID tindrà al client Ubuntu? Per quin motiu pot ser un problema en entorns amb NFS?</p>
+          <span class="q-tag qt-ubuntu">Linux AD</span><span class="q-tag qt-asix">SSSD</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-tag tag-pregs fi">Samba, NFS i permisos</div>
+    <h2 class="fi">Preguntes sobre recursos compartits i permisos</h2>
+    <div class="grid fi" style="gap:.9rem;margin-bottom:3rem">
+
+      <div class="q-card">
+        <div class="q-num">4</div>
+        <div class="q-body">
+          <h4>Compara Samba (SMB/CIFS) i NFS com a protocols de compartir fitxers en un entorn empresarial heterogeni (Linux i Windows). Per a cada protocol descriu: mecanisme d'autenticació, model de permisos, versió recomanada i cas d'ús òptim. En quin escenari usaries Samba i en quin NFS? Pot un servidor Linux proporcionar accés simultani via Samba i NFS al mateix directori? Quins problemes de permisos podrien apareixer?</h4>
+          <p>Explica el problema específic de <code>root_squash</code> en NFS i per quin motiu és una mesura de seguretat essencial. En quins casos justificaries usar <code>no_root_squash</code>?</p>
+          <span class="q-tag qt-samba">Samba</span><span class="q-tag qt-ubuntu">NFS</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">5</div>
+        <div class="q-body">
+          <h4>Un usuari (membre de G_IT amb permís NTFS "Modificar" i G_RRHH amb "Denegar Escriptura" explícit) accedeix per xarxa a un share on el Share Permission és "Canvi" per a Authenticated Users. Calcula el permís efectiu final, justificant pas a pas: (a) resolució dels permisos NTFS acumulats, (b) aplicació de la regla "Denegar té prioritat", (c) intersecció amb el Share Permission. Pot escriure al fitxer? Pot llegir-lo? Pot esborrar-lo?</h4>
+          <p>Si el mateix usuari accedeix <em>localment</em> al servidor (sessió RDP), el resultat canvia? Per quin motiu?</p>
+          <span class="q-tag qt-win">Permisos efectius</span><span class="q-tag qt-both">NTFS</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">6</div>
+        <div class="q-body">
+          <h4>Explica el concepte d'herència de permisos NTFS en profunditat: per quin motiu és útil i quan és necessari trencar-la. Descriu la diferència entre "convertir heretats en explícits" i "eliminar heretats" en el moment de trencar l'herència. Descriu un escenari real on trencar l'herència incorrectament podria provocar un problema de seguretat greu (escalada de privilegis o pèrdua d'accés).</h4>
+          <p>Com es detecta si un directori té l'herència trencada a través de <code>icacls</code>? Quin indicador visual apareix a les entrades de permisos que SÍ s'hereten?</p>
+          <span class="q-tag qt-win">Herència</span><span class="q-tag qt-sec">NTFS</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">7</div>
+        <div class="q-body">
+          <h4>Descriu la delegació de control en Active Directory: per a quines tasques és útil, quines tècniques s'usen (wizard vs PowerShell vs ADSI Edit) i com es verifica quins permisos han estat delegats. Explica per quin motiu la delegació és difícil d'auditar en un domini gran. Quines eines existeixen per fer un informe de totes les delegacions actives a un domini?</h4>
+          <p>Un administrador atorga per error al grup G_HelpDesk el dret "Escriure tots els atributs" sobre tots els objectes de l'OU d'Usuaris en lloc de sols "Restablir contrasenya". Quines accions podria fer un membre de HelpDesk que normalment no podria fer? Com revocaries el permís incorrecte?</p>
+          <span class="q-tag qt-asix">Delegació</span><span class="q-tag qt-sec">Auditoria AD</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-tag tag-pregs fi">GPO i directives de seguretat</div>
+    <h2 class="fi">Preguntes sobre Group Policy</h2>
+    <div class="grid fi" style="gap:.9rem">
+
+      <div class="q-card">
+        <div class="q-num">8</div>
+        <div class="q-body">
+          <h4>Explica l'ordre d'aplicació LSDOU de les GPOs i com les opcions "Enforce" i "Block Inheritance" alteren aquest ordre. Considera el següent escenari: la GPO "Seguretat_Global" (vinculada al Domini, amb Enforce) configura un fons d'escriptori corporatiu. La GPO "Kioscos" (vinculada a OU=Kioscos) configura un fons diferent. La OU=Kioscos té "Block Inheritance" actiu. Quin fons d'escriptori veuen els usuaris dels kioscos? Justifica-ho pas a pas.</h4>
+          <p>Quin és l'impacte de l'opció "Loopback Processing" en les GPOs? Quan s'usa i quins dos modes existeixen (Merge i Replace)?</p>
+          <span class="q-tag qt-gpo">GPO LSDOU</span><span class="q-tag qt-win">Enforce</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">9</div>
+        <div class="q-body">
+          <h4>Diferencia els "Drets d'usuari" (User Rights Assignment) dels "Permisos NTFS" en el context de les GPO de Seguretat. Per a cada un d'ells: on es configuren, a qui s'apliquen, quin aspecte del sistema controlen i dona 3 exemples concrets de cada tipus. Descriu per quin motiu un usuari sense permís NTFS en un directori pot fer una còpia de seguretat del mateix si té el dret "Fer còpies de seguretat de fitxers i directoris".</h4>
+          <p>Quin dret permet a un compte de servei (com el de SQL Server) iniciar sessions com a servei sense poder fer login interactiu?</p>
+          <span class="q-tag qt-gpo">User Rights</span><span class="q-tag qt-sec">Seguretat</span>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-num">10</div>
+        <div class="q-body">
+          <h4>Dissenya una infraestructura completa d'accés al domini per a una empresa de 200 treballadors amb seus a Barcelona i Madrid, equips Windows i Ubuntu, servidor de fitxers Linux (Samba+NFS) i necessitat de compliment de la ISO 27001. Inclou: estructura AD (OUs, grups, AGDLP), protocol d'autenticació, tipus de recursos compartits (quins via Samba, quins via NFS), permisos per rol, delegació d'administració local a cada seu, GPOs necessàries (seguretat, configuració d'equips, scripts) i eines d'auditoria.</h4>
+          <p>Quin impacte tindria sobre la infraestructura dissenyada la implementació de MFA (Multi-Factor Authentication)? Quines tecnologies de Microsoft i de codi obert suportarien MFA integrat amb Active Directory?</p>
+          <span class="q-tag qt-both">Disseny</span><span class="q-tag qt-sec">ISO 27001</span><span class="q-tag qt-asix">Integrador</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESUM -->
+<section class="s-cream">
+  <div class="container fi">
+    <div class="section-tag tag-asix">Resum del RA5</div>
+    <h2>El que heu après</h2>
+    <p class="lead">Repàs dels conceptes clau del RA5 i la seva aplicació professional.</p>
+    <div class="grid g4 fi">
+      <div class="card bl-asix">
+        <div class="card-icon" style="background:#f5f3ff">🌐</div>
+        <h3>Active Directory</h3>
+        <p><strong>Jerarquia:</strong> Forest → Domini → OU → Objectes. <strong>Grups:</strong> Global, Domain Local, Universal. <strong>AGDLP:</strong> A→GG→DL→Permís. <strong>Kerberos:</strong> TGT + Service Ticket, sense contrasenya per xarxa. <strong>realm join</strong> per a Linux.</p>
+      </div>
+      <div class="card bl-samba">
+        <div class="card-icon" style="background:#fff4f0">🦷</div>
+        <h3>Samba &amp; NFS</h3>
+        <p><strong>Samba:</strong> SMBv3, smb.conf, valid users, write list, force group. Deshabilitar SMBv1. <strong>NFS:</strong> /etc/exports, rw/ro, root_squash, NFSv4+Kerberos. <strong>Clau:</strong> NFS per Linux↔Linux, Samba per interoperabilitat Windows.</p>
+      </div>
+      <div class="card bl-win">
+        <div class="card-icon" style="background:#f0f7ff">🔑</div>
+        <h3>Permisos</h3>
+        <p><strong>NTFS:</strong> permisos s'acumulen, Denegar guanya, explícit > heretat. <strong>Share + NTFS:</strong> permís final = min(Share, NTFS). <strong>Millor pràctica:</strong> Tots→CT als Share, controla tot per NTFS. <strong>Efectius:</strong> eina "Accés efectiu".</p>
+      </div>
+      <div class="card bl-green">
+        <div class="card-icon" style="background:#f0fdf4">📋</div>
+        <h3>GPO</h3>
+        <p><strong>LSDOU:</strong> Local→Site→Domain→OU (last wins). <strong>Enforce:</strong> cap OU filla pot sobreescriure. <strong>Block Inh.:</strong> bloqueja GPO pare. <strong>Security Filter:</strong> aplicar sols a un grup. <strong>RSoP:</strong> <code>gpresult /H</code>. <strong>Delegació:</strong> mínim privilegi per OU.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p><strong>RA5 — Administració de l'Accés a Dominis · ASIX · MP0369 · Implantació de Sistemes Operatius</strong></p>
+  <p style="margin-top:.4rem">Active Directory · Kerberos · Samba · NFS · NTFS · GPO · Delegació · AGDLP · LSDOU</p>
+  <p style="margin-top:.4rem">Departament d'Informàtica · Administració de Sistemes Informàtics en Xarxa</p>
+</footer>
+
+<script>
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+}, { threshold: 0.05, rootMargin: '0px 0px -30px 0px' });
+document.querySelectorAll('.fi').forEach(el => io.observe(el));
+</script>
+</body>
+</html>

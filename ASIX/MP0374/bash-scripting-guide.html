@@ -1,0 +1,1602 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bash Scripting — De Zero a Heroi</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=Manrope:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0e14;--surf:#0f1520;--surf2:#151e2d;--surf3:#1c2840;
+  --border:#1e3048;--border2:#264060;
+  --blue:#4d9de0;--cyan:#00c9b1;--orange:#f07d3e;--red:#e05252;
+  --green:#3fb950;--yellow:#e3c55a;--purple:#b48eff;
+  --text:#d4e0f0;--text2:#7a96b8;--text3:#a8c0d8;
+  --bash:#89e051;--bash2:#c3e88d;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Manrope',sans-serif;min-height:100vh;overflow-x:hidden}
+
+/* ─── SIDEBAR ─── */
+#sb{position:fixed;left:0;top:0;height:100vh;width:270px;
+  background:var(--surf);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;z-index:200;overflow-y:auto;
+  transition:transform .3s cubic-bezier(.4,0,.2,1)}
+.sb-logo{padding:26px 22px 18px;border-bottom:1px solid var(--border);
+  background:linear-gradient(135deg,rgba(137,224,81,.1),rgba(195,232,141,.06))}
+.sb-logo h1{font-size:1rem;font-weight:800;color:var(--bash);letter-spacing:-.01em;line-height:1.3}
+.sb-logo p{font-size:.7rem;color:var(--text2);margin-top:5px}
+.sb-logo .pt-badge{display:inline-block;background:rgba(137,224,81,.15);
+  border:1px solid rgba(137,224,81,.35);color:var(--bash);
+  font-size:.65rem;font-weight:700;padding:2px 9px;border-radius:20px;margin-top:8px}
+.sb-nav{padding:10px 0;flex:1}
+.sb-group{margin:6px 0}
+.sb-label{font-size:.62rem;font-weight:700;color:var(--text2);
+  text-transform:uppercase;letter-spacing:.12em;padding:8px 20px 3px}
+.sb-item{display:flex;align-items:center;gap:9px;padding:9px 20px;
+  cursor:pointer;border-left:3px solid transparent;color:var(--text2);
+  font-size:.81rem;font-weight:600;transition:all .2s;text-decoration:none;user-select:none}
+.sb-item:hover{color:var(--text);background:rgba(137,224,81,.07);border-left-color:rgba(137,224,81,.4)}
+.sb-item.active{color:var(--bash);background:rgba(137,224,81,.09);border-left-color:var(--bash)}
+.sb-item .ic{font-size:.95rem;width:18px;text-align:center}
+.sb-foot{padding:14px 20px;border-top:1px solid var(--border);font-size:.7rem;color:var(--text2);line-height:1.5}
+
+/* ─── MAIN ─── */
+#main{margin-left:270px;padding:44px 52px;max-width:calc(100% - 270px)}
+.pg{display:none;animation:fu .35s ease}
+.pg.active{display:block}
+@keyframes fu{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+/* ─── HERO ─── */
+.hero{position:relative;overflow:hidden;border-radius:16px;padding:44px 48px;margin-bottom:32px;
+  background:linear-gradient(135deg,var(--surf2) 0%,var(--surf3) 100%);border:1px solid var(--border2)}
+.hero::before{content:'';position:absolute;top:-60px;right:-60px;width:280px;height:280px;border-radius:50%;
+  background:radial-gradient(circle,rgba(137,224,81,.1) 0%,transparent 65%);pointer-events:none}
+.hero::after{content:'';position:absolute;bottom:-40px;left:30%;width:200px;height:200px;border-radius:50%;
+  background:radial-gradient(circle,rgba(195,232,141,.07) 0%,transparent 70%);pointer-events:none}
+.hero h2{font-size:2rem;font-weight:800;letter-spacing:-.04em;margin-bottom:10px;line-height:1.2}
+.hero h2 span{color:var(--bash)}
+.hero p{color:var(--text2);max-width:580px;font-size:.9rem;line-height:1.7}
+.htags{display:flex;gap:7px;flex-wrap:wrap;margin-top:16px}
+.htag{background:var(--surf3);border:1px solid var(--border2);color:var(--text3);
+  font-size:.68rem;font-weight:700;padding:3px 11px;border-radius:20px}
+
+/* ─── SECTION TITLE ─── */
+.stitle{font-size:1.2rem;font-weight:800;color:var(--text);margin:32px 0 14px;
+  display:flex;align-items:center;gap:10px;letter-spacing:-.02em}
+.stitle::after{content:'';flex:1;height:1px;background:var(--border2)}
+
+/* ─── CARDS ─── */
+.card{background:var(--surf);border:1px solid var(--border);border-radius:12px;padding:22px 26px;margin-bottom:18px}
+.card h3{font-size:.95rem;font-weight:700;color:var(--text);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.card p{color:var(--text2);line-height:1.7;font-size:.86rem;margin-bottom:8px}
+.card p:last-child{margin-bottom:0}
+.card ul,.card ol{color:var(--text2);padding-left:20px;font-size:.86rem;line-height:1.9}
+.card li{margin-bottom:2px}
+.card li strong{color:var(--text3)}
+.card a{color:var(--blue);text-decoration:none}
+.card a:hover{text-decoration:underline}
+
+/* ─── GRID ─── */
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-bottom:18px}
+.gc{background:var(--surf);border:1px solid var(--border);border-radius:12px;padding:20px}
+.gc .gi{font-size:1.7rem;margin-bottom:10px}
+.gc h4{font-size:.88rem;font-weight:700;color:var(--text);margin-bottom:6px}
+.gc p{font-size:.8rem;color:var(--text2);line-height:1.6}
+
+/* ─── CALLOUTS ─── */
+.cl{border-radius:10px;padding:13px 18px;margin:14px 0;display:flex;gap:10px;font-size:.84rem;line-height:1.65}
+.cl .ci{font-size:1rem;flex-shrink:0;margin-top:1px}
+.cl.info{background:rgba(77,157,224,.08);border:1px solid rgba(77,157,224,.2);color:var(--text3)}
+.cl.warn{background:rgba(240,125,62,.08);border:1px solid rgba(240,125,62,.25);color:var(--text3)}
+.cl.ok{background:rgba(63,185,80,.08);border:1px solid rgba(63,185,80,.2);color:var(--text3)}
+.cl.danger{background:rgba(224,82,82,.08);border:1px solid rgba(224,82,82,.25);color:var(--text3)}
+.cl.bash{background:rgba(137,224,81,.07);border:1px solid rgba(137,224,81,.25);color:var(--text3)}
+
+/* ─── CODE ─── */
+pre{background:#060a10;border:1px solid var(--border);border-radius:10px;
+  padding:18px 20px;overflow-x:auto;margin:12px 0;position:relative}
+pre code{font-family:'IBM Plex Mono',monospace;font-size:.78rem;line-height:1.85;color:var(--text3)}
+.ll{position:absolute;top:7px;right:12px;font-family:'IBM Plex Mono',monospace;
+  font-size:.6rem;color:var(--text2);text-transform:uppercase;letter-spacing:.08em;
+  padding:2px 8px;border-radius:4px;border:1px solid var(--border)}
+.ll.sh{color:var(--bash);border-color:rgba(137,224,81,.3);background:rgba(137,224,81,.07)}
+.ll.out{color:var(--text2);border-color:var(--border);background:var(--surf2)}
+.ll.sol{color:var(--cyan);border-color:rgba(0,201,177,.3);background:rgba(0,201,177,.07)}
+.cmd{color:var(--bash)}.path{color:var(--yellow)}.kw{color:var(--purple)}.num{color:var(--orange)}
+.cm{color:#4a6070;font-style:italic}.str{color:#a5d6ff}.ok2{color:var(--green)}
+.err{color:var(--red)}.var{color:#f07d3e}.fn2{color:var(--cyan)}.op{color:var(--bash2)}
+
+/* ─── TABLE ─── */
+.tw{overflow-x:auto;margin:14px 0;border-radius:10px;border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;font-size:.83rem}
+th{background:var(--surf2);color:var(--text);font-weight:700;padding:11px 15px;text-align:left;border-bottom:1px solid var(--border)}
+td{padding:10px 15px;color:var(--text2);border-bottom:1px solid rgba(30,48,72,.8)}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(137,224,81,.02)}
+code{font-family:'IBM Plex Mono',monospace;font-size:.76rem;background:rgba(137,224,81,.1);color:var(--bash);padding:1px 6px;border-radius:4px}
+
+/* ─── STEPS ─── */
+.steps{counter-reset:s;margin:14px 0}
+.step{display:flex;gap:14px;margin-bottom:12px;padding:16px 18px;
+  background:var(--surf);border:1px solid var(--border);border-radius:10px}
+.step::before{counter-increment:s;content:counter(s);
+  background:var(--bash);color:#0a0e14;font-weight:800;font-size:.78rem;
+  min-width:24px;height:24px;border-radius:50%;display:flex;
+  align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;
+  font-family:'IBM Plex Mono',monospace}
+.sc h4{font-size:.86rem;font-weight:700;color:var(--text);margin-bottom:3px}
+.sc p{font-size:.81rem;color:var(--text2);line-height:1.6;margin:0}
+
+/* ─── EXERCISE ─── */
+.ex{border-radius:12px;border:2px solid rgba(0,201,177,.3);background:rgba(0,201,177,.04);
+  padding:20px 24px;margin:18px 0}
+.ex-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.ex-badge{background:var(--cyan);color:#0a0e14;font-size:.65rem;font-weight:800;
+  padding:2px 10px;border-radius:20px;font-family:'IBM Plex Mono',monospace;text-transform:uppercase}
+.ex-badge.mitjà{background:var(--yellow);color:#0a0e14}
+.ex-badge.avançat{background:var(--orange);color:#0a0e14}
+.ex-title{font-size:.92rem;font-weight:700;color:var(--text)}
+.ex p{font-size:.85rem;color:var(--text2);line-height:1.7;margin-bottom:8px}
+.ex ul{color:var(--text2);padding-left:18px;font-size:.84rem;line-height:1.8}
+.sol-toggle{margin-top:14px;background:none;border:1px solid rgba(0,201,177,.4);
+  color:var(--cyan);font-family:'Manrope',sans-serif;font-size:.8rem;font-weight:700;
+  padding:7px 16px;border-radius:8px;cursor:pointer;transition:all .2s}
+.sol-toggle:hover{background:rgba(0,201,177,.1)}
+.sol-body{display:none;margin-top:14px;border-top:1px solid rgba(0,201,177,.2);padding-top:14px}
+.sol-body.open{display:block}
+
+/* ─── CHECKLIST ─── */
+.checklist{list-style:none;padding:0;margin:10px 0}
+.checklist li{display:flex;align-items:flex-start;gap:10px;padding:8px 0;
+  border-bottom:1px solid rgba(30,48,72,.6);font-size:.85rem;color:var(--text2)}
+.checklist li:last-child{border-bottom:none}
+.chk{width:18px;height:18px;border-radius:4px;border:2px solid var(--border2);
+  flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  font-size:.7rem;margin-top:1px;cursor:pointer;transition:all .2s}
+.chk.done{background:var(--green);border-color:var(--green);color:#0a0e14}
+
+/* ─── PROGRESS ─── */
+#prog{position:fixed;top:0;left:0;height:3px;
+  background:linear-gradient(90deg,var(--bash),var(--bash2));
+  z-index:1000;transition:width .3s ease;width:0;box-shadow:0 0 8px var(--bash)}
+
+/* ─── MOBILE ─── */
+#mbtoggle{display:none;position:fixed;top:14px;left:14px;z-index:300;
+  background:var(--surf);border:1px solid var(--border);color:var(--text);
+  width:38px;height:38px;border-radius:8px;font-size:1.1rem;cursor:pointer}
+@media(max-width:860px){
+  #sb{transform:translateX(-100%)}
+  #sb.open{transform:translateX(0)}
+  #main{margin-left:0;padding:20px 16px;max-width:100%;padding-top:60px}
+  #mbtoggle{display:flex;align-items:center;justify-content:center}
+  .hero{padding:26px 22px}.hero h2{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+<div id="prog"></div>
+<button id="mbtoggle" onclick="toggleSB()">☰</button>
+
+<aside id="sb">
+  <div class="sb-logo">
+    <h1>🐚 Bash Scripting<br>De Zero a Heroi</h1>
+    <p>Linux · Shell · Automatització</p>
+    <span class="pt-badge">GNU Bash 5.x</span>
+  </div>
+  <nav class="sb-nav">
+    <div class="sb-group">
+      <div class="sb-label">Fonaments</div>
+      <a class="sb-item active" onclick="sp('intro')"><span class="ic">🏠</span>Introducció</a>
+      <a class="sb-item" onclick="sp('primers-passos')"><span class="ic">🚀</span>Primers Passos</a>
+      <a class="sb-item" onclick="sp('variables')"><span class="ic">📦</span>Variables</a>
+      <a class="sb-item" onclick="sp('entrada-sortida')"><span class="ic">💬</span>Entrada i Sortida</a>
+    </div>
+    <div class="sb-group">
+      <div class="sb-label">Control de Flux</div>
+      <a class="sb-item" onclick="sp('condicionals')"><span class="ic">🔀</span>Condicionals</a>
+      <a class="sb-item" onclick="sp('bucles')"><span class="ic">🔁</span>Bucles</a>
+      <a class="sb-item" onclick="sp('funcions')"><span class="ic">🧩</span>Funcions</a>
+    </div>
+    <div class="sb-group">
+      <div class="sb-label">Eines Avançades</div>
+      <a class="sb-item" onclick="sp('arrays')"><span class="ic">📚</span>Arrays</a>
+      <a class="sb-item" onclick="sp('text')"><span class="ic">✂️</span>Manipulació de Text</a>
+      <a class="sb-item" onclick="sp('fitxers')"><span class="ic">📁</span>Fitxers i Directoris</a>
+      <a class="sb-item" onclick="sp('errors')"><span class="ic">🚨</span>Gestió d'Errors</a>
+    </div>
+    <div class="sb-group">
+      <div class="sb-label">Projectes Reals</div>
+      <a class="sb-item" onclick="sp('scripts-utils')"><span class="ic">🔧</span>Scripts Útils</a>
+      <a class="sb-item" onclick="sp('exercicis')"><span class="ic">🏋️</span>Exercicis</a>
+      <a class="sb-item" onclick="sp('checklist')"><span class="ic">✅</span>Llista de Verificació</a>
+    </div>
+  </nav>
+  <div class="sb-foot">🐚 bash · 🐧 Linux · ⚙️ GNU coreutils</div>
+</aside>
+
+<main id="main">
+
+<!-- ══════════ INTRO ══════════ -->
+<section id="intro" class="pg active">
+  <div class="hero">
+    <h2>🐚 Bash Scripting —<br><span>De Zero a Heroi</span></h2>
+    <p>Bash és l'intèrpret d'ordres per defecte a la majoria de distribucions Linux. Aprendre a escriure scripts de Bash et permet <strong>automatitzar tasques repetitives</strong>, gestionar fitxers i processos, i crear eines pròpies de línia d'ordres. Aquesta guia t'acompanya des del primer script fins a tècniques avançades.</p>
+    <div class="htags">
+      <span class="htag">🐚 Bash 5.x</span>
+      <span class="htag">🐧 Linux</span>
+      <span class="htag">⚙️ Automatització</span>
+      <span class="htag">📁 Fitxers</span>
+      <span class="htag">🔁 Bucles</span>
+      <span class="htag">🧩 Funcions</span>
+    </div>
+  </div>
+
+  <div class="stitle">Per què aprendre Bash?</div>
+  <div class="grid">
+    <div class="gc"><div class="gi">⚡</div><h4>Automatització</h4><p>Elimina tasques manuals i repetitives: còpies de seguretat, reanomenament massiu, instal·lació de paquets...</p></div>
+    <div class="gc"><div class="gi">🔧</div><h4>Administració del sistema</h4><p>Gestiona processos, usuaris, permisos, serveis i recursos del sistema amb scripts senzills.</p></div>
+    <div class="gc"><div class="gi">🔗</div><h4>Pipes i composició</h4><p>Connecta ordres per construir eines potents. La filosofia Unix: cada ordre fa una cosa i la fa bé.</p></div>
+    <div class="gc"><div class="gi">🌐</div><h4>Ubiqüitat</h4><p>Bash és present a tots els sistemes Linux i macOS. Un script Bash funciona a qualsevol servidor sense instal·lar res.</p></div>
+  </div>
+
+  <div class="stitle">Full de ruta d'aprenentatge</div>
+  <div class="tw">
+    <table>
+      <thead><tr><th>Fase</th><th>Continguts</th><th>Temps estimat</th><th>Objectiu</th></tr></thead>
+      <tbody>
+        <tr><td><strong style="color:var(--green)">1 — Bàsic</strong></td><td>Primers scripts, variables, echo, read</td><td>1–2 dies</td><td>Escriure i executar el primer script</td></tr>
+        <tr><td><strong style="color:var(--cyan)">2 — Control</strong></td><td>if/else, bucles for/while, funcions</td><td>3–5 dies</td><td>Lògica i automatització senzilla</td></tr>
+        <tr><td><strong style="color:var(--blue)">3 — Intermedi</strong></td><td>Arrays, sed/awk/grep, gestió d'errors</td><td>1 setmana</td><td>Scripts robustos i reutilitzables</td></tr>
+        <tr><td><strong style="color:var(--purple)">4 — Avançat</strong></td><td>Processos, signals, scripts de sistema</td><td>2 setmanes</td><td>Automatitzar tasques d'administració reals</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="cl bash"><span class="ci">🐚</span><div><strong>Consell:</strong> Practica a mesura que llegeixis. Obre un terminal i executa cada exemple. La millor manera d'aprendre Bash és escriure scripts reals que resolguin problemes que tens tu mateix.</div></div>
+</section>
+
+<!-- ══════════ PRIMERS PASSOS ══════════ -->
+<section id="primers-passos" class="pg">
+  <div class="hero">
+    <h2>Primers <span>Passos</span></h2>
+    <p>Un script de Bash és un fitxer de text amb una llista d'ordres. La primera línia (el <em>shebang</em>) indica al sistema operatiu quin intèrpret ha d'usar per executar-lo.</p>
+  </div>
+
+  <div class="stitle">El primer script</div>
+  <div class="steps">
+    <div class="step"><div class="sc"><h4>Crea el fitxer</h4><p>Per convenció els scripts de Bash tenen l'extensió <code>.sh</code>, però no és obligatori.</p></div></div>
+    <div class="step"><div class="sc"><h4>Escriu el contingut</h4><p>El shebang <code>#!/bin/bash</code> a la primera línia és essencial.</p></div></div>
+    <div class="step"><div class="sc"><h4>Fes-lo executable i executa'l</h4><p>Cal donar permís d'execució amb <code>chmod</code> abans de poder-lo executar.</p></div></div>
+  </div>
+
+  <pre><code><span class="ll sh">Bash</span><span class="cm"># Pas 1: Crea el fitxer</span>
+<span class="cmd">nano hola.sh</span>    <span class="cm"># o vim, gedit, etc.</span></code></pre>
+
+  <pre><code><span class="ll sh">hola.sh</span><span class="op">#!/bin/bash</span>
+<span class="cm"># Això és un comentari — Bash l'ignora</span>
+<span class="cm"># Primer script: Hola, món!</span>
+
+<span class="cmd">echo</span> <span class="str">"Hola, món!"</span>
+<span class="cmd">echo</span> <span class="str">"Avui és: $(date +%A, %d/%m/%Y)"</span>
+<span class="cmd">echo</span> <span class="str">"Ets l'usuari: $USER"</span></code></pre>
+
+  <pre><code><span class="ll sh">Bash</span><span class="cm"># Pas 3: Permís d'execució i execució</span>
+<span class="cmd">chmod +x hola.sh</span>
+<span class="cmd">./hola.sh</span></code></pre>
+
+  <pre><code><span class="ll out">Sortida</span>Hola, món!
+Avui és: dilluns, 05/03/2026
+Ets l'usuari: anna</code></pre>
+
+  <div class="stitle">El Shebang — explicat</div>
+  <div class="tw">
+    <table>
+      <thead><tr><th>Shebang</th><th>Quan usar-lo</th></tr></thead>
+      <tbody>
+        <tr><td><code>#!/bin/bash</code></td><td>La majoria d'scripts — Bash específic, path absolut</td></tr>
+        <tr><td><code>#!/usr/bin/env bash</code></td><td>Recomanat: busca bash al PATH, més portable</td></tr>
+        <tr><td><code>#!/bin/sh</code></td><td>POSIX sh bàsic — compatible amb més sistemes però menys funcions</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="stitle">Formes d'executar un script</div>
+  <pre><code><span class="ll sh">Bash</span><span class="cm"># Forma 1: Executable directe (necessita chmod +x)</span>
+<span class="cmd">./script.sh</span>
+
+<span class="cm"># Forma 2: Passant-lo com a argument a bash</span>
+<span class="cmd">bash script.sh</span>
+
+<span class="cm"># Forma 3: Source — executa al shell actual (les variables queden)</span>
+<span class="cmd">source script.sh</span>
+<span class="cmd">. script.sh</span>          <span class="cm"># equivalent a source</span>
+
+<span class="cm"># Forma 4: Amb path complet</span>
+<span class="cmd">/home/anna/scripts/script.sh</span></code></pre>
+
+  <div class="stitle">Mode de depuració</div>
+  <pre><code><span class="ll sh">Bash</span><span class="cm"># Executa el script en mode verbose (mostra cada ordre abans d'executar-la)</span>
+<span class="cmd">bash -x script.sh</span>
+
+<span class="cm"># O afegeix al principi del script:</span>
+<span class="op">set -x</span>    <span class="cm"># activa depuració</span>
+<span class="op">set +x</span>    <span class="cm"># desactiva depuració</span></code></pre>
+
+  <div class="cl info"><span class="ci">💡</span><div>Posa sempre <code>set -euo pipefail</code> al principi dels teus scripts. <code>-e</code> atura el script si una ordre falla, <code>-u</code> genera error si uses una variable no definida, i <code>pipefail</code> detecta errors en pipes. Veurem això en detall a la secció de gestió d'errors.</div></div>
+</section>
+
+<!-- ══════════ VARIABLES ══════════ -->
+<section id="variables" class="pg">
+  <div class="hero">
+    <h2><span>Variables</span></h2>
+    <p>Les variables emmagatzemen dades temporalment. A Bash tot és text per defecte — no hi ha tipus de dades com en altres llenguatges. La sintaxi és senzilla però cal respectar les espais (o l'absència d'espais).</p>
+  </div>
+
+  <div class="stitle">Declaració i ús</div>
+  <pre><code><span class="ll sh">Bash</span><span class="cm"># Assignació: SENSE espais al voltant del =</span>
+<span class="var">nom</span>=<span class="str">"Anna"</span>
+<span class="var">edat</span>=<span class="num">25</span>
+<span class="var">directori</span>=<span class="str">"/home/anna/documents"</span>
+
+<span class="cm"># Ús: amb $ davant del nom</span>
+<span class="cmd">echo</span> <span class="str">"Hola, <span class="var">$nom</span>!"</span>
+<span class="cmd">echo</span> <span class="str">"Tens <span class="var">${edat}</span> anys"</span>    <span class="cm"># {} per delimitar el nom</span>
+
+<span class="cm"># IMPORTANT: espais trenquen l'assignació</span>
+<span class="cm"># nom = "Anna"   ← ERROR! Bash ho interpreta com una ordre</span>
+
+<span class="cm"># Variable de només lectura (constant)</span>
+<span class="kw">readonly</span> <span class="var">PI</span>=<span class="num">3.14159</span>
+
+<span class="cm"># Eliminar una variable</span>
+<span class="kw">unset</span> <span class="var">nom</span></code></pre>
+
+  <div class="stitle">Cometes: quan i per què</div>
+  <pre><code><span class="ll sh">Bash</span><span class="var">frase</span>=<span class="str">"Hola món"</span>
+
+<span class="cm"># Cometes dobles: expanden variables i subshells</span>
+<span class="cmd">echo</span> <span class="str">"La frase és: <span class="var">$frase</span>"</span>     <span class="cm"># → La frase és: Hola món</span>
+
+<span class="cm"># Cometes simples: text literal, NO expandeixen res</span>
+<span class="cmd">echo</span> <span class="str">'La frase és: $frase'</span>      <span class="cm"># → La frase és: $frase</span>
+
+<span class="cm"># Sense cometes: el shell divideix per espais (word splitting)</span>
+<span class="cmd">echo</span> <span class="var">$frase</span>                    <span class="cm"># → Hola món  (igual, però perillós amb espais)</span>
+
+<span class="cm"># Bona pràctica: SEMPRE posa les variables entre cometes dobles</span>
+<span class="var">fitxer</span>=<span class="str">"el meu document.txt"</span>
+<span class="cm"># rm $fitxer    ← DOLENT: intentaria borrar "el", "meu" i "document.txt"</span>
+<span class="cmd">rm</span> <span class="str">"<span class="var">$fitxer</span>"</span>    <span class="cm"># ← CORRECTE</span></code></pre>
+
+  <div class="stitle">Variables especials</div>
+  <div class="tw">
+    <table>
+      <thead><tr><th>Variable</th><th>Significat</th><th>Exemple</th></tr></thead>
+      <tbody>
+        <tr><td><code>$0</code></td><td>Nom del script</td><td><code>./backup.sh</code></td></tr>
+        <tr><td><code>$1</code> … <code>$9</code></td><td>Arguments posicionals</td><td><code>$1</code> = primer argument</td></tr>
+        <tr><td><code>$@</code></td><td>Tots els arguments (llista)</td><td>útil per iterar</td></tr>
+        <tr><td><code>$#</code></td><td>Nombre d'arguments</td><td><code>if [ $# -eq 0 ]</code></td></tr>
+        <tr><td><code>$?</code></td><td>Codi de sortida de l'última ordre</td><td><code>0</code> = èxit, altres = error</td></tr>
+        <tr><td><code>$$</code></td><td>PID del procés actual</td><td>útil per fitxers temporals</td></tr>
+        <tr><td><code>$!</code></td><td>PID de l'últim procés en segon pla</td><td>per gestionar background jobs</td></tr>
+        <tr><td><code>$HOME</code></td><td>Directori home de l'usuari</td><td><code>/home/anna</code></td></tr>
+        <tr><td><code>$PATH</code></td><td>Directoris on busca executables</td><td><code>/usr/bin:/bin:...</code></td></tr>
+        <tr><td><code>$PWD</code></td><td>Directori de treball actual</td><td><code>/home/anna/scripts</code></td></tr>
+        <tr><td><code>$RANDOM</code></td><td>Nombre aleatori (0–32767)</td><td><code>echo $RANDOM</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="stitle">Arguments del script</div>
+  <pre><code><span class="ll sh">arguments.sh</span><span class="op">#!/usr/bin/env bash</span>
+
+<span class="cmd">echo</span> <span class="str">"Script: <span class="var">$0</span>"</span>
+<span class="cmd">echo</span> <span class="str">"Nombre d'arguments: <span class="var">$#</span>"</span>
+<span class="cmd">echo</span> <span class="str">"Primer argument: <span class="var">$1</span>"</span>
+<span class="cmd">echo</span> <span class="str">"Segon argument: <span class="var">$2</span>"</span>
+<span class="cmd">echo</span> <span class="str">"Tots els arguments: <span class="var">$@</span>"</span></code></pre>
+
+  <pre><code><span class="ll sh">Bash</span><span class="cmd">./arguments.sh</span> hola adeu
+<span class="cm"># → Script: ./arguments.sh</span>
+<span class="cm"># → Nombre d'arguments: 2</span>
+<span class="cm"># → Primer argument: hola</span>
+<span class="cm"># → Segon argument: adeu</span></code></pre>
+
+  <div class="stitle">Aritmètica</div>
+  <pre><code><span class="ll sh">Bash</span><span class="cm"># Forma 1: $(( )) — aritmètica entera</span>
+<span class="var">a</span>=<span class="num">10</span>
+<span class="var">b</span>=<span class="num">3</span>
+<span class="cmd">echo</span> <span class="str">"Suma: <span class="var">$(( a + b ))</span>"</span>     <span class="cm"># → 13</span>
+<span class="cmd">echo</span> <span class="str">"Resta: <span class="var">$(( a - b ))</span>"</span>    <span class="cm"># → 7</span>
+<span class="cmd">echo</span> <span class="str">"Producte: <span class="var">$(( a * b ))</span>"</span> <span class="cm"># → 30</span>
+<span class="cmd">echo</span> <span class="str">"Divisió: <span class="var">$(( a / b ))</span>"</span>  <span class="cm"># → 3 (divisió entera)</span>
+<span class="cmd">echo</span> <span class="str">"Mòdul: <span class="var">$(( a % b ))</span>"</span>    <span class="cm"># → 1</span>
+
+<span class="cm"># Increment / decrement</span>
+<span class="var">comptador</span>=<span class="num">0</span>
+<span class="var">comptador</span>=<span class="var">$(( comptador + 1 ))</span>
+<span class="var">(( comptador++ ))</span>    <span class="cm"># forma curta</span>
+
+<span class="cm"># Forma 2: bc — per a decimals</span>
+<span class="cmd">echo</span> <span class="str">"scale=2; 10/3"</span> | <span class="cmd">bc</span>   <span class="cm"># → 3.33</span></code></pre>
+
+  <div class="stitle">Substitució de comandes</div>
+  <pre><code><span class="ll sh">Bash</span><span class="cm"># $() captura la sortida d'una ordre com a text</span>
+<span class="var">data_actual</span>=<span class="var">$(date +%Y-%m-%d)</span>
+<span class="var">num_fitxers</span>=<span class="var">$(ls -1 | wc -l)</span>
+<span class="var">usuari_actual</span>=<span class="var">$(whoami)</span>
+
+<span class="cmd">echo</span> <span class="str">"Data: <span class="var">$data_actual</span> | Fitxers: <span class="var">$num_fitxers</span> | Usuari: <span class="var">$usuari_actual</span>"</span>
+
+<span class="cm"># Aniuament de $() — la sortida interior s'usa com a argument</span>
+<span class="var">directori_pare</span>=<span class="var">$(dirname $(realpath $0))</span></code></pre>
+
+  <div class="stitle">Valors per defecte</div>
+  <pre><code><span class="ll sh">Bash</span><span class="cm"># ${variable:-valor_defecte}  → usa el valor si la variable és buida/no definida</span>
+<span class="var">nom</span>=<span class="var">${1:-"Usuari"}</span>           <span class="cm"># si $1 no existeix, usa "Usuari"</span>
+<span class="cmd">echo</span> <span class="str">"Hola, <span class="var">$nom</span>!"</span>
+
+<span class="cm"># ${variable:=valor}  → assigna el valor per defecte si no definida</span>
+<span class="cm"># ${variable:?missatge}  → error si no definida</span>
+<span class="cm"># ${variable:+valor_si_definida}  → usa valor alternatiu si definida</span>
+
+<span class="cm"># Longitud d'una variable</span>
+<span class="var">text</span>=<span class="str">"Hola món"</span>
+<span class="cmd">echo</span> <span class="str">"Longitud: <span class="var">${#text}</span>"</span>   <span class="cm"># → 8</span></code></pre>
+</section>
+
+<!-- ══════════ ENTRADA I SORTIDA ══════════ -->
+<section id="entrada-sortida" class="pg">
+  <div class="hero">
+    <h2>Entrada <span>i Sortida</span></h2>
+    <p>Bash gestiona tres fluxos estàndard: <strong>stdin</strong> (entrada), <strong>stdout</strong> (sortida) i <strong>stderr</strong> (errors). Dominar la redirecció i els pipes és fonamental per construir scripts potents.</p>
+  </div>
+
+  <div class="stitle">echo i printf</div>
+  <pre><code><span class="ll sh">Bash</span><span class="cm"># echo — sortida simple</span>
+<span class="cmd">echo</span> <span class="str">"Hola, món!"</span>
+<span class="cmd">echo</span> -n <span class="str">"Sense salt de línia"</span>    <span class="cm"># -n: no afegeix \n al final</span>
+<span class="cmd">echo</span> -e <span class="str">"Línia 1\nLínia 2"</span>       <span class="cm"># -e: interpreta seqüències d'escapament</span>
+
+<span class="cm"># printf — formatació avançada (com en C)</span>
+<span class="cmd">printf</span> <span class="str">"Nom: %-15s Edat: %3d\n"</span> <span class="str">"Anna"</span> <span class="num">25</span>
+<span class="cm"># → Nom: Anna            Edat:  25</span>
+
+<span class="cmd">printf</span> <span class="str">"Float: %.2f\n"</span> <span class="num">3.14159</span>
+<span class="cm"># → Float: 3.14</span>
+
+<span class="cm"># Colors amb echo -e (còdis ANSI)</span>
+<span class="cmd">echo</span> -e <span class="str">"\e[32mVerd\e[0m normal \e[31mVermell\e[0m"</span>
+
+<span class="cm"># Millor amb variables:</span>
+<span class="var">VERD</span>=<span class="str">'\e[32m'</span> <span class="var">VERMELL</span>=<span class="str">'\e[31m'</span> <span class="var">NC</span>=<span class="str">'\e[0m'</span>  <span class="cm"># NC = No Color</span>
+<span class="cmd">echo</span> -e <span class="str">"<span class="var">${VERD}</span>Èxit!<span class="var">${NC}</span>"</span></code></pre>
+
+  <div class="stitle">Lectura d'entrada: read</div>
+  <pre><code><span class="ll sh">Bash</span><span class="cm"># Llegir una línia de l'usuari</span>
+<span class="cmd">read</span> -p <span class="str">"Quin és el teu nom? "</span> <span class="var">nom</span>
+<span class="cmd">echo</span> <span class="str">"Hola, <span class="var">$nom</span>!"</span>
+
+<span class="cm"># Lectura silenciosa (contrasenyes)</span>
+<span class="cmd">read</span> -s -p <span class="str">"Contrasenya: "</span> <span class="var">password</span>
+<span class="cmd">echo</span>    <span class="cm"># salt de línia després de la contrasenya</span>
+
+<span class="cm"># Lectura amb timeout</span>
+<span class="cmd">read</span> -t <span class="num">10</span> -p <span class="str">"Tens 10 segons: "</span> <span class="var">resposta</span>
+
+<span class="cm"># Llegir múltiples valors en una línia</span>
+<span class="cmd">read</span> -p <span class="str">"Entra nom i edat: "</span> <span class="var">nom</span> <span class="var">edat</span>
+<span class="cmd">echo</span> <span class="str">"<span class="var">$nom</span> té <span class="var">$edat</span> anys"</span></code></pre>
+
+  <div class="stitle">Redirecció</div>
+  <div class="tw">
+    <table>
+      <thead><tr><th>Operador</th><th>Acció</th><th>Exemple</th></tr></thead>
+      <tbody>
+        <tr><td><code>&gt;</code></td><td>Redirigeix stdout a fitxer (sobreescriu)</td><td><code>ls &gt; llista.txt</code></td></tr>
+        <tr><td><code>&gt;&gt;</code></td><td>Redirigeix stdout a fitxer (afegeix)</td><td><code>echo "log" &gt;&gt; app.log</code></td></tr>
+        <tr><td><code>&lt;</code></td><td>Llegeix stdin d'un fitxer</td><td><code>sort &lt; dades.txt</code></td></tr>
+        <tr><td><code>2&gt;</code></td><td>Redirigeix stderr a fitxer</td><td><code>ordre 2&gt; errors.log</code></td></tr>
+        <tr><td><code>2&gt;&amp;1</code></td><td>Redirigeix stderr a stdout</td><td><code>ordre &gt; tot.log 2&gt;&amp;1</code></td></tr>
+        <tr><td><code>&amp;&gt;</code></td><td>Redirigeix stdout i stderr (forma curta)</td><td><code>ordre &amp;&gt; tot.log</code></td></tr>
+        <tr><td><code>/dev/null</code></td><td>Descarta la sortida</td><td><code>ordre &gt; /dev/null 2&gt;&amp;1</code></td></tr>
+        <tr><td><code>&lt;&lt;EOF</code></td><td>Here document — text multilínia</td><td>veure exemple</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <pre><code><span class="ll sh">Bash</span><span class="cm"># Here document — text multilínia com a stdin</span>
+<span class="cmd">cat</span> &lt;&lt;EOF
+Línia 1
+Línia 2 amb variable: <span class="var">$USER</span>
+Línia 3
+EOF
+
+<span class="cm"># Here string — string com a stdin</span>
+<span class="cmd">grep</span> <span class="str">"hola"</span> &lt;&lt;&lt; <span class="str">"hola món"</span>
+
+<span class="cm"># Encadenament de pipes</span>
+<span class="cmd">cat</span> /var/log/syslog | <span class="cmd">grep</span> <span class="str">"ERROR"</span> | <span class="cmd">tail</span> -n <span class="num">20</span>
+<span class="cmd">ls</span> -la | <span class="cmd">sort</span> -k5 -n | <span class="cmd">tail</span> -n <span class="num">5</span>    <span class="cm"># els 5 fitxers més grans</span></code></pre>
+</section>
+
+<!-- ══════════ CONDICIONALS ══════════ -->
+<section id="condicionals" class="pg">
+  <div class="hero">
+    <h2><span>Condicionals</span></h2>
+    <p>Els condicionals permeten executar blocs de codi segons condicions. Bash ofereix <code>if/elif/else</code>, la construcció <code>case</code>, i els operadors <code>&&</code> i <code>||</code> per a condicions en línia.</p>
+  </div>
+
+  <div class="stitle">if / elif / else</div>
+  <pre><code><span class="ll sh">Bash</span><span class="var">edat</span>=<span class="num">20</span>
+
+<span class="kw">if</span> [[ <span class="var">$edat</span> -ge <span class="num">18</span> ]]; <span class="kw">then</span>
+    <span class="cmd">echo</span> <span class="str">"Ets major d'edat"</span>
+<span class="kw">elif</span> [[ <span class="var">$edat</span> -ge <span class="num">16</span> ]]; <span class="kw">then</span>
+    <span class="cmd">echo</span> <span class="str">"Quasi adult"</span>
+<span class="kw">else</span>
+    <span class="cmd">echo</span> <span class="str">"Ets menor d'edat"</span>
+<span class="kw">fi</span></code></pre>
+
+  <div class="stitle">Operadors de comparació</div>
+  <div class="tw">
+    <table>
+      <thead><tr><th>Números</th><th>Cadenes</th><th>Fitxers</th></tr></thead>
+      <tbody>
+        <tr><td><code>-eq</code> igual</td><td><code>=</code> o <code>==</code> igual</td><td><code>-e</code> existeix</td></tr>
+        <tr><td><code>-ne</code> diferent</td><td><code>!=</code> diferent</td><td><code>-f</code> és fitxer regular</td></tr>
+        <tr><td><code>-lt</code> menor que</td><td><code>-z</code> cadena buida</td><td><code>-d</code> és directori</td></tr>
+        <tr><td><code>-le</code> menor o igual</td><td><code>-n</code> cadena no buida</td><td><code>-r</code> té permís lectura</td></tr>
+        <tr><td><code>-gt</code> major que</td><td><code>&lt;</code> menor alfa.</td><td><code>-w</code> té permís escriptura</td></tr>
+        <tr><td><code>-ge</code> major o igual</td><td><code>&gt;</code> major alfa.</td><td><code>-x</code> és executable</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <pre><code><span class="ll sh">Bash</span><span class="cm"># Comparació de cadenes</span>
+<span class="var">fruit</span>=<span class="str">"poma"</span>
+<span class="kw">if</span> [[ <span class="str">"<span class="var">$fruit</span>"</span> == <span class="str">"poma"</span> ]]; <span class="kw">then</span>
+    <span class="cmd">echo</span> <span class="str">"És una poma"</span>
+<span class="kw">fi</span>
+
+<span class="cm"># Comprovació de fitxers</span>
+<span class="kw">if</span> [[ -f <span class="str">"config.txt"</span> ]]; <span class="kw">then</span>
+    <span class="cmd">echo</span> <span class="str">"El fitxer existeix"</span>
+<span class="kw">else</span>
+    <span class="cmd">echo</span> <span class="str">"El fitxer no existeix"</span>
+<span class="kw">fi</span>
+
+<span class="cm"># Condicions combinades</span>
+<span class="kw">if</span> [[ <span class="var">$edat</span> -ge <span class="num">18</span> && <span class="str">"<span class="var">$pais</span>"</span> == <span class="str">"Espanya"</span> ]]; <span class="kw">then</span>
+    <span class="cmd">echo</span> <span class="str">"Pot votar a Espanya"</span>
+<span class="kw">fi</span>
+
+<span class="cm"># Patrons glob amb [[ ]]</span>
+<span class="kw">if</span> [[ <span class="str">"<span class="var">$fitxer</span>"</span> == *.txt ]]; <span class="kw">then</span>
+    <span class="cmd">echo</span> <span class="str">"És un fitxer de text"</span>
+<span class="kw">fi</span>
+
+<span class="cm"># Regex amb =~</span>
+<span class="kw">if</span> [[ <span class="str">"<span class="var">$email</span>"</span> =~ ^[a-zA-Z0-9.]+@[a-zA-Z0-9.]+\.[a-zA-Z]{2,}$ ]]; <span class="kw">then</span>
+    <span class="cmd">echo</span> <span class="str">"Email vàlid"</span>
+<span class="kw">fi</span></code></pre>
+
+  <div class="stitle">case — múltiples opcions</div>
+  <pre><code><span class="ll sh">Bash</span><span class="cmd">read</span> -p <span class="str">"Dia de la setmana (1-7): "</span> <span class="var">dia</span>
+
+<span class="kw">case</span> <span class="var">$dia</span> <span class="kw">in</span>
+    <span class="num">1</span>)  <span class="cmd">echo</span> <span class="str">"Dilluns"</span> ;;
+    <span class="num">2</span>)  <span class="cmd">echo</span> <span class="str">"Dimarts"</span> ;;
+    <span class="num">3</span>)  <span class="cmd">echo</span> <span class="str">"Dimecres"</span> ;;
+    <span class="num">4</span>)  <span class="cmd">echo</span> <span class="str">"Dijous"</span> ;;
+    <span class="num">5</span>)  <span class="cmd">echo</span> <span class="str">"Divendres"</span> ;;
+    <span class="num">6</span>|<span class="num">7</span>) <span class="cmd">echo</span> <span class="str">"Cap de setmana!"</span> ;;
+    *)   <span class="cmd">echo</span> <span class="str">"Número no vàlid"</span> ;;
+<span class="kw">esac</span>
+
+<span class="cm"># case amb patrons glob</span>
+<span class="kw">case</span> <span class="str">"<span class="var">$fitxer</span>"</span> <span class="kw">in</span>
+    *.jpg|*.png|*.gif) <span class="cmd">echo</span> <span class="str">"Imatge"</span> ;;
+    *.mp3|*.ogg|*.wav) <span class="cmd">echo</span> <span class="str">"Àudio"</span> ;;
+    *.sh)              <span class="cmd">echo</span> <span class="str">"Script de Bash"</span> ;;
+    *)                 <span class="cmd">echo</span> <span class="str">"Tipus desconegut"</span> ;;
+<span class="kw">esac</span></code></pre>
+
+  <div class="stitle">Operadors curts &amp;&amp; i ||</div>
+  <pre><code><span class="ll sh">Bash</span><span class="cm"># && — executa la dreta NOMÉS si l'esquerra té èxit (codi 0)</span>
+<span class="cmd">mkdir</span> <span class="str">"nou_directori"</span> && <span class="cmd">cd</span> <span class="str">"nou_directori"</span>
+
+<span class="cm"># || — executa la dreta NOMÉS si l'esquerra falla</span>
+<span class="cmd">cd</span> <span class="str">"/directori/que/no/existeix"</span> || <span class="cmd">echo</span> <span class="str">"Error: directori no trobat"</span>
+
+<span class="cm"># Patró idiomàtic: sortida amb error</span>
+[[ -f <span class="str">"<span class="var">$fitxer</span>"</span> ]] || { <span class="cmd">echo</span> <span class="str">"Fitxer no trobat: <span class="var">$fitxer</span>"</span>; <span class="kw">exit</span> <span class="num">1</span>; }</code></pre>
+</section>
+
+<!-- ══════════ BUCLES ══════════ -->
+<section id="bucles" class="pg">
+  <div class="hero">
+    <h2><span>Bucles</span></h2>
+    <p>Els bucles permeten repetir blocs de codi. Bash n'ofereix tres tipus principals: <code>for</code> (iteració sobre llistes), <code>while</code> (mentre una condició sigui certa) i <code>until</code> (fins que una condició sigui certa).</p>
+  </div>
+
+  <div class="stitle">for — iteració sobre llistes</div>
+  <pre><code><span class="ll sh">Bash</span><span class="cm"># Iteració sobre valors literals</span>
+<span class="kw">for</span> <span class="var">fruit</span> <span class="kw">in</span> poma pera taronja maduixa; <span class="kw">do</span>
+    <span class="cmd">echo</span> <span class="str">"Fruit: <span class="var">$fruit</span>"</span>
+<span class="kw">done</span>
+
+<span class="cm"># Iteració sobre un rang numèric</span>
+<span class="kw">for</span> <span class="var">i</span> <span class="kw">in</span> {<span class="num">1</span>..<span class="num">5</span>}; <span class="kw">do</span>
+    <span class="cmd">echo</span> <span class="str">"Número: <span class="var">$i</span>"</span>
+<span class="kw">done</span>
+
+<span class="cm"># Rang amb pas</span>
+<span class="kw">for</span> <span class="var">i</span> <span class="kw">in</span> {<span class="num">0</span>..<span class="num">20</span>..<span class="num">5</span>}; <span class="kw">do</span>   <span class="cm"># 0, 5, 10, 15, 20</span>
+    <span class="cmd">echo</span> <span class="var">$i</span>
+<span class="kw">done</span>
+
+<span class="cm"># Sintaxi estil C</span>
+<span class="kw">for</span> <span class="var">(( i=0; i<5; i++ ))</span>; <span class="kw">do</span>
+    <span class="cmd">echo</span> <span class="str">"i = <span class="var">$i</span>"</span>
+<span class="kw">done</span>
+
+<span class="cm"># Iteració sobre fitxers</span>
+<span class="kw">for</span> <span class="var">fitxer</span> <span class="kw">in</span> *.txt; <span class="kw">do</span>
+    <span class="cmd">echo</span> <span class="str">"Processant: <span class="var">$fitxer</span>"</span>
+<span class="kw">done</span>
+
+<span class="cm"># Iteració sobre la sortida d'una ordre</span>
+<span class="kw">for</span> <span class="var">usuari</span> <span class="kw">in</span> <span class="var">$(cat /etc/passwd | cut -d: -f1 | head -5)</span>; <span class="kw">do</span>
+    <span class="cmd">echo</span> <span class="str">"Usuari: <span class="var">$usuari</span>"</span>
+<span class="kw">done</span></code></pre>
+
+  <div class="stitle">while i until</div>
+  <pre><code><span class="ll sh">Bash</span><span class="cm"># while — executa MENTRE la condició sigui certa</span>
+<span class="var">comptador</span>=<span class="num">1</span>
+<span class="kw">while</span> [[ <span class="var">$comptador</span> -le <span class="num">5</span> ]]; <span class="kw">do</span>
+    <span class="cmd">echo</span> <span class="str">"Compte: <span class="var">$comptador</span>"</span>
+    <span class="var">(( comptador++ ))</span>
+<span class="kw">done</span>
+
+<span class="cm"># until — executa FINS QUE la condició sigui certa (invers de while)</span>
+<span class="var">n</span>=<span class="num">1</span>
+<span class="kw">until</span> [[ <span class="var">$n</span> -gt <span class="num">5</span> ]]; <span class="kw">do</span>
+    <span class="cmd">echo</span> <span class="str">"n = <span class="var">$n</span>"</span>
+    <span class="var">(( n++ ))</span>
+<span class="kw">done</span>
+
+<span class="cm"># Llegir un fitxer línia per línia</span>
+<span class="kw">while</span> <span class="kw">IFS</span>= <span class="cmd">read</span> -r <span class="var">linia</span>; <span class="kw">do</span>
+    <span class="cmd">echo</span> <span class="str">"Línia: <span class="var">$linia</span>"</span>
+<span class="kw">done</span> &lt; <span class="str">"fitxer.txt"</span>
+
+<span class="cm"># Bucle infinit amb break</span>
+<span class="kw">while</span> <span class="kw">true</span>; <span class="kw">do</span>
+    <span class="cmd">read</span> -p <span class="str">"Ordre (q=sortir): "</span> <span class="var">entrada</span>
+    [[ <span class="str">"<span class="var">$entrada</span>"</span> == <span class="str">"q"</span> ]] && <span class="kw">break</span>
+    <span class="cmd">echo</span> <span class="str">"Has dit: <span class="var">$entrada</span>"</span>
+<span class="kw">done</span></code></pre>
+
+  <div class="stitle">break i continue</div>
+  <pre><code><span class="ll sh">Bash</span><span class="cm"># break — surt del bucle</span>
+<span class="kw">for</span> <span class="var">i</span> <span class="kw">in</span> {<span class="num">1</span>..<span class="num">10</span>}; <span class="kw">do</span>
+    <span class="kw">if</span> [[ <span class="var">$i</span> -eq <span class="num">5</span> ]]; <span class="kw">then</span>
+        <span class="kw">break</span>
+    <span class="kw">fi</span>
+    <span class="cmd">echo</span> <span class="var">$i</span>    <span class="cm"># imprimeix 1 2 3 4</span>
+<span class="kw">done</span>
+
+<span class="cm"># continue — salta a la pròxima iteració</span>
+<span class="kw">for</span> <span class="var">i</span> <span class="kw">in</span> {<span class="num">1</span>..<span class="num">6</span>}; <span class="kw">do</span>
+    <span class="kw">if</span> [[ <span class="var">$(( i % 2 ))</span> -eq <span class="num">0</span> ]]; <span class="kw">then</span>
+        <span class="kw">continue</span>    <span class="cm"># salta els parells</span>
+    <span class="kw">fi</span>
+    <span class="cmd">echo</span> <span class="var">$i</span>    <span class="cm"># imprimeix 1 3 5</span>
+<span class="kw">done</span></code></pre>
+</section>
+
+<!-- ══════════ FUNCIONS ══════════ -->
+<section id="funcions" class="pg">
+  <div class="hero">
+    <h2><span>Funcions</span></h2>
+    <p>Les funcions agrupen blocs de codi reutilitzables. A Bash, les funcions reben arguments igual que els scripts (amb <code>$1</code>, <code>$2</code>...) i retornen un codi de sortida numèric. Per retornar text, s'usa <code>echo</code> i substitució de comandes.</p>
+  </div>
+
+  <div class="stitle">Definició i crida</div>
+  <pre><code><span class="ll sh">Bash</span><span class="cm"># Sintaxi 1 (recomanada)</span>
+<span class="fn2">saluda</span>() {
+    <span class="var">local</span> <span class="var">nom</span>=<span class="var">${1:-"Món"}</span>    <span class="cm"># local: variable local a la funció</span>
+    <span class="cmd">echo</span> <span class="str">"Hola, <span class="var">$nom</span>!"</span>
+}
+
+<span class="cm"># Sintaxi 2 (amb paraula clau function)</span>
+<span class="kw">function</span> <span class="fn2">adeu</span>() {
+    <span class="cmd">echo</span> <span class="str">"Adeu, <span class="var">$1</span>!"</span>
+}
+
+<span class="cm"># Crida de la funció</span>
+<span class="fn2">saluda</span> <span class="str">"Anna"</span>    <span class="cm"># → Hola, Anna!</span>
+<span class="fn2">saluda</span>           <span class="cm"># → Hola, Món!</span>
+<span class="fn2">adeu</span> <span class="str">"Pere"</span>      <span class="cm"># → Adeu, Pere!</span></code></pre>
+
+  <div class="stitle">Retorn de valors</div>
+  <pre><code><span class="ll sh">Bash</span><span class="cm"># return → retorna un codi de sortida (0-255)</span>
+<span class="cm"># 0 = èxit, ≠0 = error</span>
+<span class="fn2">es_parell</span>() {
+    <span class="kw">if</span> [[ <span class="var">$(( $1 % 2 ))</span> -eq <span class="num">0</span> ]]; <span class="kw">then</span>
+        <span class="kw">return</span> <span class="num">0</span>    <span class="cm"># èxit (veritable)</span>
+    <span class="kw">else</span>
+        <span class="kw">return</span> <span class="num">1</span>    <span class="cm"># error (fals)</span>
+    <span class="kw">fi</span>
+}
+
+<span class="fn2">es_parell</span> <span class="num">4</span> && <span class="cmd">echo</span> <span class="str">"4 és parell"</span>
+<span class="fn2">es_parell</span> <span class="num">3</span> || <span class="cmd">echo</span> <span class="str">"3 és imparell"</span>
+
+<span class="cm"># Retornar text: echo + substitució de comandes $( )</span>
+<span class="fn2">majuscules</span>() {
+    <span class="cmd">echo</span> <span class="str">"<span class="var">$1</span>"</span> | <span class="cmd">tr</span> <span class="str">'[:lower:]'</span> <span class="str">'[:upper:]'</span>
+}
+
+<span class="var">resultat</span>=<span class="var">$(majuscules "hola món")</span>
+<span class="cmd">echo</span> <span class="str">"<span class="var">$resultat</span>"</span>    <span class="cm"># → HOLA MÓN</span></code></pre>
+
+  <div class="stitle">Variables locals i globals</div>
+  <pre><code><span class="ll sh">Bash</span><span class="var">variable_global</span>=<span class="str">"global"</span>
+
+<span class="fn2">demo_scope</span>() {
+    <span class="kw">local</span> <span class="var">variable_local</span>=<span class="str">"local"</span>
+    <span class="var">variable_global</span>=<span class="str">"modificada"</span>    <span class="cm"># modifica la global!</span>
+    <span class="cmd">echo</span> <span class="str">"Dins: <span class="var">$variable_local</span> | <span class="var">$variable_global</span>"</span>
+}
+
+<span class="fn2">demo_scope</span>
+<span class="cmd">echo</span> <span class="str">"Fora: <span class="var">$variable_global</span>"</span>    <span class="cm"># → Fora: modificada</span>
+<span class="cm"># echo $variable_local → buit (no existeix fora)</span></code></pre>
+
+  <div class="stitle">Patró: funcions d'utilitat reutilitzables</div>
+  <pre><code><span class="ll sh">utils.sh</span><span class="op">#!/usr/bin/env bash</span>
+
+<span class="cm"># Funció per mostrar missatges de log amb colors</span>
+<span class="fn2">log_info</span>()    { <span class="cmd">echo</span> -e <span class="str">"\e[34m[INFO]\e[0m <span class="var">$*</span>"</span>; }
+<span class="fn2">log_ok</span>()      { <span class="cmd">echo</span> -e <span class="str">"\e[32m[ OK ]\e[0m <span class="var">$*</span>"</span>; }
+<span class="fn2">log_warn</span>()    { <span class="cmd">echo</span> -e <span class="str">"\e[33m[WARN]\e[0m <span class="var">$*</span>"</span> &gt;&amp;<span class="num">2</span>; }
+<span class="fn2">log_error</span>()   { <span class="cmd">echo</span> -e <span class="str">"\e[31m[ERR ]\e[0m <span class="var">$*</span>"</span> &gt;&amp;<span class="num">2</span>; }
+
+<span class="cm"># Funció per confirmar accions perilloses</span>
+<span class="fn2">confirmar</span>() {
+    <span class="kw">local</span> <span class="var">pregunta</span>=<span class="var">${1:-"Estàs segur?"}</span>
+    <span class="cmd">read</span> -r -p <span class="str">"<span class="var">$pregunta</span> [s/N] "</span> <span class="var">resposta</span>
+    [[ <span class="str">"<span class="var">$resposta</span>"</span> =~ ^[Ss]$ ]]
+}
+
+<span class="cm"># Ús:</span>
+<span class="fn2">log_info</span> <span class="str">"Iniciant còpia de seguretat..."</span>
+<span class="kw">if</span> <span class="fn2">confirmar</span> <span class="str">"Vols esborrar els fitxers antics?"</span>; <span class="kw">then</span>
+    <span class="fn2">log_warn</span> <span class="str">"Esborrant fitxers..."</span>
+<span class="kw">fi</span></code></pre>
+</section>
+
+<!-- ══════════ ARRAYS ══════════ -->
+<section id="arrays" class="pg">
+  <div class="hero">
+    <h2><span>Arrays</span></h2>
+    <p>Bash suporta arrays indexats (llistes) i arrays associatius (diccionaris). Útils per gestionar col·leccions de valors sense haver de crear múltiples variables.</p>
+  </div>
+
+  <div class="stitle">Arrays indexats</div>
+  <pre><code><span class="ll sh">Bash</span><span class="cm"># Declaració</span>
+<span class="var">fruites</span>=(<span class="str">"poma"</span> <span class="str">"pera"</span> <span class="str">"taronja"</span> <span class="str">"maduixa"</span>)
+
+<span class="cm"># Accés per índex (comença en 0)</span>
+<span class="cmd">echo</span> <span class="var">${fruites[0]}</span>       <span class="cm"># → poma</span>
+<span class="cmd">echo</span> <span class="var">${fruites[2]}</span>       <span class="cm"># → taronja</span>
+<span class="cmd">echo</span> <span class="var">${fruites[-1]}</span>      <span class="cm"># → maduixa (últim element)</span>
+
+<span class="cm"># Tots els elements</span>
+<span class="cmd">echo</span> <span class="var">${fruites[@]}</span>       <span class="cm"># → poma pera taronja maduixa</span>
+
+<span class="cm"># Nombre d'elements</span>
+<span class="cmd">echo</span> <span class="var">${#fruites[@]}</span>      <span class="cm"># → 4</span>
+
+<span class="cm"># Afegir elements</span>
+<span class="var">fruites</span>+=(<span class="str">"raïm"</span>)
+<span class="var">fruites</span>[<span class="num">10</span>]=<span class="str">"kiwi"</span>      <span class="cm"># índex no consecutiu</span>
+
+<span class="cm"># Eliminar un element</span>
+<span class="kw">unset</span> <span class="var">fruites[1]</span>
+
+<span class="cm"># Iteració</span>
+<span class="kw">for</span> <span class="var">fruit</span> <span class="kw">in</span> <span class="var">"${fruites[@]}"</span>; <span class="kw">do</span>
+    <span class="cmd">echo</span> <span class="str">"- <span class="var">$fruit</span>"</span>
+<span class="kw">done</span>
+
+<span class="cm"># Iteració amb índex</span>
+<span class="kw">for</span> <span class="var">i</span> <span class="kw">in</span> <span class="var">"${!fruites[@]}"</span>; <span class="kw">do</span>
+    <span class="cmd">echo</span> <span class="str">"[<span class="var">$i</span>] <span class="var">${fruites[$i]}</span>"</span>
+<span class="kw">done</span>
+
+<span class="cm"># Subarray</span>
+<span class="cmd">echo</span> <span class="var">"${fruites[@]:1:2}"</span>  <span class="cm"># des de índex 1, 2 elements</span></code></pre>
+
+  <div class="stitle">Arrays associatius (Bash 4+)</div>
+  <pre><code><span class="ll sh">Bash</span><span class="cm"># Cal declarar-los explícitament amb declare -A</span>
+<span class="kw">declare</span> -A <span class="var">capitals</span>
+
+<span class="var">capitals</span>[<span class="str">"Espanya"</span>]=<span class="str">"Madrid"</span>
+<span class="var">capitals</span>[<span class="str">"França"</span>]=<span class="str">"París"</span>
+<span class="var">capitals</span>[<span class="str">"Alemanya"</span>]=<span class="str">"Berlín"</span>
+<span class="var">capitals</span>[<span class="str">"Catalunya"</span>]=<span class="str">"Barcelona"</span>
+
+<span class="cm"># Accés per clau</span>
+<span class="cmd">echo</span> <span class="var">${capitals["Catalunya"]}</span>     <span class="cm"># → Barcelona</span>
+
+<span class="cm"># Totes les claus</span>
+<span class="cmd">echo</span> <span class="var">"${!capitals[@]}"</span>
+
+<span class="cm"># Tots els valors</span>
+<span class="cmd">echo</span> <span class="var">"${capitals[@]}"</span>
+
+<span class="cm"># Iteració</span>
+<span class="kw">for</span> <span class="var">pais</span> <span class="kw">in</span> <span class="var">"${!capitals[@]}"</span>; <span class="kw">do</span>
+    <span class="cmd">echo</span> <span class="str">"Capital de <span class="var">$pais</span>: <span class="var">${capitals[$pais]}</span>"</span>
+<span class="kw">done</span></code></pre>
+</section>
+
+<!-- ══════════ MANIPULACIÓ DE TEXT ══════════ -->
+<section id="text" class="pg">
+  <div class="hero">
+    <h2>Manipulació <span>de Text</span></h2>
+    <p>El processament de text és el punt fort de Bash. Combina les expansions de cadenes integrades amb les eines Unix clàssiques: <code>grep</code>, <code>sed</code>, <code>awk</code>, <code>cut</code>, <code>tr</code> i <code>sort</code>.</p>
+  </div>
+
+  <div class="stitle">Expansions de cadenes ${}</div>
+  <pre><code><span class="ll sh">Bash</span><span class="var">text</span>=<span class="str">"Hola, Món!"</span>
+<span class="var">fitxer</span>=<span class="str">"document.backup.txt"</span>
+
+<span class="cm"># Longitud</span>
+<span class="cmd">echo</span> <span class="var">${#text}</span>                    <span class="cm"># → 10</span>
+
+<span class="cm"># Convertir majúscules/minúscules (Bash 4+)</span>
+<span class="cmd">echo</span> <span class="var">${text^^}</span>                   <span class="cm"># → HOLA, MÓN! (tot majúscules)</span>
+<span class="cmd">echo</span> <span class="var">${text,,}</span>                   <span class="cm"># → hola, món! (tot minúscules)</span>
+<span class="cmd">echo</span> <span class="var">${text^}</span>                    <span class="cm"># → Hola, Món! (primera majúscula)</span>
+
+<span class="cm"># Substring: ${variable:posició:longitud}</span>
+<span class="cmd">echo</span> <span class="var">${text:0:4}</span>                 <span class="cm"># → Hola</span>
+<span class="cmd">echo</span> <span class="var">${text: -4}</span>                 <span class="cm"># → Món! (des del final)</span>
+
+<span class="cm"># Eliminar prefix (# = mínim, ## = màxim)</span>
+<span class="cmd">echo</span> <span class="var">${fitxer#*.}</span>               <span class="cm"># → backup.txt (elimina fins al primer .)</span>
+<span class="cmd">echo</span> <span class="var">${fitxer##*.}</span>              <span class="cm"># → txt (elimina fins a l'últim .)</span>
+
+<span class="cm"># Eliminar sufix (% = mínim, %% = màxim)</span>
+<span class="cmd">echo</span> <span class="var">${fitxer%.*}</span>               <span class="cm"># → document.backup (elimina des de l'últim .)</span>
+<span class="cmd">echo</span> <span class="var">${fitxer%%.*}</span>              <span class="cm"># → document (elimina des del primer .)</span>
+
+<span class="cm"># Reemplaçar: ${variable/patró/substitució}</span>
+<span class="cmd">echo</span> <span class="var">${text/Hola/Adeu}</span>          <span class="cm"># → Adeu, Món! (primera ocurrència)</span>
+<span class="cmd">echo</span> <span class="var">${text//o/0}</span>               <span class="cm"># → H0la, M0n! (totes les ocurrències)</span></code></pre>
+
+  <div class="stitle">grep — cerca de patrons</div>
+  <pre><code><span class="ll sh">Bash</span><span class="cm"># Cercar text en fitxers</span>
+<span class="cmd">grep</span> <span class="str">"ERROR"</span> app.log
+<span class="cmd">grep</span> -i <span class="str">"error"</span> app.log          <span class="cm"># -i: insensible a majúscules</span>
+<span class="cmd">grep</span> -n <span class="str">"ERROR"</span> app.log          <span class="cm"># -n: mostra número de línia</span>
+<span class="cmd">grep</span> -c <span class="str">"ERROR"</span> app.log          <span class="cm"># -c: compta coincidències</span>
+<span class="cmd">grep</span> -v <span class="str">"ERROR"</span> app.log          <span class="cm"># -v: línes que NO coincideixen</span>
+<span class="cmd">grep</span> -r <span class="str">"TODO"</span> ./src/           <span class="cm"># -r: recursiu en directoris</span>
+
+<span class="cm"># Expressions regulars exteses</span>
+<span class="cmd">grep</span> -E <span class="str">"^[0-9]{4}-[0-9]{2}"</span> dades.txt
+<span class="cmd">grep</span> -E <span class="str">"(ERROR|WARN)"</span> app.log
+
+<span class="cm"># Mostrar context (línies de context)</span>
+<span class="cmd">grep</span> -A <span class="num">3</span> -B <span class="num">1</span> <span class="str">"ERROR"</span> app.log  <span class="cm"># 3 línies despres, 1 abans</span></code></pre>
+
+  <div class="stitle">sed — edició de flux</div>
+  <pre><code><span class="ll sh">Bash</span><span class="cm"># Substitució: s/patró/substitució/flags</span>
+<span class="cmd">sed</span> <span class="str">'s/hola/adeu/'</span> fitxer.txt      <span class="cm"># primera ocurrència per línia</span>
+<span class="cmd">sed</span> <span class="str">'s/hola/adeu/g'</span> fitxer.txt     <span class="cm"># g = totes les ocurrències</span>
+<span class="cmd">sed</span> <span class="str">'s/hola/adeu/gi'</span> fitxer.txt    <span class="cm"># gi = totes + insensible</span>
+
+<span class="cm"># Edició al fitxer original (-i)</span>
+<span class="cmd">sed</span> -i <span class="str">'s/versio=1/versio=2/g'</span> config.ini
+
+<span class="cm"># Eliminar línies</span>
+<span class="cmd">sed</span> <span class="str">'/^#/d'</span> fitxer.txt             <span class="cm"># elimina línies que comencen per #</span>
+<span class="cmd">sed</span> <span class="str">'/^$/d'</span> fitxer.txt             <span class="cm"># elimina línies buides</span>
+
+<span class="cm"># Imprimir línies específiques</span>
+<span class="cmd">sed</span> -n <span class="str">'5,10p'</span> fitxer.txt          <span class="cm"># línies 5 a 10</span>
+<span class="cmd">sed</span> -n <span class="str">'/INICI/,/FINAL/p'</span> fitxer.txt</code></pre>
+
+  <div class="stitle">awk — processament de columnes</div>
+  <pre><code><span class="ll sh">Bash</span><span class="cm"># Imprimir columnes específiques (separador per defecte: espai)</span>
+<span class="cmd">awk</span> <span class="str">'{print $1, $3}'</span> fitxer.txt    <span class="cm"># columnes 1 i 3</span>
+<span class="cmd">awk</span> -F: <span class="str">'{print $1}'</span> /etc/passwd   <span class="cm"># -F: separador de camps</span>
+
+<span class="cm"># Condicionals en awk</span>
+<span class="cmd">awk</span> <span class="str">'$3 > 100 {print $1, $3}'</span> dades.txt
+<span class="cmd">awk</span> <span class="str">'/ERROR/ {print NR": "$0}'</span> app.log  <span class="cm"># NR = número de línia</span>
+
+<span class="cm"># Sumar una columna</span>
+<span class="cmd">awk</span> <span class="str">'{suma += $2} END {print "Total:", suma}'</span> vendes.txt
+
+<span class="cm"># Recompte de paraules</span>
+<span class="cmd">awk</span> <span class="str">'{for(i=1;i<=NF;i++) freq[$i]++} END {for(w in freq) print freq[w], w}'</span> \
+  text.txt | <span class="cmd">sort</span> -rn | <span class="cmd">head</span> -<span class="num">10</span></code></pre>
+
+  <div class="stitle">cut, sort, uniq, tr, wc</div>
+  <pre><code><span class="ll sh">Bash</span><span class="cm"># cut — extreure columnes o caràcters</span>
+<span class="cmd">cut</span> -d: -f1,3 /etc/passwd         <span class="cm"># camps 1 i 3, separador :</span>
+<span class="cmd">cut</span> -c1-10 fitxer.txt             <span class="cm"># caràcters 1 al 10</span>
+
+<span class="cm"># sort — ordenar</span>
+<span class="cmd">sort</span> fitxer.txt                   <span class="cm"># ordre alfabètic</span>
+<span class="cmd">sort</span> -n fitxer.txt                <span class="cm"># ordre numèric</span>
+<span class="cmd">sort</span> -r fitxer.txt                <span class="cm"># ordre invers</span>
+<span class="cmd">sort</span> -u fitxer.txt                <span class="cm"># elimina duplicats</span>
+<span class="cmd">sort</span> -k2 -n fitxer.txt            <span class="cm"># ordena per columna 2</span>
+
+<span class="cm"># uniq — elimina/compta duplicats (requereix entrada ordenada)</span>
+<span class="cmd">sort</span> fitxer.txt | <span class="cmd">uniq</span>           <span class="cm"># elimina duplicats</span>
+<span class="cmd">sort</span> fitxer.txt | <span class="cmd">uniq</span> -c        <span class="cm"># compta cada línia única</span>
+<span class="cmd">sort</span> fitxer.txt | <span class="cmd">uniq</span> -d        <span class="cm"># mostra solo duplicats</span>
+
+<span class="cm"># tr — transliterar/eliminar caràcters</span>
+<span class="cmd">echo</span> <span class="str">"hola"</span> | <span class="cmd">tr</span> <span class="str">'a-z'</span> <span class="str">'A-Z'</span>       <span class="cm"># → HOLA</span>
+<span class="cmd">echo</span> <span class="str">"a,b,c"</span> | <span class="cmd">tr</span> <span class="str">','</span> <span class="str">'\n'</span>         <span class="cm"># substitueix coma per salt de línia</span>
+<span class="cmd">echo</span> <span class="str">"abc123"</span> | <span class="cmd">tr</span> -d <span class="str">'0-9'</span>       <span class="cm"># elimina dígits</span>
+
+<span class="cm"># wc — comptar línies, paraules, caràcters</span>
+<span class="cmd">wc</span> -l fitxer.txt                  <span class="cm"># nombre de línies</span>
+<span class="cmd">wc</span> -w fitxer.txt                  <span class="cm"># nombre de paraules</span>
+<span class="cmd">wc</span> -c fitxer.txt                  <span class="cm"># nombre de bytes</span></code></pre>
+</section>
+
+<!-- ══════════ FITXERS I DIRECTORIS ══════════ -->
+<section id="fitxers" class="pg">
+  <div class="hero">
+    <h2>Fitxers <span>i Directoris</span></h2>
+    <p>La gestió de fitxers és una de les tasques més freqüents als scripts de Bash. Veurem com navegar, crear, copiar, moure i processar fitxers de manera segura i eficient.</p>
+  </div>
+
+  <div class="stitle">Operacions bàsiques</div>
+  <pre><code><span class="ll sh">Bash</span><span class="cm"># Crear directoris (mkdir -p crea els pares si cal)</span>
+<span class="cmd">mkdir</span> -p <span class="str">"projecte/src/utils"</span>
+
+<span class="cm"># Copiar fitxers i directoris</span>
+<span class="cmd">cp</span> fitxer.txt copia.txt
+<span class="cmd">cp</span> -r directori/ directori_copia/
+<span class="cmd">cp</span> -p fitxer.txt /dest/    <span class="cm"># -p: preserva permisos i timestamps</span>
+
+<span class="cm"># Moure / reanomenar</span>
+<span class="cmd">mv</span> vell.txt nou.txt
+<span class="cmd">mv</span> fitxer.txt /altre/directori/
+
+<span class="cm"># Eliminar (amb precaució!)</span>
+<span class="cmd">rm</span> fitxer.txt
+<span class="cmd">rm</span> -r directori/        <span class="cm"># recursiu</span>
+<span class="cmd">rm</span> -ri directori/       <span class="cm"># recursiu amb confirmació</span>
+
+<span class="cm"># Trobar fitxers amb find</span>
+<span class="cmd">find</span> /home -name <span class="str">"*.log"</span>             <span class="cm"># per nom</span>
+<span class="cmd">find</span> /tmp -mtime +<span class="num">7</span>                  <span class="cm"># modificats fa més de 7 dies</span>
+<span class="cmd">find</span> . -size +<span class="num">100</span>M                   <span class="cm"># més grans de 100 MB</span>
+<span class="cmd">find</span> . -name <span class="str">"*.sh"</span> -exec chmod +x {} \;  <span class="cm"># executa ordre per cada resultat</span></code></pre>
+
+  <div class="stitle">Reanomenament massiu</div>
+  <pre><code><span class="ll sh">Bash</span><span class="cm"># Reanomenar tots els .txt a .bak</span>
+<span class="kw">for</span> <span class="var">f</span> <span class="kw">in</span> *.txt; <span class="kw">do</span>
+    <span class="cmd">mv</span> <span class="str">"<span class="var">$f</span>"</span> <span class="str">"<span class="var">${f%.txt}</span>.bak"</span>
+<span class="kw">done</span>
+
+<span class="cm"># Afegir prefix de data als fitxers</span>
+<span class="var">data</span>=<span class="var">$(date +%Y%m%d)</span>
+<span class="kw">for</span> <span class="var">f</span> <span class="kw">in</span> *.jpg; <span class="kw">do</span>
+    <span class="cmd">mv</span> <span class="str">"<span class="var">$f</span>"</span> <span class="str">"<span class="var">${data}</span>_<span class="var">$f</span>"</span>
+<span class="kw">done</span>
+
+<span class="cm"># Convertir noms a minúscules</span>
+<span class="kw">for</span> <span class="var">f</span> <span class="kw">in</span> *; <span class="kw">do</span>
+    <span class="var">nou</span>=<span class="var">"${f,,}"</span>
+    [[ <span class="str">"<span class="var">$f</span>"</span> != <span class="str">"<span class="var">$nou</span>"</span> ]] && <span class="cmd">mv</span> <span class="str">"<span class="var">$f</span>"</span> <span class="str">"<span class="var">$nou</span>"</span>
+<span class="kw">done</span></code></pre>
+
+  <div class="stitle">Fitxers temporals segurs</div>
+  <pre><code><span class="ll sh">Bash</span><span class="cm"># mktemp crea fitxers/directoris temporals segurs</span>
+<span class="var">tmp_fitxer</span>=<span class="var">$(mktemp /tmp/script_XXXXXX.tmp)</span>
+<span class="var">tmp_dir</span>=<span class="var">$(mktemp -d /tmp/script_XXXXXX)</span>
+
+<span class="cm"># SEMPRE neteja els temporals en sortir</span>
+<span class="kw">trap</span> <span class="str">"rm -rf '<span class="var">$tmp_fitxer</span>' '<span class="var">$tmp_dir</span>'"</span> EXIT
+
+<span class="cm"># Ara pots usar $tmp_fitxer i $tmp_dir de forma segura</span>
+<span class="cmd">echo</span> <span class="str">"dades"</span> &gt; <span class="str">"<span class="var">$tmp_fitxer</span>"</span></code></pre>
+</section>
+
+<!-- ══════════ GESTIÓ D'ERRORS ══════════ -->
+<section id="errors" class="pg">
+  <div class="hero">
+    <h2>Gestió <span>d'Errors</span></h2>
+    <p>Els scripts robustos gestionen els errors de forma explícita. Bash ofereix eines per aturar-se davant d'errors, capturar senyals del sistema i retornar codis de sortida informatius.</p>
+  </div>
+
+  <div class="stitle">Opcions de seguretat: set -euo pipefail</div>
+  <pre><code><span class="ll sh">Bash</span><span class="op">#!/usr/bin/env bash</span>
+<span class="op">set -euo pipefail</span>
+<span class="cm"># -e : atura el script si qualsevol ordre retorna un codi ≠ 0</span>
+<span class="cm"># -u : error si s'usa una variable no definida</span>
+<span class="cm"># -o pipefail : el pipe falla si qualsevol part del pipe falla</span>
+
+<span class="cm"># Amb -e, a vegades cal permetre que algunes ordres fallin:</span>
+<span class="var">count</span>=<span class="var">$(grep -c "patró" fitxer.txt || true)</span>  <span class="cm"># || true evita la sortida per grep -c</span>
+
+<span class="cm"># O desactivar temporalment:</span>
+<span class="op">set +e</span>
+<span class="var">resultat</span>=<span class="var">$(ordre_que_pot_fallar)</span>
+<span class="var">codi</span>=<span class="var">$?</span>
+<span class="op">set -e</span></code></pre>
+
+  <div class="stitle">Codis de sortida i $?</div>
+  <pre><code><span class="ll sh">Bash</span><span class="cm"># Convencions de codis de sortida:</span>
+<span class="cm"># 0   = èxit</span>
+<span class="cm"># 1   = error general</span>
+<span class="cm"># 2   = ús incorrecte de la ordre o argument invàlid</span>
+<span class="cm"># 126 = permís denegat</span>
+<span class="cm"># 127 = ordre no trobada</span>
+
+<span class="cm"># Comprovar el codi de sortida de l'última ordre</span>
+<span class="cmd">cp</span> fitxer.txt /dest/
+<span class="kw">if</span> [[ <span class="var">$?</span> -ne <span class="num">0</span> ]]; <span class="kw">then</span>
+    <span class="cmd">echo</span> <span class="str">"Error copiant el fitxer"</span> &gt;&amp;<span class="num">2</span>
+    <span class="kw">exit</span> <span class="num">1</span>
+<span class="kw">fi</span>
+
+<span class="cm"># Funció per sortir amb error</span>
+<span class="fn2">morir</span>() {
+    <span class="cmd">echo</span> -e <span class="str">"\e[31m[ERROR]\e[0m <span class="var">$*</span>"</span> &gt;&amp;<span class="num">2</span>
+    <span class="kw">exit</span> <span class="num">1</span>
+}
+
+[[ -f <span class="str">"config.ini"</span> ]] || <span class="fn2">morir</span> <span class="str">"No es troba config.ini"</span>
+[[ <span class="var">$#</span> -ge <span class="num">1</span> ]]       || <span class="fn2">morir</span> <span class="str">"Ús: <span class="var">$0</span> &lt;argument&gt;"</span></code></pre>
+
+  <div class="stitle">trap — captura de senyals</div>
+  <pre><code><span class="ll sh">Bash</span><span class="cm"># trap 'acció' SENYAL</span>
+<span class="cm"># Senyals més comunes: EXIT, INT (Ctrl+C), TERM, ERR</span>
+
+<span class="cm"># Neteja en sortir (sempre s'executa)</span>
+<span class="fn2">neteja</span>() {
+    <span class="cmd">echo</span> <span class="str">"Netejant fitxers temporals..."</span>
+    <span class="cmd">rm</span> -f <span class="str">"/tmp/script_<span class="var">$$</span>.tmp"</span>
+}
+<span class="kw">trap</span> neteja EXIT
+
+<span class="cm"># Gestionar Ctrl+C graciosament</span>
+<span class="kw">trap</span> <span class="str">'echo "Interromput per l'\''usuari"; exit 130'</span> INT
+
+<span class="cm"># Mostrar la línia on s'ha produït l'error (amb set -e)</span>
+<span class="kw">trap</span> <span class="str">'echo "Error a la línia $LINENO"'</span> ERR
+
+<span class="cm"># Exemple complet: script robust</span>
+<span class="op">#!/usr/bin/env bash</span>
+<span class="op">set -euo pipefail</span>
+<span class="kw">trap</span> <span class="str">'echo "Error a la línia $LINENO. Sortint..." >&2'</span> ERR
+<span class="kw">trap</span> <span class="str">'rm -f /tmp/tmp_$$'</span> EXIT</code></pre>
+
+  <div class="stitle">Validació d'arguments</div>
+  <pre><code><span class="ll sh">Bash</span><span class="op">#!/usr/bin/env bash</span>
+<span class="op">set -euo pipefail</span>
+
+<span class="fn2">ajuda</span>() {
+    <span class="cmd">cat</span> &lt;&lt;EOF
+Ús: <span class="var">$0</span> [opcions] &lt;fitxer&gt;
+
+Opcions:
+  -h, --help     Mostra aquesta ajuda
+  -v, --verbose  Mode detallat
+  -o &lt;sortida&gt;   Fitxer de sortida (per defecte: stdout)
+
+Exemples:
+  <span class="var">$0</span> dades.txt
+  <span class="var">$0</span> -v -o resultat.txt dades.txt
+EOF
+}
+
+<span class="cm"># Valors per defecte</span>
+<span class="var">verbose</span>=<span class="kw">false</span>
+<span class="var">sortida</span>=<span class="str">"-"</span>    <span class="cm"># - = stdout</span>
+
+<span class="cm"># Parsejar arguments</span>
+<span class="kw">while</span> [[ <span class="var">$#</span> -gt <span class="num">0</span> ]]; <span class="kw">do</span>
+    <span class="kw">case</span> <span class="var">$1</span> <span class="kw">in</span>
+        -h|--help)    <span class="fn2">ajuda</span>; <span class="kw">exit</span> <span class="num">0</span> ;;
+        -v|--verbose) <span class="var">verbose</span>=<span class="kw">true</span>; <span class="kw">shift</span> ;;
+        -o)           <span class="var">sortida</span>=<span class="str">"<span class="var">$2</span>"</span>; <span class="kw">shift</span> <span class="num">2</span> ;;
+        -*)           <span class="fn2">morir</span> <span class="str">"Opció desconeguda: <span class="var">$1</span>"</span> ;;
+        *)            <span class="kw">break</span> ;;
+    <span class="kw">esac</span>
+<span class="kw">done</span>
+
+[[ <span class="var">$#</span> -lt <span class="num">1</span> ]] && { <span class="fn2">ajuda</span>; <span class="kw">exit</span> <span class="num">1</span>; }
+<span class="var">fitxer_entrada</span>=<span class="str">"<span class="var">$1</span>"</span>
+[[ -f <span class="str">"<span class="var">$fitxer_entrada</span>"</span> ]] || <span class="fn2">morir</span> <span class="str">"No es troba: <span class="var">$fitxer_entrada</span>"</span></code></pre>
+</section>
+
+<!-- ══════════ SCRIPTS ÚTILS ══════════ -->
+<section id="scripts-utils" class="pg">
+  <div class="hero">
+    <h2>Scripts <span>Útils</span></h2>
+    <p>Scripts complets i reutilitzables per a tasques habituals: còpies de seguretat, neteja del sistema, monitoratge i més. Usa'ls com a plantilles per als teus propis scripts.</p>
+  </div>
+
+  <div class="stitle">Script de còpia de seguretat</div>
+  <pre><code><span class="ll sh">backup.sh</span><span class="op">#!/usr/bin/env bash</span>
+<span class="op">set -euo pipefail</span>
+
+<span class="cm"># Configuració</span>
+<span class="var">ORIGEN</span>=<span class="str">"<span class="var">$HOME</span>/documents"</span>
+<span class="var">DESTI</span>=<span class="str">"<span class="var">$HOME</span>/backups"</span>
+<span class="var">DATA</span>=<span class="var">$(date +%Y%m%d_%H%M%S)</span>
+<span class="var">NOM_BACKUP</span>=<span class="str">"backup_<span class="var">$DATA</span>.tar.gz"</span>
+<span class="var">RETENCIO_DIES</span>=<span class="num">30</span>
+
+<span class="fn2">log</span>() { <span class="cmd">echo</span> <span class="str">"[<span class="var">$(date +%H:%M:%S)</span>] <span class="var">$*</span>"</span>; }
+
+<span class="cm"># Crear directori de desti si no existeix</span>
+<span class="cmd">mkdir</span> -p <span class="str">"<span class="var">$DESTI</span>"</span>
+
+<span class="fn2">log</span> <span class="str">"Iniciant backup de <span class="var">$ORIGEN</span>..."</span>
+
+<span class="cm"># Crear arxiu comprimit</span>
+<span class="kw">if</span> <span class="cmd">tar</span> -czf <span class="str">"<span class="var">$DESTI</span>/<span class="var">$NOM_BACKUP</span>"</span> -C <span class="str">"<span class="var">$(dirname "$ORIGEN")</span>"</span> <span class="str">"<span class="var">$(basename "$ORIGEN")</span>"</span>; <span class="kw">then</span>
+    <span class="var">mida</span>=<span class="var">$(du -sh "$DESTI/$NOM_BACKUP" | cut -f1)</span>
+    <span class="fn2">log</span> <span class="str">"Backup creat: <span class="var">$NOM_BACKUP</span> (<span class="var">$mida</span>)"</span>
+<span class="kw">else</span>
+    <span class="cmd">echo</span> <span class="str">"ERROR: no s'ha pogut crear el backup"</span> &gt;&amp;<span class="num">2</span>
+    <span class="kw">exit</span> <span class="num">1</span>
+<span class="kw">fi</span>
+
+<span class="cm"># Esborrar backups antics</span>
+<span class="var">eliminats</span>=<span class="var">$(find "$DESTI" -name "backup_*.tar.gz" -mtime +$RETENCIO_DIES -print -delete | wc -l)</span>
+[[ <span class="var">$eliminats</span> -gt <span class="num">0</span> ]] && <span class="fn2">log</span> <span class="str">"Eliminats <span class="var">$eliminats</span> backups antics"</span>
+
+<span class="fn2">log</span> <span class="str">"Backup completat!"</span></code></pre>
+
+  <div class="stitle">Script de monitoratge del sistema</div>
+  <pre><code><span class="ll sh">monitor.sh</span><span class="op">#!/usr/bin/env bash</span>
+<span class="op">set -euo pipefail</span>
+
+<span class="cm"># Llindars d'alerta</span>
+<span class="var">LLINDAR_CPU</span>=<span class="num">80</span>
+<span class="var">LLINDAR_DISC</span>=<span class="num">90</span>
+<span class="var">LLINDAR_MEMORIA</span>=<span class="num">85</span>
+
+<span class="fn2">comprova_cpu</span>() {
+    <span class="var">us_cpu</span>=<span class="var">$(top -bn1 | grep "Cpu(s)" | awk '{print $2}' | cut -d. -f1)</span>
+    <span class="kw">if</span> [[ <span class="var">$us_cpu</span> -gt <span class="var">$LLINDAR_CPU</span> ]]; <span class="kw">then</span>
+        <span class="cmd">echo</span> -e <span class="str">"\e[31m[ALERTA] CPU: <span class="var">${us_cpu}</span>% (llindar: <span class="var">${LLINDAR_CPU}</span>%)\e[0m"</span>
+    <span class="kw">else</span>
+        <span class="cmd">echo</span> -e <span class="str">"\e[32m[ OK  ] CPU: <span class="var">${us_cpu}</span>%\e[0m"</span>
+    <span class="kw">fi</span>
+}
+
+<span class="fn2">comprova_disc</span>() {
+    <span class="kw">while</span> <span class="kw">IFS</span>= <span class="cmd">read</span> -r <span class="var">linia</span>; <span class="kw">do</span>
+        <span class="var">percentatge</span>=<span class="var">$(echo "$linia" | awk '{print $5}' | tr -d '%')</span>
+        <span class="var">punt</span>=<span class="var">$(echo "$linia" | awk '{print $6}')</span>
+        <span class="kw">if</span> [[ <span class="var">$percentatge</span> -gt <span class="var">$LLINDAR_DISC</span> ]]; <span class="kw">then</span>
+            <span class="cmd">echo</span> -e <span class="str">"\e[31m[ALERTA] Disc <span class="var">$punt</span>: <span class="var">${percentatge}</span>% ple\e[0m"</span>
+        <span class="kw">else</span>
+            <span class="cmd">echo</span> -e <span class="str">"\e[32m[ OK  ] Disc <span class="var">$punt</span>: <span class="var">${percentatge}</span>%\e[0m"</span>
+        <span class="kw">fi</span>
+    <span class="kw">done</span> &lt; &lt;(<span class="cmd">df</span> -h | <span class="cmd">grep</span> <span class="str">'^/dev'</span>)
+}
+
+<span class="fn2">comprova_memoria</span>() {
+    <span class="var">total</span>=<span class="var">$(free | grep Mem | awk '{print $2}')</span>
+    <span class="var">usada</span>=<span class="var">$(free | grep Mem | awk '{print $3}')</span>
+    <span class="var">percentatge</span>=<span class="var">$(( usada * 100 / total ))</span>
+    <span class="kw">if</span> [[ <span class="var">$percentatge</span> -gt <span class="var">$LLINDAR_MEMORIA</span> ]]; <span class="kw">then</span>
+        <span class="cmd">echo</span> -e <span class="str">"\e[31m[ALERTA] Memòria: <span class="var">${percentatge}</span>%\e[0m"</span>
+    <span class="kw">else</span>
+        <span class="cmd">echo</span> -e <span class="str">"\e[32m[ OK  ] Memòria: <span class="var">${percentatge}</span>%\e[0m"</span>
+    <span class="kw">fi</span>
+}
+
+<span class="cmd">echo</span> <span class="str">"=== Informe del sistema: <span class="var">$(date)</span> ==="</span>
+<span class="fn2">comprova_cpu</span>
+<span class="fn2">comprova_disc</span>
+<span class="fn2">comprova_memoria</span></code></pre>
+</section>
+
+<!-- ══════════ EXERCICIS ══════════ -->
+<section id="exercicis" class="pg">
+  <div class="hero">
+    <h2>🏋️ <span>Exercicis</span></h2>
+    <p>Posa en pràctica el que has après. Cada exercici ve amb una descripció, els requisits i una solució que pots desplegar. <strong>Intenta resoldre'ls tu primer!</strong></p>
+  </div>
+
+  <!-- EX 1 -->
+  <div class="ex">
+    <div class="ex-head">
+      <span class="ex-badge">Bàsic</span>
+      <span class="ex-title">Ex. 1 — Calculadora de l'IMC</span>
+    </div>
+    <p>Escriu un script que demani a l'usuari el seu pes (en kg) i la seva alçada (en metres), calculi l'Índex de Massa Corporal (IMC = pes / alçada²) i mostri el resultat amb la categoria corresponent.</p>
+    <ul>
+      <li>IMC &lt; 18.5 → Baix pes</li>
+      <li>18.5 ≤ IMC &lt; 25 → Pes normal</li>
+      <li>25 ≤ IMC &lt; 30 → Sobrepès</li>
+      <li>IMC ≥ 30 → Obesitat</li>
+    </ul>
+    <p><strong>Pista:</strong> Usa <code>bc</code> per fer el càlcul amb decimals.</p>
+    <button class="sol-toggle" onclick="toggleSol(this)">▶ Veure solució</button>
+    <div class="sol-body">
+      <pre><code><span class="ll sol">Solució</span><span class="op">#!/usr/bin/env bash</span>
+<span class="op">set -euo pipefail</span>
+
+<span class="cmd">read</span> -p <span class="str">"Pes (kg): "</span> <span class="var">pes</span>
+<span class="cmd">read</span> -p <span class="str">"Alçada (m, ex: 1.75): "</span> <span class="var">alcada</span>
+
+<span class="cm"># Càlcul amb bc (escala 2 decimals)</span>
+<span class="var">imc</span>=<span class="var">$(echo "scale=2; $pes / ($alcada * $alcada)" | bc)</span>
+
+<span class="cmd">echo</span> <span class="str">"IMC: <span class="var">$imc</span>"</span>
+
+<span class="cm"># Comparació amb bc (retorna 1 si és cert, 0 si és fals)</span>
+<span class="fn2">menor_que</span>() { <span class="cmd">echo</span> <span class="str">"<span class="var">$1</span> < <span class="var">$2</span>"</span> | <span class="cmd">bc</span> -l; }
+
+<span class="kw">if</span> [[ <span class="var">$(menor_que "$imc" "18.5")</span> -eq <span class="num">1</span> ]]; <span class="kw">then</span>
+    <span class="cmd">echo</span> <span class="str">"Categoria: Baix pes"</span>
+<span class="kw">elif</span> [[ <span class="var">$(menor_que "$imc" "25")</span> -eq <span class="num">1</span> ]]; <span class="kw">then</span>
+    <span class="cmd">echo</span> <span class="str">"Categoria: Pes normal"</span>
+<span class="kw">elif</span> [[ <span class="var">$(menor_que "$imc" "30")</span> -eq <span class="num">1</span> ]]; <span class="kw">then</span>
+    <span class="cmd">echo</span> <span class="str">"Categoria: Sobrepès"</span>
+<span class="kw">else</span>
+    <span class="cmd">echo</span> <span class="str">"Categoria: Obesitat"</span>
+<span class="kw">fi</span></code></pre>
+    </div>
+  </div>
+
+  <!-- EX 2 -->
+  <div class="ex">
+    <div class="ex-head">
+      <span class="ex-badge">Bàsic</span>
+      <span class="ex-title">Ex. 2 — Taula de multiplicar</span>
+    </div>
+    <p>Escriu un script que rebi un número com a argument i mostri la seva taula de multiplicar del 1 al 10. Si no es passa cap argument, ha de mostrar un missatge d'ús.</p>
+    <button class="sol-toggle" onclick="toggleSol(this)">▶ Veure solució</button>
+    <div class="sol-body">
+      <pre><code><span class="ll sol">Solució</span><span class="op">#!/usr/bin/env bash</span>
+
+[[ <span class="var">$#</span> -ne <span class="num">1</span> ]] && { <span class="cmd">echo</span> <span class="str">"Ús: <span class="var">$0</span> &lt;número&gt;"</span>; <span class="kw">exit</span> <span class="num">1</span>; }
+[[ <span class="str">"<span class="var">$1</span>"</span> =~ ^[0-9]+$ ]] || { <span class="cmd">echo</span> <span class="str">"Error: '<span class="var">$1</span>' no és un número"</span>; <span class="kw">exit</span> <span class="num">1</span>; }
+
+<span class="var">n</span>=<span class="var">$1</span>
+<span class="cmd">echo</span> <span class="str">"--- Taula del <span class="var">$n</span> ---"</span>
+<span class="kw">for</span> <span class="var">i</span> <span class="kw">in</span> {<span class="num">1</span>..<span class="num">10</span>}; <span class="kw">do</span>
+    <span class="cmd">printf</span> <span class="str">"%2d x %2d = %3d\n"</span> <span class="var">$n</span> <span class="var">$i</span> <span class="var">$(( n * i ))</span>
+<span class="kw">done</span></code></pre>
+    </div>
+  </div>
+
+  <!-- EX 3 -->
+  <div class="ex">
+    <div class="ex-head">
+      <span class="ex-badge mitjà">Mitjà</span>
+      <span class="ex-title">Ex. 3 — Anàlisi d'un fitxer de log</span>
+    </div>
+    <p>Donat un fitxer de log on cada línia té el format <code>YYYY-MM-DD HH:MM:SS [NIVELL] Missatge</code>, escriu un script que:</p>
+    <ul>
+      <li>Compti el nombre de línies per nivell (INFO, WARN, ERROR)</li>
+      <li>Mostri les 5 últimes línies de nivell ERROR</li>
+      <li>Mostri la primera i última data/hora que apareix al log</li>
+    </ul>
+    <p><strong>Pista:</strong> Combina <code>grep</code>, <code>awk</code>, <code>wc</code> i <code>head</code>/<code>tail</code>.</p>
+    <button class="sol-toggle" onclick="toggleSol(this)">▶ Veure solució</button>
+    <div class="sol-body">
+      <pre><code><span class="ll sol">Solució</span><span class="op">#!/usr/bin/env bash</span>
+<span class="op">set -euo pipefail</span>
+
+<span class="var">LOG</span>=<span class="var">${1:-"app.log"}</span>
+[[ -f <span class="str">"<span class="var">$LOG</span>"</span> ]] || { <span class="cmd">echo</span> <span class="str">"Error: no es troba '<span class="var">$LOG</span>'"</span> &gt;&amp;<span class="num">2</span>; <span class="kw">exit</span> <span class="num">1</span>; }
+
+<span class="cmd">echo</span> <span class="str">"=== Anàlisi de: <span class="var">$LOG</span> ==="</span>
+<span class="cmd">echo</span>
+
+<span class="cm"># Comptador per nivell</span>
+<span class="cmd">echo</span> <span class="str">"--- Resum per nivell ---"</span>
+<span class="kw">for</span> <span class="var">nivell</span> <span class="kw">in</span> INFO WARN ERROR; <span class="kw">do</span>
+    <span class="var">count</span>=<span class="var">$(grep -c "\[$nivell\]" "$LOG" || true)</span>
+    <span class="cmd">printf</span> <span class="str">"  %-5s : %d línies\n"</span> <span class="var">$nivell</span> <span class="var">$count</span>
+<span class="kw">done</span>
+<span class="cmd">echo</span>
+
+<span class="cm"># Últims 5 errors</span>
+<span class="cmd">echo</span> <span class="str">"--- Últims 5 errors ---"</span>
+<span class="cmd">grep</span> <span class="str">"\[ERROR\]"</span> <span class="str">"<span class="var">$LOG</span>"</span> | <span class="cmd">tail</span> -n <span class="num">5</span>
+<span class="cmd">echo</span>
+
+<span class="cm"># Primera i última entrada</span>
+<span class="cmd">echo</span> <span class="str">"--- Rang de temps ---"</span>
+<span class="var">primera</span>=<span class="var">$(head -n 1 "$LOG" | awk '{print $1, $2}')</span>
+<span class="var">ultima</span>=<span class="var">$(tail -n 1 "$LOG" | awk '{print $1, $2}')</span>
+<span class="cmd">echo</span> <span class="str">"  Primera entrada: <span class="var">$primera</span>"</span>
+<span class="cmd">echo</span> <span class="str">"  Última entrada:  <span class="var">$ultima</span>"</span></code></pre>
+    </div>
+  </div>
+
+  <!-- EX 4 -->
+  <div class="ex">
+    <div class="ex-head">
+      <span class="ex-badge mitjà">Mitjà</span>
+      <span class="ex-title">Ex. 4 — Organitzador de fitxers per extensió</span>
+    </div>
+    <p>Escriu un script que organitzi tots els fitxers d'un directori (passat com a argument) en subdirectoris per extensió. Per exemple: <code>foto.jpg</code> va a <code>jpg/foto.jpg</code>, <code>doc.pdf</code> va a <code>pdf/doc.pdf</code>.</p>
+    <ul>
+      <li>Ha de ignorar els directoris (només mou fitxers)</li>
+      <li>Si no hi ha extensió, el fitxer va a <code>sense_extensio/</code></li>
+      <li>Mostra quants fitxers ha mogut al final</li>
+    </ul>
+    <button class="sol-toggle" onclick="toggleSol(this)">▶ Veure solució</button>
+    <div class="sol-body">
+      <pre><code><span class="ll sol">Solució</span><span class="op">#!/usr/bin/env bash</span>
+<span class="op">set -euo pipefail</span>
+
+<span class="var">DIR</span>=<span class="var">${1:-.}</span>    <span class="cm"># per defecte: directori actual</span>
+[[ -d <span class="str">"<span class="var">$DIR</span>"</span> ]] || { <span class="cmd">echo</span> <span class="str">"Error: '<span class="var">$DIR</span>' no és un directori"</span>; <span class="kw">exit</span> <span class="num">1</span>; }
+
+<span class="var">moguts</span>=<span class="num">0</span>
+
+<span class="kw">for</span> <span class="var">fitxer</span> <span class="kw">in</span> <span class="str">"<span class="var">$DIR</span>"</span>/*; <span class="kw">do</span>
+    <span class="cm"># Salta si no és un fitxer regular</span>
+    [[ -f <span class="str">"<span class="var">$fitxer</span>"</span> ]] || <span class="kw">continue</span>
+
+    <span class="var">nom</span>=<span class="var">$(basename "$fitxer")</span>
+    <span class="var">ext</span>=<span class="var">${nom##*.}</span>
+
+    <span class="cm"># Si nom i ext són iguals, no té extensió</span>
+    <span class="kw">if</span> [[ <span class="str">"<span class="var">$nom</span>"</span> == <span class="str">"<span class="var">$ext</span>"</span> ]]; <span class="kw">then</span>
+        <span class="var">ext</span>=<span class="str">"sense_extensio"</span>
+    <span class="kw">fi</span>
+
+    <span class="var">desti</span>=<span class="str">"<span class="var">$DIR</span>/<span class="var">$ext</span>"</span>
+    <span class="cmd">mkdir</span> -p <span class="str">"<span class="var">$desti</span>"</span>
+    <span class="cmd">mv</span> <span class="str">"<span class="var">$fitxer</span>"</span> <span class="str">"<span class="var">$desti</span>/<span class="var">$nom</span>"</span>
+    <span class="var">(( moguts++ ))</span>
+    <span class="cmd">echo</span> <span class="str">"  <span class="var">$nom</span> → <span class="var">$ext</span>/"</span>
+<span class="kw">done</span>
+
+<span class="cmd">echo</span>
+<span class="cmd">echo</span> <span class="str">"Total: <span class="var">$moguts</span> fitxer(s) organitzat(s)"</span></code></pre>
+    </div>
+  </div>
+
+  <!-- EX 5 -->
+  <div class="ex">
+    <div class="ex-head">
+      <span class="ex-badge avançat">Avançat</span>
+      <span class="ex-title">Ex. 5 — Script de desplegament senzill</span>
+    </div>
+    <p>Crea un script de desplegament que:</p>
+    <ul>
+      <li>Accepti un argument: l'entorn (<code>dev</code>, <code>staging</code>, <code>prod</code>)</li>
+      <li>Per a <code>prod</code>, demani confirmació explícita a l'usuari</li>
+      <li>Faci una còpia de seguretat del directori de desplegament actual</li>
+      <li>Copiï els fitxers nous al directori de desplegament</li>
+      <li>Registri totes les accions en un fitxer de log</li>
+      <li>En cas d'error, restauri la còpia de seguretat automàticament</li>
+    </ul>
+    <button class="sol-toggle" onclick="toggleSol(this)">▶ Veure solució</button>
+    <div class="sol-body">
+      <pre><code><span class="ll sol">Solució</span><span class="op">#!/usr/bin/env bash</span>
+<span class="op">set -euo pipefail</span>
+
+<span class="cm"># Configuració</span>
+<span class="var">ENTORNS_VALIDS</span>=(<span class="str">"dev"</span> <span class="str">"staging"</span> <span class="str">"prod"</span>)
+<span class="var">DIR_FONT</span>=<span class="str">"./dist"</span>
+<span class="var">DIR_DESTI_BASE</span>=<span class="str">"/var/www"</span>
+<span class="var">LOG</span>=<span class="str">"deploy_<span class="var">$(date +%Y%m%d)</span>.log"</span>
+<span class="var">BACKUP</span>=<span class="str">""</span>
+
+<span class="fn2">log</span>() {
+    <span class="var">msg</span>=<span class="str">"[<span class="var">$(date +%H:%M:%S)</span>] <span class="var">$*</span>"</span>
+    <span class="cmd">echo</span> <span class="str">"<span class="var">$msg</span>"</span>
+    <span class="cmd">echo</span> <span class="str">"<span class="var">$msg</span>"</span> &gt;&gt; <span class="str">"<span class="var">$LOG</span>"</span>
+}
+
+<span class="fn2">restaurar</span>() {
+    <span class="kw">if</span> [[ -n <span class="str">"<span class="var">$BACKUP</span>"</span> && -d <span class="str">"<span class="var">$BACKUP</span>"</span> ]]; <span class="kw">then</span>
+        <span class="fn2">log</span> <span class="str">"ERROR detectat. Restaurant backup..."</span>
+        <span class="cmd">rm</span> -rf <span class="str">"<span class="var">$DIR_DESTI</span>"</span>
+        <span class="cmd">mv</span> <span class="str">"<span class="var">$BACKUP</span>"</span> <span class="str">"<span class="var">$DIR_DESTI</span>"</span>
+        <span class="fn2">log</span> <span class="str">"Backup restaurat a <span class="var">$DIR_DESTI</span>"</span>
+    <span class="kw">fi</span>
+}
+<span class="kw">trap</span> restaurar ERR
+
+<span class="cm"># Validació d'arguments</span>
+[[ <span class="var">$#</span> -ne <span class="num">1</span> ]] && { <span class="cmd">echo</span> <span class="str">"Ús: <span class="var">$0</span> &lt;dev|staging|prod&gt;"</span>; <span class="kw">exit</span> <span class="num">1</span>; }
+<span class="var">ENTORN</span>=<span class="str">"<span class="var">$1</span>"</span>
+
+<span class="var">valid</span>=<span class="kw">false</span>
+<span class="kw">for</span> <span class="var">e</span> <span class="kw">in</span> <span class="str">"<span class="var">${ENTORNS_VALIDS[@]}</span>"</span>; <span class="kw">do</span>
+    [[ <span class="str">"<span class="var">$ENTORN</span>"</span> == <span class="str">"<span class="var">$e</span>"</span> ]] && <span class="var">valid</span>=<span class="kw">true</span>
+<span class="kw">done</span>
+[[ <span class="str">"<span class="var">$valid</span>"</span> == <span class="kw">true</span> ]] || { <span class="cmd">echo</span> <span class="str">"Entorn invàlid: <span class="var">$ENTORN</span>"</span>; <span class="kw">exit</span> <span class="num">1</span>; }
+
+<span class="var">DIR_DESTI</span>=<span class="str">"<span class="var">$DIR_DESTI_BASE</span>/<span class="var">$ENTORN</span>"</span>
+
+<span class="cm"># Confirmació per a producció</span>
+<span class="kw">if</span> [[ <span class="str">"<span class="var">$ENTORN</span>"</span> == <span class="str">"prod"</span> ]]; <span class="kw">then</span>
+    <span class="cmd">echo</span> -e <span class="str">"\e[31m⚠ ATENCIÓ: Estàs desplegant a PRODUCCIÓ!\e[0m"</span>
+    <span class="cmd">read</span> -r -p <span class="str">"Escriu 'DESPLEGAR' per confirmar: "</span> <span class="var">conf</span>
+    [[ <span class="str">"<span class="var">$conf</span>"</span> == <span class="str">"DESPLEGAR"</span> ]] || { <span class="fn2">log</span> <span class="str">"Desplegament cancel·lat"</span>; <span class="kw">exit</span> <span class="num">0</span>; }
+<span class="kw">fi</span>
+
+<span class="fn2">log</span> <span class="str">"Iniciant desplegament a <span class="var">$ENTORN</span>..."</span>
+
+<span class="cm"># Còpia de seguretat</span>
+<span class="kw">if</span> [[ -d <span class="str">"<span class="var">$DIR_DESTI</span>"</span> ]]; <span class="kw">then</span>
+    <span class="var">BACKUP</span>=<span class="str">"<span class="var">$DIR_DESTI</span>_backup_<span class="var">$(date +%Y%m%d_%H%M%S)</span>"</span>
+    <span class="cmd">cp</span> -r <span class="str">"<span class="var">$DIR_DESTI</span>"</span> <span class="str">"<span class="var">$BACKUP</span>"</span>
+    <span class="fn2">log</span> <span class="str">"Backup creat: <span class="var">$BACKUP</span>"</span>
+<span class="kw">fi</span>
+
+<span class="cm"># Desplegament</span>
+<span class="cmd">mkdir</span> -p <span class="str">"<span class="var">$DIR_DESTI</span>"</span>
+<span class="cmd">cp</span> -r <span class="str">"<span class="var">$DIR_FONT</span>"</span>/. <span class="str">"<span class="var">$DIR_DESTI</span>"</span>/
+<span class="fn2">log</span> <span class="str">"Fitxers desplegats a <span class="var">$DIR_DESTI</span>"</span>
+
+<span class="cm"># Elimina backup si tot ha anat bé</span>
+[[ -n <span class="str">"<span class="var">$BACKUP</span>"</span> ]] && <span class="cmd">rm</span> -rf <span class="str">"<span class="var">$BACKUP</span>"</span>
+<span class="fn2">log</span> <span class="str">"Desplegament completat amb èxit! ✓"</span></code></pre>
+    </div>
+  </div>
+
+  <!-- EX 6 -->
+  <div class="ex">
+    <div class="ex-head">
+      <span class="ex-badge avançat">Avançat</span>
+      <span class="ex-title">Ex. 6 — Menú interactiu</span>
+    </div>
+    <p>Crea un script amb un menú interactiu que ofereixi les opcions: (1) mostrar informació del sistema, (2) llistar els 10 processos que més CPU consumeixen, (3) cercar un fitxer al sistema, (4) sortir. El menú ha de repetir-se fins que l'usuari triï sortir.</p>
+    <button class="sol-toggle" onclick="toggleSol(this)">▶ Veure solució</button>
+    <div class="sol-body">
+      <pre><code><span class="ll sol">Solució</span><span class="op">#!/usr/bin/env bash</span>
+
+<span class="fn2">info_sistema</span>() {
+    <span class="cmd">echo</span> <span class="str">"=== Informació del sistema ==="</span>
+    <span class="cmd">echo</span> <span class="str">"Hostname:  <span class="var">$(hostname)</span>"</span>
+    <span class="cmd">echo</span> <span class="str">"Kernel:    <span class="var">$(uname -r)</span>"</span>
+    <span class="cmd">echo</span> <span class="str">"Uptime:    <span class="var">$(uptime -p)</span>"</span>
+    <span class="cmd">echo</span> <span class="str">"CPU:       <span class="var">$(nproc)</span> nuclis"</span>
+    <span class="cmd">echo</span> <span class="str">"Memòria:   <span class="var">$(free -h | grep Mem | awk '{print $2}')</span> total"</span>
+    <span class="cmd">echo</span> <span class="str">"Disc /:    <span class="var">$(df -h / | tail -1 | awk '{print $3"/"$2" ("$5")"}')</span>"</span>
+}
+
+<span class="fn2">top_processos</span>() {
+    <span class="cmd">echo</span> <span class="str">"=== Top 10 processos (CPU) ==="</span>
+    <span class="cmd">ps</span> aux --sort=-%cpu | <span class="cmd">head</span> -n <span class="num">11</span> | \
+        <span class="cmd">awk</span> <span class="str">'NR==1{printf "%-8s %-6s %-6s %s\n",$1,$2,$3,$11} NR>1{printf "%-8s %-6s %-6s %s\n",$1,$2,$3,$11}'</span>
+}
+
+<span class="fn2">cercar_fitxer</span>() {
+    <span class="cmd">read</span> -r -p <span class="str">"Nom del fitxer a cercar: "</span> <span class="var">nom</span>
+    <span class="cmd">echo</span> <span class="str">"Cercant '<span class="var">$nom</span>'..."</span>
+    <span class="cmd">find</span> / -name <span class="str">"<span class="var">$nom</span>"</span> <span class="num">2</span>&gt;/dev/null | <span class="cmd">head</span> -<span class="num">20</span>
+}
+
+<span class="kw">while</span> <span class="kw">true</span>; <span class="kw">do</span>
+    <span class="cmd">echo</span>
+    <span class="cmd">echo</span> -e <span class="str">"\e[32m╔══════════════════════╗\e[0m"</span>
+    <span class="cmd">echo</span> -e <span class="str">"\e[32m║   MENÚ PRINCIPAL     ║\e[0m"</span>
+    <span class="cmd">echo</span> -e <span class="str">"\e[32m╠══════════════════════╣\e[0m"</span>
+    <span class="cmd">echo</span> -e <span class="str">"\e[32m║\e[0m 1) Info del sistema   \e[32m║\e[0m"</span>
+    <span class="cmd">echo</span> -e <span class="str">"\e[32m║\e[0m 2) Top processos CPU  \e[32m║\e[0m"</span>
+    <span class="cmd">echo</span> -e <span class="str">"\e[32m║\e[0m 3) Cercar fitxer      \e[32m║\e[0m"</span>
+    <span class="cmd">echo</span> -e <span class="str">"\e[32m║\e[0m 4) Sortir             \e[32m║\e[0m"</span>
+    <span class="cmd">echo</span> -e <span class="str">"\e[32m╚══════════════════════╝\e[0m"</span>
+    <span class="cmd">read</span> -r -p <span class="str">"Opció [1-4]: "</span> <span class="var">opcio</span>
+
+    <span class="kw">case</span> <span class="var">$opcio</span> <span class="kw">in</span>
+        <span class="num">1</span>) <span class="fn2">info_sistema</span> ;;
+        <span class="num">2</span>) <span class="fn2">top_processos</span> ;;
+        <span class="num">3</span>) <span class="fn2">cercar_fitxer</span> ;;
+        <span class="num">4</span>) <span class="cmd">echo</span> <span class="str">"Fins aviat!"</span>; <span class="kw">exit</span> <span class="num">0</span> ;;
+        *) <span class="cmd">echo</span> -e <span class="str">"\e[31mOpció invàlida\e[0m"</span> ;;
+    <span class="kw">esac</span>
+<span class="kw">done</span></code></pre>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ CHECKLIST ══════════ -->
+<section id="checklist" class="pg">
+  <div class="hero">
+    <h2>Llista de <span>Verificació</span></h2>
+    <p>Fes servir aquesta llista per comprovar el teu progrés. Clica cada element quan l'hagis dominat.</p>
+  </div>
+
+  <div class="stitle">Fonaments</div>
+  <ul class="checklist">
+    <li><span class="chk" onclick="toggleCheck(this)"></span><span>Sé crear un script amb el shebang <code>#!/usr/bin/env bash</code> i donar-li permisos d'execució</span></li>
+    <li><span class="chk" onclick="toggleCheck(this)"></span><span>Entenc la diferència entre <code>./script.sh</code>, <code>bash script.sh</code> i <code>source script.sh</code></span></li>
+    <li><span class="chk" onclick="toggleCheck(this)"></span><span>Sé usar variables (assignació sense espais, ús amb <code>$</code>, cometes dobles)</span></li>
+    <li><span class="chk" onclick="toggleCheck(this)"></span><span>Entenc les variables especials: <code>$1</code>, <code>$@</code>, <code>$#</code>, <code>$?</code>, <code>$$</code></span></li>
+    <li><span class="chk" onclick="toggleCheck(this)"></span><span>Sé fer aritmètica amb <code>$(( ))</code> i càlculs decimals amb <code>bc</code></span></li>
+    <li><span class="chk" onclick="toggleCheck(this)"></span><span>Sé llegir entrada de l'usuari amb <code>read</code></span></li>
+    <li><span class="chk" onclick="toggleCheck(this)"></span><span>Entenc la redirecció (<code>&gt;</code>, <code>&gt;&gt;</code>, <code>2&gt;</code>, <code>&amp;&gt;</code>) i els pipes (<code>|</code>)</span></li>
+  </ul>
+
+  <div class="stitle">Control de Flux</div>
+  <ul class="checklist">
+    <li><span class="chk" onclick="toggleCheck(this)"></span><span>Sé escriure condicionals <code>if/elif/else</code> amb <code>[[ ]]</code></span></li>
+    <li><span class="chk" onclick="toggleCheck(this)"></span><span>Conec els operadors de comparació per a números, cadenes i fitxers</span></li>
+    <li><span class="chk" onclick="toggleCheck(this)"></span><span>Sé usar <code>case</code> per gestionar múltiples opcions</span></li>
+    <li><span class="chk" onclick="toggleCheck(this)"></span><span>Sé escriure bucles <code>for</code> (ranges, llistes, fitxers) i <code>while</code></span></li>
+    <li><span class="chk" onclick="toggleCheck(this)"></span><span>Sé llegir un fitxer línia per línia amb <code>while IFS= read -r</code></span></li>
+    <li><span class="chk" onclick="toggleCheck(this)"></span><span>Sé definir funcions amb variables <code>local</code> i retornar valors amb <code>echo</code></span></li>
+  </ul>
+
+  <div class="stitle">Eines i Robustesa</div>
+  <ul class="checklist">
+    <li><span class="chk" onclick="toggleCheck(this)"></span><span>Sempre poso <code>set -euo pipefail</code> als meus scripts</span></li>
+    <li><span class="chk" onclick="toggleCheck(this)"></span><span>Sé usar <code>trap</code> per netejar recursos en sortir o en cas d'error</span></li>
+    <li><span class="chk" onclick="toggleCheck(this)"></span><span>Sé parsear arguments amb un bucle <code>while/case</code></span></li>
+    <li><span class="chk" onclick="toggleCheck(this)"></span><span>Domino les expansions de cadenes: <code>${#var}</code>, <code>${var##*.}</code>, <code>${var/a/b}</code></span></li>
+    <li><span class="chk" onclick="toggleCheck(this)"></span><span>Sé usar <code>grep</code>, <code>sed</code>, <code>awk</code> i <code>cut</code> per processar text</span></li>
+    <li><span class="chk" onclick="toggleCheck(this)"></span><span>Sé usar arrays indexats i associatius</span></li>
+    <li><span class="chk" onclick="toggleCheck(this)"></span><span>He completat tots els exercicis d'aquesta guia</span></li>
+    <li><span class="chk" onclick="toggleCheck(this)"></span><span>He escrit almenys un script real que resol un problema propi</span></li>
+  </ul>
+
+  <div class="stitle">Recursos addicionals</div>
+  <div class="card">
+    <h3>📖 Per continuar aprenent</h3>
+    <ul>
+      <li><strong><a href="https://www.gnu.org/software/bash/manual/bash.html">Manual oficial de GNU Bash</a></strong> — La referència completa de Bash</li>
+      <li><strong><a href="https://mywiki.wooledge.org/BashGuide">Bash Guide (Wooledge)</a></strong> — Guia pràctica amb explicacions profundes, molt recomanada</li>
+      <li><strong><a href="https://www.shellcheck.net">ShellCheck</a></strong> — Analitzador estàtic online; posa sempre els teus scripts aquí</li>
+      <li><strong><a href="https://explainshell.com">explainshell.com</a></strong> — Enganxa qualsevol ordre i t'explica cada part</li>
+      <li><strong><a href="https://learnxinyminutes.com/docs/bash/">Learn X in Y Minutes: Bash</a></strong> — Resum ràpid de referència</li>
+    </ul>
+  </div>
+  <div class="cl bash"><span class="ci">🐚</span><div>Instal·la <strong>ShellCheck</strong> localment (<code>sudo apt install shellcheck</code>) i integra'l al teu editor. T'estalviarà hores depurant errors comuns. Executa <code>shellcheck script.sh</code> abans de desplegar qualsevol script a producció.</div></div>
+</section>
+
+</main>
+
+<script>
+const pages=['intro','primers-passos','variables','entrada-sortida','condicionals','bucles','funcions','arrays','text','fitxers','errors','scripts-utils','exercicis','checklist'];
+function sp(id){
+  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.sb-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.currentTarget.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(window.innerWidth<=860) document.getElementById('sb').classList.remove('open');
+  document.getElementById('prog').style.width=((pages.indexOf(id)+1)/pages.length*100)+'%';
+}
+function toggleSB(){document.getElementById('sb').classList.toggle('open')}
+function toggleCheck(el){el.classList.toggle('done');el.textContent=el.classList.contains('done')?'✓':'';}
+function toggleSol(btn){
+  const body=btn.nextElementSibling;
+  const open=body.classList.toggle('open');
+  btn.textContent=open?'▼ Amagar solució':'▶ Veure solució';
+}
+window.addEventListener('click',e=>{
+  if(window.innerWidth<=860&&!e.target.closest('#sb')&&!e.target.closest('#mbtoggle'))
+    document.getElementById('sb').classList.remove('open');
+});
+document.getElementById('prog').style.width=((1/pages.length)*100)+'%';
+</script>
+</body>
+</html>

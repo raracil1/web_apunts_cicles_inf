@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PT4 — Servidor d'Impressió PDF: CUPS + Zentyal · M0374</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0d0f1a;--paper:#f4f2ed;--cream:#eceae3;--navy:#1a1f4e;
+    --cobalt:#2d3bb5;--accent:#0d7c60;--accentd:#085542;--accentl:#1aab88;
+    --green:#0ea472;--red:#dc2626;--teal:#0891b2;--orange:#e07b20;--purple:#7c3aed;
+    --muted:#6b6f85;--border:#d6d2c9;--card:#ffffff;--terminal:#0d1117;
+    --radius:16px;--radius-sm:8px;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);font-size:16px;line-height:1.7;overflow-x:hidden;}
+
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(244,242,237,0.95);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:62px;}
+  .nav-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;color:var(--navy);letter-spacing:-0.02em;}
+  .nav-logo span{color:var(--accent);}
+  .nav-pills{display:flex;gap:.5rem;list-style:none;flex-wrap:wrap;}
+  .nav-pills a{text-decoration:none;font-size:0.78rem;font-weight:600;padding:.3rem .85rem;border-radius:100px;color:var(--muted);transition:all .2s;border:1px solid transparent;}
+  .nav-pills a:hover{color:var(--accent);border-color:var(--accent);background:rgba(13,124,96,0.07);}
+
+  .hero{min-height:100vh;display:grid;place-items:center;background:var(--navy);color:white;position:relative;overflow:hidden;padding:8rem 2rem 5rem;}
+  .hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 55% 45% at 80% 20%,rgba(13,124,96,0.38) 0%,transparent 65%),radial-gradient(ellipse 50% 40% at 15% 75%,rgba(8,145,178,0.2) 0%,transparent 65%),radial-gradient(ellipse 40% 35% at 55% 95%,rgba(124,58,237,0.12) 0%,transparent 60%);}
+  .hero-dots{position:absolute;inset:0;opacity:0.06;background-image:radial-gradient(rgba(255,255,255,.7) 1px,transparent 1px);background-size:28px 28px;}
+  .hero-content{position:relative;z-index:1;text-align:center;max-width:860px;}
+  .pt-badge{display:inline-flex;align-items:center;gap:.75rem;background:rgba(13,124,96,0.18);border:1px solid rgba(26,171,136,0.4);color:#6ee7b7;font-family:'JetBrains Mono',monospace;font-size:0.78rem;font-weight:700;letter-spacing:0.1em;padding:.45rem 1.2rem;border-radius:100px;margin-bottom:1.5rem;}
+  .pt-badge .dot{width:8px;height:8px;border-radius:50%;background:#6ee7b7;animation:blink 1.4s ease-in-out infinite;}
+  @keyframes blink{0%,100%{opacity:.3}50%{opacity:1}}
+  .hero h1{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(2.4rem,6vw,4.6rem);line-height:1.05;letter-spacing:-0.03em;margin-bottom:1.25rem;}
+  .hero h1 .hi{color:#6ee7b7;}
+  .hero h1 .lo{color:rgba(255,255,255,.45);font-size:0.65em;display:block;font-weight:600;margin-top:.3rem;letter-spacing:-.01em;}
+  .hero-sub{font-size:1.05rem;color:rgba(255,255,255,0.55);max-width:600px;margin:0 auto 2rem;}
+  .ra-pills{display:flex;justify-content:center;gap:.75rem;flex-wrap:wrap;margin-bottom:2.5rem;}
+  .ra-pill{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);padding:.35rem 1rem;border-radius:100px;font-size:0.78rem;font-weight:600;color:rgba(255,255,255,.75);font-family:'JetBrains Mono',monospace;}
+  .ra-pill.active{background:rgba(13,124,96,0.22);border-color:rgba(26,171,136,0.5);color:#6ee7b7;}
+  .hero-meta{display:flex;justify-content:center;gap:2rem;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,0.1);padding-top:2rem;margin-top:2rem;}
+  .meta-item .label{font-size:0.68rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:.2rem;}
+  .meta-item .value{font-size:0.95rem;font-weight:600;color:rgba(255,255,255,0.85);}
+  .scroll-hint{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.4rem;color:rgba(255,255,255,0.25);font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;}
+  .scroll-hint::after{content:'';display:block;width:1px;height:38px;background:linear-gradient(to bottom,rgba(255,255,255,.3),transparent);animation:pulse 2s ease-in-out infinite;}
+  @keyframes pulse{0%,100%{opacity:.2}50%{opacity:.9}}
+
+  section{padding:5.5rem 2rem;}
+  .container{max-width:1060px;margin:0 auto;}
+  .section-tag{font-size:0.7rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;display:flex;align-items:center;gap:.5rem;margin-bottom:.85rem;}
+  .section-tag::before{content:'';display:block;width:20px;height:2px;}
+  .tag-green{color:var(--accent);}.tag-green::before{background:var(--accent);}
+  .tag-blue{color:var(--cobalt);}.tag-blue::before{background:var(--cobalt);}
+  .tag-orange{color:var(--orange);}.tag-orange::before{background:var(--orange);}
+  .tag-purple{color:var(--purple);}.tag-purple::before{background:var(--purple);}
+  .tag-teal{color:var(--teal);}.tag-teal::before{background:var(--teal);}
+
+  h2{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(1.65rem,3.5vw,2.5rem);line-height:1.1;letter-spacing:-0.025em;color:var(--navy);margin-bottom:.85rem;}
+  h3{font-family:'Syne',sans-serif;font-weight:700;font-size:1.12rem;color:var(--navy);margin-bottom:.6rem;}
+  h4{font-family:'Syne',sans-serif;font-weight:700;font-size:0.95rem;color:var(--navy);margin-bottom:.4rem;}
+  .lead{font-size:1.02rem;color:var(--muted);max-width:700px;margin-bottom:2.8rem;line-height:1.75;}
+
+  .grid{display:grid;gap:1.2rem;}
+  .g2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr));}
+  .g3{grid-template-columns:repeat(auto-fit,minmax(230px,1fr));}
+  .g4{grid-template-columns:repeat(auto-fit,minmax(200px,1fr));}
+
+  .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.65rem;transition:transform .2s,box-shadow .2s;}
+  .card:hover{transform:translateY(-3px);box-shadow:0 12px 32px rgba(26,31,78,0.09);}
+  .card p{color:var(--muted);font-size:0.91rem;}
+  .card-icon{width:42px;height:42px;border-radius:10px;display:grid;place-items:center;font-size:1.25rem;margin-bottom:.85rem;}
+  .bl-green{border-left:3px solid var(--accent);}
+  .bl-blue{border-left:3px solid var(--cobalt);}
+  .bl-orange{border-left:3px solid var(--orange);}
+  .bl-purple{border-left:3px solid var(--purple);}
+  .bl-teal{border-left:3px solid var(--teal);}
+
+  .terminal{background:var(--terminal);border-radius:var(--radius);overflow:hidden;margin:1.25rem 0;border:1px solid rgba(255,255,255,0.06);box-shadow:0 8px 32px rgba(0,0,0,0.35);}
+  .terminal-bar{background:#1c2128;padding:.65rem 1rem;display:flex;align-items:center;gap:.5rem;border-bottom:1px solid rgba(255,255,255,0.06);}
+  .t-dot{width:12px;height:12px;border-radius:50%;}
+  .t-red{background:#ff5f57;}.t-yellow{background:#febc2e;}.t-green-d{background:#28c840;}
+  .terminal-label{margin-left:.5rem;font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:rgba(255,255,255,.3);}
+  .terminal-body{padding:1.25rem 1.5rem;font-family:'JetBrains Mono',monospace;font-size:0.8rem;line-height:1.85;color:#c9d1d9;}
+  .t-prompt{color:#3fb950;}.t-cmd{color:#79c0ff;}.t-arg{color:#ffa657;}.t-cmt{color:#6e7681;}.t-str{color:#57e3b0;}.t-url{color:#79c0ff;}
+
+  .callout{border-radius:var(--radius);padding:1.75rem 2rem;margin:1.25rem 0;display:flex;gap:1rem;align-items:flex-start;}
+  .callout-icon{font-size:1.35rem;flex-shrink:0;margin-top:.05rem;}
+  .callout p,.callout li{font-size:0.91rem;}
+  .callout ul{padding-left:1.2rem;}
+  .callout li{margin-bottom:.25rem;}
+  .cl-blue{background:rgba(74,108,247,0.08);border:1px solid rgba(74,108,247,0.2);}
+  .cl-green{background:rgba(13,124,96,0.07);border:1px solid rgba(13,124,96,0.22);}
+  .cl-amber{background:rgba(251,188,4,0.08);border:1px solid rgba(251,188,4,0.28);}
+  .cl-red{background:rgba(220,38,38,0.07);border:1px solid rgba(220,38,38,0.2);}
+  .cl-teal{background:rgba(8,145,178,0.07);border:1px solid rgba(8,145,178,0.2);}
+  .cl-orange{background:rgba(224,123,32,0.07);border:1px solid rgba(224,123,32,0.22);}
+
+  .ex{background:var(--cream);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.9rem 1.15rem;margin:.6rem 0;}
+  .ex-lbl{font-size:0.67rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.28rem;color:var(--accent);}
+  .ex p{font-size:0.86rem;color:var(--ink);}
+
+  .badge{display:inline-block;padding:.15rem .55rem;border-radius:100px;font-size:0.7rem;font-weight:700;font-family:'Syne',sans-serif;}
+  .b-green{background:rgba(13,124,96,0.12);color:var(--accentd);}
+  .b-blue{background:rgba(74,108,247,0.12);color:var(--cobalt);}
+  .b-orange{background:rgba(224,123,32,0.12);color:#7a3e00;}
+  .b-red{background:rgba(220,38,38,0.12);color:#991b1b;}
+  .b-purple{background:rgba(124,58,237,0.12);color:#5b21b6;}
+  .b-teal{background:rgba(8,145,178,0.12);color:#065f79;}
+  .b-amber{background:rgba(251,188,4,0.15);color:#8a6500;}
+
+  .s-dark{background:var(--navy);color:white;}
+  .s-dark h2,.s-dark h3,.s-dark h4{color:white;}
+  .s-dark .lead{color:rgba(255,255,255,.55);}
+  .s-dark .card{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.1);}
+  .s-dark .card h3,.s-dark .card h4{color:white;}
+  .s-dark .card p{color:rgba(255,255,255,.6);}
+  .s-dark .ex{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.1);}
+  .s-dark .ex p{color:rgba(255,255,255,.75);}
+  .s-cream{background:var(--cream);}
+  .s-green{background:#f0fdf9;}
+
+  .ptable{width:100%;border-collapse:collapse;font-size:0.87rem;}
+  .ptable th,.ptable td{padding:.8rem 1rem;text-align:left;border-bottom:1px solid var(--border);}
+  .ptable th{background:var(--navy);color:white;font-family:'Syne',sans-serif;font-weight:700;font-size:0.82rem;}
+  .ptable th:first-child{border-radius:8px 0 0 0;}.ptable th:last-child{border-radius:0 8px 0 0;}
+  .ptable tr:hover td{background:var(--cream);}
+
+  .task-list{display:flex;flex-direction:column;gap:1.1rem;}
+  .task{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem 1.75rem;display:flex;gap:1.25rem;align-items:flex-start;transition:box-shadow .2s;}
+  .task:hover{box-shadow:0 6px 24px rgba(26,31,78,0.08);}
+  .task-num{flex-shrink:0;width:36px;height:36px;border-radius:50%;background:var(--navy);color:white;display:grid;place-items:center;font-family:'Syne',sans-serif;font-weight:800;font-size:0.85rem;}
+  .task-num.amp{background:linear-gradient(135deg,#5b21b6,#7c3aed);}
+  .task-body h4{margin-bottom:.4rem;}
+  .task-body p{color:var(--muted);font-size:0.91rem;}
+  .task-tags{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.6rem;}
+
+  /* Flux diagram */
+  .flow{display:flex;align-items:stretch;gap:0;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin:1.5rem 0;flex-wrap:wrap;}
+  .flow-node{flex:1;padding:1.4rem .9rem;text-align:center;font-size:0.82rem;min-width:110px;}
+  .flow-node .icon{font-size:1.8rem;margin-bottom:.4rem;}
+  .flow-node .lbl{font-family:'Syne',sans-serif;font-weight:700;font-size:0.82rem;color:var(--navy);}
+  .flow-node .sub{color:var(--muted);font-size:0.72rem;margin-top:.2rem;}
+  .flow-arrow{display:flex;align-items:center;padding:0 .25rem;color:var(--muted);font-size:1.2rem;flex-shrink:0;}
+  .fn-a{background:rgba(13,124,96,0.06);}
+  .fn-b{background:rgba(8,145,178,0.06);}
+  .fn-c{background:rgba(224,123,32,0.06);}
+  .fn-d{background:rgba(124,58,237,0.06);}
+  .fn-e{background:rgba(220,38,38,0.06);}
+
+  .rubric-table{width:100%;border-collapse:collapse;font-size:0.84rem;}
+  .rubric-table th,.rubric-table td{padding:.75rem .9rem;border:1px solid var(--border);vertical-align:top;}
+  .rubric-table th{background:var(--navy);color:white;font-family:'Syne',sans-serif;font-weight:700;font-size:0.8rem;text-align:center;}
+  .rubric-table td:first-child{font-weight:600;color:var(--navy);background:var(--cream);}
+  .col-ex{background:rgba(14,164,114,0.05);}.col-be{background:rgba(74,108,247,0.04);}.col-ok{background:rgba(251,188,4,0.05);}.col-no{background:rgba(220,38,38,0.04);}
+
+  .q-list{display:flex;flex-direction:column;gap:.85rem;}
+  .q-item{display:flex;gap:1rem;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem 1.5rem;align-items:flex-start;}
+  .q-num{font-family:'Syne',sans-serif;font-weight:800;font-size:1.5rem;color:var(--border);line-height:1;flex-shrink:0;padding-top:.1rem;}
+  .q-item p{color:var(--ink);font-size:0.92rem;}
+  .q-item .hint{color:var(--muted);font-size:0.83rem;margin-top:.4rem;}
+
+  .fi{opacity:0;transform:translateY(20px);transition:opacity .5s ease,transform .5s ease;}
+  .fi.in{opacity:1;transform:translateY(0);}
+  footer{background:var(--ink);color:rgba(255,255,255,.4);text-align:center;padding:2.5rem 2rem;font-size:0.82rem;}
+  footer strong{color:rgba(255,255,255,.7);}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">M0374 · ASIX <span>PT4</span></div>
+  <ul class="nav-pills">
+    <li><a href="#context">Context</a></li>
+    <li><a href="#teoria">Teoria</a></li>
+    <li><a href="#tasques">Tasques</a></li>
+    <li><a href="#ampliacio">Ampliació</a></li>
+    <li><a href="#rubrica">Rúbrica</a></li>
+    <li><a href="#reflexio">Reflexió</a></li>
+  </ul>
+</nav>
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-dots"></div>
+  <div class="hero-content">
+    <div class="pt-badge"><span class="dot"></span>Pràctica PT4 · M0374</div>
+    <h1>
+      <span class="hi">Servidor d'Impressió PDF</span>
+      <span class="lo">CUPS-PDF · Permisos · Quotes · Xarxes Heterogènies</span>
+    </h1>
+    <p class="hero-sub">Implanta un servidor d'impressió virtual centralitzat sobre Zentyal, accessible des de Windows i Linux, amb control d'accés per grups, permisos d'usuari i quotes de documents per Bash scripting.</p>
+    <div class="ra-pills">
+      <div class="ra-pill active">RA7 · Compartició de recursos</div>
+      <div class="ra-pill active">RA8 · Permisos i quotes</div>
+      <div class="ra-pill">CUPS-PDF</div>
+      <div class="ra-pill">SMB/Samba</div>
+      <div class="ra-pill">Bash scripting</div>
+      <div class="ra-pill">Zentyal</div>
+    </div>
+    <div class="hero-meta">
+      <div class="meta-item"><div class="label">Mòdul</div><div class="value">M0374 · Sistemes Operatius</div></div>
+      <div class="meta-item"><div class="label">Curs</div><div class="value">ASIX · 1r</div></div>
+      <div class="meta-item"><div class="label">Durada estimada</div><div class="value">4–5 hores</div></div>
+      <div class="meta-item"><div class="label">Format</div><div class="value">Per grup</div></div>
+    </div>
+  </div>
+  <div class="scroll-hint">Desplaça</div>
+</section>
+
+<!-- CONTEXT -->
+<section id="context">
+  <div class="container">
+    <div class="section-tag tag-green fi">Context de la pràctica</div>
+    <h2 class="fi">Per a quin motiu és rellevant aquesta pràctica?</h2>
+    <p class="lead fi">En moltes empreses coexisteixen equips Windows i Linux. Gestionar la impressió de forma centralitzada, garantir que cada usuari accedeix únicament als seus documents i limitar el consum de recursos (quotes) és una tasca real d'un administrador de sistemes.</p>
+
+    <div class="callout cl-green fi">
+      <span class="callout-icon">💡</span>
+      <div>
+        <h4>Idees clau d'aquesta pràctica</h4>
+        <ul>
+          <li><strong>No hi ha impressora física:</strong> CUPS-PDF genera documents PDF com a resultat de cada "impressió".</li>
+          <li><strong>Tot es controla des del servidor:</strong> els usuaris imprimeixen des del client, però el PDF es genera i s'emmagatzema al servidor Zentyal.</li>
+          <li><strong>Permisos segregats:</strong> cada grup (alumnes / professors) accedeix únicament als seus documents PDF i a la seva impressora virtual.</li>
+          <li><strong>Quotes de documents:</strong> un script Bash limita el nombre de PDFs que cada usuari pot tenir emmagatzemats simultàniament.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="flow fi">
+      <div class="flow-node fn-a"><div class="icon">💻</div><div class="lbl">Client Win/Linux</div><div class="sub">Imprimeix a impressora de xarxa</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node fn-b"><div class="icon">🖨️</div><div class="lbl">CUPS-PDF</div><div class="sub">Genera PDF al servidor</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node fn-c"><div class="icon">⚙️</div><div class="lbl">Script post-proc.</div><div class="sub">Mou el PDF al directori correcte</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node fn-d"><div class="icon">📁</div><div class="lbl">Carpeta personal</div><div class="sub">Permisos 700 per usuari</div></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-node fn-e"><div class="icon">🌐</div><div class="lbl">SMB/Samba</div><div class="sub">Client accedeix al seu PDF</div></div>
+    </div>
+
+    <div class="callout cl-amber fi">
+      <span class="callout-icon">🎯</span>
+      <div>
+        <h4>Objectiu de la pràctica</h4>
+        <p>Implantar un servidor d'impressió PDF centralitzat al servidor Zentyal allotjat a Proxmox, configurat amb CUPS i accessible des de clients Windows 10 i Ubuntu Desktop 24.04, amb restriccions de permisos d'accés per grup i quotes d'impressió implementades amb Bash scripting.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TEORIA -->
+<section id="teoria" class="s-dark">
+  <div class="container">
+    <div class="section-tag tag-green fi" style="color:rgba(110,231,183,.9)">Conceptes teòrics previs</div>
+    <h2 class="fi">El que has de comprendre abans de començar</h2>
+    <p class="lead fi">Aquesta pràctica combina tres tecnologies: CUPS (servidor d'impressió), SMB/Samba (compartició de fitxers en xarxes heterogènies) i Bash scripting (automatització). Has d'entendre cadascuna per poder configurar-les correctament.</p>
+
+    <h3 class="fi" style="color:white;margin-bottom:1rem">CUPS: Common Unix Printing System</h3>
+    <div class="grid g2 fi">
+      <div class="card">
+        <h4>Arquitectura de CUPS</h4>
+        <p>CUPS és el sistema d'impressió estàndard de Linux i macOS. Funciona com un servidor d'impressió: les aplicacions envien documents a CUPS, que els processa i els envia a la impressora corresponent. Es gestiona amb una <strong>interfície web a http://localhost:631</strong>. Permet compartir impressores en xarxa amb protocols estàndard (IPP, Samba).</p>
+      </div>
+      <div class="card">
+        <h4>CUPS-PDF: la impressora virtual</h4>
+        <p><strong>CUPS-PDF</strong> és un backend de CUPS que, en lloc d'enviar el document a una impressora física, el converteix en un fitxer PDF i el desa a una ruta del sistema. És la solució estàndard per a entorns sense impressora física o per a arxivar documents en format PDF des de qualsevol aplicació.</p>
+        <div class="ex" style="background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.1);margin-top:.65rem">
+          <div class="ex-lbl" style="color:#6ee7b7">Cas d'ús real</div>
+          <p style="color:rgba(255,255,255,.75)">Una empresa volia que els comercials "imprimissin" els albarans directament en PDF al servidor, sense usar paper. CUPS-PDF va ser la solució.</p>
+        </div>
+      </div>
+      <div class="card">
+        <h4>El directori de sortida i el PostProcessing</h4>
+        <p>CUPS-PDF guarda el PDF a una ruta temporal. La directiva <code>Out</code> del fitxer <code>cups-pdf.conf</code> defineix on va el PDF. La directiva <code>PostProcessing</code> permet executar un script <strong>just després</strong> de generar el PDF: és l'eina que farem servir per moure cada PDF al directori correcte de cada usuari/grup.</p>
+      </div>
+      <div class="card">
+        <h4>Variables d'entorn de CUPS-PDF</h4>
+        <p>Quan CUPS-PDF executa el script de post-processat, li passa informació via variables d'entorn: <code>$USER</code> (l'usuari que ha imprès), <code>$PRINTER</code> (la impressora usada), <code>$FILE</code> (ruta al PDF temporal). El script ha de llegir i usar aquestes variables per prendre les decisions correctes.</p>
+      </div>
+    </div>
+
+    <h3 class="fi" style="color:white;margin-bottom:1rem;margin-top:2.5rem">SMB/Samba: compartició en xarxes heterogènies</h3>
+    <div class="grid g2 fi">
+      <div class="card">
+        <h4>Per a quin motiu SMB?</h4>
+        <p>SMB (Server Message Block) és el protocol que usa Windows per compartir fitxers i impressores en xarxa. Linux implementa SMB a través de <strong>Samba</strong>. Gràcies a Samba, un servidor Linux (com Zentyal) pot actuar com un servidor de fitxers i impressores completament transparent per a clients Windows, sense que l'usuari noti la diferència.</p>
+      </div>
+      <div class="card">
+        <h4>Accés des de Windows vs. Linux</h4>
+        <p>Des de <strong>Windows</strong>, s'accedeix als recursos compartits via l'explorador d'arxius: <code>\\IP_SERVIDOR\recurs</code>. Des de <strong>Linux</strong>, s'usa el muntatge SMB o l'accés via gestor de fitxers: <code>smb://IP_SERVIDOR/recurs</code>. En ambdós casos, el servidor Samba valida les credencials de l'usuari i aplica els permisos configurats.</p>
+      </div>
+    </div>
+
+    <h3 class="fi" style="color:white;margin-bottom:1rem;margin-top:2.5rem">Permisos POSIX i control d'accés</h3>
+    <div class="grid g3 fi">
+      <div class="card">
+        <h4>Permisos 700: carpeta privada</h4>
+        <p>El permís <code>700</code> significa: el propietari té lectura+escriptura+execució; el grup i la resta no tenen cap permís. Per a directoris d'usuari, és el permís adequat per garantir que <strong>ningú més pot accedir</strong> als documents.</p>
+        <div class="ex" style="background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.1);margin-top:.6rem"><div class="ex-lbl" style="color:#6ee7b7">Notació octal</div><p style="color:rgba(255,255,255,.75);font-family:'JetBrains Mono',monospace;font-size:.82rem">7 = rwx (propietari)<br>0 = --- (grup)<br>0 = --- (resta)</p></div>
+      </div>
+      <div class="card">
+        <h4>Propietari i grup del fitxer</h4>
+        <p>Cada fitxer i directori de Linux té un <strong>propietari</strong> (un usuari) i un <strong>grup</strong> associat. El script de post-processat ha d'assignar el propietari correcte a cada PDF generat (<code>chown usuari:usuari fitxer.pdf</code>) perquè l'usuari pugui llegir-lo a través de la compartició SMB.</p>
+      </div>
+      <div class="card">
+        <h4>Quotes de documents</h4>
+        <p>Una <strong>quota</strong> limita el nombre de recursos (en aquest cas, PDFs) que un usuari pot tenir. En aquesta pràctica, les quotes no es gestionen amb eines del kernel (com <code>quota</code>) sinó amb un <strong>script Bash</strong> que compta els PDFs existents i refusa la nova impressió si se supera el límit.</p>
+      </div>
+    </div>
+
+    <h3 class="fi" style="color:white;margin-bottom:1rem;margin-top:2.5rem">Bash Scripting: automatització al servidor</h3>
+    <div class="grid g2 fi">
+      <div class="card">
+        <h4>Per a quin motiu un script i no una solució manual?</h4>
+        <p>Sense script, el PDF quedaria en un directori temporal i ningú el podria trobar. El script de post-processat de CUPS-PDF és el <strong>cervell del sistema</strong>: llegeix variables d'entorn, decideix on mou el PDF (alumnes o professors), crea el directori si no existeix, aplica permisos i registra l'operació al log.</p>
+      </div>
+      <div class="card">
+        <h4>Conceptes de Bash que aplicaràs</h4>
+        <p>El professor t'explicarà el codi del script, però és important que entenguis: variables (<code>$VAR</code>), condicionals (<code>case/if</code>), comandes de fitxers (<code>mkdir -p</code>, <code>mv</code>, <code>chmod</code>, <code>chown</code>), redireccions (<code>&gt;&gt; log</code>) i substitució de comandes (<code>$(comanda)</code>). Cada element del script té un propòsit concret.</p>
+      </div>
+    </div>
+
+    <div class="callout cl-amber fi" style="margin-top:2rem">
+      <span class="callout-icon">⚠️</span>
+      <div>
+        <h4>Atenció: el professor guia el codi dels scripts</h4>
+        <p>El professor t'explicarà el contingut dels scripts de Bash i et guiarà per entendre que fa cada línia. El teu objectiu no és escriure el script des de zero, sinó <strong>entendre per a quin motiu cada part és necessària</strong> i ser capaç d'adaptar-la si és necessari. Documenta a la memòria la funció de cada secció del script.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TASQUES -->
+<section id="tasques" class="s-green">
+  <div class="container">
+    <div class="section-tag tag-green fi">Enunciat · Tasques principals</div>
+    <h2 class="fi">Tasques a realitzar</h2>
+    <p class="lead fi">El sistema que has de construir no té impressora física. Cada "impressió" d'un client genera un PDF al servidor, organitzat per usuari i grup, accessible només per a qui correspon. Documenta cada pas amb captures.</p>
+
+    <div class="task-list fi">
+      <div class="task">
+        <div class="task-num">1</div>
+        <div class="task-body">
+          <h4>Preparació del servidor: instal·lació i verificació de CUPS-PDF</h4>
+          <p>Instal·la el paquet <code>cups-pdf</code> al servidor Zentyal. Verifica que el servei CUPS està actiu i en execució. Accedeix a la interfície web d'administració de CUPS (port 631) i documenta l'aspecte del panell inicial. Per a quin motiu CUPS usa el port 631 i no el port 80 o 443?</p>
+          <div class="task-tags"><span class="badge b-green">cups-pdf</span><span class="badge b-blue">Port 631</span><span class="badge b-teal">systemctl</span></div>
+        </div>
+      </div>
+      <div class="task">
+        <div class="task-num">2</div>
+        <div class="task-body">
+          <h4>Creació de grups i usuaris</h4>
+          <p>Crea dos grups al servidor Zentyal: <strong>alumnes</strong> i <strong>professors</strong>. Crea almenys dos usuaris per a cada grup (4 usuaris en total). Documenta els noms d'usuari i a quin grup pertany cadascun. Pots crear els usuaris i grups des del panell de Zentyal o per línia de comandes: documenta quin mètode has usat i per a quin motiu.</p>
+          <div class="task-tags"><span class="badge b-green">Grups</span><span class="badge b-blue">Usuaris</span><span class="badge b-teal">Zentyal</span></div>
+        </div>
+      </div>
+      <div class="task">
+        <div class="task-num">3</div>
+        <div class="task-body">
+          <h4>Creació de les dues impressores virtuals PDF a CUPS</h4>
+          <p>Dins de la interfície web de CUPS, crea dues impressores virtuals: <strong>PDF_Alumnes</strong> i <strong>PDF_Professors</strong>. Ambdues usen el backend CUPS-PDF. Activa la compartició en xarxa de cadascuna. Pensa en com configuraries els permisos per que la impressora PDF_Alumnes no sigui accessible als professors i viceversa. Documenta la configuració de cada impressora amb captures.</p>
+          <div class="task-tags"><span class="badge b-green">CUPS web</span><span class="badge b-blue">PDF_Alumnes</span><span class="badge b-teal">PDF_Professors</span></div>
+        </div>
+      </div>
+      <div class="task">
+        <div class="task-num">4</div>
+        <div class="task-body">
+          <h4>Configuració del fitxer cups-pdf.conf i estructura de directoris</h4>
+          <p>Edita el fitxer de configuració de CUPS-PDF per definir: (a) el directori de sortida temporal on CUPS-PDF deixarà el PDF just en ser generat, i (b) la ruta al script de post-processat que s'executarà automàticament un cop generat el PDF. Crea l'estructura de directoris necessària al servidor per organitzar els PDFs per grup i per usuari. Pensa en quins permisos han de tenir els directoris base i per a quin motiu.</p>
+          <div class="task-tags"><span class="badge b-green">cups-pdf.conf</span><span class="badge b-orange">PostProcessing</span><span class="badge b-blue">Directoris</span></div>
+        </div>
+      </div>
+      <div class="task">
+        <div class="task-num">5</div>
+        <div class="task-body">
+          <h4>Comprensió i desplegament del script de post-processat</h4>
+          <p>El professor t'explicarà el funcionament del script <code>cups-pdf-post.sh</code>. El teu objectiu és entendre que fa cada secció i poder explicar-la. Un cop entès, desplega el script a la ubicació correcta del servidor i dona-li els permisos d'execució necessaris. Documenta a la memòria la funció de cada part del script: les variables d'entorn que llegeix, la lògica de decisió (case/esac), la creació de directoris, l'assignació de permisos i el registre al log.</p>
+          <div class="task-tags"><span class="badge b-orange">Bash scripting</span><span class="badge b-green">chmod +x</span><span class="badge b-blue">Log</span></div>
+        </div>
+      </div>
+      <div class="task">
+        <div class="task-num">6</div>
+        <div class="task-body">
+          <h4>Compartició dels directoris via Samba/Zentyal</h4>
+          <p>Comparteix els directoris de PDFs (alumnes i professors) a través del mòdul de compartició de recursos de Zentyal. Configura els permisos de compartició per que: el grup alumnes accedeixi únicament al seu directori, el grup professors accedeixi únicament al seu. Documenta la configuració de cada recurs compartit i justifica per a quin motiu els permisos de compartició SMB i els permisos POSIX del directori han de ser coherents entre ells.</p>
+          <div class="task-tags"><span class="badge b-green">Samba</span><span class="badge b-teal">Zentyal</span><span class="badge b-blue">Permisos SMB</span></div>
+        </div>
+      </div>
+      <div class="task">
+        <div class="task-num">7</div>
+        <div class="task-body">
+          <h4>Verificació des de Windows 10</h4>
+          <p>Des d'un client Windows 10, realitza les comprovacions amb tots els usuaris creats. Per a cada usuari, verifica: (a) pot connectar la impressora del seu grup, (b) no pot connectar la impressora de l'altre grup, (c) pot imprimir un document de text i el PDF apareix al seu directori personal, (d) no pot accedir als PDFs d'altres usuaris del mateix grup. Documenta cada comprovació amb captures de pantalla.</p>
+          <div class="task-tags"><span class="badge b-blue">Windows 10</span><span class="badge b-green">Permisos</span><span class="badge b-orange">Verificació</span></div>
+        </div>
+      </div>
+      <div class="task">
+        <div class="task-num">8</div>
+        <div class="task-body">
+          <h4>Verificació des d'Ubuntu Desktop 24.04</h4>
+          <p>Repeteix les mateixes comprovacions del punt anterior des d'un client Ubuntu Desktop 24.04. Tingues en compte que el procediment per connectar una impressora de xarxa i accedir als recursos SMB és diferent a Linux que a Windows. Documenta les diferències de procediment observades entre els dos sistemes operatius clients. Per a quin motiu el resultat final (impressió PDF al servidor) és el mateix independentment del SO client?</p>
+          <div class="task-tags"><span class="badge b-teal">Ubuntu Desktop</span><span class="badge b-green">smb://</span><span class="badge b-orange">Verificació</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AMPLIACIÓ -->
+<section id="ampliacio">
+  <div class="container">
+    <div class="section-tag tag-purple fi">Tasques d'ampliació</div>
+    <h2 class="fi">Control de quotes d'impressió</h2>
+    <p class="lead fi">Les tasques d'ampliació implementen un sistema de quotes que limita el nombre de PDFs que cada usuari pot acumular. Un script Bash comprova el comptador i refusa la impressió si s'ha superat el límit.</p>
+
+    <div class="callout cl-teal fi">
+      <span class="callout-icon">ℹ️</span>
+      <div>
+        <h4>Lògica del sistema de quotes</h4>
+        <p>El sistema de quotes funciona de la manera següent: els alumnes tenen un límit de <strong>5 PDFs</strong> i els professors de <strong>10 PDFs</strong>. Quan un usuari intenta imprimir i ja ha superat el límit, el PDF nou es descarta i s'escriu un fitxer <code>ATENCIO_QUOTA.txt</code> al seu directori explicant la situació i com resoldre-la.</p>
+      </div>
+    </div>
+
+    <div class="task-list fi">
+      <div class="task">
+        <div class="task-num amp">A1</div>
+        <div class="task-body">
+          <h4>Comprensió i desplegament del script de control de quotes</h4>
+          <p>El professor t'explicarà el funcionament del script <code>quota_cups_pdf.sh</code>. Entén que fa cada secció: com llegeix les variables d'entorn de CUPS-PDF, com determina si l'usuari és alumne o professor, com compta els PDFs existents, com genera el missatge d'avís i com registra l'event al log del sistema. Un cop entès, desplega el script i configura CUPS-PDF per executar-lo com a segon script de post-processat (encadenat amb l'script de moviment del pas 5). Documenta el procés complet.</p>
+          <div class="task-tags"><span class="badge b-purple">Bash quotes</span><span class="badge b-orange">logger</span><span class="badge b-green">find · wc</span></div>
+        </div>
+      </div>
+      <div class="task">
+        <div class="task-num amp">A2</div>
+        <div class="task-body">
+          <h4>Prova del sistema de quotes i monitoratge des del servidor</h4>
+          <p>Prova el sistema de quotes des de Windows 10 (per a alumnes) i des d'Ubuntu Desktop (per a professors). Per a cada grup, supera el límit de PDFs i verifica que: el PDF nou es descarta, el fitxer <code>ATENCIO_QUOTA.txt</code> apareix al directori de l'usuari i conté el missatge correcte. Des del servidor, comprova els logs de CUPS-PDF i del sistema per verificar que els events queden registrats correctament. Documenta les comandes de monitoratge que has usat i el que mostren.</p>
+          <div class="task-tags"><span class="badge b-purple">Quotes</span><span class="badge b-blue">journalctl</span><span class="badge b-orange">Monitoratge</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RÚBRICA -->
+<section id="rubrica" class="s-cream">
+  <div class="container">
+    <div class="section-tag tag-green fi">Criteris d'avaluació</div>
+    <h2 class="fi">Rúbrica de la pràctica PT4</h2>
+    <div style="overflow-x:auto" class="fi">
+      <table class="rubric-table">
+        <thead>
+          <tr><th style="width:22%">Criteri</th><th style="width:8%">Pes</th>
+          <th class="col-ex" style="width:17%">🟢 Excel·lent (10)</th>
+          <th class="col-be" style="width:17%">🔵 Bé (7)</th>
+          <th class="col-ok" style="width:17%">🟡 Suficient (5)</th>
+          <th class="col-no" style="width:19%">🔴 Insuficient (0–3)</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>CUPS-PDF instal·lat i impressores creades</td><td style="text-align:center;font-weight:700">15%</td><td class="col-ex">Servei actiu, dues impressores creades i compartides, accés web documentat.</td><td class="col-be">Impressores creades però compartició no verificada.</td><td class="col-ok">CUPS actiu però impressores mal configurades.</td><td class="col-no">CUPS no funcional.</td></tr>
+          <tr><td>Script post-processat comprès i desplegat</td><td style="text-align:center;font-weight:700">20%</td><td class="col-ex">Script desplegat, funcional, cada secció explicada a la memòria, logs generats.</td><td class="col-be">Funcional però explicació incompleta.</td><td class="col-ok">Desplegat però no funcional o sense explicació.</td><td class="col-no">No desplegat.</td></tr>
+          <tr><td>Permisos i compartició SMB correctes</td><td style="text-align:center;font-weight:700">20%</td><td class="col-ex">Cada grup accedeix únicament al seu directori, usuaris no poden accedir a PDFs d'altres usuaris del mateix grup.</td><td class="col-be">Separació per grup correcta però aïllament per usuari no verificat.</td><td class="col-ok">Compartició activa però permisos incorrectes.</td><td class="col-no">Compartició no configurada.</td></tr>
+          <tr><td>Verificació Windows + Ubuntu</td><td style="text-align:center;font-weight:700">25%</td><td class="col-ex">Totes les comprovacions documentades en ambdós SO amb tots els usuaris. Restriccions verificades.</td><td class="col-be">Comprovacions en un dels dos SO, o no tots els usuaris.</td><td class="col-ok">Comprovació parcial documentada.</td><td class="col-no">No verificat.</td></tr>
+          <tr><td>Ampliació: quotes</td><td style="text-align:center;font-weight:700">10%</td><td class="col-ex">Script de quotes funcional, prova superada en ambdós clients, logs analitzats.</td><td class="col-be">Funcional en un client.</td><td class="col-ok">Desplegat però no provat.</td><td class="col-no">No realitzat.</td></tr>
+          <tr><td>Qualitat de la memòria</td><td style="text-align:center;font-weight:700">10%</td><td class="col-ex">Captures de tots els passos, explicació dels scripts, justificació de permisos.</td><td class="col-be">Captures dels resultats, poques explicacions.</td><td class="col-ok">Memòria incompleta.</td><td class="col-no">Sense memòria.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout cl-blue fi" style="margin-top:2rem">
+      <span class="callout-icon">📦</span>
+      <div><h4>Lliurament</h4><p>ZIP per grup: <strong>PT4_grup_N.zip</strong> amb memòria en PDF, captures i els scripts Bash (amb comentaris). Data límit: indicada a l'aula virtual.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- REFLEXIÓ -->
+<section id="reflexio">
+  <div class="container">
+    <div class="section-tag tag-blue fi">Preguntes de reflexió</div>
+    <h2 class="fi">Demostra la teva comprensió</h2>
+    <div class="q-list fi">
+      <div class="q-item"><div class="q-num">1</div><div><p>Explica la cadena completa del procés d'impressió en aquesta pràctica: des que l'usuari fa clic a "Imprimir" a Windows fins que el PDF apareix al seu directori personal al servidor. Quina tecnologia intervé a cada pas?</p><p class="hint">Pensa en: protocol d'impressió (IPP/SMB), CUPS, backend CUPS-PDF, script de post-processat, permisos POSIX, compartició Samba.</p></div></div>
+      <div class="q-item"><div class="q-num">2</div><div><p>Per a quin motiu el directori personal de PDFs de cada usuari ha de tenir permisos 700 i no 750 o 755? Quina vulnerabilitat de seguretat s'evita amb els permisos 700?</p><p class="hint">Pensa en un usuari "alumne1" que intenta accedir als PDFs de "alumne2", que pertany al mateix grup "alumnes".</p></div></div>
+      <div class="q-item"><div class="q-num">3</div><div><p>El script de post-processat rep el nom de la impressora usada via la variable <code>$PRINTER</code>. Per a quin motiu és important usar dues impressores virtuals separades (PDF_Alumnes i PDF_Professors) en lloc d'una sola impressora per a tots els usuaris?</p><p class="hint">Reflexiona sobre com el script pren la decisió de on moure el PDF: sense la informació de la impressora, com sabria a quin grup pertany el document?</p></div></div>
+      <div class="q-item"><div class="q-num">4</div><div><p>El sistema de quotes d'aquesta pràctica s'implementa amb un script Bash en comptes d'usar les eines de quota del kernel de Linux (<code>quota</code>, <code>setquota</code>). Quins avantatges i desavantatges té l'enfocament del script respecte a les quotes del kernel?</p><p class="hint">Pensa en: flexibilitat, rendiment, atomicitat, condicions de competència (race conditions), complexitat d'implementació.</p></div></div>
+      <div class="q-item"><div class="q-num">5</div><div><p>Un usuari et diu: "He eliminat 3 PDFs del meu directori però encara rebo el missatge que he superat la quota". Quina pot ser la causa i com ho investigaries? Quina comanda usaries per comptar exactament quants PDFs té l'usuari al seu directori?</p><p class="hint">Pensa en la comanda usada al script per comptar fitxers. Pot haver-hi condicions que el comptador no reflecteixi correctament?</p></div></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p><strong>PT4 — Servidor d'Impressió PDF: CUPS-PDF + Zentyal + Samba · M0374</strong></p>
+  <p style="margin-top:.4rem">CUPS · CUPS-PDF · SMB/Samba · Bash Scripting · Permisos POSIX · Quotes</p>
+  <p style="margin-top:.4rem">Departament d'Informàtica · ASIX</p>
+</footer>
+
+<script>
+  const io=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in');});},{threshold:0.06,rootMargin:'0px 0px -40px 0px'});
+  document.querySelectorAll('.fi').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>

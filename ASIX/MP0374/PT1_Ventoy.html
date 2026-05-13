@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PT1 — Ventoy: USB Boot i Sistemes Persistents · M0374</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink:     #0d0f1a;
+    --paper:   #f4f2ed;
+    --cream:   #eceae3;
+    --navy:    #1a1f4e;
+    --cobalt:  #2d3bb5;
+    --sky:     #4a6cf7;
+    --accent:  #e07b20;
+    --accentd: #9a4e00;
+    --green:   #0ea472;
+    --red:     #dc2626;
+    --purple:  #7c3aed;
+    --muted:   #6b6f85;
+    --border:  #d6d2c9;
+    --card:    #ffffff;
+    --terminal:#0d1117;
+    --radius:  16px;
+    --radius-sm: 8px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    font-size: 16px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(244,242,237,0.95);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 62px;
+  }
+  .nav-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1rem; color: var(--navy); letter-spacing: -0.02em; }
+  .nav-logo span { color: var(--accent); }
+  .nav-pills { display: flex; gap: .5rem; list-style: none; flex-wrap: wrap; }
+  .nav-pills a {
+    text-decoration: none; font-size: 0.78rem; font-weight: 600;
+    padding: .3rem .85rem; border-radius: 100px;
+    color: var(--muted); transition: all .2s;
+    border: 1px solid transparent;
+  }
+  .nav-pills a:hover { color: var(--accent); border-color: var(--accent); background: rgba(224,123,32,0.07); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: grid; place-items: center;
+    background: var(--navy);
+    color: white;
+    position: relative;
+    overflow: hidden;
+    padding: 8rem 2rem 5rem;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 55% 45% at 85% 25%, rgba(224,123,32,0.3) 0%, transparent 65%),
+      radial-gradient(ellipse 50% 40% at 15% 75%, rgba(74,108,247,0.2) 0%, transparent 65%),
+      radial-gradient(ellipse 40% 35% at 55% 95%, rgba(14,164,114,0.15) 0%, transparent 60%);
+  }
+  .hero-dots {
+    position: absolute; inset: 0; opacity: 0.06;
+    background-image: radial-gradient(rgba(255,255,255,.7) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+  .hero-content { position: relative; z-index: 1; text-align: center; max-width: 860px; }
+
+  .pt-badge {
+    display: inline-flex; align-items: center; gap: .75rem;
+    background: rgba(224,123,32,0.15); border: 1px solid rgba(224,123,32,0.35);
+    color: #fbbc04; font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem; font-weight: 700; letter-spacing: 0.1em;
+    padding: .45rem 1.2rem; border-radius: 100px; margin-bottom: 1.5rem;
+  }
+  .pt-badge .dot { width: 8px; height: 8px; border-radius: 50%; background: #fbbc04; animation: blink 1.4s ease-in-out infinite; }
+  @keyframes blink { 0%,100%{opacity:.3} 50%{opacity:1} }
+
+  .hero h1 {
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: clamp(2.5rem, 6vw, 4.8rem); line-height: 1.05;
+    letter-spacing: -0.03em; margin-bottom: 1.25rem;
+  }
+  .hero h1 .hi { color: var(--accent); }
+  .hero h1 .lo { color: rgba(255,255,255,.45); font-size: 0.65em; display:block; font-weight:600; margin-top:.3rem; letter-spacing:-.01em; }
+  .hero-sub { font-size: 1.05rem; color: rgba(255,255,255,0.55); max-width: 580px; margin: 0 auto 2rem; }
+
+  .ra-pills { display: flex; justify-content: center; gap: .75rem; flex-wrap: wrap; margin-bottom: 2.5rem; }
+  .ra-pill {
+    background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15);
+    padding: .35rem 1rem; border-radius: 100px; font-size: 0.78rem; font-weight: 600;
+    color: rgba(255,255,255,.75); font-family: 'JetBrains Mono', monospace;
+  }
+  .ra-pill.active { background: rgba(224,123,32,0.2); border-color: rgba(224,123,32,0.5); color: #fbbc04; }
+
+  .hero-meta {
+    display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap;
+    border-top: 1px solid rgba(255,255,255,0.1); padding-top: 2rem; margin-top: 2rem;
+  }
+  .meta-item { text-align: center; }
+  .meta-item .label { font-size: 0.68rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,0.35); margin-bottom: .2rem; }
+  .meta-item .value { font-size: 0.95rem; font-weight: 600; color: rgba(255,255,255,0.85); }
+
+  .scroll-hint {
+    position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: .4rem;
+    color: rgba(255,255,255,0.25); font-size: 0.68rem; letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .scroll-hint::after {
+    content: ''; display: block; width: 1px; height: 38px;
+    background: linear-gradient(to bottom, rgba(255,255,255,.3), transparent);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:.2} 50%{opacity:.9} }
+
+  /* LAYOUT */
+  section { padding: 5.5rem 2rem; }
+  .container { max-width: 1060px; margin: 0 auto; }
+
+  .section-tag {
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; display: flex; align-items: center; gap: .5rem;
+    margin-bottom: .85rem;
+  }
+  .section-tag::before { content: ''; display: block; width: 20px; height: 2px; }
+  .tag-orange { color: var(--accent);  } .tag-orange::before { background: var(--accent); }
+  .tag-blue   { color: var(--cobalt);  } .tag-blue::before   { background: var(--cobalt); }
+  .tag-green  { color: var(--green);   } .tag-green::before  { background: var(--green); }
+  .tag-purple { color: var(--purple);  } .tag-purple::before { background: var(--purple); }
+  .tag-red    { color: var(--red);     } .tag-red::before    { background: var(--red); }
+
+  h2 {
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: clamp(1.65rem, 3.5vw, 2.5rem); line-height: 1.1;
+    letter-spacing: -0.025em; color: var(--navy); margin-bottom: .85rem;
+  }
+  h3 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.12rem; color: var(--navy); margin-bottom: .6rem; }
+  h4 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.95rem; color: var(--navy); margin-bottom: .4rem; }
+  .lead { font-size: 1.02rem; color: var(--muted); max-width: 700px; margin-bottom: 2.8rem; line-height: 1.75; }
+
+  /* CARDS */
+  .grid { display: grid; gap: 1.2rem; }
+  .g2 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+  .g3 { grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
+  .g4 { grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); }
+
+  .card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 1.65rem;
+    transition: transform .2s, box-shadow .2s;
+  }
+  .card:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(26,31,78,0.09); }
+  .card p { color: var(--muted); font-size: 0.91rem; }
+  .card-icon { width: 42px; height: 42px; border-radius: 10px; display: grid; place-items: center; font-size: 1.25rem; margin-bottom: .85rem; }
+
+  .bl-orange { border-left: 3px solid var(--accent); }
+  .bl-blue   { border-left: 3px solid var(--cobalt); }
+  .bl-green  { border-left: 3px solid var(--green); }
+  .bl-purple { border-left: 3px solid var(--purple); }
+  .bl-red    { border-left: 3px solid var(--red); }
+
+  /* TERMINAL */
+  .terminal {
+    background: var(--terminal); border-radius: var(--radius);
+    overflow: hidden; margin: 1.25rem 0;
+    border: 1px solid rgba(255,255,255,0.06);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+  }
+  .terminal-bar {
+    background: #1c2128; padding: .65rem 1rem;
+    display: flex; align-items: center; gap: .5rem;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .t-dot { width: 12px; height: 12px; border-radius: 50%; }
+  .t-red { background: #ff5f57; } .t-yellow { background: #febc2e; } .t-green { background: #28c840; }
+  .terminal-label { margin-left: .5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: rgba(255,255,255,.3); }
+  .terminal-body { padding: 1.25rem 1.5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; line-height: 1.75; color: #c9d1d9; }
+  .t-prompt { color: #3fb950; }
+  .t-cmd    { color: #79c0ff; }
+  .t-arg    { color: #ffa657; }
+  .t-cmt    { color: #6e7681; }
+  .t-out    { color: #c9d1d9; }
+  .t-err    { color: #ff7b72; }
+  .t-str    { color: #a5d6ff; }
+
+  /* CALLOUT */
+  .callout {
+    border-radius: var(--radius); padding: 1.75rem 2rem; margin: 1.25rem 0;
+    display: flex; gap: 1rem; align-items: flex-start;
+  }
+  .callout-icon { font-size: 1.35rem; flex-shrink: 0; margin-top: .05rem; }
+  .callout p, .callout li { font-size: 0.91rem; }
+  .callout ul { padding-left: 1.2rem; }
+  .callout li { margin-bottom: .25rem; }
+  .cl-blue   { background: rgba(74,108,247,0.08);  border: 1px solid rgba(74,108,247,0.2); }
+  .cl-orange { background: rgba(224,123,32,0.08);  border: 1px solid rgba(224,123,32,0.25); }
+  .cl-green  { background: rgba(14,164,114,0.07);  border: 1px solid rgba(14,164,114,0.2); }
+  .cl-amber  { background: rgba(251,188,4,0.08);   border: 1px solid rgba(251,188,4,0.28); }
+  .cl-red    { background: rgba(220,38,38,0.07);   border: 1px solid rgba(220,38,38,0.2); }
+  .cl-purple { background: rgba(124,58,237,0.07);  border: 1px solid rgba(124,58,237,0.2); }
+
+  /* EXAMPLE BOX */
+  .ex { background: var(--cream); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: .9rem 1.15rem; margin: .6rem 0; }
+  .ex-lbl { font-size: 0.67rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; margin-bottom: .28rem; color: var(--accent); }
+  .ex p { font-size: 0.86rem; color: var(--ink); }
+
+  /* BADGE */
+  .badge {
+    display: inline-block; padding: .15rem .55rem; border-radius: 100px;
+    font-size: 0.7rem; font-weight: 700; font-family: 'Syne', sans-serif;
+  }
+  .b-orange { background: rgba(224,123,32,0.12); color: var(--accentd); }
+  .b-blue   { background: rgba(74,108,247,0.12); color: var(--cobalt); }
+  .b-green  { background: rgba(14,164,114,0.12); color: #077a52; }
+  .b-red    { background: rgba(220,38,38,0.12);  color: #991b1b; }
+  .b-purple { background: rgba(124,58,237,0.12); color: var(--purple); }
+  .b-amber  { background: rgba(251,188,4,0.15);  color: #8a6500; }
+
+  /* SECTIONS */
+  .s-dark   { background: var(--navy); color: white; }
+  .s-dark h2, .s-dark h3, .s-dark h4 { color: white; }
+  .s-dark .lead { color: rgba(255,255,255,.55); }
+  .s-dark .card { background: rgba(255,255,255,.05); border-color: rgba(255,255,255,.1); }
+  .s-dark .card h3, .s-dark .card h4 { color: white; }
+  .s-dark .card p { color: rgba(255,255,255,.6); }
+  .s-dark .ex { background: rgba(255,255,255,.05); border-color: rgba(255,255,255,.1); }
+  .s-dark .ex p { color: rgba(255,255,255,.75); }
+  .s-cream  { background: var(--cream); }
+  .s-orange { background: #fff8f2; }
+
+  /* TABLE */
+  .ptable { width: 100%; border-collapse: collapse; font-size: 0.87rem; }
+  .ptable th, .ptable td { padding: .8rem 1rem; text-align: left; border-bottom: 1px solid var(--border); }
+  .ptable th { background: var(--navy); color: white; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.82rem; }
+  .ptable th:first-child { border-radius: 8px 0 0 0; }
+  .ptable th:last-child  { border-radius: 0 8px 0 0; }
+  .ptable tr:hover td { background: var(--cream); }
+
+  /* STEPS (tasques) */
+  .task-list { display: flex; flex-direction: column; gap: 1.1rem; }
+  .task {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 1.5rem 1.75rem;
+    display: flex; gap: 1.25rem; align-items: flex-start;
+    transition: box-shadow .2s;
+  }
+  .task:hover { box-shadow: 0 6px 24px rgba(26,31,78,0.08); }
+  .task-num {
+    flex-shrink: 0; width: 36px; height: 36px; border-radius: 50%;
+    background: var(--navy); color: white;
+    display: grid; place-items: center;
+    font-family: 'Syne', sans-serif; font-weight: 800; font-size: 0.85rem;
+  }
+  .task-body h4 { margin-bottom: .4rem; }
+  .task-body p { color: var(--muted); font-size: 0.91rem; }
+  .task-tags { display: flex; gap: .4rem; flex-wrap: wrap; margin-top: .6rem; }
+
+  /* AMPLIACIÓ */
+  .task-num.amp { background: linear-gradient(135deg, #5b21b6, #7c3aed); }
+
+  /* RÚBRICA */
+  .rubric-table { width: 100%; border-collapse: collapse; font-size: 0.84rem; }
+  .rubric-table th, .rubric-table td { padding: .75rem .9rem; border: 1px solid var(--border); vertical-align: top; }
+  .rubric-table th { background: var(--navy); color: white; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.8rem; text-align: center; }
+  .rubric-table td:first-child { font-weight: 600; color: var(--navy); background: var(--cream); }
+  .rubric-table .col-ex  { background: rgba(14,164,114,0.05); }
+  .rubric-table .col-be  { background: rgba(74,108,247,0.04); }
+  .rubric-table .col-ok  { background: rgba(251,188,4,0.05); }
+  .rubric-table .col-no  { background: rgba(220,38,38,0.04); }
+  .rubric-table .col-ex td, .rubric-table .col-be td, .rubric-table .col-ok td, .rubric-table .col-no td { color: var(--muted); }
+
+  /* PREGUNTES */
+  .q-list { display: flex; flex-direction: column; gap: .85rem; }
+  .q-item {
+    display: flex; gap: 1rem; background: var(--card);
+    border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 1.25rem 1.5rem; align-items: flex-start;
+  }
+  .q-num { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.5rem; color: var(--border); line-height: 1; flex-shrink: 0; padding-top: .1rem; }
+  .q-item p { color: var(--ink); font-size: 0.92rem; }
+  .q-item .hint { color: var(--muted); font-size: 0.83rem; margin-top: .4rem; }
+
+  /* FI ANIMATION */
+  .fi { opacity: 0; transform: translateY(20px); transition: opacity .5s ease, transform .5s ease; }
+  .fi.in { opacity: 1; transform: translateY(0); }
+
+  /* FOOTER */
+  footer { background: var(--ink); color: rgba(255,255,255,.4); text-align: center; padding: 2.5rem 2rem; font-size: 0.82rem; }
+  footer strong { color: rgba(255,255,255,.7); }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">M0374 · ASIX <span>PT1</span></div>
+  <ul class="nav-pills">
+    <li><a href="#context">Context</a></li>
+    <li><a href="#teoria">Teoria</a></li>
+    <li><a href="#tasques">Tasques</a></li>
+    <li><a href="#ampliacio">Ampliació</a></li>
+    <li><a href="#rubrica">Rúbrica</a></li>
+    <li><a href="#reflexio">Reflexió</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-dots"></div>
+  <div class="hero-content">
+    <div class="pt-badge"><span class="dot"></span> Pràctica PT1 · M0374</div>
+    <h1>
+      <span class="hi">Ventoy</span>
+      <span class="lo">USB Boot · Sistemes Persistents · Arch Linux</span>
+    </h1>
+    <p class="hero-sub">Prepara un USB multiarranc professional, desplega un disc virtual persistent i explora l'ecosistema Arch Linux en un entorn real amb EFI.</p>
+    <div class="ra-pills">
+      <div class="ra-pill active">RA2 · Instal·lació de SO</div>
+      <div class="ra-pill active">RA3 · Gestió de maquinari</div>
+      <div class="ra-pill">Ventoy</div>
+      <div class="ra-pill">EFI/UEFI</div>
+      <div class="ra-pill">Arch Linux</div>
+      <div class="ra-pill">AUR</div>
+    </div>
+    <div class="hero-meta">
+      <div class="meta-item"><div class="label">Mòdul</div><div class="value">M0374 · Sistemes Operatius</div></div>
+      <div class="meta-item"><div class="label">Curs</div><div class="value">ASIX · 1r</div></div>
+      <div class="meta-item"><div class="label">Durada estimada</div><div class="value">3–4 hores</div></div>
+      <div class="meta-item"><div class="label">Format</div><div class="value">Individual</div></div>
+    </div>
+  </div>
+  <div class="scroll-hint">Desplaça</div>
+</section>
+
+<!-- CONTEXT -->
+<section id="context">
+  <div class="container">
+    <div class="section-tag tag-orange fi">Context de la pràctica</div>
+    <h2 class="fi">Per a quin motiu és rellevant aquesta pràctica?</h2>
+    <p class="lead fi">En un entorn professional de sistemes, el tècnic ha de poder arrencar qualsevol màquina sense dependre de la instal·lació existent, mantenir un entorn de treball portable i persistent, i entendre el cicle d'arrencada modern (EFI/UEFI). Ventoy és l'eina estàndard actual per aconseguir-ho.</p>
+
+    <div class="grid g3 fi">
+      <div class="card bl-orange">
+        <div class="card-icon" style="background:#fff8f2">💾</div>
+        <h3>El problema que resol</h3>
+        <p>Abans, per tenir 5 ISOs en un USB calia 5 pendrives o reformatejar cada vegada. Ventoy permet tenir <strong>múltiples ISOs</strong> en un únic USB sense reformatejar-lo cada cop que n'afegeixes una de nova.</p>
+      </div>
+      <div class="card bl-orange">
+        <div class="card-icon" style="background:#fff8f2">🔄</div>
+        <h3>La persistència</h3>
+        <p>Un sistema en mode <em>Live</em> descarta tot el que fas en apagar. Un sistema <strong>persistent</strong> guarda els canvis entre arrencades, convertint el USB/disc en un entorn de treball real i portàtil.</p>
+      </div>
+      <div class="card bl-orange">
+        <div class="card-icon" style="background:#fff8f2">🖥️</div>
+        <h3>EFI vs. BIOS Legacy</h3>
+        <p>Els sistemes moderns arranquen en mode <strong>EFI/UEFI</strong>, que requereix una partició especial (ESP) i un gestor d'arrencada compatible. Entendre com funciona és fonamental per a qualsevol tècnic de sistemes.</p>
+      </div>
+    </div>
+
+    <div class="callout cl-orange fi" style="margin-top:2rem">
+      <span class="callout-icon">🎯</span>
+      <div>
+        <h4>Objectiu de la pràctica</h4>
+        <p>Formatar el USB proporcionat pel professor amb Ventoy, verificar que el sistema host el reconeix correctament, i preparar una màquina virtual d'Arch Linux amb disc persistent de 50 GB i EFI activat, seguint la documentació oficial de Ventoy per aconseguir que el disc sigui persistent i arrencable.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TEORIA -->
+<section id="teoria" class="s-dark">
+  <div class="container">
+    <div class="section-tag tag-orange fi" style="color:rgba(224,123,32,.9)">Conceptes teòrics previs</div>
+    <h2 class="fi">El que has de comprendre abans de començar</h2>
+    <p class="lead fi">No és necessari memoritzar comandes: sí que és necessari entendre <em>per a quin motiu</em> funcionen les coses. Aquests conceptes et donaran el marc per prendre decisions durant la pràctica.</p>
+
+    <!-- VENTOY -->
+    <div class="section-tag tag-orange fi" style="color:rgba(224,123,32,.8);margin-top:0">Com funciona Ventoy</div>
+    <h3 class="fi" style="color:white;margin-bottom:1rem">Arquitectura d'un USB Ventoy</h3>
+    <div class="grid g2 fi">
+      <div class="card">
+        <h4>La partició de dades (exFAT)</h4>
+        <p>Quan instal·les Ventoy en un USB, crea dues particions. La gran (exFAT) és on l'usuari copia les ISOs com a fitxers normals. Ventoy les detecta automàticament en arrencar. <strong>No cal descomprimir ni gravar res.</strong></p>
+      </div>
+      <div class="card">
+        <h4>La partició d'arrencada (Ventoy)</h4>
+        <p>La partició petita conté el propi programari Ventoy: el gestor d'arrencada que intercepta el procés EFI/BIOS i presenta el menú de selecció d'ISOs. L'usuari mai ha de tocar aquesta partició.</p>
+      </div>
+      <div class="card">
+        <h4>Mode ISO i mode persistent</h4>
+        <p>Per defecte, Ventoy arrenca en mode Live (sense persistència). Per activar la persistència, cal crear un fitxer de persistència associat a la ISO específica i configurar Ventoy perquè el faci servir. <strong>Llegeix la documentació oficial.</strong></p>
+      </div>
+      <div class="card">
+        <h4>Compatible amb EFI i Legacy BIOS</h4>
+        <p>Ventoy instal·la gestors d'arrencada per a tots dos modes simultàniament. Perquè funcioni en EFI cal que la BIOS/UEFI tingui Secure Boot desactivat (o configurar Ventoy Secure Boot, opció avançada).</p>
+      </div>
+    </div>
+
+    <!-- EFI -->
+    <div class="section-tag tag-orange fi" style="color:rgba(224,123,32,.8);margin-top:3rem">Arrencada EFI/UEFI</div>
+    <h3 class="fi" style="color:white;margin-bottom:1rem">El cicle d'arrencada modern</h3>
+    <div class="grid g2 fi">
+      <div class="card">
+        <h4>Què és la partició ESP?</h4>
+        <p>L'<strong>EFI System Partition (ESP)</strong> és una partició FAT32 obligatòria en sistemes EFI. Conté els fitxers <code>.efi</code> dels carregadors d'arrencada. El firmware UEFI la llegeix directament per saber quins SO pot arrencar.</p>
+        <div class="ex" style="background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.1);margin-top:.6rem">
+          <div class="ex-lbl">Ruta típica</div>
+          <p style="color:rgba(255,255,255,.75);font-family:'JetBrains Mono',monospace;font-size:.82rem">/boot/efi/EFI/BOOT/bootx64.efi</p>
+        </div>
+      </div>
+      <div class="card">
+        <h4>BIOS Legacy vs. UEFI</h4>
+        <p>BIOS Legacy llegeix el sector d'arrencada (MBR) del primer disc. UEFI llegeix fitxers <code>.efi</code> de la partició ESP i pot arrencar des de qualsevol dispositiu compatible. UEFI és el <strong>estàndard des de 2012</strong> aproximadament i ofereix temps d'arrencada més ràpids, suport per a discs grans (GPT) i Secure Boot.</p>
+      </div>
+    </div>
+
+    <!-- ARCH LINUX -->
+    <div class="section-tag tag-orange fi" style="color:rgba(224,123,32,.8);margin-top:3rem">Arch Linux</div>
+    <h3 class="fi" style="color:white;margin-bottom:1rem">Per a quin motiu Arch Linux?</h3>
+    <div class="grid g3 fi">
+      <div class="card">
+        <h4>Rolling Release</h4>
+        <p>Arch no té versions (<em>22.04, Bookworm...</em>). El sistema s'actualitza contínuament. Quan actualitzes, obtens les últimes versions de tots els paquets. Ideal per a aprendre, però requereix manteniment actiu.</p>
+      </div>
+      <div class="card">
+        <h4>Gestor de paquets: Pacman</h4>
+        <p>Arch usa <strong>Pacman</strong> com a gestor de paquets oficial. La seva sintaxi és diferent d'APT o DNF, però és molt potent i ràpid. Per actualitzar el sistema complet s'usa <code>sudo pacman -Syu</code>.</p>
+      </div>
+      <div class="card">
+        <h4>La Wiki d'Arch</h4>
+        <p>La <strong>ArchWiki</strong> és considerada la millor documentació de Linux. Fins i tot usuaris d'Ubuntu o Fedora la fan servir. Durant la pràctica, la wiki és la teva primera font de consulta per a qualsevol dubte.</p>
+      </div>
+      <div class="card">
+        <h4>L'AUR (Arch User Repository)</h4>
+        <p>Repositori de paquets mantinguts per la comunitat. No estan als repositoris oficials, però qualsevol usuari pot pujar-hi un PKGBUILD. Milers de programes hi estan disponibles. Cal usar un <strong>AUR helper</strong> per instal·lar-hi paquets còmodament.</p>
+      </div>
+      <div class="card">
+        <h4>PKGBUILD i els AUR helpers</h4>
+        <p>Un PKGBUILD és un script de Bash que descriu com compilar i empaquetar un programa. Un AUR helper (<strong>yay</strong>, <em>paru</em>...) automatitza el procés: descarrega el PKGBUILD, compila i instal·la el paquet. Requereix <code>git</code> per clonar els PKGBUILDs.</p>
+      </div>
+      <div class="card">
+        <h4>VirtualBox a Arch</h4>
+        <p>Instal·lar VirtualBox a Arch no és trivial: requereix carregar els mòduls del kernel adequats i tenir les <em>linux-headers</em> instal·lades. La ArchWiki té una pàgina específica per a VirtualBox que explica cada pas i per a quin motiu és necessari.</p>
+      </div>
+    </div>
+
+    <div class="callout cl-amber fi" style="margin-top:2rem">
+      <span class="callout-icon">📖</span>
+      <div>
+        <h4>Documentació oficial: el teu punt de partida</h4>
+        <p>Per a aquesta pràctica has de consultar: la documentació oficial de Ventoy per a la persistència (<em>ventoy.net</em>) i la ArchWiki per a VirtualBox i l'AUR. <strong>No cerquis tutorials de tercers fins que hagis llegit la documentació oficial.</strong> La documentació oficial és sempre la font més fiable i actualitzada.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TASQUES -->
+<section id="tasques" class="s-orange">
+  <div class="container">
+    <div class="section-tag tag-orange fi">Enunciat · Tasques principals</div>
+    <h2 class="fi">Tasques a realitzar</h2>
+    <p class="lead fi">Llegeix cada tasca amb atenció. La descripció explica el <strong>quèi el per a quin motiu</strong>, però el <strong>com</strong> l'has de descobrir tu consultant la documentació. Documenta tot el procés amb captures de pantalla.</p>
+
+    <div class="task-list fi">
+
+      <div class="task">
+        <div class="task-num">1</div>
+        <div class="task-body">
+          <h4>Instal·lació de Ventoy al USB i verificació inicial</h4>
+          <p>El professor t'ha proporcionat un USB. El teu primer objectiu és formatar-lo amb Ventoy des del teu sistema host. Un cop instal·lat, afegeix almenys una ISO al USB i comprova que el sistema host la detecta correctament en el menú d'arrencada de Ventoy. Documenta quines ISOs hi has posat i per a quin motiu.</p>
+          <div class="task-tags">
+            <span class="badge b-orange">Ventoy</span>
+            <span class="badge b-blue">EFI</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="task">
+        <div class="task-num">2</div>
+        <div class="task-body">
+          <h4>Creació de la màquina virtual amb Arch Linux i EFI activat</h4>
+          <p>Crea una màquina virtual amb les especificacions indicades: sistema operatiu Arch Linux, disc dur de <strong>50 GB amb pre-allocate full disk</strong> (VHD o VDI, a la teva elecció), i <strong>EFI activat</strong> al configurador de la VM. El disc ha de ser de mida fixa i no dinàmica per raons de rendiment i consistència. Justifica la teva elecció de format (VHD vs. VDI) en la memòria.</p>
+          <div class="task-tags">
+            <span class="badge b-orange">VM</span>
+            <span class="badge b-blue">EFI</span>
+            <span class="badge b-amber">50 GB · Pre-alloc</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="task">
+        <div class="task-num">3</div>
+        <div class="task-body">
+          <h4>Configuració del disc com a persistent i arrencable via Ventoy</h4>
+          <p>Consulta la documentació oficial de Ventoy per entendre com s'associa un fitxer de persistència a una ISO concreta. L'objectiu és que el disc de la màquina virtual sigui reconegut per Ventoy com a persistent: els canvis que facis (fitxers creats, programes instal·lats) han de sobreviure a un apagat i encesa de la màquina, fins i tot si l'USB es connecta a un altre PC.</p>
+          <p style="margin-top:.5rem">Crea un fitxer de text dins de la carpeta <strong>Documents</strong> del sistema Arch arrencat. Apaga la màquina, arrenca-la de nou, i verifica que el fitxer continua existint. Documenta amb captures el procés complet.</p>
+          <div class="task-tags">
+            <span class="badge b-orange">Persistència</span>
+            <span class="badge b-blue">Ventoy docs</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="task">
+        <div class="task-num">4</div>
+        <div class="task-body">
+          <h4>Prova de portabilitat entre PC</h4>
+          <p>La gran promesa de la persistència portable és que pots dur el teu entorn a qualsevol màquina. Connecta l'USB a un altre PC del taller (amb el permís del professor) i verifica que:</p>
+          <ul style="color:var(--muted);font-size:.91rem;padding-left:1.2rem;margin-top:.4rem">
+            <li>El menú de Ventoy apareix correctament.</li>
+            <li>El fitxer de text que vas crear al pas anterior segueix existint.</li>
+            <li>L'entorn és funcional (pots obrir un terminal, navegar per fitxers).</li>
+          </ul>
+          <p style="margin-top:.5rem">Si el sistema no arrenca a l'altre PC, investiga per quin motiu (pot ser una diferència de configuració EFI/Legacy, Secure Boot, etc.) i documenta la causa i la solució.</p>
+          <div class="task-tags">
+            <span class="badge b-green">Portabilitat</span>
+            <span class="badge b-red">Troubleshooting</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="task">
+        <div class="task-num">5</div>
+        <div class="task-body">
+          <h4>Actualització del sistema Arch Linux</h4>
+          <p>Un sistema Arch Linux no actualitzat pot ser inestable o insegur. Investiga quina és la comanda correcta per actualitzar <strong>tots els paquets</strong> del sistema amb Pacman. Executa-la i documenta el resultat. Reflexiona: quin avantatge i quin risc té el model <em>rolling release</em> en comparació amb distribucions amb versions fixes (com Ubuntu LTS)?</p>
+          <div class="task-tags">
+            <span class="badge b-orange">Pacman</span>
+            <span class="badge b-blue">Rolling release</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="task">
+        <div class="task-num">6</div>
+        <div class="task-body">
+          <h4>Instal·lació de <code>yay</code> des de l'AUR</h4>
+          <p>L'AUR (Arch User Repository) no es pot accedir directament amb Pacman: cal un <strong>AUR helper</strong>. El més popular és <code>yay</code>. Per instal·lar-lo, primer necessites el paquet <code>git</code> (que sí és als repositoris oficials). Un cop tens Git, segueix el procés de clonació del repositori de <code>yay</code> des de l'AUR i compila'l manualment.</p>
+          <p style="margin-top:.5rem">Un cop instal·lat, verifica que <code>yay</code> funciona cercant algun paquet de l'AUR. Documenta cada pas i explica a la memòria <strong>per a quin motiu calen les linux-headers</strong> i el grup <code>base-devel</code> per a la compilació.</p>
+          <div class="task-tags">
+            <span class="badge b-orange">AUR</span>
+            <span class="badge b-blue">yay</span>
+            <span class="badge b-amber">git</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- AMPLIACIÓ -->
+<section id="ampliacio">
+  <div class="container">
+    <div class="section-tag tag-purple fi">Tasques d'ampliació</div>
+    <h2 class="fi">Reptes addicionals</h2>
+    <p class="lead fi">Aquestes tasques no són obligatòries però sumen a la nota i demostren un nivell de comprensió avançat. Aborda-les un cop completades totes les tasques principals.</p>
+
+    <div class="task-list fi">
+      <div class="task">
+        <div class="task-num amp">A1</div>
+        <div class="task-body">
+          <h4>Instal·lació de VirtualBox dins d'Arch Linux (Nested Virtualization)</h4>
+          <p>Intenta instal·lar VirtualBox dins de la teva màquina virtual Arch Linux persistent. Consulta la pàgina específica de VirtualBox a la ArchWiki per entendre quins mòduls del kernel cal carregar i quins paquets addicionals necessites. Documenta si funciona i, si no funciona, per a quin motiu tècnic pot ser (pista: virtualització anidada, requisits del kernel). Inclou captures dels intents i dels errors obtinguts.</p>
+          <div class="task-tags">
+            <span class="badge b-purple">Nested VMs</span>
+            <span class="badge b-blue">Kernel modules</span>
+          </div>
+        </div>
+      </div>
+      <div class="task">
+        <div class="task-num amp">A2</div>
+        <div class="task-body">
+          <h4>Instal·lació d'un paquet de l'AUR amb <code>yay</code></h4>
+          <p>Ara que tens <code>yay</code> instal·lat, utilitza'l per instal·lar un paquet que <strong>no existeixi</strong> als repositoris oficials d'Arch. Tria qualsevol eina que et sembli útil (un client de Spotify, un emulador, una eina de sistema...). Documenta el procés: busca el paquet, llegeix el PKGBUILD per entendre que fa, instal·la'l i verifica que funciona. Explica per a quin motiu és important llegir el PKGBUILD <strong>abans</strong> d'instal·lar paquets de l'AUR.</p>
+          <div class="task-tags">
+            <span class="badge b-purple">AUR</span>
+            <span class="badge b-orange">yay</span>
+            <span class="badge b-red">Seguretat</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RÚBRICA -->
+<section id="rubrica" class="s-cream">
+  <div class="container">
+    <div class="section-tag tag-green fi">Criteris d'avaluació</div>
+    <h2 class="fi">Rúbrica de la pràctica PT1</h2>
+    <p class="lead fi">La nota final es compon dels criteris següents. A cada criteri s'avalua el nivell d'assoliment: Excel·lent (10), Bé (7), Suficient (5) o Insuficient (0–3).</p>
+
+    <div style="overflow-x:auto" class="fi">
+      <table class="rubric-table">
+        <thead>
+          <tr>
+            <th style="width:22%">Criteri d'avaluació</th>
+            <th style="width:8%">Pes</th>
+            <th class="col-ex" style="width:18%">🟢 Excel·lent (10)</th>
+            <th class="col-be" style="width:18%">🔵 Bé (7)</th>
+            <th class="col-ok" style="width:18%">🟡 Suficient (5)</th>
+            <th class="col-no" style="width:16%">🔴 Insuficient (0–3)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Ventoy instal·lat i funcional</td>
+            <td style="text-align:center;font-weight:700">15%</td>
+            <td class="col-ex">USB arrenca en EFI i Legacy, múltiples ISOs detectades, captures completes.</td>
+            <td class="col-be">Funciona en un mode (EFI o Legacy), almenys 1 ISO detectada.</td>
+            <td class="col-ok">Ventoy instal·lat però no verificat en arrencada real.</td>
+            <td class="col-no">Ventoy no instal·lat o no funcional.</td>
+          </tr>
+          <tr>
+            <td>VM creada amb EFI i disc pre-allocated</td>
+            <td style="text-align:center;font-weight:700">15%</td>
+            <td class="col-ex">VM creada, EFI actiu, 50 GB pre-allocated, format justificat a la memòria.</td>
+            <td class="col-be">VM creada amb EFI, pre-allocated sense justificació del format.</td>
+            <td class="col-ok">VM creada però sense EFI o sense pre-allocated.</td>
+            <td class="col-no">VM no creada o configuració incorrecta.</td>
+          </tr>
+          <tr>
+            <td>Persistència verificada</td>
+            <td style="text-align:center;font-weight:700">25%</td>
+            <td class="col-ex">Fitxer creat persisteix entre arrencades, verificat en segon PC, documentat detalladament.</td>
+            <td class="col-be">Fitxer persiteix en el mateix PC, no verificat en segon PC.</td>
+            <td class="col-ok">Persistència configurada però no verificada amb proves reals.</td>
+            <td class="col-no">Persistència no configurada o no funcional.</td>
+          </tr>
+          <tr>
+            <td>Sistema actualitzat i <code>yay</code> instal·lat</td>
+            <td style="text-align:center;font-weight:700">20%</td>
+            <td class="col-ex">Sistema actualitzat, <code>yay</code> compilat manualment des de l'AUR, explicació del procés a la memòria.</td>
+            <td class="col-be">Actualitzat i <code>yay</code> instal·lat sense explicació del procés.</td>
+            <td class="col-ok">Un dels dos (actualització o yay) completat.</td>
+            <td class="col-no">Cap dels dos completat.</td>
+          </tr>
+          <tr>
+            <td>Qualitat de la memòria i captures</td>
+            <td style="text-align:center;font-weight:700">15%</td>
+            <td class="col-ex">Captures de cada pas, explicacions clares, errors documentats i resolts, reflexions pròpies.</td>
+            <td class="col-be">Captures dels resultats finals, poques explicacions de procés.</td>
+            <td class="col-ok">Memòria incompleta, captures insuficients.</td>
+            <td class="col-no">Sense memòria o captures.</td>
+          </tr>
+          <tr>
+            <td>Tasques d'ampliació</td>
+            <td style="text-align:center;font-weight:700">10%</td>
+            <td class="col-ex">Totes dues ampliacions documentades, fins i tot si una no ha funcionat, amb anàlisi de la causa.</td>
+            <td class="col-be">Una ampliació completada i documentada.</td>
+            <td class="col-ok">Ampliació intentada però no completada.</td>
+            <td class="col-no">No s'han abordat.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout cl-blue fi" style="margin-top:2rem">
+      <span class="callout-icon">📦</span>
+      <div>
+        <h4>Lliurament</h4>
+        <p>Lliura un únic fitxer ZIP amb: (1) la memòria tècnica en PDF, (2) les captures de pantalla organitzades per tasca, (3) qualsevol script o fitxer de configuració que hagis creat. El nom del fitxer ha de seguir el format: <strong>PT1_cognom_nom.zip</strong>. Data límit: la indicada a l'aula virtual.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REFLEXIÓ -->
+<section id="reflexio">
+  <div class="container">
+    <div class="section-tag tag-blue fi">Preguntes de reflexió</div>
+    <h2 class="fi">Demostra la teva comprensió</h2>
+    <p class="lead fi">Respon aquestes preguntes a la memòria. No hi ha una única resposta correcta: s'avalua el raonament i la comprensió dels conceptes, no la memorització.</p>
+
+    <div class="q-list fi">
+      <div class="q-item">
+        <div class="q-num">1</div>
+        <div>
+          <p>Per a quin motiu Ventoy no necessita que reforgratis el USB cada vegada que hi afegeixes o elimines una ISO? Quin és el mecanisme tècnic que permet detectar les ISOs automàticament en arrencar?</p>
+          <p class="hint">Pensa en com Ventoy organitza les particions i com el gestor d'arrencada llegeix el contingut de la partició de dades.</p>
+        </div>
+      </div>
+      <div class="q-item">
+        <div class="q-num">2</div>
+        <div>
+          <p>Quina diferència hi ha entre un disc en format VHD i un en format VDI? En quin context professional tindria sentit escollir VHD sobre VDI?</p>
+          <p class="hint">Pensa en compatibilitat entre hipervisors (VirtualBox, Hyper-V, VMware).</p>
+        </div>
+      </div>
+      <div class="q-item">
+        <div class="q-num">3</div>
+        <div>
+          <p>Explica amb les teves paraules per a quin motiu un sistema Arch Linux sense el grup <code>base-devel</code> i les <code>linux-headers</code> no pot compilar paquets de l'AUR. Quina és la funció de cada un d'aquests requisits?</p>
+          <p class="hint">Pensa en el procés de compilació: quines eines necessites per transformar codi font en un programa executable?</p>
+        </div>
+      </div>
+      <div class="q-item">
+        <div class="q-num">4</div>
+        <div>
+          <p>L'AUR és un repositori mantingut per la comunitat, sense revisió oficial d'Arch Linux. Quins riscos de seguretat comporta instal·lar paquets de l'AUR? Quina mesura hauries de prendre sempre abans d'instal·lar un paquet AUR desconegut?</p>
+          <p class="hint">Pensa en el PKGBUILD com un script de Bash que s'executa amb els teus privilegis.</p>
+        </div>
+      </div>
+      <div class="q-item">
+        <div class="q-num">5</div>
+        <div>
+          <p>Si el USB amb Ventoy arrenca correctament al teu PC però no a un altre PC del taller, quines causes podrien explicar-ho? Enumera almenys 3 causes possibles i indica com les investigaries.</p>
+          <p class="hint">Pensa en Secure Boot, ordre d'arrencada, diferències de firmware UEFI, mode CSM/Legacy...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p><strong>PT1 — Ventoy: USB Boot i Sistemes Persistents · M0374 Sistemes Operatius</strong></p>
+  <p style="margin-top:.4rem">Ventoy · Arch Linux · EFI/UEFI · AUR · Pacman · VirtualBox · Persistència</p>
+  <p style="margin-top:.4rem">Departament d'Informàtica · ASIX</p>
+</footer>
+
+<script>
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+  }, { threshold: 0.06, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.fi').forEach(el => io.observe(el));
+</script>
+</body>
+</html>
