@@ -7,357 +7,303 @@
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
 <style>
   :root {
-    --ink:    #0d0f1a;
-    --paper:  #f4f2ed;
-    --cream:  #eceae3;
-    --navy:   #1a1f4e;
-    --cobalt: #2d3bb5;
-    --sky:    #4a6cf7;
-    --teal:   #0891b2;
-    --teald:  #065f79;
-    --red:    #dc2626;
-    --orange: #e07b20;
-    --purple: #7c3aed;
-    --muted:  #6b6f85;
-    --border: #d6d2c9;
-    --card:   #ffffff;
-    --radius: 16px;
-    --radius-sm: 8px;
+    --ink:#0d0f1a; --paper:#f4f2ed; --cream:#eceae3; --navy:#1a1f4e;
+    --cobalt:#2d3bb5; --teal:#0891b2; --teald:#065f79;
+    --red:#dc2626; --orange:#e07b20; --purple:#7c3aed;
+    --green:#0ea472; --muted:#6b6f85; --border:#d6d2c9;
+    --card:#ffffff; --radius:16px; --radius-sm:8px;
   }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);font-size:16px;line-height:1.7;overflow-x:hidden;}
 
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--paper);
-    color: var(--ink);
-    font-size: 16px;
-    line-height: 1.7;
-    overflow-x: hidden;
-  }
+  /* PROGRESS BAR */
+  #progress-bar{position:fixed;top:0;left:0;height:3px;z-index:200;background:linear-gradient(90deg,var(--teal),var(--green));width:0%;transition:width .1s linear;}
 
   /* NAV */
-  nav {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-    background: rgba(244,242,237,0.94);
-    backdrop-filter: blur(14px);
-    border-bottom: 1px solid var(--border);
-    padding: 0 2rem;
-    display: flex; align-items: center; justify-content: space-between;
-    height: 62px;
-  }
-  .nav-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1rem; color: var(--navy); letter-spacing: -0.02em; }
-  .nav-logo span { color: var(--teal); }
-  .nav-pills { display: flex; gap: .5rem; list-style: none; flex-wrap: wrap; }
-  .nav-pills a {
-    text-decoration: none; font-size: 0.78rem; font-weight: 600;
-    padding: .3rem .85rem; border-radius: 100px;
-    color: var(--muted); transition: all .2s;
-    border: 1px solid transparent;
-  }
-  .nav-pills a:hover { color: var(--teal); border-color: var(--teal); background: rgba(8,145,178,0.07); }
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(244,242,237,0.95);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:62px;}
+  .nav-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;color:var(--navy);letter-spacing:-0.02em;white-space:nowrap;}
+  .nav-logo span{color:var(--teal);}
+  .nav-pills{display:flex;gap:.3rem;list-style:none;flex-wrap:wrap;}
+  .nav-pills a{text-decoration:none;font-size:0.73rem;font-weight:600;padding:.28rem .7rem;border-radius:100px;color:var(--muted);transition:all .2s;border:1px solid transparent;}
+  .nav-pills a:hover{color:var(--teal);border-color:var(--teal);background:rgba(8,145,178,0.07);}
 
   /* HERO */
-  .hero {
-    min-height: 100vh;
-    display: grid; place-items: center;
-    background: var(--navy);
-    color: white;
-    position: relative;
-    overflow: hidden;
-    padding: 8rem 2rem 4rem;
-  }
-  .hero-bg {
-    position: absolute; inset: 0;
-    background:
-      radial-gradient(ellipse 60% 50% at 80% 30%, rgba(8,145,178,0.3) 0%, transparent 65%),
-      radial-gradient(ellipse 50% 40% at 20% 70%, rgba(220,38,38,0.2) 0%, transparent 65%),
-      radial-gradient(ellipse 40% 35% at 50% 90%, rgba(124,58,237,0.15) 0%, transparent 60%);
-  }
-  .hero-dots {
-    position: absolute; inset: 0; opacity: 0.07;
-    background-image: radial-gradient(rgba(255,255,255,.6) 1px, transparent 1px);
-    background-size: 28px 28px;
-  }
-  .hero-content { position: relative; z-index: 1; text-align: center; max-width: 820px; }
-  .hero-badge {
-    display: inline-flex; align-items: center; gap: .5rem;
-    background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
-    color: rgba(255,255,255,0.8); font-size: 0.78rem; font-weight: 600;
-    letter-spacing: 0.1em; text-transform: uppercase;
-    padding: .35rem 1rem; border-radius: 100px; margin-bottom: 1.5rem;
-  }
-  .hero h1 {
-    font-family: 'Syne', sans-serif; font-weight: 800;
-    font-size: clamp(2.4rem, 6vw, 4.6rem); line-height: 1.06;
-    letter-spacing: -0.03em; margin-bottom: 1.5rem;
-  }
-  .hero h1 .hi { color: #22d3ee; }
-  .hero p { font-size: 1.1rem; color: rgba(255,255,255,0.6); max-width: 560px; margin: 0 auto 2.5rem; }
-  .hero-chips { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
-  .hero-chip {
-    display: flex; align-items: center; gap: .6rem;
-    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
-    padding: .55rem 1.1rem; border-radius: 12px; font-size: 0.88rem; font-weight: 500;
-    color: white; transition: all .25s;
-  }
-  .hero-chip:hover { background: rgba(255,255,255,0.15); transform: translateY(-2px); }
-  .scroll-hint {
-    position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
-    display: flex; flex-direction: column; align-items: center; gap: .4rem;
-    color: rgba(255,255,255,0.3); font-size: 0.72rem; letter-spacing: 0.1em;
-  }
-  .scroll-hint::after {
-    content: ''; display: block; width: 1px; height: 36px;
-    background: linear-gradient(to bottom, rgba(255,255,255,.35), transparent);
-    animation: pulse 2s ease-in-out infinite;
-  }
-  @keyframes pulse { 0%,100%{opacity:.3} 50%{opacity:1} }
+  .hero{min-height:100vh;display:grid;place-items:center;background:var(--navy);color:white;position:relative;overflow:hidden;padding:8rem 2rem 4rem;}
+  .hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 80% 30%,rgba(8,145,178,0.3) 0%,transparent 65%),radial-gradient(ellipse 50% 40% at 20% 70%,rgba(220,38,38,0.2) 0%,transparent 65%),radial-gradient(ellipse 40% 35% at 50% 90%,rgba(124,58,237,0.15) 0%,transparent 60%);}
+  .hero-dots{position:absolute;inset:0;opacity:0.07;background-image:radial-gradient(rgba(255,255,255,.6) 1px,transparent 1px);background-size:28px 28px;}
+  .hero-content{position:relative;z-index:1;text-align:center;max-width:820px;}
+  .hero-badge{display:inline-flex;align-items:center;gap:.5rem;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.8);font-size:0.78rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:.35rem 1rem;border-radius:100px;margin-bottom:1.5rem;}
+  .hero h1{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(2.4rem,6vw,4.6rem);line-height:1.06;letter-spacing:-0.03em;margin-bottom:1.5rem;}
+  .hero h1 .hi{color:#22d3ee;}
+  .hero p{font-size:1.1rem;color:rgba(255,255,255,0.6);max-width:560px;margin:0 auto 2.5rem;}
+  .hero-chips{display:flex;justify-content:center;gap:1rem;flex-wrap:wrap;}
+  .hero-chip{display:flex;align-items:center;gap:.6rem;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);padding:.55rem 1.1rem;border-radius:12px;font-size:0.88rem;font-weight:500;color:white;transition:all .25s;}
+  .hero-chip:hover{background:rgba(255,255,255,0.15);transform:translateY(-2px);}
+  .scroll-hint{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.4rem;color:rgba(255,255,255,0.3);font-size:0.72rem;letter-spacing:0.1em;}
+  .scroll-hint::after{content:'';display:block;width:1px;height:36px;background:linear-gradient(to bottom,rgba(255,255,255,.35),transparent);animation:pulse 2s ease-in-out infinite;}
+  @keyframes pulse{0%,100%{opacity:.3}50%{opacity:1}}
 
   /* LAYOUT */
-  section { padding: 6rem 2rem; }
-  .container { max-width: 1080px; margin: 0 auto; }
-  .section-tag {
-    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em;
-    text-transform: uppercase; display: flex; align-items: center; gap: .5rem;
-    margin-bottom: .9rem;
-  }
-  .section-tag::before { content: ''; display: block; width: 20px; height: 2px; }
-  .tag-teal   { color: var(--teal);   } .tag-teal::before   { background: var(--teal); }
-  .tag-red    { color: var(--red);    } .tag-red::before    { background: var(--red); }
-  .tag-orange { color: var(--orange); } .tag-orange::before { background: var(--orange); }
-  .tag-cobalt { color: var(--cobalt); } .tag-cobalt::before { background: var(--cobalt); }
-  .tag-purple { color: var(--purple); } .tag-purple::before { background: var(--purple); }
-  .tag-preguntes { color: #b45309; }   .tag-preguntes::before { background: #b45309; }
+  section{padding:5.5rem 2rem;}
+  .container{max-width:1080px;margin:0 auto;}
+  .section-tag{font-size:0.72rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;display:flex;align-items:center;gap:.5rem;margin-bottom:.9rem;}
+  .section-tag::before{content:'';display:block;width:20px;height:2px;}
+  .tag-teal{color:var(--teal);}.tag-teal::before{background:var(--teal);}
+  .tag-red{color:var(--red);}.tag-red::before{background:var(--red);}
+  .tag-orange{color:var(--orange);}.tag-orange::before{background:var(--orange);}
+  .tag-cobalt{color:var(--cobalt);}.tag-cobalt::before{background:var(--cobalt);}
+  .tag-purple{color:var(--purple);}.tag-purple::before{background:var(--purple);}
+  .tag-green{color:var(--green);}.tag-green::before{background:var(--green);}
 
-  h2 {
-    font-family: 'Syne', sans-serif; font-weight: 800;
-    font-size: clamp(1.7rem, 3.5vw, 2.6rem); line-height: 1.1;
-    letter-spacing: -0.025em; color: var(--navy); margin-bottom: .9rem;
-  }
-  h3 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.15rem; color: var(--navy); margin-bottom: .65rem; }
-  h4 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.95rem; color: var(--navy); margin-bottom: .4rem; }
-  .lead { font-size: 1.05rem; color: var(--muted); max-width: 680px; margin-bottom: 3rem; line-height: 1.7; }
+  h2{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(1.7rem,3.5vw,2.6rem);line-height:1.1;letter-spacing:-0.025em;color:var(--navy);margin-bottom:.9rem;}
+  h3{font-family:'Syne',sans-serif;font-weight:700;font-size:1.15rem;color:var(--navy);margin-bottom:.65rem;}
+  h4{font-family:'Syne',sans-serif;font-weight:700;font-size:0.95rem;color:var(--navy);margin-bottom:.4rem;}
+  .lead{font-size:1.05rem;color:var(--muted);max-width:680px;margin-bottom:3rem;line-height:1.7;}
 
   /* CARDS */
-  .grid { display: grid; gap: 1.25rem; }
-  .g2 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
-  .g3 { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
-  .g4 { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
-  .card {
-    background: var(--card); border: 1px solid var(--border);
-    border-radius: var(--radius); padding: 1.75rem;
-    transition: transform .2s, box-shadow .2s;
-  }
-  .card:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(26,31,78,0.1); }
-  .card p { color: var(--muted); font-size: 0.92rem; }
-  .card-icon {
-    width: 44px; height: 44px; border-radius: 10px;
-    display: grid; place-items: center; font-size: 1.3rem; margin-bottom: .9rem;
-  }
-  .bl        { border-left: 3px solid var(--cobalt); }
-  .bl-teal   { border-left: 3px solid var(--teal); }
-  .bl-red    { border-left: 3px solid var(--red); }
-  .bl-orange { border-left: 3px solid var(--orange); }
-  .bl-purple { border-left: 3px solid var(--purple); }
+  .grid{display:grid;gap:1.25rem;}
+  .g2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr));}
+  .g3{grid-template-columns:repeat(auto-fit,minmax(240px,1fr));}
+  .g4{grid-template-columns:repeat(auto-fit,minmax(200px,1fr));}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.75rem;transition:transform .2s,box-shadow .2s;}
+  .card:hover{transform:translateY(-3px);box-shadow:0 12px 32px rgba(26,31,78,0.1);}
+  .card p{color:var(--muted);font-size:0.92rem;}
+  .card-icon{width:44px;height:44px;border-radius:10px;display:grid;place-items:center;font-size:1.3rem;margin-bottom:.9rem;}
+  .bl{border-left:3px solid var(--cobalt);}
+  .bl-teal{border-left:3px solid var(--teal);}
+  .bl-red{border-left:3px solid var(--red);}
+  .bl-orange{border-left:3px solid var(--orange);}
+  .bl-purple{border-left:3px solid var(--purple);}
+  .bl-green{border-left:3px solid var(--green);}
 
   /* CALLOUT */
-  .callout {
-    border-radius: var(--radius); padding: 2rem 2.25rem; margin: 1.5rem 0;
-    display: flex; gap: 1rem; align-items: flex-start;
-  }
-  .callout-icon { font-size: 1.4rem; flex-shrink: 0; margin-top: .1rem; }
-  .callout p, .callout li { font-size: 0.92rem; }
-  .callout ul { padding-left: 1.2rem; }
-  .callout li { margin-bottom: .25rem; }
-  .cl-blue   { background: rgba(74,108,247,0.08); border: 1px solid rgba(74,108,247,0.2); }
-  .cl-teal   { background: rgba(8,145,178,0.07);  border: 1px solid rgba(8,145,178,0.2); }
-  .cl-green  { background: rgba(14,164,114,0.07); border: 1px solid rgba(14,164,114,0.2); }
-  .cl-amber  { background: rgba(251,188,4,0.1);   border: 1px solid rgba(251,188,4,0.3); }
-  .cl-red    { background: rgba(220,38,38,0.07);  border: 1px solid rgba(220,38,38,0.2); }
-  .cl-purple { background: rgba(124,58,237,0.07); border: 1px solid rgba(124,58,237,0.2); }
+  .callout{border-radius:var(--radius);padding:2rem 2.25rem;margin:1.5rem 0;display:flex;gap:1rem;align-items:flex-start;}
+  .callout-icon{font-size:1.4rem;flex-shrink:0;margin-top:.1rem;}
+  .callout p,.callout li{font-size:0.92rem;}
+  .callout ul{padding-left:1.2rem;}
+  .callout li{margin-bottom:.25rem;}
+  .cl-blue{background:rgba(74,108,247,0.08);border:1px solid rgba(74,108,247,0.2);}
+  .cl-teal{background:rgba(8,145,178,0.07);border:1px solid rgba(8,145,178,0.2);}
+  .cl-green{background:rgba(14,164,114,0.07);border:1px solid rgba(14,164,114,0.2);}
+  .cl-amber{background:rgba(251,188,4,0.1);border:1px solid rgba(251,188,4,0.3);}
+  .cl-red{background:rgba(220,38,38,0.07);border:1px solid rgba(220,38,38,0.2);}
+  .cl-purple{background:rgba(124,58,237,0.07);border:1px solid rgba(124,58,237,0.2);}
 
-  /* EXAMPLE BOX */
-  .ex { background: var(--cream); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1rem 1.25rem; margin: .65rem 0; }
-  .ex .ex-lbl { font-size: 0.68rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; margin-bottom: .3rem; color: var(--teal); }
-  .ex p { font-size: 0.87rem; color: var(--ink); }
-  .ex-red .ex-lbl    { color: var(--red); }
-  .ex-orange .ex-lbl { color: var(--orange); }
-  .ex-purple .ex-lbl { color: var(--purple); }
+  /* EX BOX */
+  .ex{background:var(--cream);border:1px solid var(--border);border-radius:var(--radius-sm);padding:1rem 1.25rem;margin:.65rem 0;}
+  .ex .ex-lbl{font-size:0.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.3rem;color:var(--teal);}
+  .ex p{font-size:0.87rem;color:var(--ink);}
+  .ex-red .ex-lbl{color:var(--red);}
+  .ex-orange .ex-lbl{color:var(--orange);}
+  .ex-purple .ex-lbl{color:var(--purple);}
 
   /* CODE */
-  .code {
-    background: #13172e; border-radius: var(--radius-sm);
-    padding: 1.1rem 1.4rem; font-family: 'Courier New', monospace;
-    font-size: 0.8rem; color: #a8c4ff; overflow-x: auto; line-height: 1.65;
-    margin: .65rem 0;
-  }
-  .code .cm { color: #4a6070; }
-  .code .kw { color: #fbbc04; }
-  .code .st { color: #57e3b0; }
-  .code .er { color: #ff7b7b; }
-  .code .ok { color: #7ec96b; }
+  .code{background:#13172e;border-radius:var(--radius-sm);padding:1.1rem 1.4rem;font-family:'Courier New',monospace;font-size:0.8rem;color:#a8c4ff;overflow-x:auto;line-height:1.65;margin:.65rem 0;}
+  .code .cm{color:#4a6070;}.code .kw{color:#fbbc04;}.code .st{color:#57e3b0;}.code .er{color:#ff7b7b;}.code .ok{color:#7ec96b;}
 
   /* SECTIONS */
-  .s-dark { background: var(--navy); color: white; }
-  .s-dark h2, .s-dark h3, .s-dark h4 { color: white; }
-  .s-dark .lead { color: rgba(255,255,255,0.58); }
-  .s-dark .card { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1); }
-  .s-dark .card h3, .s-dark .card h4 { color: white; }
-  .s-dark .card p { color: rgba(255,255,255,0.6); }
-  .s-cream { background: var(--cream); }
-  .s-teal  { background: #f0f9ff; }
-  .s-red   { background: #fff8f8; }
-
-  /* PILLS */
-  .pills { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: .6rem; }
-  .pill {
-    background: var(--cream); border: 1px solid var(--border);
-    border-radius: 100px; padding: .2rem .7rem;
-    font-size: 0.75rem; font-weight: 600; color: var(--muted);
-  }
+  .s-dark{background:var(--navy);color:white;}
+  .s-dark h2,.s-dark h3,.s-dark h4{color:white;}
+  .s-dark .lead{color:rgba(255,255,255,0.58);}
+  .s-dark .card{background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.1);}
+  .s-dark .card h3,.s-dark .card h4{color:white;}
+  .s-dark .card p{color:rgba(255,255,255,0.6);}
+  .s-cream{background:var(--cream);}
+  .s-teal{background:#f0f9ff;}
+  .s-red{background:#fff8f8;}
+  .s-light{background:#f8f9ff;}
 
   /* BADGE */
-  .badge {
-    display: inline-block; padding: .15rem .55rem; border-radius: 100px;
-    font-size: 0.72rem; font-weight: 700; font-family: 'Syne', sans-serif;
-  }
-  .b-teal   { background: rgba(8,145,178,0.12);  color: var(--teald); }
-  .b-red    { background: rgba(220,38,38,0.12);  color: #991b1b; }
-  .b-orange { background: rgba(224,123,32,0.12); color: #9a4e00; }
-  .b-blue   { background: rgba(74,108,247,0.12); color: var(--cobalt); }
-  .b-purple { background: rgba(124,58,237,0.12); color: var(--purple); }
-  .b-green  { background: rgba(14,164,114,0.12); color: #077a52; }
+  .badge{display:inline-block;padding:.15rem .55rem;border-radius:100px;font-size:0.72rem;font-weight:700;font-family:'Syne',sans-serif;}
+  .b-teal{background:rgba(8,145,178,0.12);color:var(--teald);}
+  .b-red{background:rgba(220,38,38,0.12);color:#991b1b;}
+  .b-orange{background:rgba(224,123,32,0.12);color:#9a4e00;}
+  .b-blue{background:rgba(74,108,247,0.12);color:var(--cobalt);}
+  .b-purple{background:rgba(124,58,237,0.12);color:var(--purple);}
+  .b-green{background:rgba(14,164,114,0.12);color:#077a52;}
 
   /* TABLE */
-  .ptable { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
-  .ptable th, .ptable td { padding: .85rem 1rem; text-align: left; border-bottom: 1px solid var(--border); }
-  .ptable th { background: var(--navy); color: white; font-family: 'Syne', sans-serif; font-weight: 700; }
-  .ptable th:first-child { border-radius: 8px 0 0 0; }
-  .ptable th:last-child  { border-radius: 0 8px 0 0; }
-  .ptable tr:hover td { background: var(--cream); }
+  .ptable{width:100%;border-collapse:collapse;font-size:0.88rem;}
+  .ptable th,.ptable td{padding:.85rem 1rem;text-align:left;border-bottom:1px solid var(--border);}
+  .ptable th{background:var(--navy);color:white;font-family:'Syne',sans-serif;font-weight:700;}
+  .ptable th:first-child{border-radius:8px 0 0 0;}.ptable th:last-child{border-radius:0 8px 0 0;}
+  .ptable tr:hover td{background:var(--cream);}
 
   /* RA BANNER */
-  .ra-banner {
-    border-radius: var(--radius); padding: 1.5rem 2rem;
-    display: flex; align-items: center; gap: 1.25rem; margin-bottom: 3rem;
-    color: white;
-  }
-  .ra-num { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 2.4rem; opacity: .25; flex-shrink: 0; line-height: 1; }
-  .ra-banner h2 { color: white; font-size: 1.35rem; margin-bottom: .2rem; }
-  .ra-banner p  { color: rgba(255,255,255,0.7); font-size: 0.88rem; }
-  .ra-teal      { background: linear-gradient(135deg, #065f79, var(--teal)); }
-  .ra-red       { background: linear-gradient(135deg, #7f1d1d, var(--red)); }
-  .ra-practica  { background: linear-gradient(135deg, #5b21b6, #7c3aed); }
-  .ra-preguntes { background: linear-gradient(135deg, #92400e, #d97706); }
+  .ra-banner{border-radius:var(--radius);padding:1.5rem 2rem;display:flex;align-items:center;gap:1.25rem;margin-bottom:3rem;color:white;}
+  .ra-num{font-family:'Syne',sans-serif;font-weight:800;font-size:2.4rem;opacity:.25;flex-shrink:0;line-height:1;}
+  .ra-banner h2{color:white;font-size:1.35rem;margin-bottom:.2rem;}
+  .ra-banner p{color:rgba(255,255,255,0.7);font-size:0.88rem;}
+  .ra-teal{background:linear-gradient(135deg,#065f79,var(--teal));}
+  .ra-red{background:linear-gradient(135deg,#7f1d1d,var(--red));}
+  .ra-practica{background:linear-gradient(135deg,#5b21b6,#7c3aed);}
+  .ra-preguntes{background:linear-gradient(135deg,#92400e,#d97706);}
+  .ra-green{background:linear-gradient(135deg,#065f40,var(--green));}
 
   /* STEPS */
-  .steps { counter-reset: st; list-style: none; display: flex; flex-direction: column; gap: .85rem; }
-  .steps li {
-    counter-increment: st;
-    display: flex; gap: .9rem; align-items: flex-start;
-    padding: .9rem 1.1rem; background: var(--cream);
-    border-radius: var(--radius-sm); font-size: 0.9rem;
-  }
-  .steps li::before {
-    content: counter(st);
-    flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%;
-    background: var(--teal); color: white;
-    display: grid; place-items: center;
-    font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.8rem;
-  }
-  .steps li p { color: var(--ink); margin: 0; }
+  .steps{counter-reset:st;list-style:none;display:flex;flex-direction:column;gap:.85rem;}
+  .steps li{counter-increment:st;display:flex;gap:.9rem;align-items:flex-start;padding:.9rem 1.1rem;background:var(--cream);border-radius:var(--radius-sm);font-size:0.9rem;}
+  .steps li::before{content:counter(st);flex-shrink:0;width:28px;height:28px;border-radius:50%;background:var(--teal);color:white;display:grid;place-items:center;font-family:'Syne',sans-serif;font-weight:700;font-size:0.8rem;}
+  .steps li p{color:var(--ink);margin:0;}
 
-  /* PRACTICE CARD */
-  .practice-card {
-    background: var(--card); border: 1px solid var(--border);
-    border-radius: var(--radius); overflow: hidden;
-  }
-  .practice-header {
-    padding: 1.5rem 2rem;
-    display: flex; align-items: center; gap: 1rem;
-    color: white;
-  }
-  .practice-num {
-    font-family: 'Syne', sans-serif; font-weight: 800;
-    font-size: 1.8rem; opacity: .35; line-height: 1;
-  }
-  .practice-header h3 { color: white; font-size: 1.2rem; margin: 0; }
-  .practice-header p  { color: rgba(255,255,255,0.7); font-size: 0.82rem; margin: .2rem 0 0; }
-  .practice-body { padding: 2rem; }
-  .ph-teal { background: linear-gradient(135deg, #065f79, #0891b2); }
+  /* PRACTICE CARD — text contrast fix */
+  .practice-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
+  .practice-header{padding:1.5rem 2rem;display:flex;align-items:center;gap:1rem;color:white;}
+  .practice-num{font-family:'Syne',sans-serif;font-weight:800;font-size:1.8rem;opacity:.35;line-height:1;}
+  .practice-header h3{color:white;font-size:1.2rem;margin:0;}
+  .practice-header p{color:rgba(255,255,255,0.85);font-size:0.82rem;margin:.2rem 0 0;}
+  .practice-body{padding:2rem;background:white;}
+  /* All text inside practice body always readable */
+  .practice-body h3{color:var(--navy);}
+  .practice-body h4{color:var(--navy);}
+  .practice-body p{color:var(--ink);}
+  .practice-body .steps li p{color:var(--ink);}
+  .ph-teal{background:linear-gradient(135deg,#065f79,#0891b2);}
 
-  /* QUESTIONS */
-  .q-card {
-    display: flex; gap: 1.1rem; background: var(--card);
-    border: 1px solid var(--border); border-radius: var(--radius);
-    padding: 1.4rem 1.6rem; align-items: flex-start;
-  }
-  .q-num {
-    font-family: 'Syne', sans-serif; font-weight: 800;
-    font-size: 1.6rem; color: var(--border); line-height: 1; flex-shrink: 0;
-    padding-top: .1rem;
-  }
-  .q-body h4 { color: var(--navy); margin-bottom: .35rem; line-height: 1.4; }
-  .q-body p  { color: var(--muted); font-size: 0.88rem; }
-  .q-tags { display: flex; gap: .35rem; flex-wrap: wrap; margin-top: .5rem; }
-  .q-tag {
-    font-size: 0.68rem; font-weight: 700; letter-spacing: .06em;
-    text-transform: uppercase; padding: .15rem .6rem; border-radius: 100px;
-  }
-  .qt-diag { background: rgba(8,145,178,0.12);  color: var(--teald); }
-  .qt-inc  { background: rgba(220,38,38,0.12);  color: #991b1b; }
-  .qt-tool { background: rgba(74,108,247,0.12); color: var(--cobalt); }
-  .qt-doc  { background: rgba(14,164,114,0.12); color: #077a52; }
-  .qt-mix  { background: rgba(124,58,237,0.12); color: var(--purple); }
-  .qt-user { background: rgba(224,123,32,0.12); color: #9a4e00; }
+  /* SEVERITY */
+  .severity{display:inline-flex;align-items:center;gap:.4rem;font-size:0.75rem;font-weight:700;padding:.2rem .7rem;border-radius:100px;font-family:'Syne',sans-serif;}
+  .sev-1{background:rgba(220,38,38,0.12);color:#991b1b;}
+  .sev-2{background:rgba(224,123,32,0.12);color:#9a4e00;}
+  .sev-3{background:rgba(251,188,4,0.15);color:#8a6500;}
+  .sev-4{background:rgba(14,164,114,0.12);color:#077a52;}
 
-  /* SEVERITY INDICATOR */
-  .severity {
-    display: inline-flex; align-items: center; gap: .4rem;
-    font-size: 0.75rem; font-weight: 700; padding: .2rem .7rem;
-    border-radius: 100px; font-family: 'Syne', sans-serif;
-  }
-  .sev-1 { background: rgba(220,38,38,0.12); color: #991b1b; }
-  .sev-2 { background: rgba(224,123,32,0.12); color: #9a4e00; }
-  .sev-3 { background: rgba(251,188,4,0.15); color: #8a6500; }
-  .sev-4 { background: rgba(14,164,114,0.12); color: #077a52; }
+  /* TICKET */
+  .ticket{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.4rem;border-left:4px solid;}
+  .ticket-teal{border-left-color:var(--teal);}
+  .ticket-red{border-left-color:var(--red);}
+  .ticket-orange{border-left-color:var(--orange);}
+  .ticket-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.6rem;flex-wrap:wrap;gap:.4rem;}
+  .ticket-id{font-family:'Syne',sans-serif;font-weight:700;font-size:0.78rem;color:var(--muted);}
+  .ticket h4{color:var(--navy);font-size:0.95rem;}
+  .ticket p{color:var(--muted);font-size:0.85rem;margin-top:.35rem;}
 
-  /* TICKET CARD */
-  .ticket {
-    background: var(--card); border: 1px solid var(--border);
-    border-radius: var(--radius); padding: 1.4rem;
-    border-left: 4px solid;
-  }
-  .ticket-teal   { border-left-color: var(--teal); }
-  .ticket-red    { border-left-color: var(--red); }
-  .ticket-orange { border-left-color: var(--orange); }
-  .ticket-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: .6rem; flex-wrap: wrap; gap: .4rem; }
-  .ticket-id { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.78rem; color: var(--muted); }
-  .ticket h4 { color: var(--navy); font-size: 0.95rem; }
-  .ticket p { color: var(--muted); font-size: 0.85rem; margin-top: .35rem; }
+  /* Q-CARD */
+  .q-card{display:flex;gap:1.1rem;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.4rem 1.6rem;align-items:flex-start;}
+  .q-num{font-family:'Syne',sans-serif;font-weight:800;font-size:1.6rem;color:var(--border);line-height:1;flex-shrink:0;padding-top:.1rem;}
+  .q-body h4{color:var(--navy);margin-bottom:.35rem;line-height:1.4;}
+  .q-body p{color:var(--muted);font-size:0.88rem;}
+  .q-tags{display:flex;gap:.35rem;flex-wrap:wrap;margin-top:.5rem;}
+  .q-tag{font-size:0.68rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:.15rem .6rem;border-radius:100px;}
+  .qt-diag{background:rgba(8,145,178,0.12);color:var(--teald);}
+  .qt-inc{background:rgba(220,38,38,0.12);color:#991b1b;}
+  .qt-tool{background:rgba(74,108,247,0.12);color:var(--cobalt);}
+  .qt-doc{background:rgba(14,164,114,0.12);color:#077a52;}
+  .qt-mix{background:rgba(124,58,237,0.12);color:var(--purple);}
+  .qt-user{background:rgba(224,123,32,0.12);color:#9a4e00;}
 
-  /* FI ANIMATION */
-  .fi { opacity: 0; transform: translateY(22px); transition: opacity .55s ease, transform .55s ease; }
-  .fi.in { opacity: 1; transform: translateY(0); }
+  /* CONCEPT MAP */
+  .concept-map{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--border);border-radius:var(--radius);overflow:hidden;margin:1.5rem 0;}
+  .cm-node{background:var(--card);padding:1.1rem;text-align:center;}
+  .cm-node .cm-icon{font-size:1.5rem;margin-bottom:.3rem;}
+  .cm-node .cm-lbl{font-family:'Syne',sans-serif;font-weight:700;font-size:0.82rem;color:var(--navy);}
+  .cm-node .cm-sub{font-size:0.72rem;color:var(--muted);margin-top:.2rem;}
+  .cm-center{background:var(--navy);}
+  .cm-center .cm-lbl{color:white;}
+  .cm-center .cm-sub{color:rgba(255,255,255,.6);}
+
+  /* DIFFICULTY BADGES */
+  .dif-badge{display:inline-flex;align-items:center;gap:.4rem;font-size:0.72rem;font-weight:700;padding:.2rem .65rem;border-radius:100px;margin-right:.3rem;}
+  .dif-basic{background:rgba(14,164,114,0.12);color:#065f40;}
+  .dif-mid{background:rgba(251,188,4,0.18);color:#8a6500;}
+  .dif-advanced{background:rgba(220,38,38,0.12);color:#991b1b;}
+  .time-badge{display:inline-flex;align-items:center;gap:.35rem;font-size:0.72rem;font-weight:600;color:var(--muted);background:var(--cream);border:1px solid var(--border);padding:.2rem .65rem;border-radius:100px;}
+
+  /* COMPARE (bé vs malament) */
+  .compare-wrap{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1rem 0;}
+  @media(max-width:600px){.compare-wrap{grid-template-columns:1fr;}}
+  .compare-bad{background:rgba(220,38,38,0.05);border:1px solid rgba(220,38,38,0.22);border-radius:var(--radius);padding:1.1rem 1.25rem;}
+  .compare-good{background:rgba(14,164,114,0.06);border:1px solid rgba(14,164,114,0.25);border-radius:var(--radius);padding:1.1rem 1.25rem;}
+  .compare-lbl{font-size:0.68rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.5rem;display:flex;align-items:center;gap:.4rem;}
+  .compare-bad .compare-lbl{color:#991b1b;}
+  .compare-good .compare-lbl{color:#065f40;}
+  .compare-bad p,.compare-good p{font-size:0.87rem;color:var(--ink);line-height:1.55;}
+
+  /* TRAMPES */
+  .trap-card{background:#fff8f0;border:1px solid rgba(220,38,38,0.22);border-left:4px solid var(--red);border-radius:var(--radius);padding:1.25rem 1.5rem;margin-bottom:.85rem;}
+  .trap-card .trap-head{display:flex;align-items:center;gap:.65rem;margin-bottom:.4rem;}
+  .trap-card h4{color:#991b1b;margin:0;font-size:0.95rem;}
+  .trap-card p{color:var(--muted);font-size:0.88rem;}
+  .trap-fix{margin-top:.5rem;padding:.5rem .85rem;border-radius:6px;background:rgba(14,164,114,0.09);font-size:0.85rem;color:#065f40;}
+
+  /* CHECKLIST */
+  .delivery-check{background:#f0fdf9;border:1px solid rgba(8,145,178,0.3);border-radius:var(--radius);padding:1.5rem;margin-top:1.25rem;}
+  .delivery-check h4{color:var(--teald);margin-bottom:.75rem;}
+  .check-list{list-style:none;display:flex;flex-direction:column;gap:.45rem;}
+  .check-list li{display:flex;align-items:center;gap:.65rem;font-size:0.88rem;color:var(--ink);}
+  .check-list li input[type=checkbox]{width:17px;height:17px;accent-color:var(--teal);cursor:pointer;flex-shrink:0;}
+  .check-list li.checked{text-decoration:line-through;color:var(--muted);}
+
+  /* RUBRIC */
+  .rubric-wrap{overflow-x:auto;margin-top:1.5rem;}
+  .rubric-table{width:100%;border-collapse:collapse;font-size:0.82rem;}
+  .rubric-table th,.rubric-table td{padding:.7rem .85rem;border:1px solid var(--border);vertical-align:top;}
+  .rubric-table th{background:var(--navy);color:white;font-family:'Syne',sans-serif;font-weight:700;font-size:0.78rem;text-align:center;}
+  .rubric-table th:first-child{border-radius:8px 0 0 0;}.rubric-table th:last-child{border-radius:0 8px 0 0;}
+  .rubric-table td:first-child{font-weight:600;color:var(--navy);background:#fafafa;min-width:140px;}
+  .col-ex{background:rgba(14,164,114,0.05);}.col-be{background:rgba(74,108,247,0.04);}.col-ok{background:rgba(251,188,4,0.05);}.col-no{background:rgba(220,38,38,0.04);}
+  .col-ex td,.col-be td,.col-ok td,.col-no td{color:var(--muted);font-size:0.79rem;}
+  .rubric-total{background:var(--navy) !important;}.rubric-total td{color:white !important;font-weight:700 !important;background:transparent !important;}
+
+  /* QUIZ */
+  .quiz-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;margin-bottom:1rem;}
+  .quiz-q{font-weight:600;font-size:0.95rem;color:var(--navy);margin-bottom:.85rem;}
+  .quiz-options{display:flex;flex-direction:column;gap:.5rem;}
+  .quiz-opt{display:flex;align-items:center;gap:.75rem;padding:.65rem 1rem;border-radius:8px;cursor:pointer;border:1.5px solid var(--border);background:white;font-size:0.88rem;color:var(--ink);transition:all .2s;text-align:left;}
+  .quiz-opt:hover{border-color:var(--teal);background:rgba(8,145,178,0.05);}
+  .quiz-opt.correct{border-color:var(--green);background:rgba(14,164,114,0.1);color:#065f40;font-weight:600;}
+  .quiz-opt.wrong{border-color:var(--red);background:rgba(220,38,38,0.07);color:#991b1b;}
+  .quiz-opt.disabled{cursor:not-allowed;}
+  .quiz-feedback{margin-top:.65rem;font-size:0.83rem;padding:.5rem .85rem;border-radius:6px;display:none;}
+  .quiz-feedback.show{display:block;}
+  .quiz-feedback.ok{background:rgba(14,164,114,0.1);color:#065f40;}
+  .quiz-feedback.ko{background:rgba(220,38,38,0.08);color:#991b1b;}
+  .quiz-score{font-family:'Syne',sans-serif;font-weight:800;font-size:1.5rem;color:var(--navy);margin:1rem 0 .3rem;}
+
+  /* RESOURCES */
+  .resource-link{display:flex;align-items:center;gap:1rem;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1rem 1.25rem;text-decoration:none;color:inherit;transition:all .2s;margin-bottom:.6rem;}
+  .resource-link:hover{border-color:var(--teal);transform:translateX(4px);}
+  .resource-icon{font-size:1.6rem;flex-shrink:0;}
+  .resource-link .r-title{font-weight:700;font-size:0.92rem;color:var(--navy);}
+  .resource-link .r-desc{font-size:0.8rem;color:var(--muted);}
+  .resource-link .r-tag{font-size:0.68rem;font-weight:700;background:rgba(8,145,178,0.1);color:var(--teal);padding:.1rem .5rem;border-radius:100px;margin-top:.2rem;display:inline-block;}
+
+  /* FEYNMAN */
+  .feynman{background:linear-gradient(135deg,#1a1f4e,#065f79);color:white;border-radius:var(--radius);padding:2rem 2.25rem;margin:2rem 0;}
+  .feynman h3{color:white;}
+  .feynman p{color:rgba(255,255,255,.75);font-size:0.92rem;}
+  .feyn-prompts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.75rem;margin-top:1.25rem;}
+  .feyn-card{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:1rem;}
+  .feyn-card p{color:rgba(255,255,255,.8);font-size:0.85rem;font-style:italic;}
+
+  /* PILLS */
+  .pills{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.6rem;}
+  .pill{background:var(--cream);border:1px solid var(--border);border-radius:100px;padding:.2rem .7rem;font-size:0.75rem;font-weight:600;color:var(--muted);}
+
+  /* FI */
+  .fi{opacity:0;transform:translateY(22px);transition:opacity .55s ease,transform .55s ease;}
+  .fi.in{opacity:1;transform:translateY(0);}
 
   /* FOOTER */
-  footer {
-    background: var(--ink); color: rgba(255,255,255,0.5);
-    text-align: center; padding: 3rem 2rem; font-size: 0.85rem;
-  }
+  footer{background:var(--ink);color:rgba(255,255,255,0.5);text-align:center;padding:3rem 2rem;font-size:0.85rem;}
 </style>
 </head>
 <body>
+
+<div id="progress-bar"></div>
 
 <!-- NAV -->
 <nav>
   <div class="nav-logo">M3 · SMX <span>RA9</span></div>
   <ul class="nav-pills">
+    <li><a href="#visio">Visió</a></li>
     <li><a href="#teoria">Teoria</a></li>
     <li><a href="#metodologia">Metodologia</a></li>
-    <li><a href="#incidencies">Incidències comunes</a></li>
+    <li><a href="#incidencies">Incidències</a></li>
     <li><a href="#practica">Pràctica</a></li>
+    <li><a href="#rubrica">Rúbrica</a></li>
+    <li><a href="#autoavaluacio">Test</a></li>
+    <li><a href="#recursos">Recursos</a></li>
     <li><a href="#preguntes">Preguntes</a></li>
   </ul>
 </nav>
@@ -368,9 +314,7 @@
   <div class="hero-dots"></div>
   <div class="hero-content">
     <div class="hero-badge">🛠️ Mòdul 3 · SMX · Ofimàtica</div>
-    <h1>
-      <span class="hi">Suport</span> Tècnic<br>en Aplicacions<br>Ofimàtiques
-    </h1>
+    <h1><span class="hi">Suport</span> Tècnic<br>en Aplicacions<br>Ofimàtiques</h1>
     <p>Aprèn a identificar, diagnosticar i resoldre incidències en aplicacions ofimàtiques amb metodologia professional, eines de diagnòstic i documentació adequada.</p>
     <div class="hero-chips">
       <div class="hero-chip">🔍 Diagnòstic d'incidències</div>
@@ -382,7 +326,96 @@
   <div class="scroll-hint">DESPLAÇA</div>
 </section>
 
-<!-- TEORIA: SUPORT TÈCNIC -->
+<!-- ═══ VISIÓ GENERAL ═══ -->
+<section id="visio" class="s-cream">
+  <div class="container">
+    <div class="section-tag tag-teal fi">Visió general</div>
+    <h2 class="fi">Mapa de continguts del RA9</h2>
+    <p class="lead fi" style="margin-bottom:1.5rem">Abans d'entrar als detalls, aquí tens la fotografia completa del que aprendràs i com es connecta tot.</p>
+
+    <div class="concept-map fi">
+      <div class="cm-node"><div class="cm-icon">🎫</div><div class="cm-lbl">Tickets</div><div class="cm-sub">GLPI · Jira · SLA</div></div>
+      <div class="cm-node"><div class="cm-icon">📊</div><div class="cm-lbl">Nivells N1/N2/N3</div><div class="cm-sub">Escalat</div></div>
+      <div class="cm-node cm-center"><div class="cm-icon">🛠️</div><div class="cm-lbl">Suport Tècnic IT</div><div class="cm-sub">RA9 · SMX · Ofimàtica</div></div>
+      <div class="cm-node"><div class="cm-icon">🔍</div><div class="cm-lbl">Diagnòstic</div><div class="cm-sub">5 Whys · Bisecció</div></div>
+      <div class="cm-node"><div class="cm-icon">🗣️</div><div class="cm-lbl">Comunicació</div><div class="cm-sub">Escolta activa · Usuari</div></div>
+      <div class="cm-node"><div class="cm-icon">📖</div><div class="cm-lbl">Base de coneixement</div><div class="cm-sub">KB · Documentació</div></div>
+      <div class="cm-node"><div class="cm-icon">🖥️</div><div class="cm-lbl">Accés remot</div><div class="cm-sub">AnyDesk · RDP · QAssist</div></div>
+    </div>
+
+    <!-- BÉ vs MALAMENT -->
+    <div class="section-tag tag-red fi" style="margin-top:3rem">Bé vs. Malament</div>
+    <h2 class="fi">Errors típics en suport tècnic que no pots cometre</h2>
+    <p style="color:var(--muted);font-size:.95rem;margin-bottom:1.25rem" class="fi">Veure l'error ajuda molt més que llegir que no s'ha de fer. Aquí tens els errors més freqüents amb la seva alternativa correcta.</p>
+
+    <div class="compare-wrap fi">
+      <div class="compare-bad">
+        <div class="compare-lbl">❌ Malament</div>
+        <p><strong>Tancar el ticket sense confirmar amb l'usuari</strong><br><br>
+        Resolem el problema tècnicament, marquem el ticket com a "Tancat" i passem al següent. L'usuari mai ha confirmat que ho veu resolt i torna a trucar hores després perquè "el problema no està arreglat del tot".</p>
+      </div>
+      <div class="compare-good">
+        <div class="compare-lbl">✅ Correcte</div>
+        <p><strong>Verificació activa amb l'usuari abans de tancar</strong><br><br>
+        Apliquem la solució → truquem o escrivim a l'usuari → li demanem que comprovi que tot funciona → esperem la seva confirmació → llavors tanquem el ticket. El SLA es mesura fins al tancament confirmat.</p>
+      </div>
+    </div>
+    <div class="compare-wrap fi">
+      <div class="compare-bad">
+        <div class="compare-lbl">❌ Malament</div>
+        <p><strong>Resoldre el símptoma sense trobar la causa arrel</strong><br><br>
+        L'usuari diu que LibreOffice es tanca sol. Reinstal·lem LibreOffice → funciona → tanquem. Al cap d'una setmana torna a passar perquè el problema real era el perfil d'usuari corrupte, que continua allà.</p>
+      </div>
+      <div class="compare-good">
+        <div class="compare-lbl">✅ Correcte</div>
+        <p><strong>Arribar a la causa arrel amb els 5 Whys</strong><br><br>
+        Per quina raó es tanca? → Error al perfil. Per quina raó? → Fitxer de configuració corrupte. Per quina raó? → Actualització incompleta. La solució real: regenerar el perfil i revisar el procés d'actualització.</p>
+      </div>
+    </div>
+    <div class="compare-wrap fi">
+      <div class="compare-bad">
+        <div class="compare-lbl">❌ Malament</div>
+        <p><strong>Usar jerga tècnica amb l'usuari final</strong><br><br>
+        "El procés svchost.exe del vostre LSASS consumeix un 95% de CPU per culpa d'un deadlock entre el servei de spooler i el driver del controlador de perifèrics." L'usuari no entén res i perd la confiança.</p>
+      </div>
+      <div class="compare-good">
+        <div class="compare-lbl">✅ Correcte</div>
+        <p><strong>Adaptar el llenguatge al nivell de l'usuari</strong><br><br>
+        "El vostre ordinador té un programa de fons que treballa massa i va molt lent. Ara el reiniciaré i quedarà resolt. Si torna a passar avisa'ns." Simple, clar, i l'usuari entén exactament el que passa.</p>
+      </div>
+    </div>
+
+    <!-- TRAMPES FREQÜENTS -->
+    <div class="section-tag tag-red fi" style="margin-top:3rem">Trampes freqüents</div>
+    <h2 class="fi">Errors habituals que fan tots els alumnes</h2>
+    <p style="color:var(--muted);font-size:.95rem;margin-bottom:1.25rem" class="fi">Llegeix-los abans de la pràctica. Si els coneixes, no els comets.</p>
+
+    <div class="fi">
+      <div class="trap-card">
+        <div class="trap-head"><span>⚠️</span><h4>Confondre prioritat amb urgència percebuda per l'usuari</h4></div>
+        <p>Un usuari crida molt i insisteix que el seu problema és "urgentíssim" perquè no pot canviar el fons de pantalla. Un altre usuari avisa tranquil·lament que el servidor de correu ha caigut. La prioritat real la determina l'impacte al negoci, no l'estat emocional de l'usuari.</p>
+        <div class="trap-fix">✅ Solució: usa sempre una matriu d'impacte × urgència objectiva per assignar prioritats, independentment de com de nerviós estigui l'usuari.</div>
+      </div>
+      <div class="trap-card">
+        <div class="trap-head"><span>⚠️</span><h4>No documentar la solució perquè "ja ho recordaré"</h4></div>
+        <p>Resolem una incidència complexa en 2 hores. No escrivim res a la KB perquè "és evident". Al cap de 3 mesos, el mateix problema torna amb un altre usuari i tornem a invertir 2 hores. Multiplicat per 10 incidències similars a l'any, estem perdent 20 hores de suport evitables.</p>
+        <div class="trap-fix">✅ Solució: documenta SEMPRE la solució al ticket i a la KB, fins i tot quan sembla evident. El futur tu (o el company) t'ho agrairà.</div>
+      </div>
+      <div class="trap-card">
+        <div class="trap-head"><span>⚠️</span><h4>Saltar-se els nivells d'escalat (N1 → N3 directament)</h4></div>
+        <p>L'usuari truca directament al tècnic N2 o N3 perquè "el coneix". El N2 resol el problema però perd temps en coses que hauria resolt N1, la KB no es consulta, i el sistema de tickets no reflecteix la realitat. El mànager no pot veure quin tipus d'incidències hi ha perquè no estan registrades.</p>
+        <div class="trap-fix">✅ Solució: tot passa per N1 i s'obre un ticket, sempre. L'escalat ha de ser formal i documentat, no informal per correu o WhatsApp.</div>
+      </div>
+      <div class="trap-card">
+        <div class="trap-head"><span>⚠️</span><h4>Accedir remotament sense el consentiment explícit de l'usuari</h4></div>
+        <p>Iniciem una sessió d'accés remot per "mirar una cosa ràpida" sense avisar l'usuari. Si l'usuari té documents confidencials oberts, estem accedint a informació sense permís. A més, pot generar desconfiança i problemes legals de privacitat.</p>
+        <div class="trap-fix">✅ Solució: sempre informa l'usuari, explica-li el que faràs, demana el seu consentiment explícit i tancat la sessió en acabar. Moltes eines com Quick Assist ho demanen automàticament.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ TEORIA ═══ -->
 <section id="teoria">
   <div class="container">
     <div class="section-tag tag-teal fi">Conceptes de suport tècnic</div>
@@ -394,31 +427,39 @@
         <div class="card-icon" style="background:#f0f9ff">🎫</div>
         <h3>Gestió de tickets</h3>
         <p>Cada incidència o petició de suport es registra com un <strong>ticket</strong> en un sistema de gestió (GLPI, Jira Service Management, Zendesk). El ticket documenta el problema, l'usuari afectat, la prioritat i el responsable de resolució.</p>
+        <div class="ex" style="margin-top:.75rem">
+          <div class="ex-lbl">Connexió amb el món real</div>
+          <p>En empreses com Telefónica, CaixaBank o l'Ajuntament de Barcelona, els departaments IT gestionen milers de tickets al mes. Sense un sistema de tickets, seria impossible fer un seguiment de totes les incidències.</p>
+        </div>
       </div>
       <div class="card bl-teal">
         <div class="card-icon" style="background:#f0f9ff">📊</div>
         <h3>SLA — Acord de Nivell de Servei</h3>
         <p>Un <strong>Service Level Agreement</strong> defineix els temps màxims de resposta i resolució per a cada nivell de prioritat. Exemple: incidències crítiques → resposta en 15 min, resolució en 4 hores.</p>
+        <div class="ex" style="margin-top:.75rem">
+          <div class="ex-lbl">Per a quin motiu és important</div>
+          <p>Si l'empresa no compleix els SLAs pactats amb el client, pot haver-hi penalitzacions econòmiques al contracte. Per això els tècnics treballen contra rellotge en incidències crítiques.</p>
+        </div>
       </div>
       <div class="card bl-teal">
         <div class="card-icon" style="background:#f0f9ff">🔁</div>
         <h3>Escalat d'incidències</h3>
         <p>Quan un tècnic no pot resoldre una incidència en el temps establert o requereix coneixements especialitzats, <strong>escala</strong> el ticket al nivell superior (N1 → N2 → N3 → Fabricant).</p>
+        <div class="ex" style="margin-top:.75rem">
+          <div class="ex-lbl">Regla clau</div>
+          <p>Mai s'escala un ticket sense documentar el que s'ha provat prèviament. El tècnic N2 necessita saber per on ha passat la incidència per no repetir els passos.</p>
+        </div>
       </div>
     </div>
 
-    <!-- NIVELLS DE SUPORT -->
-    <div class="section-tag tag-teal fi" style="margin-top:4rem">Nivells de suport</div>
+    <div class="section-tag tag-teal fi" style="margin-top:3.5rem">Nivells de suport</div>
     <h2 class="fi">Model de suport per nivells (N1, N2, N3)</h2>
     <p class="lead fi">El suport tècnic s'organitza en nivells de complexitat creixent. Cada nivell intenta resoldre la incidència abans d'escalar-la al nivell superior.</p>
 
     <div class="grid g3 fi">
       <div class="card" style="border-top:4px solid var(--teal)">
-        <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.75rem">
-          <span class="badge b-teal">N1</span>
-          <h3 style="margin:0">Primer nivell</h3>
-        </div>
-        <p style="margin-bottom:.65rem">Suport bàsic, primer contacte amb l'usuari. Resol el <strong>70-80% de les incidències</strong> amb procediments estàndard (FAQ, guies, reinicis). Temps d'atenció reduït.</p>
+        <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.75rem"><span class="badge b-teal">N1</span><h3 style="margin:0">Primer nivell</h3></div>
+        <p style="margin-bottom:.65rem">Suport bàsic, primer contacte amb l'usuari. Resol el <strong>70-80% de les incidències</strong> amb procediments estàndard.</p>
         <ul style="color:var(--muted);font-size:.88rem;padding-left:1.2rem">
           <li>Obertura de tickets</li>
           <li>Solucions ràpides i guiades</li>
@@ -428,11 +469,8 @@
         </ul>
       </div>
       <div class="card" style="border-top:4px solid var(--orange)">
-        <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.75rem">
-          <span class="badge b-orange">N2</span>
-          <h3 style="margin:0">Segon nivell</h3>
-        </div>
-        <p style="margin-bottom:.65rem">Suport tècnic avançat. Treballa amb incidències que N1 no ha pogut resoldre. Accedeix remotament als equips dels usuaris. Coneixement profund de les aplicacions.</p>
+        <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.75rem"><span class="badge b-orange">N2</span><h3 style="margin:0">Segon nivell</h3></div>
+        <p style="margin-bottom:.65rem">Suport tècnic avançat. Treballa amb incidències que N1 no ha pogut resoldre. Accedeix remotament als equips.</p>
         <ul style="color:var(--muted);font-size:.88rem;padding-left:1.2rem">
           <li>Accés remot (RDP, AnyDesk)</li>
           <li>Diagnòstic de logs i errors</li>
@@ -442,11 +480,8 @@
         </ul>
       </div>
       <div class="card" style="border-top:4px solid var(--red)">
-        <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.75rem">
-          <span class="badge b-red">N3</span>
-          <h3 style="margin:0">Tercer nivell</h3>
-        </div>
-        <p style="margin-bottom:.65rem">Suport especialista. Enginyers de producte, consultors o suport del fabricant. Gestionen errors de programari, incompatibilitats greus i personalitzacions complexes.</p>
+        <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.75rem"><span class="badge b-red">N3</span><h3 style="margin:0">Tercer nivell</h3></div>
+        <p style="margin-bottom:.65rem">Suport especialista. Enginyers de producte, consultors o suport del fabricant. Gestionen errors greus i casos nous.</p>
         <ul style="color:var(--muted);font-size:.88rem;padding-left:1.2rem">
           <li>Anàlisi de codi i logs avançats</li>
           <li>Comunicació amb el fabricant</li>
@@ -457,35 +492,17 @@
       </div>
     </div>
 
-    <!-- CICLE DE VIDA D'UNA INCIDÈNCIA -->
-    <div class="section-tag tag-teal fi" style="margin-top:4rem">Cicle de vida</div>
+    <div class="section-tag tag-teal fi" style="margin-top:3.5rem">Cicle de vida</div>
     <h2 class="fi">Cicle de vida d'una incidència</h2>
-    <p class="lead fi">Des que l'usuari notifica el problema fins que es tanca el ticket, cada incidència passa per diverses etapes que han de documentar-se adequadament.</p>
-
+    <p class="lead fi" style="margin-bottom:1.5rem">Des que l'usuari notifica el problema fins que es tanca el ticket, cada incidència passa per diverses etapes que han de documentar-se adequadament.</p>
     <div class="grid g4 fi">
-      <div class="card" style="text-align:center;padding:1.25rem">
-        <div style="font-size:2rem;margin-bottom:.5rem">📥</div>
-        <h4>1. Obertura</h4>
-        <p style="font-size:.82rem">L'usuari informa. El tècnic crea el ticket amb descripció, usuari, data i prioritat inicial.</p>
-      </div>
-      <div class="card" style="text-align:center;padding:1.25rem">
-        <div style="font-size:2rem;margin-bottom:.5rem">🔍</div>
-        <h4>2. Classificació</h4>
-        <p style="font-size:.82rem">S'assigna categoria, prioritat (1–4) i SLA. S'assigna al tècnic o equip adequat.</p>
-      </div>
-      <div class="card" style="text-align:center;padding:1.25rem">
-        <div style="font-size:2rem;margin-bottom:.5rem">🔧</div>
-        <h4>3. Diagnòstic</h4>
-        <p style="font-size:.82rem">El tècnic reprodueix el problema, analitza logs i fonts d'informació per identificar la causa arrel.</p>
-      </div>
-      <div class="card" style="text-align:center;padding:1.25rem">
-        <div style="font-size:2rem;margin-bottom:.5rem">✅</div>
-        <h4>4. Resolució</h4>
-        <p style="font-size:.82rem">S'aplica la solució. Es verifica amb l'usuari que el problema s'ha resolt. Es documenta la solució.</p>
-      </div>
+      <div class="card" style="text-align:center;padding:1.25rem"><div style="font-size:2rem;margin-bottom:.5rem">📥</div><h4>1. Obertura</h4><p style="font-size:.82rem">L'usuari informa. El tècnic crea el ticket amb descripció, usuari, data i prioritat inicial.</p></div>
+      <div class="card" style="text-align:center;padding:1.25rem"><div style="font-size:2rem;margin-bottom:.5rem">🔍</div><h4>2. Classificació</h4><p style="font-size:.82rem">S'assigna categoria, prioritat (1–4) i SLA. S'assigna al tècnic o equip adequat.</p></div>
+      <div class="card" style="text-align:center;padding:1.25rem"><div style="font-size:2rem;margin-bottom:.5rem">🔧</div><h4>3. Diagnòstic</h4><p style="font-size:.82rem">El tècnic reprodueix el problema, analitza logs i fonts d'informació per identificar la causa arrel.</p></div>
+      <div class="card" style="text-align:center;padding:1.25rem"><div style="font-size:2rem;margin-bottom:.5rem">✅</div><h4>4. Resolució</h4><p style="font-size:.82rem">S'aplica la solució. Es verifica amb l'usuari que el problema s'ha resolt. Es documenta la solució.</p></div>
     </div>
 
-    <div class="callout cl-teal fi">
+    <div class="callout cl-teal fi" style="margin-top:1.5rem">
       <span class="callout-icon">💡</span>
       <div>
         <h4>Causa arrel vs. símptoma</h4>
@@ -495,7 +512,7 @@
   </div>
 </section>
 
-<!-- METODOLOGIA -->
+<!-- ═══ METODOLOGIA ═══ -->
 <section id="metodologia" class="s-dark">
   <div class="container">
     <div class="section-tag tag-teal fi" style="color:rgba(34,211,238,.9)">Metodologia de diagnòstic</div>
@@ -504,76 +521,46 @@
 
     <div class="grid g2 fi">
       <div class="card">
-        <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem">
-          <span class="badge b-teal">Mètode</span>
-          <h3 style="margin:0">Els 5 Per quès (5 Whys)</h3>
-        </div>
+        <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem"><span class="badge b-teal">Mètode</span><h3 style="margin:0">Els 5 Per quès (5 Whys)</h3></div>
         <p style="color:rgba(255,255,255,.6);margin-bottom:.75rem">Tècnica per arribar a la causa arrel preguntant "per quina raó?" fins a 5 vegades consecutives.</p>
         <div class="ex" style="background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.1)">
-          <div class="ex-lbl">Exemple pràctic</div>
-          <p style="color:rgba(255,255,255,.75);font-size:.82rem">
-            🔴 <em>LibreOffice Calc es tanca en obrir un fitxer .xlsx.</em><br>
-            1. Per quina raó? → Hi ha un error d'extensió incompatible.<br>
-            2. Per quina raó? → L'extensió Solver està desactivada.<br>
-            3. Per quina raó? → L'actualització 7.6.3 va desactivar complements.<br>
-            4. Per quina raó? → No es va fer prova pilot abans de desplegar.<br>
-            5. Per quina raó? → No existeix procediment de prova post-actualització.<br>
-            ✅ <strong>Causa arrel:</strong> Manca de procés de validació d'actualitzacions.
-          </p>
+          <div class="ex-lbl" style="color:#22d3ee">Exemple pràctic</div>
+          <p style="color:rgba(255,255,255,.75);font-size:.82rem">🔴 <em>LibreOffice Calc es tanca en obrir un fitxer .xlsx.</em><br>1. Per quina raó? → Error d'extensió incompatible.<br>2. Per quina raó? → L'extensió Solver està desactivada.<br>3. Per quina raó? → L'actualització 7.6.3 va desactivar complements.<br>4. Per quina raó? → No es va fer prova pilot.<br>5. Per quina raó? → No existeix procediment de validació.<br>✅ <strong>Causa arrel:</strong> Manca de procés de validació d'actualitzacions.</p>
         </div>
       </div>
       <div class="card">
-        <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem">
-          <span class="badge b-orange">Mètode</span>
-          <h3 style="margin:0">Diagrama d'Ishikawa (Causa-Efecte)</h3>
-        </div>
-        <p style="color:rgba(255,255,255,.6);margin-bottom:.75rem">Visualitza les causes possibles d'un problema organitzant-les en categories (les 6M o les 4P del sector serveis).</p>
+        <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem"><span class="badge b-orange">Mètode</span><h3 style="margin:0">Diagrama d'Ishikawa (Causa-Efecte)</h3></div>
+        <p style="color:rgba(255,255,255,.6);margin-bottom:.75rem">Visualitza les causes possibles d'un problema organitzant-les en categories.</p>
         <div class="ex" style="background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.1)">
-          <div class="ex-lbl">Categories per IT</div>
-          <p style="color:rgba(255,255,255,.75);font-size:.82rem">
-            <strong>Maquinari:</strong> RAM insuficient, disc dur defectuós<br>
-            <strong>Programari:</strong> versió incompatible, extensió corrupta<br>
-            <strong>Configuració:</strong> paràmetres incorrectes, perfil corrupte<br>
-            <strong>Xarxa:</strong> problemes de connectivitat, firewall<br>
-            <strong>Usuari:</strong> procediment incorrecte, formació insuficient<br>
-            <strong>Entorn:</strong> antivirus agressiu, permisos insuficients
-          </p>
+          <div class="ex-lbl" style="color:#ffa657">Categories per IT</div>
+          <p style="color:rgba(255,255,255,.75);font-size:.82rem"><strong>Maquinari:</strong> RAM insuficient, disc defectuós<br><strong>Programari:</strong> versió incompatible, extensió corrupta<br><strong>Configuració:</strong> paràmetres incorrectes, perfil corrupte<br><strong>Xarxa:</strong> problemes de connectivitat, firewall<br><strong>Usuari:</strong> procediment incorrecte, formació insuficient<br><strong>Entorn:</strong> antivirus agressiu, permisos insuficients</p>
         </div>
       </div>
       <div class="card">
-        <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem">
-          <span class="badge b-blue">Mètode</span>
-          <h3 style="margin:0">Reducció per bisecció (Half-split)</h3>
-        </div>
-        <p style="color:rgba(255,255,255,.6);margin-bottom:.75rem">Divideix el problema a la meitat a cada pas per localitzar el punt de falla de forma eficient. Molt útil per a problemes de configuració o compatibilitat.</p>
+        <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem"><span class="badge b-blue">Mètode</span><h3 style="margin:0">Reducció per bisecció (Half-split)</h3></div>
+        <p style="color:rgba(255,255,255,.6);margin-bottom:.75rem">Divideix el problema a la meitat a cada pas per localitzar el punt de falla de forma eficient.</p>
         <div class="ex" style="background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.1)">
-          <div class="ex-lbl">Exemple: Word no s'obre</div>
-          <p style="color:rgba(255,255,255,.75);font-size:.82rem">¿Falla el programa o el fitxer? → <em>El programa.</em><br>
-          ¿Falla en tots els usuaris? → <em>Només en un.</em><br>
-          ¿Falla si creo un perfil nou? → <em>No.</em><br>
-          ✅ <strong>Diagnòstic:</strong> Perfil d'usuari corrupte.</p>
+          <div class="ex-lbl" style="color:#a8c4ff">Exemple: Word no s'obre</div>
+          <p style="color:rgba(255,255,255,.75);font-size:.82rem">¿Falla el programa o el fitxer? → <em>El programa.</em><br>¿Falla en tots els usuaris? → <em>Només en un.</em><br>¿Falla si creo un perfil nou? → <em>No.</em><br>✅ <strong>Diagnòstic:</strong> Perfil d'usuari corrupte.</p>
         </div>
       </div>
       <div class="card">
-        <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem">
-          <span class="badge b-purple">Mètode</span>
-          <h3 style="margin:0">Recollida i anàlisi de logs</h3>
-        </div>
-        <p style="color:rgba(255,255,255,.6);margin-bottom:.75rem">Els fitxers de registre (logs) contenen informació detallada sobre errors i events del sistema i les aplicacions. Saber llegir-los és una habilitat clau del tècnic N2.</p>
-        <div class="code" style="font-size:.74rem;margin-top:.5rem">
+        <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem"><span class="badge b-purple">Mètode</span><h3 style="margin:0">Recollida i anàlisi de logs</h3></div>
+        <p style="color:rgba(255,255,255,.6);margin-bottom:.75rem">Els fitxers de registre (logs) contenen informació detallada sobre errors i events del sistema.</p>
+        <div class="code" style="margin-top:.5rem;font-size:.74rem">
 <span class="cm"># Log d'events de Windows (PowerShell)</span><br>
-<span class="kw">Get-EventLog</span> -LogName Application -Source "*Office*" -EntryType Error -Newest 20<br><br>
+<span class="kw">Get-EventLog</span> -LogName Application -Source "<span class="st">*Office*</span>" -EntryType Error -Newest 20<br><br>
 <span class="cm"># Log de LibreOffice (Ubuntu)</span><br>
 ~/.config/libreoffice/4/user/registrymodifications.xcu<br><br>
-<span class="cm"># Visor d'events gràfic: eventvwr.msc</span>
+<span class="cm"># Visor gràfic</span><br>
+<span class="kw">eventvwr.msc</span>
         </div>
       </div>
     </div>
 
-    <!-- COMUNICACIÓ AMB L'USUARI -->
-    <div class="section-tag tag-teal fi" style="margin-top:4rem;color:rgba(34,211,238,.9)">Comunicació</div>
+    <div class="section-tag tag-teal fi" style="margin-top:3.5rem;color:rgba(34,211,238,.9)">Comunicació</div>
     <h2 class="fi">Comunicació professional amb l'usuari</h2>
-    <p class="lead fi">El suport tècnic és un servei. La manera com el tècnic es comunica amb l'usuari és tant important com la solució tècnica en si mateixa.</p>
+    <p class="lead fi">El suport tècnic és un servei. La manera com el tècnic es comunica amb l'usuari és tan important com la solució tècnica en si mateixa.</p>
 
     <div class="grid g3 fi">
       <div class="card">
@@ -593,142 +580,79 @@
       </div>
     </div>
 
-    <div class="callout cl-amber fi">
+    <div class="callout cl-amber fi" style="margin-top:1.5rem">
       <span class="callout-icon">⚠️</span>
       <div>
-        <h4>Errors freqüents de comunicació en suport tècnic</h4>
-        <ul style="color:rgba(255,255,255,.7)">
+        <h4 style="color:var(--navy)">Errors freqüents de comunicació en suport tècnic</h4>
+        <ul>
           <li>Culpar l'usuari del problema (<em>"és que sempre feu el mateix"</em>)</li>
           <li>Usar jerga tècnica que l'usuari no entén i no donar explicació</li>
           <li>Tancar el ticket sense confirmar amb l'usuari que el problema s'ha resolt</li>
           <li>No documentar la solució aplicada per a futurs casos similars</li>
-          <li>Resoldre el problema sense explicar a l'usuari per quin motiu ha passat i com evitar-ho</li>
+          <li>Resoldre el problema sense explicar a l'usuari com evitar-ho la propera vegada</li>
         </ul>
       </div>
     </div>
   </div>
 </section>
 
-<!-- INCIDÈNCIES COMUNES -->
+<!-- ═══ INCIDÈNCIES COMUNES ═══ -->
 <section id="incidencies" class="s-teal">
   <div class="container">
     <div class="section-tag tag-red fi">Incidències habituals</div>
     <h2 class="fi">Incidències freqüents en aplicacions ofimàtiques</h2>
     <p class="lead fi">Conèixer les incidències més habituals i les seves solucions permet resoldre-les de manera ràpida i eficient, millorant el temps de resposta del servei de suport.</p>
 
-    <!-- TICKETS EXEMPLE -->
     <h3 class="fi">Exemples de tickets reals</h3>
     <div class="grid g2 fi" style="margin-bottom:3rem">
       <div class="ticket ticket-red">
-        <div class="ticket-head">
-          <div class="ticket-id">#INC-2024-0312</div>
-          <span class="severity sev-2">🟠 Alta</span>
-        </div>
+        <div class="ticket-head"><div class="ticket-id">#INC-2024-0312</div><span class="severity sev-2">🟠 Alta</span></div>
         <h4>LibreOffice Writer es tanca sol en desar el document</h4>
         <p><strong>Usuari:</strong> Maria López · <strong>Dept:</strong> Administració<br>
-        <strong>Descripció:</strong> En intentar desar el document amb Ctrl+S, l'aplicació es tanca sense missatge d'error. El document no es desa.<br>
-        <strong>Solució aplicada:</strong> Perfil d'usuari de LibreOffice corrupte. Reanomenat el directori <code>~/.config/libreoffice/4/user/</code> i regenerat el perfil. Es va recuperar el document des de la còpia automàtica (<em>AutoRecovery</em>).</p>
+        <strong>Descripció:</strong> En intentar desar amb Ctrl+S, l'aplicació es tanca sense missatge d'error.<br>
+        <strong>Solució:</strong> Perfil d'usuari corrupte. Reanomenat <code>~/.config/libreoffice/4/user/</code> i regenerat el perfil. Document recuperat via AutoRecovery.</p>
       </div>
       <div class="ticket ticket-orange">
-        <div class="ticket-head">
-          <div class="ticket-id">#INC-2024-0318</div>
-          <span class="severity sev-3">🟡 Mitjana</span>
-        </div>
+        <div class="ticket-head"><div class="ticket-id">#INC-2024-0318</div><span class="severity sev-3">🟡 Mitjana</span></div>
         <h4>Formulari de Word no funciona correctament en LibreOffice</h4>
         <p><strong>Usuari:</strong> Pere Solà · <strong>Dept:</strong> RRHH<br>
-        <strong>Descripció:</strong> El formulari de sol·licitud de vacances (format .docx amb macros de VBA) no mostra els botons correctament en LibreOffice.<br>
-        <strong>Solució aplicada:</strong> Les macros VBA de MS Word no són 100% compatibles amb LibreOffice Basic. Es va reescriure la macro en LibreOffice Basic. Alternativa: obrir amb Microsoft 365 Online (gratuït).</p>
+        <strong>Descripció:</strong> Formulari .docx amb macros VBA no mostra els botons correctament.<br>
+        <strong>Solució:</strong> Macro reescrita en LibreOffice Basic. Alternativa: obrir amb Microsoft 365 Online (gratuït).</p>
       </div>
       <div class="ticket ticket-teal">
-        <div class="ticket-head">
-          <div class="ticket-id">#INC-2024-0325</div>
-          <span class="severity sev-4">🟢 Baixa</span>
-        </div>
+        <div class="ticket-head"><div class="ticket-id">#INC-2024-0325</div><span class="severity sev-4">🟢 Baixa</span></div>
         <h4>L'Excel no reconeix les dates en format DD/MM/AAAA</h4>
         <p><strong>Usuari:</strong> Anna Vidal · <strong>Dept:</strong> Comptabilitat<br>
-        <strong>Descripció:</strong> Després de canviar l'ordinador (Windows 11 en anglès), les dates del full de càlcul apareixen com a text i no es poden fer càlculs.<br>
-        <strong>Solució aplicada:</strong> Configuració regional de Windows (Panell de control → Idioma i hora → Format de data). Es va configurar l'idioma de Windows a "Espanyol (Espanya)" per fer coincidir el format de data DD/MM/AAAA.</p>
+        <strong>Descripció:</strong> Nou equip Windows 11 en anglès. Les dates apareixen com a text.<br>
+        <strong>Solució:</strong> Configuració regional → Idioma i hora → Format de data → "Espanyol (Espanya)".</p>
       </div>
       <div class="ticket ticket-red">
-        <div class="ticket-head">
-          <div class="ticket-id">#INC-2024-0341</div>
-          <span class="severity sev-1">🔴 Crítica</span>
-        </div>
+        <div class="ticket-head"><div class="ticket-id">#INC-2024-0341</div><span class="severity sev-1">🔴 Crítica</span></div>
         <h4>Microsoft 365 demana activació en tots els equips de l'empresa</h4>
         <p><strong>Usuari:</strong> Tot l'departament · <strong>Dept:</strong> Tots<br>
-        <strong>Descripció:</strong> Tots els usuaris veuen el missatge "La teva subscripció ha caducat". No poden obrir ni editar documents.<br>
-        <strong>Solució aplicada:</strong> La llicència Microsoft 365 Business va caducar. Es va renovar des del portal admin.microsoft.com. Les activacions es van restableir en 15 minuts per a tots els equips. <strong>Acció preventiva:</strong> crear alerta de renovació 60 dies abans.</p>
+        <strong>Descripció:</strong> Missatge "La teva subscripció ha caducat". No es pot treballar.<br>
+        <strong>Solució:</strong> Llicència M365 caducada. Renovada des de admin.microsoft.com. Restablerta en 15 min. <strong>Preventiu:</strong> alerta de renovació 60 dies abans.</p>
       </div>
     </div>
 
-    <!-- TAULA D'INCIDÈNCIES -->
     <h3 class="fi">Guia ràpida de resolució d'incidències</h3>
     <div style="overflow-x:auto" class="fi">
       <table class="ptable">
         <thead>
-          <tr>
-            <th>Incidència</th>
-            <th>Aplicació</th>
-            <th>Prioritat</th>
-            <th>Diagnòstic</th>
-            <th>Solució ràpida</th>
-          </tr>
+          <tr><th>Incidència</th><th>Aplicació</th><th>Prioritat</th><th>Diagnòstic</th><th>Solució ràpida</th></tr>
         </thead>
         <tbody>
-          <tr>
-            <td>L'aplicació no s'inicia</td>
-            <td>Qualsevol</td>
-            <td><span class="severity sev-2" style="font-size:.72rem">🟠 Alta</span></td>
-            <td>Registre d'events, logs de l'app</td>
-            <td>Reparar instal·lació, reiniciar, reinstal·lar</td>
-          </tr>
-          <tr>
-            <td>Document corrupte / no s'obre</td>
-            <td>Writer, Word, Calc</td>
-            <td><span class="severity sev-2" style="font-size:.72rem">🟠 Alta</span></td>
-            <td>Obrir en mode segur, recuperació automàtica</td>
-            <td>AutoRecovery, recuperació integrada</td>
-          </tr>
-          <tr>
-            <td>Error d'activació de llicència</td>
-            <td>MS 365, Office</td>
-            <td><span class="severity sev-1" style="font-size:.72rem">🔴 Crítica</span></td>
-            <td>Verificar subscripció al portal admin</td>
-            <td>Renovar llicència, desactivar i reactivar</td>
-          </tr>
-          <tr>
-            <td>La impressió no funciona</td>
-            <td>Writer, Word, Excel</td>
-            <td><span class="severity sev-3" style="font-size:.72rem">🟡 Mitjana</span></td>
-            <td>Cua d'impressió, driver d'impressora</td>
-            <td>Netejar cua, reinstal·lar driver</td>
-          </tr>
-          <tr>
-            <td>Macros desactivades / no funcionen</td>
-            <td>Excel, LibreOffice</td>
-            <td><span class="severity sev-3" style="font-size:.72rem">🟡 Mitjana</span></td>
-            <td>Configuració de seguretat de macros</td>
-            <td>Ajustar nivell de seguretat, signar la macro</td>
-          </tr>
-          <tr>
-            <td>Pèrdua de format en obrir .docx</td>
-            <td>Writer vs. Word</td>
-            <td><span class="severity sev-4" style="font-size:.72rem">🟢 Baixa</span></td>
-            <td>Incompatibilitat de fonts o estils</td>
-            <td>Instal·lar fonts necessàries, usar PDF</td>
-          </tr>
-          <tr>
-            <td>Rendiment lent de l'aplicació</td>
-            <td>Qualsevol</td>
-            <td><span class="severity sev-3" style="font-size:.72rem">🟡 Mitjana</span></td>
-            <td>Monitor de recursos, extenssions actives</td>
-            <td>Desactivar extensions, augmentar memòria virtual</td>
-          </tr>
+          <tr><td>L'aplicació no s'inicia</td><td>Qualsevol</td><td><span class="severity sev-2" style="font-size:.72rem">🟠 Alta</span></td><td>Registre d'events, logs de l'app</td><td>Reparar instal·lació, reiniciar, reinstal·lar</td></tr>
+          <tr><td>Document corrupte / no s'obre</td><td>Writer, Word, Calc</td><td><span class="severity sev-2" style="font-size:.72rem">🟠 Alta</span></td><td>Obrir en mode segur, recuperació automàtica</td><td>AutoRecovery, recuperació integrada</td></tr>
+          <tr><td>Error d'activació de llicència</td><td>MS 365, Office</td><td><span class="severity sev-1" style="font-size:.72rem">🔴 Crítica</span></td><td>Verificar subscripció al portal admin</td><td>Renovar llicència, desactivar i reactivar</td></tr>
+          <tr><td>La impressió no funciona</td><td>Writer, Word, Excel</td><td><span class="severity sev-3" style="font-size:.72rem">🟡 Mitjana</span></td><td>Cua d'impressió, driver d'impressora</td><td>Netejar cua, reinstal·lar driver</td></tr>
+          <tr><td>Macros desactivades / no funcionen</td><td>Excel, LibreOffice</td><td><span class="severity sev-3" style="font-size:.72rem">🟡 Mitjana</span></td><td>Configuració de seguretat de macros</td><td>Ajustar nivell de seguretat, signar la macro</td></tr>
+          <tr><td>Pèrdua de format en obrir .docx</td><td>Writer vs. Word</td><td><span class="severity sev-4" style="font-size:.72rem">🟢 Baixa</span></td><td>Incompatibilitat de fonts o estils</td><td>Instal·lar fonts necessàries, usar PDF</td></tr>
+          <tr><td>Rendiment lent de l'aplicació</td><td>Qualsevol</td><td><span class="severity sev-3" style="font-size:.72rem">🟡 Mitjana</span></td><td>Monitor de recursos, extensions actives</td><td>Desactivar extensions, augmentar memòria virtual</td></tr>
         </tbody>
       </table>
     </div>
 
-    <!-- EINES DE DIAGNÒSTIC -->
     <div class="section-tag tag-cobalt fi" style="margin-top:4rem">Eines de diagnòstic</div>
     <h2 class="fi">Eines per al diagnòstic i resolució d'incidències</h2>
     <p class="lead fi">El tècnic SMX ha de dominar un conjunt d'eines que permeten diagnosticar remotament i resoldre incidències de forma eficient.</p>
@@ -737,10 +661,7 @@
       <div class="card bl">
         <h3>🖥️ Accés remot</h3>
         <p style="margin-bottom:.75rem">Permet connectar-se a l'equip de l'usuari sense desplaçament físic. Essencial per al suport N2.</p>
-        <div class="ex">
-          <div class="ex-lbl">Eines principals</div>
-          <p><strong>Microsoft Quick Assist</strong> (integrat a Windows 11) · <strong>AnyDesk</strong> (gratuït per a ús personal) · <strong>TeamViewer</strong> (corporatiu) · <strong>RDP</strong> (Escriptori Remot de Windows) per a xarxes corporatives.</p>
-        </div>
+        <div class="ex"><div class="ex-lbl">Eines principals</div><p><strong>Microsoft Quick Assist</strong> (integrat a Windows 11) · <strong>AnyDesk</strong> (gratuït per a ús personal) · <strong>TeamViewer</strong> (corporatiu) · <strong>RDP</strong> per a xarxes corporatives.</p></div>
       </div>
       <div class="card bl">
         <h3>📋 Visor d'events (Event Viewer)</h3>
@@ -754,29 +675,25 @@
       </div>
       <div class="card bl">
         <h3>🔧 Mode segur d'aplicació</h3>
-        <p style="margin-bottom:.75rem">Obre l'aplicació amb les extensions, complements i configuració personalitzada desactivats. Permet determinar si el problema és causat per una extensió o la configuració.</p>
+        <p style="margin-bottom:.75rem">Obre l'aplicació amb extensions i complements desactivats. Permet determinar si el problema ve d'una extensió o del codi principal.</p>
         <div class="code">
 <span class="cm"># LibreOffice en mode segur</span><br>
 <span class="kw">soffice</span> --safe-mode<br><br>
 <span class="cm"># Microsoft Office en mode segur</span><br>
-<span class="kw">winword</span> /safe<br>
-<span class="kw">excel</span> /safe<br>
-<span class="kw">outlook</span> /safe
+<span class="kw">winword</span> /safe · <span class="kw">excel</span> /safe · <span class="kw">outlook</span> /safe
         </div>
       </div>
       <div class="card bl">
-        <h3>📦 Eina de reparació d'instal·lació</h3>
-        <p style="margin-bottom:.75rem">Quan una aplicació té fitxers danyats o la instal·lació és incompleta, es pot reparar sense necessitat de desinstal·lar i tornar a instal·lar.</p>
+        <h3>📦 Reparació d'instal·lació</h3>
+        <p style="margin-bottom:.75rem">Quan una aplicació té fitxers danyats, es pot reparar sense necessitat de desinstal·lar completament.</p>
         <div class="code">
 <span class="cm"># Reparar Microsoft 365 des de PowerShell</span><br>
 <span class="kw">Get-AppxPackage</span> *Microsoft.Office* | <span class="kw">Repair-AppxPackage</span><br><br>
-<span class="cm"># O des de Configuració → Apps → Modificar</span><br>
-<span class="cm"># LibreOffice: desinstal·lar i reinstal·lar és més fiable</span>
+<span class="cm"># O des de Configuració → Apps → Modificar</span>
         </div>
       </div>
     </div>
 
-    <!-- BASE DE CONEIXEMENT -->
     <div class="section-tag tag-cobalt fi" style="margin-top:4rem">Base de coneixement</div>
     <h2 class="fi">Documentació i base de coneixement (KB)</h2>
     <p class="lead fi">Documentar les solucions és tan important com resoldre el problema. Una bona base de coneixement redueix el temps de resolució de futures incidències similars.</p>
@@ -796,27 +713,18 @@
       </div>
       <div class="card bl-teal">
         <h3>🗄️ Sistemes de gestió de tickets i KB</h3>
-        <div class="ex" style="margin-bottom:.5rem">
-          <div class="ex-lbl">GLPI (Software lliure)</div>
-          <p>Eina de gestió d'actius i helpdesk molt usada en centres educatius i PIMES. Gratuïta, en català, amb base de coneixement integrada.</p>
-        </div>
-        <div class="ex" style="margin-bottom:.5rem">
-          <div class="ex-lbl">Jira Service Management</div>
-          <p>Solució professional de gestió de serveis IT. Integra tickets, SLAs, base de coneixement i automatitzacions.</p>
-        </div>
-        <div class="ex">
-          <div class="ex-lbl">Zendesk / Freshdesk</div>
-          <p>Plataformes SaaS orientades a l'atenció al client. Àmpliament usades en centres de suport de mida mitjana i gran.</p>
-        </div>
+        <div class="ex" style="margin-bottom:.5rem"><div class="ex-lbl">GLPI (Software lliure)</div><p>Eina de gestió d'actius i helpdesk molt usada en centres educatius i PIMES. Gratuïta, en català, amb base de coneixement integrada.</p></div>
+        <div class="ex" style="margin-bottom:.5rem"><div class="ex-lbl">Jira Service Management</div><p>Solució professional de gestió de serveis IT. Integra tickets, SLAs, base de coneixement i automatitzacions.</p></div>
+        <div class="ex"><div class="ex-lbl">Zendesk / Freshdesk</div><p>Plataformes SaaS orientades a l'atenció al client. Àmpliament usades en centres de suport de mida mitjana i gran.</p></div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- PRÀCTICA -->
+<!-- ═══ PRÀCTICA ═══ -->
 <section id="practica" class="s-cream">
   <div class="container">
-    <div class="section-tag tag-purple fi">Pràctica</div>
+    <div class="section-tag tag-purple fi">Pràctica avançada</div>
     <h2 class="fi">Pràctica</h2>
     <p class="lead fi">Una pràctica completa que simula un escenari real de suport tècnic en un entorn empresarial amb múltiples incidències simultànies.</p>
 
@@ -825,7 +733,7 @@
         <div class="practice-num">P1</div>
         <div>
           <h3>Centre de Suport IT — Gestió integral d'incidències ofimàtiques</h3>
-          <p>Durada estimada: 3–4 hores · Nivell: Avançat · En parella (tècnic + usuari) o individual amb simulació</p>
+          <p><span class="dif-badge dif-advanced" style="background:rgba(255,255,255,0.2);color:white">🔴 Avançat</span> <span style="color:rgba(255,255,255,0.8);font-size:.82rem">⏱ 3–4 hores · En parella (tècnic + usuari) o individual amb simulació</span></p>
         </div>
       </div>
       <div class="practice-body">
@@ -842,91 +750,54 @@
         <p style="color:var(--muted);font-size:.92rem;margin-bottom:1rem">Tens les 4 incidències següents. Classifica-les per prioritat (Crítica / Alta / Mitjana / Baixa) seguint el model ITIL i justifica la decisió.</p>
 
         <div class="grid g2" style="margin-bottom:1.5rem">
-          <div class="ticket ticket-red">
-            <div class="ticket-head"><div class="ticket-id">Incidència A</div></div>
-            <h4>La directora general no pot obrir el contracte de 500.000 € en format .docx que ha de signar en 2 hores</h4>
-            <p>LibreOffice mostra l'error "Format de fitxer no reconegut".</p>
-          </div>
-          <div class="ticket ticket-orange">
-            <div class="ticket-head"><div class="ticket-id">Incidència B</div></div>
-            <h4>5 usuaris del departament de disseny no poden imprimir des de LibreOffice</h4>
-            <p>Poden imprimir des d'altres aplicacions. Problema aparegut avui al matí.</p>
-          </div>
-          <div class="ticket ticket-teal">
-            <div class="ticket-head"><div class="ticket-id">Incidència C</div></div>
-            <h4>Un usuari demana com canviar la font per defecte a LibreOffice Writer</h4>
-            <p>Vol usar Arial 12 en lloc de Liberation Serif 12 en tots els documents nous.</p>
-          </div>
-          <div class="ticket ticket-orange">
-            <div class="ticket-head"><div class="ticket-id">Incidència D</div></div>
-            <h4>El full de càlcul de control de vendes mostra errors #REF! en diverses cel·les des d'ahir</h4>
-            <p>Afecta les cel·les de l'informe mensual que s'ha de lliurar demà.</p>
-          </div>
+          <div class="ticket ticket-red"><div class="ticket-head"><div class="ticket-id">Incidència A</div></div><h4>La directora general no pot obrir el contracte de 500.000 € en format .docx que ha de signar en 2 hores</h4><p>LibreOffice mostra l'error "Format de fitxer no reconegut".</p></div>
+          <div class="ticket ticket-orange"><div class="ticket-head"><div class="ticket-id">Incidència B</div></div><h4>5 usuaris del departament de disseny no poden imprimir des de LibreOffice</h4><p>Poden imprimir des d'altres aplicacions. Problema aparegut avui al matí.</p></div>
+          <div class="ticket ticket-teal"><div class="ticket-head"><div class="ticket-id">Incidència C</div></div><h4>Un usuari demana com canviar la font per defecte a LibreOffice Writer</h4><p>Vol usar Arial 12 en lloc de Liberation Serif 12 en tots els documents nous.</p></div>
+          <div class="ticket ticket-orange"><div class="ticket-head"><div class="ticket-id">Incidència D</div></div><h4>El full de càlcul de control de vendes mostra errors #REF! en diverses cel·les des d'ahir</h4><p>Afecta les cel·les de l'informe mensual que s'ha de lliurar demà.</p></div>
         </div>
 
         <ul class="steps">
-          <li><p><strong>Crea la taula de priorització:</strong> Per a cadascuna de les 4 incidències, defineix: prioritat (1=Crítica, 4=Baixa), SLA de resposta, SLA de resolució, i ordre d'atenció. Justifica cada decisió escrit en un document LibreOffice Writer.</p></li>
+          <li><p><strong>Crea la taula de priorització:</strong> Per a cadascuna de les 4 incidències, defineix: prioritat (1=Crítica, 4=Baixa), SLA de resposta, SLA de resolució, i ordre d'atenció. Justifica cada decisió en un document LibreOffice Writer.</p></li>
           <li><p><strong>Obre els 4 tickets en GLPI (o simula'ls en un full de càlcul Calc):</strong> Cada ticket ha de tenir: número d'identificació, data i hora d'obertura, usuari afectat, descripció del problema, prioritat assignada, tècnic responsable, estat inicial (Obert).</p></li>
         </ul>
 
         <h3 style="margin-top:2rem;margin-bottom:1rem">🔍 PART 2 — Diagnòstic i resolució de les incidències</h3>
-
         <ul class="steps">
-          <li>
-            <p><strong>Incidència A — Document .docx no s'obre:</strong><br>
-            (a) Intenta obrir el document en mode segur (<code>soffice --safe-mode</code>).<br>
-            (b) Comprova si el fitxer és realment un .docx vàlid amb un editor hexadecimal (els primers bytes han de ser <code>PK</code>, ja que .docx és un ZIP).<br>
-            (c) Si el fitxer està corrupte, intenta recuperar-lo: reanomena a .zip, extreu i busca el contingut XML intern.<br>
-            (d) Alternativa ràpida: demana a l'usuari que l'enviï per correu i obre'l amb Google Docs al navegador.<br>
-            Documenta cada pas i el resultat obtingut.</p>
-          </li>
-          <li>
-            <p><strong>Incidència B — Error d'impressió en LibreOffice:</strong><br>
-            (a) Verifica si el problema és de l'aplicació o de la impressora: prova d'imprimir una pàgina de prova des de Windows. Si funciona, el problema és de LibreOffice.<br>
-            (b) Comprova el driver d'impressora: Dispositius i impressores → clic dret → Propietats. Actualitza el driver.<br>
-            (c) A LibreOffice: Eines → Opcions → LibreOffice → Impressió. Comprova els paràmetres.<br>
-            (d) Comprova si el problema és d'una versió específica de LibreOffice: busca si hi ha un bug documentat a <em>bugs.documentfoundation.org</em>.<br>
-            (e) Si persisteix: reinstal·la el driver d'impressora en mode compatible (clic dret → Solucionar problemes).</p>
-          </li>
-          <li>
-            <p><strong>Incidència C — Canvi de font per defecte:</strong><br>
-            Proporciona a l'usuari les instruccions pas a pas:<br>
-            (a) Obre LibreOffice Writer → menú Format → Caràcter → configura Arial 12.<br>
-            (b) Menú Format → Paràgraf → configura l'espaiat si és necessari.<br>
-            (c) Per fer-ho permanent: Estils → Gestiona els estils → clic dret sobre "Per defecte" → Modificar → Configura la font → D'acord.<br>
-            (d) Desa la plantilla: Fitxer → Plantilles → Desa com a plantilla → marca "Establir com a predeterminada".<br>
-            Crea un article a la base de coneixement amb aquestes instruccions.</p>
-          </li>
-          <li>
-            <p><strong>Incidència D — Errors #REF! al full de càlcul:</strong><br>
-            (a) L'error #REF! indica que una fórmula fa referència a una cel·la que ja no existeix (s'ha eliminat una fila o columna).<br>
-            (b) Selecciona les cel·les amb error → Ctrl+H (Cerca i substitueix) → cerca "#REF!" per identificar les fórmules afectades.<br>
-            (c) Activa el "Rastrejador de precedents" (Eines → Detective → Rastreja precedents) per visualitzar quines cel·les alimenten les fórmules amb error.<br>
-            (d) Comprova l'historial de canvis del document: Edita → Rastre de canvis → Gestiona. Identifica qui va eliminar les files o columnes i quan.<br>
-            (e) Reconstrueix les fórmules o restaura des d'una còpia de seguretat anterior.</p>
-          </li>
+          <li><p><strong>Incidència A — Document .docx no s'obre:</strong> (a) Intenta obrir en mode segur (<code>soffice --safe-mode</code>). (b) Comprova si el fitxer és un .docx vàlid (els primers bytes han de ser <code>PK</code>, ja que .docx és un ZIP). (c) Si és corrupte, reanomena a .zip i extreu el contingut XML intern. (d) Alternativa ràpida: obre'l amb Google Docs al navegador. Documenta cada pas i el resultat.</p></li>
+          <li><p><strong>Incidència B — Error d'impressió en LibreOffice:</strong> (a) Verifica si el problema és de l'aplicació o de la impressora: imprimeix una pàgina de prova des de Windows. (b) Comprova i actualitza el driver d'impressora. (c) Revisa paràmetres d'impressió a LibreOffice (Eines → Opcions → Impressió). (d) Busca bugs documentats a <em>bugs.documentfoundation.org</em>. (e) Reinstal·la el driver en mode compatible si persisteix.</p></li>
+          <li><p><strong>Incidència C — Canvi de font per defecte:</strong> (a) Format → Caràcter → configura Arial 12. (b) Per fer-ho permanent: Estils → Gestiona els estils → "Per defecte" → Modificar → font. (c) Desa com a plantilla predeterminada. Crea un article a la KB amb les instruccions.</p></li>
+          <li><p><strong>Incidència D — Errors #REF! al full de càlcul:</strong> (a) L'error #REF! indica referència a una cel·la eliminada. (b) Ctrl+H per localitzar fórmules afectades. (c) Activar el "Rastrejador de precedents" per visualitzar quines cel·les alimenten les fórmules. (d) Revisar historial de canvis per identificar qui va eliminar files/columnes. (e) Reconstruir fórmules o restaurar des de còpia de seguretat.</p></li>
         </ul>
 
         <h3 style="margin-top:2rem;margin-bottom:1rem">📝 PART 3 — Documentació, base de coneixement i informe</h3>
         <ul class="steps">
-          <li><p><strong>Actualitza els 4 tickets:</strong> Per a cada incidència resolta, actualitza el ticket a GLPI (o al full de càlcul) amb: data i hora de resolució, descripció detallada de la solució aplicada, temps total invertit, i canvi d'estat a "Tancat". Calcula el compliment dels SLAs.</p></li>
-          <li><p><strong>Crea 2 articles a la base de coneixement:</strong> Tria les 2 incidències més rellevants (A i D) i redacta un article de KB per a cadascuna, seguint l'estructura: Títol, Simptomatologia, Causa, Solució pas a pas, Solucions alternatives, Entorn afectat. Els articles han de ser clars i buscables per altres tècnics.</p></li>
-          <li><p><strong>Redacta l'informe diari de suport:</strong> Crea un document Writer amb l'informe de gestió de la jornada per al cap d'IT, que inclogui: resum executiu (1 paràgraf), taula de tickets gestionats, mètriques (temps mig de resolució, compliment SLA, tickets tancats/oberts), incidències recurrents detectades, recomanacions per evitar incidències futures.</p></li>
-          <li><p><strong>Proposta de millora preventiva:</strong> Basant-te en les incidències gestionades, redacta 3 mesures preventives concretes que evitarien que es repetissin (exemple: còpies de seguretat automàtiques dels fulls de càlcul crítics, procediment de verificació de documents antes de reunions importants, formació d'usuaris sobre el format de fórmules).</p></li>
+          <li><p><strong>Actualitza els 4 tickets:</strong> Per a cada incidència resolta: data i hora de resolució, descripció de la solució aplicada, temps total invertit, canvi d'estat a "Tancat". Calcula el compliment dels SLAs.</p></li>
+          <li><p><strong>Crea 2 articles a la base de coneixement:</strong> Tria les incidències A i D. Segueix l'estructura: Títol, Simptomatologia, Causa, Solució pas a pas, Solucions alternatives, Entorn afectat.</p></li>
+          <li><p><strong>Redacta l'informe diari de suport:</strong> Resum executiu, taula de tickets gestionats, mètriques (temps mig de resolució, compliment SLA), incidències recurrents detectades, recomanacions preventives.</p></li>
+          <li><p><strong>Proposta de millora preventiva:</strong> 3 mesures concretes que evitarien que es repetissin les incidències gestionades avui.</p></li>
         </ul>
 
         <h3 style="margin-top:2rem;margin-bottom:1rem">📊 PART 4 — Simulació d'atenció a l'usuari (joc de rol)</h3>
         <ul class="steps">
-          <li><p><strong>Escenari de comunicació:</strong> En parella, un fa de tècnic i l'altre de la directora general (Incidència A). El tècnic ha d'atendre la trucada, recollir la informació necessària, comunicar el diagnòstic i la solució en termes no tècnics, i gestionar la pressió de temps (la reunió és en 2 hores). Gravar en vídeo o avaluar en directe amb rúbrica.</p></li>
-          <li><p><strong>Autoavaluació:</strong> Després del joc de rol, el tècnic ha d'escriure un paràgraf d'autoavaluació: Quines habilitats de comunicació ha demostrat bé? Quins aspectes milloraria? Va mantenir la calma sota pressió?</p></li>
+          <li><p><strong>Escenari de comunicació:</strong> En parella, un fa de tècnic i l'altre de la directora general (Incidència A). El tècnic ha d'atendre la trucada, recollir la informació necessària, comunicar el diagnòstic i la solució en termes no tècnics, i gestionar la pressió de temps (la reunió és en 2 hores). Gravar en vídeo o avaluar en directe.</p></li>
+          <li><p><strong>Autoavaluació personal:</strong> Quines habilitats de comunicació has demostrat bé? Quins aspectes milloraries? Has mantingut la calma sota pressió?</p></li>
         </ul>
 
-        <div class="callout cl-purple fi" style="margin-top:2rem">
-          <span class="callout-icon">📋</span>
-          <div>
-            <h4>Lliurament i criteris d'avaluació</h4>
-            <p>Lliura un fitxer ZIP amb: (1) el full de priorització de tickets (.ods), (2) els 2 articles de la base de coneixement (.odt), (3) l'informe de gestió diari (.odt i .pdf), (4) la proposta de millores preventives, (5) vídeo o rúbrica del joc de rol.<br><br>Criteris: Priorització correcta i justificada (20%), diagnòstic tècnic precís (30%), qualitat de la documentació (25%), comunicació amb l'usuari (15%), proposta de millores (10%).</p>
-          </div>
+        <!-- CHECKLIST -->
+        <div class="delivery-check">
+          <h4>✅ Checklist abans de lliurar</h4>
+          <ul class="check-list" id="check-p1">
+            <li><input type="checkbox" onchange="markCheck(this)"> Taula de priorització amb justificació escrita</li>
+            <li><input type="checkbox" onchange="markCheck(this)"> 4 tickets oberts a GLPI o full de càlcul</li>
+            <li><input type="checkbox" onchange="markCheck(this)"> Diagnòstic documentat per a cada incidència</li>
+            <li><input type="checkbox" onchange="markCheck(this)"> 4 tickets tancats amb solució i temps registrat</li>
+            <li><input type="checkbox" onchange="markCheck(this)"> 2 articles de la base de coneixement redactats</li>
+            <li><input type="checkbox" onchange="markCheck(this)"> Informe diari de suport amb mètriques</li>
+            <li><input type="checkbox" onchange="markCheck(this)"> 3 mesures preventives redactades</li>
+            <li><input type="checkbox" onchange="markCheck(this)"> Joc de rol realitzat (vídeo o rúbrica)</li>
+            <li><input type="checkbox" onchange="markCheck(this)"> Autoavaluació de comunicació escrita</li>
+            <li><input type="checkbox" onchange="markCheck(this)"> ZIP lliurat amb tots els fitxers (.ods, .odt, .pdf)</li>
+          </ul>
         </div>
 
       </div>
@@ -934,150 +805,288 @@
   </div>
 </section>
 
-<!-- PREGUNTES -->
+<!-- ═══ RÚBRICA ═══ -->
+<section id="rubrica" style="padding:5rem 2rem;background:#f0f9ff;">
+  <div class="container">
+    <div class="ra-banner ra-green fi">
+      <div class="ra-num">📊</div>
+      <div><h2>Rúbrica d'avaluació — RA9</h2><p>Criteris de correcció sobre 10. Llegeix-la abans de lliurar i comprova que el teu treball compleix cada criteri.</p></div>
+    </div>
+    <div class="rubric-wrap fi">
+      <table class="rubric-table">
+        <thead>
+          <tr>
+            <th style="width:20%">Criteri</th><th style="width:8%">Pes</th>
+            <th class="col-ex" style="width:18%">🟢 Excel·lent (9–10)</th>
+            <th class="col-be" style="width:18%">🔵 Bé (7–8)</th>
+            <th class="col-ok" style="width:18%">🟡 Suficient (5–6)</th>
+            <th class="col-no" style="width:18%">🔴 Insuficient (0–4)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Priorització de tickets</td><td style="text-align:center;font-weight:700">20%</td>
+            <td class="col-ex">Totes les prioritats correctes i justificades amb criteris ITIL. SLAs definits per a cada una. Taula completa i ben presentada.</td>
+            <td class="col-be">Prioritats correctes però justificació incompleta o SLAs sense detallar.</td>
+            <td class="col-ok">Almenys 3 de 4 prioritats correctes. Justificació bàsica present.</td>
+            <td class="col-no">Prioritats incorrectes o sense justificació. Sense SLAs.</td>
+          </tr>
+          <tr>
+            <td>Diagnòstic tècnic</td><td style="text-align:center;font-weight:700">25%</td>
+            <td class="col-ex">Procés de diagnòstic documentat pas a pas per a cada incidència. S'identifica la causa arrel (no sols el símptoma). Eines usades correctament.</td>
+            <td class="col-be">Diagnòstic documentat però sense identificar clarament la causa arrel en algun cas.</td>
+            <td class="col-ok">Diagnòstic superficial. Solucions aplicades però sense analitzar per quina raó han funcionat.</td>
+            <td class="col-no">Sense diagnòstic documentat o solucions incorrectes.</td>
+          </tr>
+          <tr>
+            <td>Documentació (tickets, KB, informe)</td><td style="text-align:center;font-weight:700">25%</td>
+            <td class="col-ex">Tickets tancats correctament, 2 articles KB amb tota l'estructura, informe amb mètriques i propostes preventives concretes.</td>
+            <td class="col-be">Documentació present però algun element incomplet (KB sense alternatives, informe sense mètriques).</td>
+            <td class="col-ok">Documentació mínima. Tickets tancats però KB o informe incomplets.</td>
+            <td class="col-no">Documentació absent o de molt baixa qualitat.</td>
+          </tr>
+          <tr>
+            <td>Comunicació amb l'usuari (joc de rol)</td><td style="text-align:center;font-weight:700">15%</td>
+            <td class="col-ex">Lenguaje adaptat, escolta activa demostrada, gestió de la pressió de temps, solució explicada sense tecnicismes, autoavaluació reflexiva.</td>
+            <td class="col-be">Comunicació adequada però amb alguns tecnicismes o sense gestió clara de les expectatives.</td>
+            <td class="col-ok">Comunicació bàsica. El problema es resol però la interacció no és professional.</td>
+            <td class="col-no">Comunicació inadequada, culpant l'usuari o usant jerga incomprensible.</td>
+          </tr>
+          <tr>
+            <td>Mesures preventives</td><td style="text-align:center;font-weight:700">10%</td>
+            <td class="col-ex">3 mesures concretes, realistes, directament relacionades amb les incidències gestionades i implementables a l'empresa de l'escenari.</td>
+            <td class="col-be">3 mesures presents però genèriques o poc concretes.</td>
+            <td class="col-ok">1–2 mesures presents.</td>
+            <td class="col-no">Sense mesures preventives.</td>
+          </tr>
+          <tr>
+            <td>Lliurament i format</td><td style="text-align:center;font-weight:700">5%</td>
+            <td class="col-ex">ZIP complet, tots els fitxers en el format correcte, noms de fitxer correctes, dins del termini.</td>
+            <td class="col-be">Lliurat correctament però algun fitxer en format incorrecte o fora de termini.</td>
+            <td class="col-ok">Lliurament incomplet o amb errors de format.</td>
+            <td class="col-no">No lliurat.</td>
+          </tr>
+          <tr class="rubric-total">
+            <td colspan="2">TOTAL</td>
+            <td colspan="4" style="text-align:center">100% · Nota final sobre 10</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout cl-teal fi" style="margin-top:1.5rem">
+      <span class="callout-icon">💡</span>
+      <div><p><strong>Consell clau:</strong> el criteri de diagnòstic tècnic val un 25%. No és suficient resoldre el problema: has de documentar <em>per quina raó</em> has aplicat cada pas i <em>quina era la causa arrel</em>. Un tècnic que resol però no explica no pot créixer professionalment.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ AUTOAVALUACIÓ ═══ -->
+<section id="autoavaluacio" style="padding:5rem 2rem;background:#f5f3ff;">
+  <div class="container">
+    <div class="section-tag tag-purple fi">Autoavaluació</div>
+    <h2 class="fi">Test ràpid: saps el contingut del RA9?</h2>
+    <p class="lead fi" style="margin-bottom:2rem">5 preguntes per saber si has entès els conceptes clau. <strong>Sense nota</strong>, és només per a tu. Fes-lo abans de la pràctica o de l'examen!</p>
+
+    <div class="quiz-card fi" id="q1">
+      <div class="quiz-q">1. Un usuari crida molt dient que el seu problema de canviar el fons de pantalla és "urgentíssim". Al mateix temps, un altre usuari avisa tranquil·lament que el servidor de correu ha caigut per a tots. Quin s'ha d'atendre primer?</div>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="checkQ('q1',this,false)">A) El primer que ha trucat, independentment del problema</button>
+        <button class="quiz-opt" onclick="checkQ('q1',this,false)">B) El que crida més, perquè sembla que el seu problema és més greu</button>
+        <button class="quiz-opt" onclick="checkQ('q1',this,true)">C) El del servidor de correu, perquè l'impacte al negoci és molt major (afecta tots els usuaris)</button>
+        <button class="quiz-opt" onclick="checkQ('q1',this,false)">D) Tots dos al mateix temps, obrint un ticket per a cadascun simultàniament</button>
+      </div>
+      <div class="quiz-feedback" id="q1-fb"></div>
+    </div>
+
+    <div class="quiz-card fi" id="q2">
+      <div class="quiz-q">2. Apliques la tècnica dels "5 Whys" a un problema de LibreOffice que es tanca sol. Arribes a la conclusió que la causa arrel és un procés d'actualització incorrecte. Quina és la solució adequada?</div>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="checkQ('q2',this,false)">A) Reinstal·lar LibreOffice a l'equip afectat i tancar el ticket</button>
+        <button class="quiz-opt" onclick="checkQ('q2',this,true)">B) Corregir el procés d'actualització per evitar que el problema es repeteixi en futurs equips, a més de solucionar l'equip afectat</button>
+        <button class="quiz-opt" onclick="checkQ('q2',this,false)">C) Canviar a Microsoft Office perquè LibreOffice no és prou estable</button>
+        <button class="quiz-opt" onclick="checkQ('q2',this,false)">D) Escalar el ticket a N3 perquè és massa complex</button>
+      </div>
+      <div class="quiz-feedback" id="q2-fb"></div>
+    </div>
+
+    <div class="quiz-card fi" id="q3">
+      <div class="quiz-q">3. Un usuari et truca perquè l'Office es tanca de vegades sense missatge d'error. Quin és el primer pas del diagnòstic que has de fer?</div>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="checkQ('q3',this,false)">A) Reinstal·lar Microsoft Office immediatament</button>
+        <button class="quiz-opt" onclick="checkQ('q3',this,false)">B) Demanar a l'usuari que formati l'ordinador</button>
+        <button class="quiz-opt" onclick="checkQ('q3',this,true)">C) Obrir el Visor d'events (eventvwr.msc) i buscar errors de l'aplicació coincidint amb les hores de tancament</button>
+        <button class="quiz-opt" onclick="checkQ('q3',this,false)">D) Escalar directament a N3 perquè no hi ha missatge d'error</button>
+      </div>
+      <div class="quiz-feedback" id="q3-fb"></div>
+    </div>
+
+    <div class="quiz-card fi" id="q4">
+      <div class="quiz-q">4. Resoleus una incidència complexa en 2 hores. Quin és el pas que molts tècnics s'obliden de fer i que és imprescindible per al bon funcionament de l'equip de suport?</div>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="checkQ('q4',this,false)">A) Avisar el cap que s'ha trigat 2 hores en resoldre-ho</button>
+        <button class="quiz-opt" onclick="checkQ('q4',this,true)">B) Documentar la solució a la base de coneixement (KB) per que futurs tècnics puguin resoldre-ho en minuts</button>
+        <button class="quiz-opt" onclick="checkQ('q4',this,false)">C) Demanar a l'usuari que faci una valoració de l'atenció rebuda</button>
+        <button class="quiz-opt" onclick="checkQ('q4',this,false)">D) Tancar el ticket immediatament sense esperar confirmació de l'usuari</button>
+      </div>
+      <div class="quiz-feedback" id="q4-fb"></div>
+    </div>
+
+    <div class="quiz-card fi" id="q5">
+      <div class="quiz-q">5. Vols iniciar una sessió d'accés remot amb AnyDesk per veure el problema d'un usuari. Quin és el procediment correcte?</div>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="checkQ('q5',this,false)">A) Connectar-te directament per no interrompre l'usuari mentre treballa</button>
+        <button class="quiz-opt" onclick="checkQ('q5',this,false)">B) Enviar un correu explicant que et connectaràs en algun moment del dia</button>
+        <button class="quiz-opt" onclick="checkQ('q5',this,true)">C) Trucar o escriure a l'usuari, explicar-li el que faràs, demanar el seu consentiment i esperar que accepti la sol·licitud de connexió</button>
+        <button class="quiz-opt" onclick="checkQ('q5',this,false)">D) L'accés remot no requereix consentiment si l'ordinador és de l'empresa</button>
+      </div>
+      <div class="quiz-feedback" id="q5-fb"></div>
+    </div>
+
+    <div id="quiz-result" style="display:none;text-align:center;margin-top:1.5rem;padding:1.5rem;background:white;border-radius:var(--radius);border:1px solid var(--border);">
+      <div class="quiz-score" id="quiz-score-txt"></div>
+      <p id="quiz-score-msg" style="color:var(--muted);font-size:.95rem;"></p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ RECURSOS ═══ -->
+<section id="recursos" style="padding:5rem 2rem;background:white;">
+  <div class="container">
+    <div class="section-tag tag-cobalt fi">Bibliografia i recursos</div>
+    <h2 class="fi">Recursos externs recomanats</h2>
+    <p class="lead fi" style="margin-bottom:2rem">Fonts oficials i curades per ampliar coneixements. Ideals per preparar la pràctica i l'examen.</p>
+
+    <div class="fi">
+      <a class="resource-link" href="https://glpi-project.org/" target="_blank" rel="noopener">
+        <span class="resource-icon">🎫</span>
+        <div><div class="r-title">GLPI — Gestió de tickets i actius IT (gratuït)</div><div class="r-desc">El sistema de gestió de tickets que usa la majoria de centres educatius i PIMES. Documentació i demo disponible. Molt usat a Espanya i Catalunya.</div><span class="r-tag">Oficial · Gratuït · En català</span></div>
+      </a>
+      <a class="resource-link" href="https://support.microsoft.com/ca-es/office" target="_blank" rel="noopener">
+        <span class="resource-icon">📘</span>
+        <div><div class="r-title">Centre d'ajuda de Microsoft Office</div><div class="r-desc">Documentació oficial per a totes les aplicacions de Microsoft 365. Primera font de consulta per a qualsevol incidència amb Word, Excel, Outlook o PowerPoint.</div><span class="r-tag">Oficial · Microsoft</span></div>
+      </a>
+      <a class="resource-link" href="https://help.libreoffice.org/latest/ca/" target="_blank" rel="noopener">
+        <span class="resource-icon">📗</span>
+        <div><div class="r-title">Ajuda de LibreOffice (en català)</div><div class="r-desc">Documentació oficial de LibreOffice en català. Inclou guies per a Writer, Calc, Impress i Base. Essencial per diagnosticar incidències de LibreOffice.</div><span class="r-tag">Oficial · LibreOffice · Català</span></div>
+      </a>
+      <a class="resource-link" href="https://bugs.documentfoundation.org/" target="_blank" rel="noopener">
+        <span class="resource-icon">🐛</span>
+        <div><div class="r-title">Base de bugs de LibreOffice (Bugzilla)</div><div class="r-desc">Repositori oficial d'errors coneguts de LibreOffice. Imprescindible per comprovar si un problema és un bug conegut i si ja té solució o versió corregida.</div><span class="r-tag">Bugs · Diagnòstic</span></div>
+      </a>
+      <a class="resource-link" href="https://itil.axelos.com/" target="_blank" rel="noopener">
+        <span class="resource-icon">📋</span>
+        <div><div class="r-title">ITIL — Marc de gestió de serveis IT</div><div class="r-desc">El marc de bones pràctiques de gestió de serveis IT més usat a nivell mundial. La web oficial explica els conceptes d'incidències, SLAs, escalat i base de coneixement que apliquem en aquest RA.</div><span class="r-tag">ITIL · Best practices</span></div>
+      </a>
+    </div>
+
+    <!-- FEYNMAN -->
+    <div class="feynman fi" style="margin-top:3rem">
+      <h3>🧠 Tècnica d'estudi: El Mètode Feynman</h3>
+      <p style="margin-top:.5rem">La millor manera de saber si has entès un concepte és intentar explicar-lo de forma senzilla. Prova-ho amb aquests conceptes del RA9:</p>
+      <div class="feyn-prompts">
+        <div class="feyn-card"><p>"Explica la diferència entre N1, N2 i N3 com si ho expliquessis a un amic que no sap res d'informàtica, usant una analogia del món real."</p></div>
+        <div class="feyn-card"><p>"Explica per a quin motiu la tècnica dels 5 Whys és millor que simplement aplicar la primera solució que se t'acudeix. Posa un exemple concret."</p></div>
+        <div class="feyn-card"><p>"Explica per a quin motiu és important documentar les solucions a una base de coneixement, calculant el temps que s'estalvia en un any amb 10 incidències similars."</p></div>
+        <div class="feyn-card"><p>"Explica per a quin motiu sempre cal el consentiment de l'usuari per fer accés remot, fins i tot si l'ordinador és propietat de l'empresa."</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PREGUNTES ═══ -->
 <section id="preguntes">
   <div class="container">
     <div class="ra-banner ra-preguntes fi">
       <div class="ra-num">?</div>
-      <div>
-        <h2>Preguntes teòriques — RA9</h2>
-        <p>10 preguntes per consolidar els coneixements. Respon-les de forma raonada, amb exemples del món real i del teu paper com a tècnic SMX.</p>
-      </div>
+      <div><h2>Preguntes teòriques — RA9</h2><p>10 preguntes per consolidar els coneixements. Respon-les de forma raonada, amb exemples del món real i del teu paper com a tècnic SMX.</p></div>
     </div>
-
     <div class="grid fi" style="gap:.9rem">
-
-      <div class="q-card">
-        <div class="q-num">1</div>
-        <div class="q-body">
-          <h4>Explica el model de suport per nivells N1, N2 i N3. Quines competències tècniques i relacionals ha de tenir cada nivell? Posa un exemple concret d'una incidència de LibreOffice que pertanyeria a cadascun dels nivells.</h4>
-          <p>Reflexiona sobre per quina raó és important no saltar-se els nivells i escalar de forma ordenada. Quins problemes organitzatius crea si tots els tickets arriben directament al N3?</p>
-          <div class="q-tags"><span class="q-tag qt-diag">Organització</span><span class="q-tag qt-mix">Helpdesk</span></div>
-        </div>
-      </div>
-
-      <div class="q-card">
-        <div class="q-num">2</div>
-        <div class="q-body">
-          <h4>Quin és un SLA (Service Level Agreement) en el context del suport IT? Quines conseqüències té per a l'empresa incomplir els temps de resolució definits al SLA?</h4>
-          <p>Dissenya una taula de SLAs per a un departament d'IT d'una PIME amb 4 nivells de prioritat. Especifica els temps de resposta inicial i de resolució per a cada prioritat. Justifica els temps escollits.</p>
-          <div class="q-tags"><span class="q-tag qt-doc">Gestió</span><span class="q-tag qt-mix">SLA</span></div>
-        </div>
-      </div>
-
-      <div class="q-card">
-        <div class="q-num">3</div>
-        <div class="q-body">
-          <h4>Descriu la tècnica dels "5 Whys" (5 Per quès) aplicada al diagnòstic d'incidències IT. Aplica-la a una incidència real o inventada: "L'Excel d'un usuari mostra errors de càlcul en obrir-se".</h4>
-          <p>Per quina raó és important arribar a la causa arrel i no quedar-se en el primer símptoma? Quins riscos comporta aplicar una solució sense entendre la causa arrel?</p>
-          <div class="q-tags"><span class="q-tag qt-diag">Diagnòstic</span></div>
-        </div>
-      </div>
-
-      <div class="q-card">
-        <div class="q-num">4</div>
-        <div class="q-body">
-          <h4>Un usuari et truca enfurismat perquè ha perdut 2 hores de feina en un document de Word que no s'ha desat. Com gestionaries la situació tècnicament i des del punt de vista de la comunicació?</h4>
-          <p>Explica com recuperaríeu el document (AutoRecovery de Word/LibreOffice). Quina actitud ha de tenir el tècnic amb l'usuari? Quins errors de comunicació hauria d'evitar? Com explicaríeu com configurar el desat automàtic per evitar que torni a passar?</p>
-          <div class="q-tags"><span class="q-tag qt-user">Comunicació</span><span class="q-tag qt-inc">Incidència</span></div>
-        </div>
-      </div>
-
-      <div class="q-card">
-        <div class="q-num">5</div>
-        <div class="q-body">
-          <h4>Quin és el propòsit d'obrir una aplicació en mode segur (safe mode) durant un diagnòstic? En quines situacions concretes faries servir aquesta tècnica i com determinaries si el problema és d'una extensió o del codi principal de l'aplicació?</h4>
-          <p>Explica el procediment per obrir LibreOffice Writer i Microsoft Word en mode segur. Si en mode segur el problema desapareix, quin seria el teu pròxim pas de diagnòstic?</p>
-          <div class="q-tags"><span class="q-tag qt-diag">Diagnòstic</span><span class="q-tag qt-tool">Eines</span></div>
-        </div>
-      </div>
-
-      <div class="q-card">
-        <div class="q-num">6</div>
-        <div class="q-body">
-          <h4>Descriu com funciona el Visor d'events de Windows (Event Viewer) i com l'uses per diagnosticar problemes d'aplicacions ofimàtiques. Quins registres (logs) han de consultar-se en primer lloc i per quina raó?</h4>
-          <p>Un usuari et diu que "l'Office es tanca sol de vegades, sense missatge d'error". Explica pas a pas com usaries el Visor d'events per identificar la causa del problema. Quins tipus d'event t'interessarien (Error, Avís, Informació)?</p>
-          <div class="q-tags"><span class="q-tag qt-tool">Eines</span><span class="q-tag qt-diag">Diagnòstic</span></div>
-        </div>
-      </div>
-
-      <div class="q-card">
-        <div class="q-num">7</div>
-        <div class="q-body">
-          <h4>Quin és el valor d'una base de coneixement (Knowledge Base) en un departament de suport IT? Quina informació ha d'incloure un article de KB ben redactat?</h4>
-          <p>Si un article de KB estalvia de mitja 30 minuts per incidència i el departament gestiona 10 incidències similars al mes, quin és l'estalvi mensual i anual en hores de suport? Quins obstacles solen trobar els equips per mantenir la KB actualitzada?</p>
-          <div class="q-tags"><span class="q-tag qt-doc">Documentació</span><span class="q-tag qt-mix">KB</span></div>
-        </div>
-      </div>
-
-      <div class="q-card">
-        <div class="q-num">8</div>
-        <div class="q-body">
-          <h4>Un document LibreOffice Writer que funcionava perfectament ahir mostra avui el missatge d'error "Error al llegir el fitxer". Descriu el procés de diagnòstic complet que seguiries per intentar recuperar el document.</h4>
-          <p>Considera les opcions de recuperació automàtica (AutoRecovery), la reparació del document obert com a ZIP, l'ús de Google Docs o Word Online com a eina de recuperació alternativa, i la possibilitat de restaurar des d'una còpia de seguretat. Quina opció provaries primer i per quin motiu?</p>
-          <div class="q-tags"><span class="q-tag qt-inc">Incidència</span><span class="q-tag qt-diag">Recuperació</span></div>
-        </div>
-      </div>
-
-      <div class="q-card">
-        <div class="q-num">9</div>
-        <div class="q-body">
-          <h4>Quins avantatges ofereix l'accés remot (Remote Desktop, AnyDesk, Quick Assist) en el context del suport tècnic? Quines consideracions de seguretat i privacitat han de tenir-se en compte en usar-lo?</h4>
-          <p>En quin cas estaria justificat refusar l'accés remot a un equip? Quines dades pot veure el tècnic durant una sessió d'accés remot? Cal el consentiment explícit de l'usuari? Elabora un protocol d'ús segur de l'accés remot per a una empresa.</p>
-          <div class="q-tags"><span class="q-tag qt-tool">Eines</span><span class="q-tag qt-mix">Seguretat</span></div>
-        </div>
-      </div>
-
-      <div class="q-card">
-        <div class="q-num">10</div>
-        <div class="q-body">
-          <h4>Reps 5 tickets de suport simultàniament un dimarts al matí. Descriu el procés de priorització que seguiries i els criteris que faries servir per decidir l'ordre d'atenció.</h4>
-          <p>Les incidències són: (A) error al servidor de correu que afecta tots els 30 usuaris, (B) un usuari no pot imprimir el seu informe per a una reunió en 1 hora, (C) un usuari demana com canviar el fons de pantalla, (D) el director no pot obrir un fitxer Excel crític, (E) 3 usuaris reporten que LibreOffice tarda molt a iniciar. Justifica l'ordre d'atenció i el SLA assignat a cadascun.</p>
-          <div class="q-tags"><span class="q-tag qt-doc">Priorització</span><span class="q-tag qt-mix">SLA</span></div>
-        </div>
-      </div>
-
+      <div class="q-card"><div class="q-num">1</div><div class="q-body"><h4>Explica el model de suport per nivells N1, N2 i N3. Quines competències tècniques i relacionals ha de tenir cada nivell? Posa un exemple concret d'una incidència de LibreOffice que pertanyeria a cadascun dels nivells.</h4><p>Reflexiona sobre per quina raó és important no saltar-se els nivells i escalar de forma ordenada. Quins problemes organitzatius crea si tots els tickets arriben directament al N3?</p><div class="q-tags"><span class="q-tag qt-diag">Organització</span><span class="q-tag qt-mix">Helpdesk</span></div></div></div>
+      <div class="q-card"><div class="q-num">2</div><div class="q-body"><h4>Quin és un SLA (Service Level Agreement) en el context del suport IT? Quines conseqüències té per a l'empresa incomplir els temps de resolució definits al SLA?</h4><p>Dissenya una taula de SLAs per a un departament d'IT d'una PIME amb 4 nivells de prioritat. Especifica els temps de resposta inicial i de resolució per a cada prioritat. Justifica els temps escollits.</p><div class="q-tags"><span class="q-tag qt-doc">Gestió</span><span class="q-tag qt-mix">SLA</span></div></div></div>
+      <div class="q-card"><div class="q-num">3</div><div class="q-body"><h4>Descriu la tècnica dels "5 Whys" (5 Per quès) aplicada al diagnòstic d'incidències IT. Aplica-la a una incidència real o inventada: "L'Excel d'un usuari mostra errors de càlcul en obrir-se".</h4><p>Per quina raó és important arribar a la causa arrel i no quedar-se en el primer símptoma? Quins riscos comporta aplicar una solució sense entendre la causa arrel?</p><div class="q-tags"><span class="q-tag qt-diag">Diagnòstic</span></div></div></div>
+      <div class="q-card"><div class="q-num">4</div><div class="q-body"><h4>Un usuari et truca enfurismat perquè ha perdut 2 hores de feina en un document de Word que no s'ha desat. Com gestionaries la situació tècnicament i des del punt de vista de la comunicació?</h4><p>Explica com recuperaríeu el document (AutoRecovery de Word/LibreOffice). Quina actitud ha de tenir el tècnic? Quins errors de comunicació hauria d'evitar? Com configuraries el desat automàtic per evitar que torni a passar?</p><div class="q-tags"><span class="q-tag qt-user">Comunicació</span><span class="q-tag qt-inc">Incidència</span></div></div></div>
+      <div class="q-card"><div class="q-num">5</div><div class="q-body"><h4>Quin és el propòsit d'obrir una aplicació en mode segur (safe mode) durant un diagnòstic? En quines situacions concretes faries servir aquesta tècnica i com determinaries si el problema és d'una extensió o del codi principal de l'aplicació?</h4><p>Explica el procediment per obrir LibreOffice Writer i Microsoft Word en mode segur. Si en mode segur el problema desapareix, quin seria el teu pròxim pas de diagnòstic?</p><div class="q-tags"><span class="q-tag qt-diag">Diagnòstic</span><span class="q-tag qt-tool">Eines</span></div></div></div>
+      <div class="q-card"><div class="q-num">6</div><div class="q-body"><h4>Descriu com funciona el Visor d'events de Windows (Event Viewer) i com l'uses per diagnosticar problemes d'aplicacions ofimàtiques. Quins registres (logs) han de consultar-se en primer lloc i per quina raó?</h4><p>Un usuari et diu que "l'Office es tanca sol de vegades, sense missatge d'error". Explica pas a pas com usaries el Visor d'events per identificar la causa. Quins tipus d'event t'interessarien (Error, Avís, Informació)?</p><div class="q-tags"><span class="q-tag qt-tool">Eines</span><span class="q-tag qt-diag">Diagnòstic</span></div></div></div>
+      <div class="q-card"><div class="q-num">7</div><div class="q-body"><h4>Quin és el valor d'una base de coneixement (Knowledge Base) en un departament de suport IT? Quina informació ha d'incloure un article de KB ben redactat?</h4><p>Si un article de KB estalvia de mitja 30 minuts per incidència i el departament gestiona 10 incidències similars al mes, quin és l'estalvi mensual i anual en hores de suport? Quins obstacles solen trobar els equips per mantenir la KB actualitzada?</p><div class="q-tags"><span class="q-tag qt-doc">Documentació</span><span class="q-tag qt-mix">KB</span></div></div></div>
+      <div class="q-card"><div class="q-num">8</div><div class="q-body"><h4>Un document LibreOffice Writer que funcionava perfectament ahir mostra avui el missatge d'error "Error al llegir el fitxer". Descriu el procés de diagnòstic complet que seguiries per intentar recuperar el document.</h4><p>Considera les opcions de recuperació automàtica (AutoRecovery), la reparació del document obert com a ZIP, l'ús de Google Docs o Word Online com a eina de recuperació alternativa, i la possibilitat de restaurar des d'una còpia de seguretat. Quina opció provaries primer i per quin motiu?</p><div class="q-tags"><span class="q-tag qt-inc">Incidència</span><span class="q-tag qt-diag">Recuperació</span></div></div></div>
+      <div class="q-card"><div class="q-num">9</div><div class="q-body"><h4>Quins avantatges ofereix l'accés remot (Remote Desktop, AnyDesk, Quick Assist) en el context del suport tècnic? Quines consideracions de seguretat i privacitat han de tenir-se en compte en usar-lo?</h4><p>En quin cas estaria justificat refusar l'accés remot a un equip? Quines dades pot veure el tècnic durant una sessió d'accés remot? Cal el consentiment explícit de l'usuari? Elabora un protocol d'ús segur de l'accés remot per a una empresa.</p><div class="q-tags"><span class="q-tag qt-tool">Eines</span><span class="q-tag qt-mix">Seguretat</span></div></div></div>
+      <div class="q-card"><div class="q-num">10</div><div class="q-body"><h4>Reps 5 tickets de suport simultàniament un dimarts al matí. Descriu el procés de priorització que seguiries i els criteris que faries servir per decidir l'ordre d'atenció.</h4><p>Les incidències són: (A) error al servidor de correu que afecta tots els 30 usuaris, (B) un usuari no pot imprimir el seu informe per a una reunió en 1 hora, (C) un usuari demana com canviar el fons de pantalla, (D) el director no pot obrir un fitxer Excel crític, (E) 3 usuaris reporten que LibreOffice tarda molt a iniciar. Justifica l'ordre d'atenció i el SLA assignat a cadascun.</p><div class="q-tags"><span class="q-tag qt-doc">Priorització</span><span class="q-tag qt-mix">SLA</span></div></div></div>
     </div>
   </div>
 </section>
 
-<!-- RESUM FINAL -->
+<!-- ═══ RESUM FINAL ═══ -->
 <section class="s-cream">
   <div class="container fi">
     <div class="section-tag tag-teal">Resum del RA9</div>
     <h2>El que heu après</h2>
     <p class="lead">Un resum dels conceptes clau del RA9 i la seva aplicació professional com a tècnics SMX de suport.</p>
     <div class="grid g3 fi">
-      <div class="card bl-teal">
-        <div class="card-icon" style="background:#f0f9ff">🎫</div>
-        <h3>Gestió d'incidències</h3>
-        <p>Model N1→N2→N3. SLAs per prioritat. Cicle de vida: obertura → classificació → diagnòstic → resolució → tancament. El ticket és la unitat de treball del suport IT.</p>
-      </div>
-      <div class="card" style="border-left:3px solid var(--red)">
-        <div class="card-icon" style="background:#fff8f8">🔍</div>
-        <h3>Diagnòstic tècnic</h3>
-        <p>5 Whys per a la causa arrel. Mode segur per a aïllar extensions. Visor d'events per a logs. Accés remot per a suport N2. Reducció per bisecció per localitzar el punt de falla.</p>
-      </div>
-      <div class="card" style="border-left:3px solid var(--orange)">
-        <div class="card-icon" style="background:#fff8f2">📖</div>
-        <h3>Documentació i comunicació</h3>
-        <p>Escolta activa. Llenguatge adaptat a l'usuari. Base de coneixement per evitar repetir diagnòstics. Informe diari per al cap d'IT. Acció preventiva per evitar incidències futures.</p>
-      </div>
+      <div class="card bl-teal"><div class="card-icon" style="background:#f0f9ff">🎫</div><h3>Gestió d'incidències</h3><p>Model N1→N2→N3. SLAs per prioritat. Cicle de vida: obertura → classificació → diagnòstic → resolució → tancament. El ticket és la unitat de treball del suport IT.</p></div>
+      <div class="card" style="border-left:3px solid var(--red)"><div class="card-icon" style="background:#fff8f8">🔍</div><h3>Diagnòstic tècnic</h3><p>5 Whys per a la causa arrel. Mode segur per aïllar extensions. Visor d'events per a logs. Accés remot per a suport N2. Reducció per bisecció per localitzar el punt de falla.</p></div>
+      <div class="card" style="border-left:3px solid var(--orange)"><div class="card-icon" style="background:#fff8f2">📖</div><h3>Documentació i comunicació</h3><p>Escolta activa. Llenguatge adaptat a l'usuari. Base de coneixement per evitar repetir diagnòstics. Informe diari per al cap d'IT. Acció preventiva per evitar incidències futures.</p></div>
     </div>
   </div>
 </section>
 
 <footer>
   <p><strong>RA9 — Suport Tècnic en l'Ús d'Aplicacions Ofimàtiques · SMX</strong></p>
-  <p style="margin-top:.4rem">LibreOffice · Microsoft 365 · GLPI · Helpdesk · N1/N2/N3 · SLA · Base de Coneixement</p>
+  <p style="margin-top:.4rem">LibreOffice · Microsoft 365 · GLPI · Helpdesk · N1/N2/N3 · SLA · Base de Coneixement · ITIL</p>
   <p style="margin-top:.4rem">Departament d'Informàtica · Sistemes Microinformàtics i Xarxes</p>
 </footer>
 
 <script>
+  // Fade-in
   const io = new IntersectionObserver(entries => {
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
-  }, { threshold: 0.07, rootMargin: '0px 0px -30px 0px' });
+  }, { threshold: 0.06, rootMargin: '0px 0px -30px 0px' });
   document.querySelectorAll('.fi').forEach(el => io.observe(el));
+
+  // Progress bar
+  const bar = document.getElementById('progress-bar');
+  window.addEventListener('scroll', () => {
+    const total = document.body.scrollHeight - window.innerHeight;
+    if (bar) bar.style.width = (window.scrollY / total * 100) + '%';
+  });
+
+  // Quiz
+  const feedbacks = {
+    'q1': 'Correcte! La prioritat es determina per l\'impacte al negoci, no per l\'estat emocional de l\'usuari. Un servidor de correu caigut afecta tots els empleats: és una incidència crítica.',
+    'q2': 'Correcte! Arribar a la causa arrel (procés d\'actualització incorrecte) significa que la solució ha de corregir aquell procés, no sols reinstal·lar l\'equip afectat. Sinó el problema es repetirà.',
+    'q3': 'Correcte! El Visor d\'events (eventvwr.msc) és el primer lloc on buscar quan una aplicació es tanca sense missatge d\'error. Els logs d\'aplicació mostren exactament el que ha fallat i quan.',
+    'q4': 'Correcte! Documentar la solució a la base de coneixement és el pas que més s\'oblida i el que més valor aporta a llarg termini. Un problema resolt en 2 hores que torni a passar es pot resoldre en 5 minuts amb una bona KB.',
+    'q5': 'Correcte! L\'accés remot sempre requereix el consentiment explícit de l\'usuari, fins i tot si el dispositiu és propietat de l\'empresa. És una qüestió de privacitat, confiança i bona pràctica professional.'
+  };
+  let answered = 0, correct = 0;
+
+  function checkQ(id, btn, isCorrect) {
+    const card = document.getElementById(id);
+    if (card.dataset.done) return;
+    card.dataset.done = '1';
+    answered++;
+    card.querySelectorAll('.quiz-opt').forEach(o => { o.classList.add('disabled'); o.disabled = true; });
+    btn.classList.add(isCorrect ? 'correct' : 'wrong');
+    if (!isCorrect) {
+      card.querySelectorAll('.quiz-opt').forEach(o => {
+        if (o.getAttribute('onclick') && o.getAttribute('onclick').includes('true')) o.classList.add('correct');
+      });
+    }
+    const fb = document.getElementById(id + '-fb');
+    fb.textContent = (isCorrect ? '✅ ' : '❌ Incorrecte. ') + feedbacks[id];
+    fb.className = 'quiz-feedback show ' + (isCorrect ? 'ok' : 'ko');
+    if (isCorrect) correct++;
+    if (answered === 5) {
+      const res = document.getElementById('quiz-result');
+      res.style.display = 'block';
+      document.getElementById('quiz-score-txt').textContent = correct + ' / 5';
+      const msgs = ['Repassa el material!', 'Bona base, revisa els fallats.', 'Bé! Ja tens els conceptes principals.', 'Molt bé! Gairebé llest.', '🏆 Excel·lent! Domines el RA9.'];
+      document.getElementById('quiz-score-msg').textContent = msgs[correct] || msgs[0];
+    }
+  }
+
+  function markCheck(cb) {
+    cb.parentElement.classList.toggle('checked', cb.checked);
+  }
 </script>
 </body>
 </html>

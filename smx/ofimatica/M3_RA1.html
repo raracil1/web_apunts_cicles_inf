@@ -47,10 +47,11 @@
   }
   .nav-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1rem; color: var(--navy); letter-spacing: -0.02em; }
   .nav-logo span { color: var(--accent); }
-  .nav-pills { display: flex; gap: .5rem; list-style: none; flex-wrap: wrap; }
+  .nav-pills { display: flex; gap: .4rem; list-style: none; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; flex-shrink: 1; max-width: calc(100% - 140px); padding-bottom: 2px; }
+  .nav-pills::-webkit-scrollbar { display: none; }
   .nav-pills a {
-    text-decoration: none; font-size: 0.78rem; font-weight: 600;
-    padding: .3rem .85rem; border-radius: 100px;
+    text-decoration: none; font-size: 0.73rem; font-weight: 600;
+    padding: .25rem .7rem; border-radius: 100px; white-space: nowrap;
     color: var(--muted); transition: all .2s;
     border: 1px solid transparent;
   }
@@ -187,7 +188,7 @@
     font-size: 0.8rem; color: #a8c4ff; overflow-x: auto; line-height: 1.65;
     margin: .65rem 0;
   }
-  .code .cm { color: #4a6070; }
+  .code .cm { color: #6fa8c0; }
   .code .kw { color: #fbbc04; }
   .code .st { color: #57e3b0; }
   .code .er { color: #ff7b7b; }
@@ -229,6 +230,9 @@
   .ptable th:first-child { border-radius: 8px 0 0 0; }
   .ptable th:last-child  { border-radius: 0 8px 0 0; }
   .ptable tr:hover td { background: var(--cream); }
+  .s-dark .ptable td { color: rgba(255,255,255,0.85); border-color: rgba(255,255,255,0.12); }
+  .s-dark .ptable tr:hover td { background: rgba(255,255,255,0.08); color: white; }
+  .s-dark .ptable th { background: rgba(255,255,255,0.12); }
 
   /* RA BANNER */
   .ra-banner {
@@ -343,19 +347,202 @@
     background: var(--ink); color: rgba(255,255,255,0.5);
     text-align: center; padding: 3rem 2rem; font-size: 0.85rem;
   }
+
+  /* ── PROGRESS BAR ── */
+  #progress-bar {
+    position: fixed; top: 0; left: 0; height: 3px; z-index: 200;
+    background: linear-gradient(90deg, var(--accent), var(--cobalt), var(--purple));
+    width: 0%; transition: width .1s linear;
+  }
+
+  /* ── TOOLTIP GLOSSARI ── */
+  .glos {
+    border-bottom: 1.5px dashed var(--cobalt); cursor: help;
+    position: relative; color: inherit;
+  }
+  .glos::after {
+    content: attr(data-def);
+    position: absolute; bottom: 130%; left: 50%; transform: translateX(-50%);
+    background: var(--navy); color: white; font-size: 0.78rem;
+    padding: .5rem .85rem; border-radius: 8px;
+    max-width: 280px; white-space: normal; line-height: 1.4;
+    opacity: 0; pointer-events: none; transition: opacity .2s;
+    z-index: 50; box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+  }
+  .glos:hover::after { opacity: 1; }
+
+  /* ── TIME BADGE ── */
+  .time-badge {
+    display: inline-flex; align-items: center; gap: .35rem;
+    font-size: 0.72rem; font-weight: 600; color: var(--muted);
+    background: var(--cream); border: 1px solid var(--border);
+    padding: .2rem .65rem; border-radius: 100px; margin-left: .4rem;
+  }
+
+  /* ── DIFFICULTY BADGE ── */
+  .dif-badge {
+    display: inline-flex; align-items: center; gap: .4rem;
+    font-size: 0.72rem; font-weight: 700; padding: .2rem .65rem;
+    border-radius: 100px; margin-bottom: .5rem;
+  }
+  .dif-basic    { background: rgba(14,164,114,0.12);  color: var(--accentd); }
+  .dif-mid      { background: rgba(251,188,4,0.18);   color: #8a6500; }
+  .dif-advanced { background: rgba(234,67,53,0.12);   color: #b31412; }
+
+  /* ── COMPARE BOX ── */
+  .compare-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0; }
+  @media(max-width:600px){ .compare-wrap { grid-template-columns: 1fr; } }
+  .compare-bad  { background: rgba(234,67,53,0.05);  border: 1px solid rgba(234,67,53,0.25);  border-radius: var(--radius); padding: 1.1rem 1.25rem; }
+  .compare-good { background: rgba(14,164,114,0.06); border: 1px solid rgba(14,164,114,0.28); border-radius: var(--radius); padding: 1.1rem 1.25rem; }
+  .compare-lbl  { font-size: 0.68rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; margin-bottom: .5rem; display: flex; align-items: center; gap: .4rem; }
+  .compare-bad .compare-lbl  { color: #b31412; }
+  .compare-good .compare-lbl { color: var(--accentd); }
+  .compare-bad p, .compare-good p { font-size: 0.87rem; color: var(--ink); line-height: 1.6; }
+
+  /* ── KBD / SHORTCUTS ── */
+  .kbd-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: .6rem; }
+  .kbd-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: .55rem .9rem; background: var(--card); border: 1px solid var(--border);
+    border-radius: 8px; font-size: 0.86rem;
+  }
+  .kbd-row .action { color: var(--muted); font-size: 0.82rem; }
+  .kbd-row .keys   { display: flex; gap: .3rem; flex-shrink: 0; }
+  kbd {
+    display: inline-block; background: var(--cream); border: 1px solid var(--border);
+    border-bottom: 2px solid #bbb; border-radius: 5px;
+    padding: .1rem .45rem; font-size: 0.75rem; font-family: monospace; color: var(--ink);
+  }
+
+  /* ── TRAP CARDS ── */
+  .trap-card {
+    background: #fff8f0; border: 1px solid rgba(234,67,53,0.25);
+    border-left: 4px solid #e53e3e; border-radius: var(--radius);
+    padding: 1.25rem 1.5rem; margin-bottom: .85rem;
+  }
+  .trap-card .trap-head { display: flex; align-items: center; gap: .65rem; margin-bottom: .4rem; }
+  .trap-card h4 { color: #b31412; margin: 0; font-size: 0.95rem; }
+  .trap-card p  { color: var(--muted); font-size: 0.88rem; }
+  .trap-card .fix { margin-top: .5rem; padding: .5rem .85rem; border-radius: 6px; background: rgba(14,164,114,0.09); font-size: 0.85rem; color: var(--accentd); }
+
+  /* ── REAL WORLD BOX ── */
+  .real-world { border-left: 3px solid var(--orange); background: #fff8f2; border-radius: 0 var(--radius) var(--radius) 0; padding: .75rem 1.1rem; margin: .65rem 0; font-size: 0.88rem; }
+  .real-world .rw-lbl { font-size: 0.67rem; font-weight: 800; letter-spacing: .1em; color: #9a4e00; margin-bottom: .2rem; text-transform: uppercase; }
+  .real-world p { color: var(--ink); }
+
+  /* ── DELIVERY CHECKLIST ── */
+  .delivery-check {
+    background: #f0fdf8; border: 1px solid rgba(14,164,114,0.3);
+    border-radius: var(--radius); padding: 1.5rem; margin-top: 1.25rem;
+  }
+  .delivery-check h4 { color: var(--accentd); margin-bottom: .75rem; }
+  .check-list { list-style: none; display: flex; flex-direction: column; gap: .45rem; }
+  .check-list li {
+    display: flex; align-items: flex-start; gap: .65rem;
+    font-size: 0.88rem; color: var(--ink); line-height: 1.5;
+  }
+  .check-list li input[type=checkbox] {
+    width: 17px; height: 17px; accent-color: var(--accent); cursor: pointer; flex-shrink: 0; margin-top: 2px;
+  }
+  .check-list li.checked { text-decoration: line-through; color: var(--muted); }
+
+  /* ── RUBRIC ── */
+  .rubric-wrap { overflow-x: auto; margin-top: 1.5rem; }
+  .rubric-table { width: 100%; border-collapse: collapse; font-size: 0.83rem; }
+  .rubric-table th, .rubric-table td { padding: .7rem .85rem; border: 1px solid var(--border); vertical-align: top; }
+  .rubric-table th { background: var(--navy); color: white; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.78rem; text-align: center; }
+  .rubric-table th:first-child { border-radius: 8px 0 0 0; }
+  .rubric-table th:last-child  { border-radius: 0 8px 0 0; }
+  .rubric-table td:first-child { font-weight: 600; color: var(--navy); background: #fafafa; min-width: 150px; }
+  .rubric-table .col-ex { background: rgba(14,164,114,0.06); }
+  .rubric-table .col-be { background: rgba(74,108,247,0.05); }
+  .rubric-table .col-ok { background: rgba(251,188,4,0.06); }
+  .rubric-table .col-no { background: rgba(234,67,53,0.05); }
+  .rubric-table .col-ex td, .rubric-table .col-be td,
+  .rubric-table .col-ok td, .rubric-table .col-no td { color: var(--muted); font-size: 0.8rem; }
+  .rubric-total { background: var(--navy) !important; }
+  .rubric-total td { color: white !important; font-weight: 700 !important; background: transparent !important; }
+
+  /* ── RESOURCE LINKS ── */
+  .resource-link {
+    display: flex; align-items: center; gap: 1rem;
+    background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 1rem 1.25rem; text-decoration: none; color: inherit; transition: all .2s;
+    margin-bottom: .6rem;
+  }
+  .resource-link:hover { border-color: var(--accent); transform: translateX(4px); }
+  .resource-icon { font-size: 1.6rem; flex-shrink: 0; }
+  .resource-link .r-title { font-weight: 700; font-size: 0.92rem; color: var(--navy); }
+  .resource-link .r-desc  { font-size: 0.8rem; color: var(--muted); }
+  .resource-link .r-tag   { font-size: 0.68rem; font-weight: 700; background: rgba(14,164,114,0.1); color: var(--accentd); padding: .1rem .5rem; border-radius: 100px; margin-top: .2rem; display: inline-block; }
+
+  /* ── VIDEO CARD ── */
+  .video-card {
+    display: flex; align-items: center; gap: 1rem;
+    background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 1rem 1.25rem; text-decoration: none; color: inherit; transition: all .2s;
+    margin-bottom: .6rem;
+  }
+  .video-card:hover { border-color: var(--orange); transform: translateX(4px); box-shadow: 0 4px 16px rgba(224,123,32,0.1); }
+  .video-thumb { width: 48px; height: 48px; background: #ea4335; border-radius: 10px; display: grid; place-items: center; font-size: 1.3rem; flex-shrink: 0; }
+  .video-card .v-title { font-weight: 700; font-size: 0.9rem; color: var(--navy); }
+  .video-card .v-desc  { font-size: 0.78rem; color: var(--muted); }
+  .video-card .v-tag   { font-size: 0.68rem; font-weight: 700; background: rgba(224,123,32,0.1); color: var(--orange); padding: .1rem .5rem; border-radius: 100px; margin-top: .2rem; display: inline-block; }
+
+  /* ── QUIZ ── */
+  .quiz-section { padding: 4rem 2rem; background: #f0fdf8; }
+  .quiz-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 1.5rem; margin-bottom: 1rem;
+  }
+  .quiz-q { font-weight: 600; font-size: 0.95rem; color: var(--navy); margin-bottom: .85rem; }
+  .quiz-options { display: flex; flex-direction: column; gap: .5rem; }
+  .quiz-opt {
+    display: flex; align-items: center; gap: .75rem;
+    padding: .65rem 1rem; border-radius: 8px; cursor: pointer;
+    border: 1.5px solid var(--border); background: white;
+    font-size: 0.88rem; color: var(--ink); transition: all .2s; text-align: left;
+  }
+  .quiz-opt:hover:not(.disabled) { border-color: var(--accent); background: rgba(14,164,114,0.05); }
+  .quiz-opt.correct { border-color: var(--accent); background: rgba(14,164,114,0.1); color: var(--accentd); font-weight: 600; }
+  .quiz-opt.wrong   { border-color: #e53e3e; background: rgba(234,67,53,0.08); color: #b31412; }
+  .quiz-opt.disabled { cursor: not-allowed; pointer-events: none; }
+  .quiz-feedback { margin-top: .65rem; font-size: 0.83rem; padding: .5rem .85rem; border-radius: 6px; display: none; }
+  .quiz-feedback.show { display: block; }
+  .quiz-feedback.ok  { background: rgba(14,164,114,0.1);  color: var(--accentd); }
+  .quiz-feedback.ko  { background: rgba(234,67,53,0.08); color: #b31412; }
+  .quiz-score { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.5rem; color: var(--navy); margin: 1rem 0 .3rem; }
+
+  /* ── FEYNMAN ── */
+  .feynman { background: linear-gradient(135deg, #077a52, #0ea472); color: white; border-radius: var(--radius); padding: 2rem 2.25rem; margin: 2rem 0; }
+  .feynman h3 { color: white; }
+  .feynman p  { color: rgba(255,255,255,.8); font-size: 0.92rem; }
+  .feynman .feyn-prompts { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: .75rem; margin-top: 1.25rem; }
+  .feyn-card { background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.2); border-radius: 10px; padding: 1rem; }
+  .feyn-card p { color: rgba(255,255,255,.9); font-size: 0.85rem; font-style: italic; }
+
+  @media (max-width: 640px) {
+    .nav-pills { display: none; }
+  }
 </style>
 </head>
 <body>
+
+<!-- PROGRESS BAR -->
+<div id="progress-bar"></div>
 
 <!-- NAV -->
 <nav>
   <div class="nav-logo">M3 · SMX <span>RA1</span></div>
   <ul class="nav-pills">
     <li><a href="#teoria">Teoria</a></li>
-    <li><a href="#tipus">Tipus de llicències</a></li>
+    <li><a href="#tipus">Llicències</a></li>
     <li><a href="#eines">Eines</a></li>
     <li><a href="#practica">Pràctica</a></li>
+    <li><a href="#rubrica">Rúbrica</a></li>
     <li><a href="#preguntes">Preguntes</a></li>
+    <li><a href="#quiz">Quiz</a></li>
+    <li><a href="#recursos">Recursos</a></li>
   </ul>
 </nav>
 
@@ -743,10 +930,23 @@ C:\Users\<span class="st">[Usuari]</span>\AppData\Roaming\<span class="st">[App]
         <div class="practice-num">P1</div>
         <div>
           <h3>Desplegament i gestió d'un parc de programari ofimàtic empresarial</h3>
-          <p>Durada estimada: 3–4 hores · Nivell: Avançat · Individual o en parella</p>
+          <p>Nivell: Avançat · Individual o en parella</p>
         </div>
       </div>
       <div class="practice-body">
+
+        <div style="display:flex;gap:.5rem;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap">
+          <span class="dif-badge dif-advanced">🔴 Dificultat alta</span>
+          <span class="time-badge">⏱ Part 1: ~60 min</span>
+          <span class="time-badge">⏱ Part 2: ~60 min</span>
+          <span class="time-badge">⏱ Part 3: ~60 min</span>
+          <span class="time-badge">⏱ Part 4: ~60 min</span>
+        </div>
+
+        <div class="real-world" style="margin-bottom:1.5rem">
+          <div class="rw-lbl">🏢 Connexió amb el món real</div>
+          <p>Aquest és exactament el primer encàrrec real d'un tècnic SMX júnior quan entra a una empresa: "tenim programari il·legal, regularitza-ho". La migració a programari lliure o SaaS, la documentació de llicències i l'automatització d'actualitzacions via scripts no és un exercici acadèmic —és el dia a dia en pimes i administracions públiques. La Llei de Propietat Intel·lectual responsabilitza el tècnic que realitza les instal·lacions, no només l'empresa.</p>
+        </div>
 
         <div class="callout cl-blue" style="margin-bottom:2rem">
           <span class="callout-icon">🏢</span>
@@ -791,6 +991,26 @@ C:\Users\<span class="st">[Usuari]</span>\AppData\Roaming\<span class="st">[App]
             <h4>Lliurament i criteris d'avaluació</h4>
             <p>Lliura un fitxer ZIP amb: (1) l'script PowerShell, (2) el log generat, (3) la memòria tècnica en .odt i .pdf, (4) el full de control d'inventari, (5) la presentació .odp. <br><br>Criteris: Funcionalitat de l'script (30%), qualitat de la documentació (30%), correcció del procés d'instal·lació (25%), presentació i claredat (15%).</p>
           </div>
+        </div>
+
+        <div class="delivery-check fi">
+          <h4>☑️ Checklist de lliurament — Pràctica RA1</h4>
+          <ul class="check-list">
+            <li><input type="checkbox"><span><strong>Part 1:</strong> Inventari inicial exportat a CSV amb PowerShell (captura del comandament i del fitxer generat)</span></li>
+            <li><input type="checkbox"><span><strong>Part 1:</strong> Taula d'anàlisi de llicències completa (lliure, vàlida, caducada, il·legal) en LibreOffice Calc</span></li>
+            <li><input type="checkbox"><span><strong>Part 1:</strong> Document de proposta de migració en LibreOffice Writer (comparativa, recomanació, pla en 3 fases)</span></li>
+            <li><input type="checkbox"><span><strong>Part 2:</strong> Descàrrega de LibreOffice verificada amb hash SHA-256 (captura comparació hash)</span></li>
+            <li><input type="checkbox"><span><strong>Part 2:</strong> Instal·lació silenciosa documentada (comandament complet + captura <code>soffice --version</code>)</span></li>
+            <li><input type="checkbox"><span><strong>Part 2:</strong> Configuració post-instal·lació: format .docx/.xlsx per defecte, actualitzacions automàtiques, signatura Writer</span></li>
+            <li><input type="checkbox"><span><strong>Part 2:</strong> Paquet d'idioma català instal·lat i corrector ortogràfic verificat (captura)</span></li>
+            <li><input type="checkbox"><span><strong>Part 3:</strong> Script <code>actualitza_ofimatica.ps1</code> funcional amb comprovació de versió, instal·lació silent i log</span></li>
+            <li><input type="checkbox"><span><strong>Part 3:</strong> Tasca programada configurada (cada dilluns 06:00h) amb captures del Programador de tasques</span></li>
+            <li><input type="checkbox"><span><strong>Part 3:</strong> Prova de regressió documentada (document .docx complex obert i verificat)</span></li>
+            <li><input type="checkbox"><span><strong>Part 4:</strong> Memòria tècnica (3–5 pàgines, portada, índex automàtic, estils Títol 1/2) en .odt i .pdf</span></li>
+            <li><input type="checkbox"><span><strong>Part 4:</strong> Full d'inventari final amb format condicional (verd/blau/taronja/vermell) en LibreOffice Calc</span></li>
+            <li><input type="checkbox"><span><strong>Part 4:</strong> Presentació de 8–10 diapositives en LibreOffice Impress (resum, costos, pla de migració)</span></li>
+            <li><input type="checkbox"><span>Tot lliurat en un fitxer ZIP correctament estructurat a Moodle</span></li>
+          </ul>
         </div>
 
       </div>
@@ -906,7 +1126,7 @@ C:\Users\<span class="st">[Usuari]</span>\AppData\Roaming\<span class="st">[App]
 </section>
 
 <!-- RESUM FINAL -->
-<section class="s-cream">
+<section id="resum" class="s-cream">
   <div class="container fi">
     <div class="section-tag tag-green">Resum del RA1</div>
     <h2>El que heu après</h2>
@@ -931,17 +1151,540 @@ C:\Users\<span class="st">[Usuari]</span>\AppData\Roaming\<span class="st">[App]
   </div>
 </section>
 
+<!-- ════════════════════════════════════
+     TRAMPES FREQÜENTS
+════════════════════════════════════ -->
+<section id="trampes" style="padding:5rem 2rem; background:#fff8f7;">
+  <div class="container">
+    <div class="section-tag tag-orange fi">Errors habituals</div>
+    <h2 class="fi">⚠️ Trampes freqüents del RA1</h2>
+    <p class="lead fi" style="margin-bottom:2rem">Errors que fan quasi tots els alumnes la primera vegada. Llegeix-los ara per no caure-hi.</p>
+    <div class="fi">
+      <div class="trap-card">
+        <div class="trap-head">⚠️ <h4>No verificar el hash SHA-256 del fitxer descarregat</h4></div>
+        <p>Descarregar un instal·lador i executar-lo directament sense comprovar la integritat és un risc real. Un fitxer manipulat (atac man-in-the-middle o mirall compromès) pot contenir malware. L'error típic és pensar "ho he descarregat de la pàgina oficial, no cal comprovar-ho". La pàgina oficial pot estar compromesa o la CDN pot servir fitxers incorrectes.</p>
+        <div class="fix">✅ Solució: Sempre executa <code>Get-FileHash fitxer.msi -Algorithm SHA256</code> a PowerShell i compara el resultat amb el hash publicat a la web oficial. Si no coincideix, no instal·lis el fitxer i reporta-ho.</div>
+      </div>
+      <div class="trap-card">
+        <div class="trap-head">⚠️ <h4>Confondre llicència "Freeware" amb "Programari lliure"</h4></div>
+        <p>Freeware vol dir gratuït però el codi font és tancat i no pots modificar-lo ni redistribuir-lo. Programari lliure (GPL, MIT...) vol dir que pots veure, modificar i redistribuir el codi. Molts alumnes (i tècnics!) posen Adobe Reader i LibreOffice al mateix sac de "programari gratuït" sense entendre que els seus drets d'ús són completament diferents.</p>
+        <div class="fix">✅ Solució: Recorda la regla: Freeware = gratuït però tancat. Lliure = pots fer-ho tot (usar, estudiar, modificar, redistribuir). A l'inventari d'empresa, el tipus de llicència ha de ser exacte, no "gratuït".</div>
+      </div>
+      <div class="trap-card">
+        <div class="trap-head">⚠️ <h4>Usar la instal·lació gràfica (GUI) per desplegar en molts equips</h4></div>
+        <p>Instal·lar un programa a 50 equips fent clic a "Següent, Següent, Accepto, Instal·la" en cada un porta moltes hores i és font d'errors humans. L'error és no conèixer els paràmetres d'instal·lació silenciosa. Per exemple, LibreOffice accepta <code>/quiet /norestart</code>.</p>
+        <div class="fix">✅ Solució: Per a qualsevol desplegament de més de 3 equips, usa instal·lació silenciosa via Winget o l'instal·lador amb paràmetres <code>/quiet</code>. Per a 20+ equips, considera Winget + PowerShell o GPO de domini.</div>
+      </div>
+      <div class="trap-card">
+        <div class="trap-head">⚠️ <h4>Aplicar actualitzacions de funcions immediatament en producció</h4></div>
+        <p>Quan surt una versió nova de LibreOffice, la temptació és aplicar-la immediatament a tots els equips. Les actualitzacions de funcions sovint introdueixen errors de regressió que afecten macros, complements o compatibilitat de fitxers.</p>
+        <div class="fix">✅ Solució: Pedaços de seguretat → aplica immediatament. Actualitzacions de funcions → espera 1–2 setmanes, aplica primer en 1 equip pilot, verifica, i desplega progressivament.</div>
+      </div>
+      <div class="trap-card">
+        <div class="trap-head">⚠️ <h4>No netejar les restes després de desinstal·lar</h4></div>
+        <p>Desinstal·lar des del "Panel de control" no elimina tot. Queden carpetes a <code>AppData\Local</code>, <code>AppData\Roaming</code> i claus al Registre. Amb el temps, les desinstal·lacions incompletes acumulen gigabytes de residus i poden causar conflictes si re-instal·les la mateixa aplicació.</p>
+        <div class="fix">✅ Solució: Comprova manualment <code>C:\Program Files</code>, <code>%AppData%</code> i <code>%LocalAppData%</code>. Per a una neteja completa, usa Revo Uninstaller (mode avançat) que analitza el registre abans i després.</div>
+      </div>
+      <div class="trap-card">
+        <div class="trap-head">⚠️ <h4>No documentar les instal·lacions a l'inventari</h4></div>
+        <p>Si l'empresa té 30 instal·lacions d'un software del qual ha pagat 20 llicències, la multa pot ser molt superior al cost de les 10 llicències que falten. El tècnic SMX que va fer les instal·lacions és corresponsable si no va documentar i alertar.</p>
+        <div class="fix">✅ Solució: Cada instal·lació ha de quedar registrada immediatament a l'inventari: nom, versió, equip, data, tipus de llicència i responsable. Automatitza-ho amb PowerShell: <code>winget list | Export-Csv</code> programat setmanalment.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════
+     BÉ VS MALAMENT
+════════════════════════════════════ -->
+<section id="exemples" style="padding:5rem 2rem; background:var(--cream);">
+  <div class="container">
+    <div class="section-tag tag-cobalt fi">Exemples visuals</div>
+    <h2 class="fi">Bé vs. Malament — exemples concrets</h2>
+    <p class="lead fi" style="margin-bottom:2rem">Veure l'error és molt millor que llegir que no s'ha de fer.</p>
+
+    <div class="fi" style="margin-bottom:2.5rem">
+      <h3 style="margin-bottom:1rem">🔐 Verificació SHA-256</h3>
+      <div class="compare-wrap">
+        <div class="compare-bad">
+          <div class="compare-lbl">❌ Malament</div>
+          <p>Descarrego LibreOffice de Google, faig doble clic a l'instal·lador i el instal·lo directament sense comprovar res.<br><br><em style="font-size:.8rem;color:#b31412">Risc: No sé si el fitxer és l'original. Podria contenir malware.</em></p>
+        </div>
+        <div class="compare-good">
+          <div class="compare-lbl">✅ Bé</div>
+          <p>Descarrego de <strong>libreoffice.org</strong> oficial. Executo:<br><code style="font-size:.78rem">Get-FileHash LibreOffice_7.6.msi -Algorithm SHA256</code><br>Comparo amb el hash de la web oficial. Coincideix → instal·lo.<br><br><em style="font-size:.8rem;color:#077a52">Garantia: el fitxer és exactament l'original del fabricant.</em></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="fi" style="margin-bottom:2.5rem">
+      <h3 style="margin-bottom:1rem">🤖 Script d'actualització</h3>
+      <div class="compare-wrap">
+        <div class="compare-bad">
+          <div class="compare-lbl">❌ Malament — sense log ni control d'errors</div>
+          <p><code style="font-size:.78rem;display:block;line-height:1.8">winget upgrade LibreOffice.LibreOffice</code><em style="font-size:.8rem;color:#b31412">Si falla, no ho sabràs. No hi ha log, ni versió anterior, ni data. Inútil per a producció.</em></p>
+        </div>
+        <div class="compare-good">
+          <div class="compare-lbl">✅ Bé — amb log, control i data</div>
+          <p><code style="font-size:.78rem;display:block;line-height:1.8">$log = "C:\Logs\actualitzacions.txt"<br>$versioAnterior = winget list LibreOffice<br>$resultat = winget upgrade LibreOffice --silent<br>$versioNova = winget list LibreOffice<br>Add-Content $log "$(Get-Date) | $versioAnterior → $versioNova | $resultat"</code><em style="font-size:.8rem;color:#077a52">Traçabilitat completa de cada actualització.</em></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="fi" style="margin-bottom:2.5rem">
+      <h3 style="margin-bottom:1rem">📋 Inventari de programari</h3>
+      <div class="compare-wrap">
+        <div class="compare-bad">
+          <div class="compare-lbl">❌ Malament — inventari informal</div>
+          <p>"PC Recepció: Office (vell), Acrobat, Chrome<br>PC Comptable: Excel, Word<br>PC Magatzem: no sé"<br><br><em style="font-size:.8rem;color:#b31412">Inútil en una auditoria. Risc legal enorme.</em></p>
+        </div>
+        <div class="compare-good">
+          <div class="compare-lbl">✅ Bé — inventari estructurat</div>
+          <p><strong>Equip | Aplicació | Versió | Llicència | Data | Responsable</strong><br><br>PC-01 | LibreOffice | 7.6.4 | MPL 2.0 (Lliure) | 2024-09-01 | J.Martí<br>PC-01 | Adobe Reader | 24.1 | Freeware | 2024-09-01 | J.Martí<br><br><em style="font-size:.8rem;color:#077a52">Auditoria passada en minuts.</em></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="fi">
+      <h3 style="margin-bottom:1rem">💬 Recomanació de llicència a una PIME</h3>
+      <div class="compare-wrap">
+        <div class="compare-bad">
+          <div class="compare-lbl">❌ Malament</div>
+          <p>Client: "Quin Office compro per a 12 persones?"<br><br>Resposta: "Microsoft 365, és el millor."<br><br><em style="font-size:.8rem;color:#b31412">Sense preguntar res. Una PIME pot estalviar milers d'euros l'any amb LibreOffice.</em></p>
+        </div>
+        <div class="compare-good">
+          <div class="compare-lbl">✅ Bé — anàlisi de necessitats</div>
+          <p>"Intercanvieu .docx amb clients? Useu macros? Pressupost ajustat?"<br><br>→ No macros + ajustat: <strong>LibreOffice + Google Workspace bàsic</strong><br>→ Macros + pressupost: <strong>Microsoft 365 Business Basic</strong><br><br><em style="font-size:.8rem;color:#077a52">Recomanació basada en necessitats reals.</em></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════
+     DRECERES DE TECLAT
+════════════════════════════════════ -->
+<section id="dreceres" style="padding:5rem 2rem; background:white;">
+  <div class="container">
+    <div class="section-tag tag-green fi">Productivitat</div>
+    <h2 class="fi">⌨️ Dreceres de teclat: PowerShell i LibreOffice</h2>
+    <p class="lead fi" style="margin-bottom:2rem">Les dreceres que un tècnic SMX usa diàriament per instal·lar, configurar i documentar.</p>
+
+    <div class="fi" style="margin-bottom:2.5rem">
+      <h3 style="margin-bottom:1rem;color:var(--cobalt)">💻 PowerShell / Línia de comandes</h3>
+      <div class="kbd-grid">
+        <div class="kbd-row"><span class="action">Completar comanda automàticament</span><span class="keys"><kbd>Tab</kbd></span></div>
+        <div class="kbd-row"><span class="action">Historial de comandes anteriors</span><span class="keys"><kbd>↑</kbd> / <kbd>↓</kbd></span></div>
+        <div class="kbd-row"><span class="action">Cercar en l'historial</span><span class="keys"><kbd>Ctrl</kbd>+<kbd>R</kbd></span></div>
+        <div class="kbd-row"><span class="action">Cancel·lar comanda en execució</span><span class="keys"><kbd>Ctrl</kbd>+<kbd>C</kbd></span></div>
+        <div class="kbd-row"><span class="action">Netejar la pantalla</span><span class="keys"><kbd>Ctrl</kbd>+<kbd>L</kbd></span></div>
+        <div class="kbd-row"><span class="action">Anar al principi de la línia</span><span class="keys"><kbd>Home</kbd></span></div>
+        <div class="kbd-row"><span class="action">Anar al final de la línia</span><span class="keys"><kbd>End</kbd></span></div>
+        <div class="kbd-row"><span class="action">Obrir com a administrador</span><span class="keys"><kbd>Win</kbd>+<kbd>X</kbd> → <kbd>A</kbd></span></div>
+        <div class="kbd-row"><span class="action">Copiar selecció al terminal</span><span class="keys"><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>C</kbd></span></div>
+        <div class="kbd-row"><span class="action">Enganxar al terminal</span><span class="keys"><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>V</kbd></span></div>
+      </div>
+    </div>
+
+    <div class="fi" style="margin-bottom:2.5rem">
+      <h3 style="margin-bottom:1rem;color:var(--accent)">📄 LibreOffice Writer — documentació tècnica</h3>
+      <div class="kbd-grid">
+        <div class="kbd-row"><span class="action">Actualitzar índex (TOC)</span><span class="keys"><kbd>F5</kbd></span></div>
+        <div class="kbd-row"><span class="action">Aplicar estil Títol 1</span><span class="keys"><kbd>Ctrl</kbd>+<kbd>1</kbd></span></div>
+        <div class="kbd-row"><span class="action">Aplicar estil Títol 2</span><span class="keys"><kbd>Ctrl</kbd>+<kbd>2</kbd></span></div>
+        <div class="kbd-row"><span class="action">Aplicar estil Normal</span><span class="keys"><kbd>Ctrl</kbd>+<kbd>0</kbd></span></div>
+        <div class="kbd-row"><span class="action">Cercar i substituir</span><span class="keys"><kbd>Ctrl</kbd>+<kbd>H</kbd></span></div>
+        <div class="kbd-row"><span class="action">Salt de pàgina</span><span class="keys"><kbd>Ctrl</kbd>+<kbd>Enter</kbd></span></div>
+        <div class="kbd-row"><span class="action">Inserir taula</span><span class="keys"><kbd>Ctrl</kbd>+<kbd>F12</kbd></span></div>
+        <div class="kbd-row"><span class="action">Exportar a PDF</span><span class="keys"><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd></span></div>
+        <div class="kbd-row"><span class="action">Desar com a (triar format)</span><span class="keys"><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>S</kbd></span></div>
+        <div class="kbd-row"><span class="action">Inserir capçalera</span><span class="keys"><kbd>Ctrl</kbd>+<kbd>F2</kbd></span></div>
+      </div>
+    </div>
+
+    <div class="fi">
+      <h3 style="margin-bottom:1rem;color:var(--orange)">📊 LibreOffice Calc — inventaris</h3>
+      <div class="kbd-grid">
+        <div class="kbd-row"><span class="action">Inserir funció</span><span class="keys"><kbd>Ctrl</kbd>+<kbd>F2</kbd></span></div>
+        <div class="kbd-row"><span class="action">Seleccionar columna sencera</span><span class="keys"><kbd>Ctrl</kbd>+<kbd>Espai</kbd></span></div>
+        <div class="kbd-row"><span class="action">Anar a última cel·la amb dades</span><span class="keys"><kbd>Ctrl</kbd>+<kbd>End</kbd></span></div>
+        <div class="kbd-row"><span class="action">Inserir data actual</span><span class="keys"><kbd>Ctrl</kbd>+<kbd>;</kbd></span></div>
+        <div class="kbd-row"><span class="action">Autofiltres</span><span class="keys"><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd></span></div>
+        <div class="kbd-row"><span class="action">Format condicional</span><span class="keys"><kbd>Alt</kbd>+<kbd>O</kbd> → <kbd>D</kbd></span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════
+     VÍDEOS RECOMANATS
+════════════════════════════════════ -->
+<section id="videos" style="padding:5rem 2rem; background:var(--cream);">
+  <div class="container">
+    <div class="section-tag tag-orange fi">Recursos audiovisuals</div>
+    <h2 class="fi">▶️ Vídeos per entendre les parts difícils</h2>
+    <p class="lead fi" style="margin-bottom:2rem">Les parts més complexes del RA1 s'entenen molt millor en vídeo.</p>
+
+    <div class="grid g2 fi">
+      <div>
+        <h3 style="margin-bottom:.75rem;color:var(--cobalt)">💻 PowerShell i Winget</h3>
+        <a class="video-card" href="https://learn.microsoft.com/en-us/powershell/scripting/learn/tutorials/01-discover-powershell" target="_blank" rel="noopener">
+          <div class="video-thumb" style="background:var(--cobalt)">▶</div>
+          <div>
+            <div class="v-title">Tutorial oficial PowerShell — Microsoft Learn</div>
+            <div class="v-desc">Des de zero: variables, cmdlets, scripts. Essencial per a la Part 3 de la pràctica.</div>
+            <span class="v-tag">Oficial · Microsoft Learn</span>
+          </div>
+        </a>
+        <a class="video-card" href="https://learn.microsoft.com/en-us/windows/package-manager/winget/" target="_blank" rel="noopener">
+          <div class="video-thumb" style="background:var(--navy)">▶</div>
+          <div>
+            <div class="v-title">Documentació oficial Winget</div>
+            <div class="v-desc">Instal·lació silenciosa, actualitzacions, llistat. Tot el que necessites per a Parts 2 i 3.</div>
+            <span class="v-tag">Oficial · Microsoft Docs</span>
+          </div>
+        </a>
+      </div>
+      <div>
+        <h3 style="margin-bottom:.75rem;color:var(--accent)">📄 LibreOffice i llicències</h3>
+        <a class="video-card" href="https://www.libreoffice.org/get-help/documentation/" target="_blank" rel="noopener">
+          <div class="video-thumb" style="background:var(--accent)">▶</div>
+          <div>
+            <div class="v-title">Documentació oficial LibreOffice</div>
+            <div class="v-desc">Guies en PDF per Writer, Calc i Impress. Cobren totes les funcions de la Part 4.</div>
+            <span class="v-tag">Oficial · LibreOffice.org</span>
+          </div>
+        </a>
+        <a class="video-card" href="https://choosealicense.com/" target="_blank" rel="noopener">
+          <div class="video-thumb" style="background:var(--purple)">▶</div>
+          <div>
+            <div class="v-title">Choose a License — guia visual de llicències</div>
+            <div class="v-desc">GPL, MIT, Apache explicades de forma clara. Per a l'anàlisi de llicències de la Part 1.</div>
+            <span class="v-tag">Web · choosealicense.com</span>
+          </div>
+        </a>
+        <a class="video-card" href="https://wiki.documentfoundation.org/Documentation/HowTo/Install_LibreOffice" target="_blank" rel="noopener">
+          <div class="video-thumb" style="background:#1e7e44">▶</div>
+          <div>
+            <div class="v-title">Instal·lació i paràmetres silenciosos LibreOffice</div>
+            <div class="v-desc">Paràmetres /quiet, paquets d'idioma i configuració post-instal·lació. Part 2 de la pràctica.</div>
+            <span class="v-tag">Oficial · The Document Foundation</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════
+     RÚBRICA DE CORRECCIÓ
+════════════════════════════════════ -->
+<section id="rubrica" style="padding:5rem 2rem; background:white;">
+  <div class="container">
+    <div class="section-tag tag-cobalt fi">Avaluació</div>
+    <h2 class="fi">📊 Rúbrica de correcció — RA1</h2>
+    <p class="lead fi" style="margin-bottom:1rem">Llegeix la rúbrica <strong>abans</strong> de lliurar.</p>
+
+    <div class="rubric-wrap fi">
+      <table class="rubric-table">
+        <thead>
+          <tr>
+            <th style="width:20%;text-align:left">Criteri</th>
+            <th style="width:8%">Pes</th>
+            <th class="col-ex" style="width:18%">🟢 Excel·lent (9–10)</th>
+            <th class="col-be" style="width:18%">🔵 Bé (7–8)</th>
+            <th class="col-ok" style="width:18%">🟡 Suficient (5–6)</th>
+            <th class="col-no" style="width:18%">🔴 Insuficient (0–4)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Script PowerShell funcional</td>
+            <td style="text-align:center;font-weight:700">30%</td>
+            <td class="col-ex">Script executa correctament, comprova versió, fa instal·lació silenciosa, genera log amb data/versió/resultat. Tasca programada configurada.</td>
+            <td class="col-be">Script funcional amb log però amb 1–2 errors menors (ruta incorrecta o falta versió anterior).</td>
+            <td class="col-ok">Script parcialment funcional: fa la instal·lació però el log és incomplet o la tasca programada no s'ha configurat.</td>
+            <td class="col-no">Script no funciona, no genera log o no s'ha creat. Instal·lació feta manualment.</td>
+          </tr>
+          <tr>
+            <td>Qualitat de la documentació</td>
+            <td style="text-align:center;font-weight:700">30%</td>
+            <td class="col-ex">Memòria 3–5 pàgines amb portada, TOC automàtic, estils Títol 1/2/Normal. Format professional. Inventari amb format condicional correcte.</td>
+            <td class="col-be">Documentació completa però índex manual, o estils inconsistents, o format condicional parcial.</td>
+            <td class="col-ok">Documentació present però sense TOC automàtic, o sense portada, o inventari sense format condicional.</td>
+            <td class="col-no">Documentació mínima, incompleta o sense estructura tècnica.</td>
+          </tr>
+          <tr>
+            <td>Correcció del procés d'instal·lació</td>
+            <td style="text-align:center;font-weight:700">25%</td>
+            <td class="col-ex">Descàrrega oficial, hash SHA-256 verificat i documentat, instal·lació silenciosa correcta, configuració post-instal·lació completa (format .docx, idioma català, signatura).</td>
+            <td class="col-be">Procés correcte però falta la verificació del hash o la configuració post-instal·lació és parcial.</td>
+            <td class="col-ok">Instal·lació feta però sense verificació hash i configuració post-instal·lació mínima.</td>
+            <td class="col-no">Instal·lació des de font no oficial, o assistida sense paràmetres silenciosos, o sense captures d'evidència.</td>
+          </tr>
+          <tr>
+            <td>Presentació i claredat</td>
+            <td style="text-align:center;font-weight:700">15%</td>
+            <td class="col-ex">Presentació Impress 8–10 diapositives amb gràfic de costos, línia temporal i resum executiu. Disseny professional.</td>
+            <td class="col-be">Presentació completa però sense gràfic de costos o sense línia temporal.</td>
+            <td class="col-ok">Menys de 8 diapositives o sense estructura clara.</td>
+            <td class="col-no">No lliurada, o menys de 5 diapositives, o tot text sense cap visual.</td>
+          </tr>
+          <tr class="rubric-total">
+            <td colspan="2">TOTAL</td>
+            <td colspan="4" style="text-align:center">100% · Nota final sobre 10</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout cl-amber fi" style="margin-top:1.5rem">
+      <span class="callout-icon">💡</span>
+      <div><p><strong>On es perd més nota:</strong> El 30% de l'script és el criteri amb més variació. Un script que "quasi funciona" però no genera log correctament no és el mateix que un que funciona perfectament. Prova l'script en una màquina virtual neta abans de lliurar.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════
+     AUTOAVALUACIÓ INTERACTIVA
+════════════════════════════════════ -->
+<section id="quiz" class="quiz-section">
+  <div class="container">
+    <div class="section-tag fi" style="color:#7c3aed;display:flex;align-items:center;gap:.5rem"><span style="display:block;width:20px;height:2px;background:#7c3aed"></span>Autoavaluació</div>
+    <h2 class="fi">🧠 Test ràpid: saps el contingut del RA1?</h2>
+    <p class="lead fi" style="margin-bottom:2rem">5 preguntes per comprovar si has entès els conceptes clau. Sense nota — és per a tu. Fes-lo <strong>abans</strong> de l'examen!</p>
+
+    <div class="quiz-card fi" id="q1">
+      <div class="quiz-q">1. Descarregues LibreOffice d'un mirall no oficial. La pàgina indica hash SHA-256 <code>a3f9...</code> però PowerShell retorna <code>b7e2...</code>. Què fas?</div>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="checkQ('q1',this,false)">A) Instal·lar igualment; els miralls modifiquen lleugerament els fitxers</button>
+        <button class="quiz-opt" onclick="checkQ('q1',this,false)">B) Comprovar si he usat MD5 en lloc de SHA-256</button>
+        <button class="quiz-opt" onclick="checkQ('q1',this,true)">C) No instal·lar. Descarregar de libreoffice.org oficial i verificar el hash de nou</button>
+        <button class="quiz-opt" onclick="checkQ('q1',this,false)">D) El hash és opcional per a programari lliure de confiança</button>
+      </div>
+      <div class="quiz-feedback" id="q1-fb"></div>
+    </div>
+
+    <div class="quiz-card fi" id="q2">
+      <div class="quiz-q">2. L'empresa vol instal·lar LibreOffice als 50 PC. LibreOffice usa llicència GPL v3. Quantes llicències addicionals cal comprar?</div>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="checkQ('q2',this,false)">A) 50 llicències d'empresa</button>
+        <button class="quiz-opt" onclick="checkQ('q2',this,true)">B) Cap. La GPL permet instal·lacions il·limitades sense cost</button>
+        <button class="quiz-opt" onclick="checkQ('q2',this,false)">C) Una llicència corporativa única per a tota l'empresa</button>
+        <button class="quiz-opt" onclick="checkQ('q2',this,false)">D) Fins a 10 PC és gratuït; a partir d'aquí cal pagar</button>
+      </div>
+      <div class="quiz-feedback" id="q2-fb"></div>
+    </div>
+
+    <div class="quiz-card fi" id="q3">
+      <div class="quiz-q">3. El Patch Tuesday ha publicat un pedaç de seguretat crític per a Microsoft 365. LibreOffice ha publicat una versió nova amb funcions noves. Com prioritzes?</div>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="checkQ('q3',this,false)">A) Primer LibreOffice perquè els usuaris esperen les noves funcions</button>
+        <button class="quiz-opt" onclick="checkQ('q3',this,true)">B) Primer el pedaç de seguretat immediatament; la versió nova de LibreOffice espera 1–2 setmanes i es prova en un equip pilot primer</button>
+        <button class="quiz-opt" onclick="checkQ('q3',this,false)">C) Les dues alhora per estalviar temps</button>
+        <button class="quiz-opt" onclick="checkQ('q3',this,false)">D) Espero el cap de setmana per no molestar els usuaris</button>
+      </div>
+      <div class="quiz-feedback" id="q3-fb"></div>
+    </div>
+
+    <div class="quiz-card fi" id="q4">
+      <div class="quiz-q">4. Desinstal·les Office 2019 des del "Panel de control" però Microsoft 365 falla en instal·lar-se dient que troba restes. Quina és la causa i la solució?</div>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="checkQ('q4',this,false)">A) Cal reiniciar entre desinstal·lació i instal·lació</button>
+        <button class="quiz-opt" onclick="checkQ('q4',this,false)">B) Les versions d'Office no es poden canviar sense formatar</button>
+        <button class="quiz-opt" onclick="checkQ('q4',this,true)">C) La desinstal·lació ha deixat residus a AppData i al Registre. Cal usar l'eina Microsoft Support and Recovery Assistant o Revo Uninstaller per eliminar-los</button>
+        <button class="quiz-opt" onclick="checkQ('q4',this,false)">D) Cal formatar el disc i reinstal·lar Windows</button>
+      </div>
+      <div class="quiz-feedback" id="q4-fb"></div>
+    </div>
+
+    <div class="quiz-card fi" id="q5">
+      <div class="quiz-q">5. Una PIME de 8 empleats no usa macros avançades, intercanvia .docx esporàdicament i té pressupost molt ajustat. Quina solució és la més adequada?</div>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="checkQ('q5',this,false)">A) Microsoft 365 Business Premium (~22€/mes per usuari) perquè és el més professional</button>
+        <button class="quiz-opt" onclick="checkQ('q5',this,false)">B) Comprar llicències Office 2021 LTSC per a cada PC (pagament únic)</button>
+        <button class="quiz-opt" onclick="checkQ('q5',this,true)">C) LibreOffice (gratuït, GPL) configurat per defecte en format .docx, complementat amb Google Workspace si cal col·laboració al núvol</button>
+        <button class="quiz-opt" onclick="checkQ('q5',this,false)">D) Versió crackeada de Microsoft Office; el client no nota la diferència</button>
+      </div>
+      <div class="quiz-feedback" id="q5-fb"></div>
+    </div>
+
+    <div id="quiz-result" style="display:none;text-align:center;margin-top:1.5rem;padding:1.5rem;background:white;border-radius:var(--radius);border:1px solid var(--border)">
+      <div class="quiz-score" id="quiz-score-txt"></div>
+      <p id="quiz-score-msg" style="color:var(--muted);font-size:.95rem"></p>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════
+     MÈTODE FEYNMAN
+════════════════════════════════════ -->
+<section id="feynman" style="padding:4rem 2rem; background:white;">
+  <div class="container fi">
+    <div class="feynman">
+      <h3>🧠 Tècnica d'estudi: El Mètode Feynman</h3>
+      <p style="margin-top:.5rem">Si pots explicar un concepte de forma senzilla, l'has entès. Prova amb aquests del RA1:</p>
+      <div class="feyn-prompts">
+        <div class="feyn-card"><p>"Explica la diferència entre GPL i Freeware a un amic que no sap res d'informàtica. Per quin motiu l'empresa pot instal·lar LibreOffice en 50 PCs sense pagar res?"</p></div>
+        <div class="feyn-card"><p>"Explica per quin motiu cal verificar el hash SHA-256. Posa un exemple d'atac que s'hauria pogut evitar amb aquesta verificació."</p></div>
+        <div class="feyn-card"><p>"Explica per quin motiu els pedaços de seguretat s'apliquen immediatament però les actualitzacions de funcions s'esperen setmanes."</p></div>
+        <div class="feyn-card"><p>"Explica on buscar les restes que deixa un programa a Windows després de desinstal·lar-lo i per quin motiu pot causar problemes."</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════
+     RECURSOS EXTERNS
+════════════════════════════════════ -->
+<section id="recursos" style="padding:5rem 2rem; background:var(--cream);">
+  <div class="container">
+    <div class="section-tag tag-purple fi">Bibliografia i recursos</div>
+    <h2 class="fi">📚 Recursos externs recomanats</h2>
+    <p class="lead fi" style="margin-bottom:2rem">Fonts oficials i curades. Consulta-les quan tinguis dubtes sobre instal·lació, llicències o gestió de programari.</p>
+    <div class="fi">
+      <a class="resource-link" href="https://learn.microsoft.com/en-us/windows/package-manager/winget/" target="_blank" rel="noopener">
+        <span class="resource-icon">📘</span>
+        <div>
+          <div class="r-title">Documentació oficial Winget — Microsoft</div>
+          <div class="r-desc">Referència completa: instal·lació, actualització, eliminació, scripting i desplegament empresarial. Tot el que necessites per a les Parts 2 i 3.</div>
+          <span class="r-tag">Oficial · Microsoft Docs</span>
+        </div>
+      </a>
+      <a class="resource-link" href="https://www.gnu.org/licenses/gpl-3.0.html" target="_blank" rel="noopener">
+        <span class="resource-icon">⚖️</span>
+        <div>
+          <div class="r-title">Llicència GPL v3 — Text oficial (GNU)</div>
+          <div class="r-desc">Text complet de la GPL v3. Per entendre exactament quins drets atorga i quines obligacions implica quan redistribueixes programari lliure. Per a l'anàlisi de llicències de la Part 1.</div>
+          <span class="r-tag">Oficial · GNU.org</span>
+        </div>
+      </a>
+      <a class="resource-link" href="https://wiki.documentfoundation.org/Documentation/HowTo/Install_LibreOffice" target="_blank" rel="noopener">
+        <span class="resource-icon">📄</span>
+        <div>
+          <div class="r-title">Guia d'instal·lació oficial LibreOffice</div>
+          <div class="r-desc">Instal·lació en Windows, Linux i macOS incloent paràmetres silenciosos, paquets d'idioma i configuració post-instal·lació. Primera referència per a la Part 2.</div>
+          <span class="r-tag">Oficial · The Document Foundation</span>
+        </div>
+      </a>
+      <a class="resource-link" href="https://learn.microsoft.com/en-us/powershell/scripting/learn/tutorials/01-discover-powershell" target="_blank" rel="noopener">
+        <span class="resource-icon">💻</span>
+        <div>
+          <div class="r-title">Tutorial oficial PowerShell — Microsoft Learn</div>
+          <div class="r-desc">Tutorial pas a pas de Microsoft per aprendre PowerShell des de zero: variables, bucles, funcions i scripting. Essencial per a la Part 3.</div>
+          <span class="r-tag">Oficial · Microsoft Learn</span>
+        </div>
+      </a>
+      <a class="resource-link" href="https://choosealicense.com/" target="_blank" rel="noopener">
+        <span class="resource-icon">🔑</span>
+        <div>
+          <div class="r-title">Choose a License — Guia de llicències</div>
+          <div class="r-desc">Explicació clara de MIT, GPL, Apache, BSD. Ideal per entendre les diferències i justificar la recomanació de llicència de la Part 1.</div>
+          <span class="r-tag">Web · choosealicense.com</span>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+
 <footer>
-  <p><strong>RA1 — Instal·lació i Actualització d'Aplicacions Ofimàtiques · SMX</strong></p>
   <p style="margin-top:.4rem">LibreOffice · Microsoft 365 · Winget · PowerShell · Llicències GPL · LTSC · SaaS</p>
   <p style="margin-top:.4rem">Departament d'Informàtica · Sistemes Microinformàtics i Xarxes</p>
 </footer>
 
 <script>
+  // ── Fade-in on scroll ──
   const io = new IntersectionObserver(entries => {
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
   }, { threshold: 0.07, rootMargin: '0px 0px -30px 0px' });
   document.querySelectorAll('.fi').forEach(el => io.observe(el));
+
+  // ── Progress bar ──
+  window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    const bar = document.getElementById('progress-bar');
+    if (bar) bar.style.width = pct + '%';
+  });
+
+  // ── Checklist checkboxes ──
+  document.querySelectorAll('.check-list input[type=checkbox]').forEach(cb => {
+    cb.addEventListener('change', () => {
+      cb.closest('li').classList.toggle('checked', cb.checked);
+    });
+  });
+
+  // ── Quiz ──
+  const quizFeedback = {
+    q1: {
+      ok: '✅ Correcte! Un hash diferent significa que el fitxer ha estat modificat respecte a l\'original. Mai s\'ha d\'instal·lar un fitxer amb hash incorrecte, independentment de la font. Descarrega sempre de la font oficial i verifica.',
+      ko: '❌ Incorrecte. Un hash diferent és un signe d\'alarma crític que no s\'ha d\'ignorar. No és un problema de l\'algoritme ni d\'acceptació dels miralls. Descarrega sempre de la font oficial i verifica el hash de nou.'
+    },
+    q2: {
+      ok: '✅ Correcte! La llicència GPL (General Public License) permet usar, copiar, modificar i redistribuir el programari sense restriccions de nombre de còpies ni cost. LibreOffice pot instal·lar-se en il·limitats equips sense cap llicència addicional.',
+      ko: '❌ Incorrecte. La GPL no té limitació per nombre de còpies ni requereix llicències corporatives. Permet instal·lacions il·limitades sense cost. Aquesta és una de les diferències clau entre programari lliure i programari privatiu.'
+    },
+    q3: {
+      ok: '✅ Correcte! Els pedaços de seguretat corregeixen vulnerabilitats actives (CVE) i han d\'aplicar-se immediatament. Les actualitzacions de funcions poden introduir errors de regressió i han de provar-se primer en un equip pilot durant 1–2 setmanes.',
+      ko: '❌ Incorrecte. La prioritat és clara: vulnerabilitats de seguretat actives → acció immediata. Funcions noves → prova pilot primer. Aplicar actualitzacions de funcions sense prova prèvia pot trencar macros o complements crítics per a l\'empresa.'
+    },
+    q4: {
+      ok: '✅ Correcte! La desinstal·lació estàndard de Windows deixa residus a AppData, carpetes de programa i claus de Registre. L\'eina oficial de Microsoft (Support and Recovery Assistant) o Revo Uninstaller en mode avançat poden detectar i eliminar tots els residus d\'una instal·lació anterior d\'Office.',
+      ko: '❌ Incorrecte. El problema és que la desinstal·lació estàndard del Panel de control deixa residus al Registre i a AppData. Reiniciar no els elimina. Cal usar eines específiques com Microsoft Support and Recovery Assistant o Revo Uninstaller per fer una neteja completa.'
+    },
+    q5: {
+      ok: '✅ Correcte! Per a una PIME sense necessitats avançades i pressupost ajustat, LibreOffice (GPL, gratuït) és la millor opció. Configurat per defecte en format .docx assegura compatibilitat amb clients que usen Microsoft Office. Estalvi aproximat: 6–12€ per usuari i mes = 576–1152€/any per a 8 empleats.',
+      ko: '❌ Incorrecte. La resposta D és il·legal (pirateria, TRLPI). Les respostes A i B representen costos innecessaris per a necessitats bàsiques. Per a una PIME sense macros avançades i pressupost ajustat, LibreOffice (GPL, gratuït, il·limitades còpies) és la solució tècnicament i econòmicament correcta.'
+    }
+  };
+
+  let quizAnswered = {};
+  let quizScore = 0;
+
+  function checkQ(qid, btn, isCorrect) {
+    if (quizAnswered[qid]) return;
+    quizAnswered[qid] = true;
+
+    const card = document.getElementById(qid);
+    const fb   = document.getElementById(qid + '-fb');
+    const opts = card.querySelectorAll('.quiz-opt');
+
+    opts.forEach(opt => opt.classList.add('disabled'));
+
+    if (isCorrect) {
+      btn.classList.add('correct');
+      quizScore++;
+      fb.textContent = quizFeedback[qid].ok;
+      fb.className = 'quiz-feedback show ok';
+    } else {
+      btn.classList.add('wrong');
+      fb.textContent = quizFeedback[qid].ko;
+      fb.className = 'quiz-feedback show ko';
+      opts.forEach(opt => {
+        if (opt.getAttribute('onclick') && opt.getAttribute('onclick').includes(',true)')) {
+          opt.classList.add('correct');
+        }
+      });
+    }
+
+    if (Object.keys(quizAnswered).length === 5) {
+      const result   = document.getElementById('quiz-result');
+      const scoreTxt = document.getElementById('quiz-score-txt');
+      const scoreMsg = document.getElementById('quiz-score-msg');
+      result.style.display = 'block';
+      scoreTxt.textContent = quizScore + ' / 5';
+      if (quizScore === 5) {
+        scoreMsg.textContent = '🎉 Perfecte! Domines tots els conceptes del RA1. Estàs a punt per a l\'examen.';
+      } else if (quizScore >= 3) {
+        scoreMsg.textContent = '👍 Molt bé! Repassa les preguntes fallades i el seu feedback per consolidar.';
+      } else {
+        scoreMsg.textContent = '📖 Cal repassar. Torna a llegir les seccions de llicències, instal·lació i actualitzacions.';
+      }
+      result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  }
 </script>
 </body>
 </html>

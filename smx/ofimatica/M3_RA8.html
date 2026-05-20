@@ -1,4 +1,3 @@
-html
 <!DOCTYPE html>
 <html lang="ca">
 <head>
@@ -135,6 +134,7 @@ html
   .tag-gcal   { color: var(--gcal);   } .tag-gcal::before   { background: var(--gcal); }
   .tag-drive  { color: var(--gdrive); } .tag-drive::before  { background: var(--gdrive); }
   .tag-practica { color: #7c3aed; } .tag-practica::before { background: #7c3aed; }
+  .tag-light-purple { color: #c4b5fd; } .tag-light-purple::before { background: #c4b5fd; }
   .tag-preguntes { color: #b45309; } .tag-preguntes::before { background: #b45309; }
 
   h2 {
@@ -219,7 +219,7 @@ html
     font-size: 0.8rem; color: #a8c4ff; overflow-x: auto; line-height: 1.65;
     margin: .65rem 0;
   }
-  .code .cm { color: #4a6070; }
+  .code .cm { color: #6fa8c0; }
   .code .kw { color: var(--yellow); }
   .code .st { color: #57e3b0; }
   .code .er { color: #ff7b7b; }
@@ -360,15 +360,215 @@ html
   .fi { opacity: 0; transform: translateY(18px); transition: opacity .55s ease, transform .55s ease; }
   .fi.in { opacity: 1; transform: none; }
 
+  /* ── FIX: practice-body is on a WHITE bg inside the s-dark (navy) section ── */
+  /* Without these overrides, .s-dark h4, p, .ex etc. all render white-on-white */
+  .s-dark .practice-body { color: var(--ink); }
+  .s-dark .practice-body h4 { color: var(--navy); }
+  .s-dark .practice-body > p,
+  .s-dark .practice-body .grid p { color: var(--muted); }
+  .s-dark .practice-body .ex { background: var(--cream); border-color: var(--border); }
+  .s-dark .practice-body .ex p { color: var(--ink); }
+  .s-dark .practice-body .ex .ex-lbl { /* keep explicit colours already set inline */ }
+  .s-dark .practice-body .real-world { background: #fffdf0; }
+  .s-dark .practice-body .real-world p { color: var(--ink); }
+  .s-dark .practice-body .callout p,
+  .s-dark .practice-body .callout li { color: var(--ink); }
+  .s-dark .practice-body .callout strong { color: var(--navy); }
+  .s-dark .practice-body .steps li { background: var(--cream); }
+  .s-dark .practice-body .steps li p { color: var(--ink); }
+  .s-dark .practice-body .steps li strong { color: var(--navy); }
+  .s-dark .practice-body .time-badge { color: var(--muted); background: var(--cream); border-color: var(--border); }
+  .s-dark .practice-body .dif-badge { /* keep its own bg/color */ }
+  .s-dark .practice-body .delivery-check { background: #f0fdf4; border-color: rgba(15,157,88,0.3); }
+  .s-dark .practice-body .delivery-check h4 { color: #0a6b3c; }
+  .s-dark .practice-body .check-list li { color: var(--ink); }
+  .s-dark .practice-body .check-list li.checked { color: var(--muted); }
+
   @media (max-width: 640px) {
     .nav-pills { display: none; }
     .proto-flow { flex-direction: column; }
     .proto-arrow { transform: rotate(90deg); }
     .practice-header { flex-direction: column; text-align: center; }
   }
+
+  /* ── PROGRESS BAR ── */
+  #progress-bar {
+    position: fixed; top: 0; left: 0; height: 3px; z-index: 200;
+    background: linear-gradient(90deg, var(--gmail), var(--gcal), var(--gdrive));
+    width: 0%; transition: width .1s linear;
+  }
+
+  /* ── GLOSSARY TOOLTIP ── */
+  .glos {
+    border-bottom: 1.5px dashed var(--gcal); cursor: help;
+    position: relative; color: inherit;
+  }
+  .glos::after {
+    content: attr(data-def);
+    position: absolute; bottom: 130%; left: 50%; transform: translateX(-50%);
+    background: var(--navy); color: white; font-size: 0.78rem;
+    padding: .5rem .85rem; border-radius: 8px;
+    max-width: 280px; white-space: normal; line-height: 1.4;
+    opacity: 0; pointer-events: none; transition: opacity .2s;
+    z-index: 50; box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+  }
+  .glos:hover::after { opacity: 1; }
+
+  /* ── TIME BADGE ── */
+  .time-badge {
+    display: inline-flex; align-items: center; gap: .35rem;
+    font-size: 0.72rem; font-weight: 600; color: var(--muted);
+    background: var(--cream); border: 1px solid var(--border);
+    padding: .2rem .65rem; border-radius: 100px; margin-left: .4rem;
+  }
+
+  /* ── DIFFICULTY BADGE ── */
+  .dif-badge {
+    display: inline-flex; align-items: center; gap: .4rem;
+    font-size: 0.72rem; font-weight: 700; padding: .2rem .65rem;
+    border-radius: 100px; margin-bottom: .5rem;
+  }
+  .dif-basic    { background: rgba(15,157,88,0.12);  color: #0a6b3c; }
+  .dif-mid      { background: rgba(251,188,4,0.18);  color: #8a6500; }
+  .dif-advanced { background: rgba(234,67,53,0.12);  color: #b31412; }
+
+  /* ── COMPARE BOX ── */
+  .compare-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0; }
+  @media(max-width:600px){ .compare-wrap { grid-template-columns: 1fr; } }
+  .compare-bad  { background: rgba(234,67,53,0.05);  border: 1px solid rgba(234,67,53,0.25);  border-radius: var(--radius); padding: 1.1rem 1.25rem; }
+  .compare-good { background: rgba(15,157,88,0.06);  border: 1px solid rgba(15,157,88,0.28);  border-radius: var(--radius); padding: 1.1rem 1.25rem; }
+  .compare-lbl { font-size: 0.68rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; margin-bottom: .5rem; display: flex; align-items: center; gap: .4rem; }
+  .compare-bad .compare-lbl  { color: #b31412; }
+  .compare-good .compare-lbl { color: #0a6b3c; }
+  .compare-bad p, .compare-good p { font-size: 0.87rem; color: var(--ink); line-height: 1.6; }
+
+  /* ── KBD / SHORTCUTS ── */
+  .kbd-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: .6rem; }
+  .kbd-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: .55rem .9rem; background: var(--card); border: 1px solid var(--border);
+    border-radius: 8px; font-size: 0.86rem;
+  }
+  .kbd-row .action { color: var(--muted); font-size: 0.82rem; }
+  .kbd-row .keys   { display: flex; gap: .3rem; flex-shrink: 0; }
+  kbd {
+    display: inline-block; background: var(--cream); border: 1px solid var(--border);
+    border-bottom: 2px solid #bbb; border-radius: 5px;
+    padding: .1rem .45rem; font-size: 0.75rem; font-family: monospace; color: var(--ink);
+  }
+
+  /* ── TRAP CARDS ── */
+  .trap-card {
+    background: #fff8f0; border: 1px solid rgba(234,67,53,0.25);
+    border-left: 4px solid var(--gmail); border-radius: var(--radius);
+    padding: 1.25rem 1.5rem; margin-bottom: .85rem;
+  }
+  .trap-card .trap-head { display: flex; align-items: center; gap: .65rem; margin-bottom: .4rem; }
+  .trap-card h4 { color: #b31412; margin: 0; font-size: 0.95rem; }
+  .trap-card p  { color: var(--muted); font-size: 0.88rem; }
+  .trap-card .fix { margin-top: .5rem; padding: .5rem .85rem; border-radius: 6px; background: rgba(15,157,88,0.09); font-size: 0.85rem; color: #0a6b3c; }
+
+  /* ── REAL WORLD BOX ── */
+  .real-world { border-left: 3px solid var(--yellow); background: #fffdf0; border-radius: 0 var(--radius) var(--radius) 0; padding: .75rem 1.1rem; margin: .65rem 0; font-size: 0.88rem; }
+  .real-world .rw-lbl { font-size: 0.67rem; font-weight: 800; letter-spacing: .1em; color: #8a6500; margin-bottom: .2rem; text-transform: uppercase; }
+  .real-world p { color: var(--ink); }
+
+  /* ── DELIVERY CHECKLIST ── */
+  .delivery-check {
+    background: #f0fdf4; border: 1px solid rgba(15,157,88,0.3);
+    border-radius: var(--radius); padding: 1.5rem; margin-top: 1.25rem;
+  }
+  .delivery-check h4 { color: #0a6b3c; margin-bottom: .75rem; }
+  .check-list { list-style: none; display: flex; flex-direction: column; gap: .45rem; }
+  .check-list li {
+    display: flex; align-items: flex-start; gap: .65rem;
+    font-size: 0.88rem; color: var(--ink); line-height: 1.5;
+  }
+  .check-list li input[type=checkbox] {
+    width: 17px; height: 17px; accent-color: var(--gdrive); cursor: pointer; flex-shrink: 0; margin-top: 2px;
+  }
+  .check-list li.checked { text-decoration: line-through; color: var(--muted); }
+
+  /* ── RUBRIC ── */
+  .rubric-wrap { overflow-x: auto; margin-top: 1.5rem; }
+  .rubric-table { width: 100%; border-collapse: collapse; font-size: 0.83rem; }
+  .rubric-table th, .rubric-table td { padding: .7rem .85rem; border: 1px solid var(--border); vertical-align: top; }
+  .rubric-table th { background: var(--navy); color: white; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.78rem; text-align: center; }
+  .rubric-table th:first-child { border-radius: 8px 0 0 0; }
+  .rubric-table th:last-child  { border-radius: 0 8px 0 0; }
+  .rubric-table td:first-child { font-weight: 600; color: var(--navy); background: #fafafa; min-width: 150px; }
+  .rubric-table .col-ex { background: rgba(15,157,88,0.06); }
+  .rubric-table .col-be { background: rgba(26,115,232,0.05); }
+  .rubric-table .col-ok { background: rgba(251,188,4,0.06); }
+  .rubric-table .col-no { background: rgba(234,67,53,0.05); }
+  .rubric-table .col-ex td, .rubric-table .col-be td,
+  .rubric-table .col-ok td, .rubric-table .col-no td { color: var(--muted); font-size: 0.8rem; }
+  .rubric-total { background: var(--navy) !important; }
+  .rubric-total td { color: white !important; font-weight: 700 !important; background: transparent !important; }
+
+  /* ── RESOURCE LINKS ── */
+  .resource-link {
+    display: flex; align-items: center; gap: 1rem;
+    background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 1rem 1.25rem; text-decoration: none; color: inherit; transition: all .2s;
+    margin-bottom: .6rem;
+  }
+  .resource-link:hover { border-color: var(--gcal); transform: translateX(4px); }
+  .resource-icon { font-size: 1.6rem; flex-shrink: 0; }
+  .resource-link .r-title { font-weight: 700; font-size: 0.92rem; color: var(--navy); }
+  .resource-link .r-desc  { font-size: 0.8rem; color: var(--muted); }
+  .resource-link .r-tag   { font-size: 0.68rem; font-weight: 700; background: rgba(26,115,232,0.1); color: var(--gcal); padding: .1rem .5rem; border-radius: 100px; margin-top: .2rem; display: inline-block; }
+
+  /* ── QUIZ ── */
+  .quiz-section { padding: 4rem 2rem; background: #f0f4ff; }
+  .quiz-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 1.5rem; margin-bottom: 1rem;
+  }
+  .quiz-q { font-weight: 600; font-size: 0.95rem; color: var(--navy); margin-bottom: .85rem; }
+  .quiz-options { display: flex; flex-direction: column; gap: .5rem; }
+  .quiz-opt {
+    display: flex; align-items: center; gap: .75rem;
+    padding: .65rem 1rem; border-radius: 8px; cursor: pointer;
+    border: 1.5px solid var(--border); background: white;
+    font-size: 0.88rem; color: var(--ink); transition: all .2s; text-align: left;
+  }
+  .quiz-opt:hover:not(.disabled) { border-color: var(--gcal); background: rgba(26,115,232,0.05); }
+  .quiz-opt.correct { border-color: var(--gdrive); background: rgba(15,157,88,0.1); color: #0a6b3c; font-weight: 600; }
+  .quiz-opt.wrong   { border-color: var(--gmail);  background: rgba(234,67,53,0.08); color: #b31412; }
+  .quiz-opt.disabled { cursor: not-allowed; pointer-events: none; }
+  .quiz-feedback { margin-top: .65rem; font-size: 0.83rem; padding: .5rem .85rem; border-radius: 6px; display: none; }
+  .quiz-feedback.show { display: block; }
+  .quiz-feedback.ok  { background: rgba(15,157,88,0.1);  color: #0a6b3c; }
+  .quiz-feedback.ko  { background: rgba(234,67,53,0.08); color: #b31412; }
+  .quiz-score { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.5rem; color: var(--navy); margin: 1rem 0 .3rem; }
+
+  /* ── FEYNMAN ── */
+  .feynman { background: linear-gradient(135deg, #1a1f4e, #1557b0); color: white; border-radius: var(--radius); padding: 2rem 2.25rem; margin: 2rem 0; }
+  .feynman h3 { color: white; }
+  .feynman p  { color: rgba(255,255,255,.75); font-size: 0.92rem; }
+  .feynman .feyn-prompts { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: .75rem; margin-top: 1.25rem; }
+  .feyn-card { background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.15); border-radius: 10px; padding: 1rem; }
+  .feyn-card p { color: rgba(255,255,255,.8); font-size: 0.85rem; font-style: italic; }
+
+  /* ── VIDEO CARD ── */
+  .video-card {
+    display: flex; align-items: center; gap: 1rem;
+    background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 1rem 1.25rem; text-decoration: none; color: inherit; transition: all .2s;
+    margin-bottom: .6rem;
+  }
+  .video-card:hover { border-color: var(--gmail); transform: translateX(4px); box-shadow: 0 4px 16px rgba(234,67,53,0.1); }
+  .video-thumb { width: 48px; height: 48px; background: #ea4335; border-radius: 10px; display: grid; place-items: center; font-size: 1.3rem; flex-shrink: 0; }
+  .video-card .v-title { font-weight: 700; font-size: 0.9rem; color: var(--navy); }
+  .video-card .v-desc  { font-size: 0.78rem; color: var(--muted); }
+  .video-card .v-tag   { font-size: 0.68rem; font-weight: 700; background: rgba(234,67,53,0.1); color: var(--gmail); padding: .1rem .5rem; border-radius: 100px; margin-top: .2rem; display: inline-block; }
 </style>
 </head>
 <body>
+
+<!-- PROGRESS BAR -->
+<div id="progress-bar"></div>
 
 <!-- NAV -->
 <nav>
@@ -379,7 +579,10 @@ html
     <li><a href="#gcal" class="gcal">Calendar</a></li>
     <li><a href="#gdrive" class="gdrive">Drive</a></li>
     <li><a href="#practiques">Pràctiques</a></li>
+    <li><a href="#rubrica">Rúbrica</a></li>
     <li><a href="#preguntes">Preguntes</a></li>
+    <li><a href="#quiz">Quiz</a></li>
+    <li><a href="#recursos">Recursos</a></li>
   </ul>
 </nav>
 
@@ -1025,6 +1228,261 @@ html
   </div>
 </section>
 
+<!-- RESUM FINAL -->
+<section id="resum" class="s-cream">
+  <div class="container fi">
+    <div class="section-tag tag-cobalt">Resum del RA8</div>
+    <h2>El que heu après</h2>
+    <p class="lead">Un resum dels conceptes clau de l'RA8 i la seva aplicació professional com a tècnics SMX.</p>
+    <div class="grid g3 fi">
+      <div class="card bl-gmail">
+        <div class="card-icon" style="background:#fef2f2">📧</div>
+        <h3>Gmail i Protocols</h3>
+        <p><strong>SMTP</strong> envia (port 587). <strong>IMAP</strong> sincronitza (port 993). <strong>POP3</strong> descarrega (port 995). Gmail s'organitza amb etiquetes i filtres. SPF, DKIM i DMARC protegeixen de spoofing. Thunderbird es connecta via IMAP+SMTP amb contrasenya d'aplicació.</p>
+      </div>
+      <div class="card" style="border-left:3px solid var(--gcal)">
+        <div class="card-icon" style="background:#eff6ff">📅</div>
+        <h3>Google Calendar</h3>
+        <p>Calendaris múltiples per organitzar per àmbits. Compartir amb permisos granulars. Invitacions via iCalendar (.ics). Esdeveniments recurrents per manteniments. Integració directa amb Gmail i Meet. Essencial per coordinar equips tècnics.</p>
+      </div>
+      <div class="card" style="border-left:3px solid var(--gdrive)">
+        <div class="card-icon" style="background:#f0fdf4">💾</div>
+        <h3>Google Drive</h3>
+        <p>Emmagatzematge SaaS al núvol. Permisos de Visualitzador, Comentarista, Editor i Propietari. Col·laboració en temps real. Historial de versions automàtic. Drive compartit per a documentació corporativa. Xifrat TLS + AES-256.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════
+     TRAMPES FREQÜENTS
+════════════════════════════════════ -->
+<section id="trampes" style="padding:5rem 2rem; background:#fff8f7;">
+  <div class="container">
+    <div class="section-tag tag-gmail fi">Errors habituals</div>
+    <h2 class="fi">⚠️ Trampes freqüents del RA8</h2>
+    <p class="lead fi" style="margin-bottom:2rem">Errors que fan tots els alumnes la primera vegada amb Gmail, Calendar i Drive. Llegeix-los ara per no caure-hi a la pràctica ni a l'examen.</p>
+
+    <div class="fi">
+      <div class="trap-card">
+        <div class="trap-head">⚠️ <h4>Usar POP3 en lloc d'IMAP quan s'accedeix des de múltiples dispositius</h4></div>
+        <p>Amb POP3, el correu es <em>descarrega i s'elimina del servidor</em>. Si llegeixes el correu al mòbil, quan obris Thunderbird al PC no hi serà. Moltíssims alumnes configuren POP3 sense entendre la diferència i es queden sense correus a la meitat de la pràctica.</p>
+        <div class="fix">✅ Solució: Usa sempre <strong>IMAP (port 993)</strong> si vols sincronització entre dispositius. POP3 només té sentit si tens UN sol dispositiu i vols guardar el correu localment sense dependre del servidor.</div>
+      </div>
+
+      <div class="trap-card">
+        <div class="trap-head">⚠️ <h4>Usar la contrasenya normal del compte Google per a Thunderbird</h4></div>
+        <p>Google rebutja la contrasenya normal quan configures un client extern. Si has activat la verificació en dos passos (obligatòria per a la pràctica), <strong>mai</strong> funcionarà amb la contrasenya habitual. L'error que veus a Thunderbird és críptic i molts alumnes perden mitja hora sense saber per on tirar.</p>
+        <div class="fix">✅ Solució: Ves a <strong>myaccount.google.com → Seguretat → Contrasenyes d'aplicació</strong>. Genera una contrasenya de 16 caràcters específica per a "Thunderbird". Usa aquesta, no la normal.</div>
+      </div>
+
+      <div class="trap-card">
+        <div class="trap-head">⚠️ <h4>Compartir fitxers de Drive amb permís d'Editor quan hauria de ser Visualitzador</h4></div>
+        <p>Quan comparteixes la carpeta del projecte amb el client fictici, l'error típic és donar permís d'Editor per descuit. En un cas real, el client podria esborrar o modificar els documents tècnics. A la pràctica, el professor verificarà que els permisos són correctes.</p>
+        <div class="fix">✅ Solució: Revisa sempre els permisos <em>abans</em> de compartir. Pensa: "Quin és el mínim permís que necessita aquesta persona per fer la seva funció?" Per als clients externs, quasi sempre és <strong>Visualitzador</strong>.</div>
+      </div>
+
+      <div class="trap-card">
+        <div class="trap-head">⚠️ <h4>Confondre "Arxivar" amb "Eliminar" a Gmail</h4></div>
+        <p>Arxivar un correu a Gmail <strong>no l'elimina</strong>: el treu de la safata d'entrada però continua accessible a "Tot el correu". Eliminar sí que el mou a la Paperera (i s'esborra als 30 dies). Molts alumnes "arxiven" pensant que han eliminat, o "eliminen" pensant que han arxivat.</p>
+        <div class="fix">✅ Solució: Usa <strong>Arxivar</strong> (tecla <kbd>e</kbd>) per desencombrar la safata sense perdre res. Elimina només el que realment no necessitaràs mai més. L'arxiu és la teva còpia de seguretat de missatges.</div>
+      </div>
+
+      <div class="trap-card">
+        <div class="trap-head">⚠️ <h4>No actualitzar la vista de Calendar després de compartir</h4></div>
+        <p>Quan un company comparteix un calendari amb tu, no apareix automàticament. Cal acceptar la invitació (arriba per correu) i, a vegades, recarregar la pàgina. Molts alumnes pensen que el calendari compartit "no funciona" quan simplement no han acceptat la invitació.</p>
+        <div class="fix">✅ Solució: Mira la safata de Gmail del compte receptor. Hi haurà un correu de "google-workspace-calendar-server" amb un botó per acceptar el calendari compartit. Un cop acceptat, apareixerà al panell esquerre de Calendar.</div>
+      </div>
+
+      <div class="trap-card">
+        <div class="trap-head">⚠️ <h4>Pujar fitxers amb dades sensibles a Drive sense pensar-ho</h4></div>
+        <p>Drive és un servei al núvol de Google. Malgrat el xifrat, pujar contrasenyes en text pla, claus privades SSH, o dades personals de clients sense xifrat és un risc de seguretat i pot incomplir el GDPR. En entorns empresarials, hi ha política explícita sobre quins fitxers <em>mai</em> van al núvol.</p>
+        <div class="fix">✅ Solució: Si necessites guardar credencials, usa un gestor de contrasenyes dedicat (Bitwarden, 1Password). Per a dades sensibles de clients, comprova la política de l'empresa i usa xifrat addicional si cal.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════
+     BÉ VS. MALAMENT
+════════════════════════════════════ -->
+<section id="exemples" style="padding:5rem 2rem; background:var(--cream);">
+  <div class="container">
+    <div class="section-tag tag-cobalt fi">Exemples visuals</div>
+    <h2 class="fi">Bé vs. Malament — exemples reals</h2>
+    <p class="lead fi" style="margin-bottom:2rem">Veure l'error ajuda molt més que llegir que no s'ha de fer. Aquí tens exemples concrets del RA8.</p>
+
+    <!-- Correu professional vs informal -->
+    <div class="fi" style="margin-bottom:2.5rem">
+      <h3 style="margin-bottom:1rem">📧 Correu electrònic professional</h3>
+      <div class="compare-wrap">
+        <div class="compare-bad">
+          <div class="compare-lbl">❌ Malament</div>
+          <p>
+            <strong>Assumpte:</strong> hola<br><br>
+            hola pere,<br><br>
+            m'has dit que el servidor no va, pots mirar-ho? tinc pressa perquè el client em crida.<br><br>
+            gràcies
+          </p>
+        </div>
+        <div class="compare-good">
+          <div class="compare-lbl">✅ Bé</div>
+          <p>
+            <strong>Assumpte:</strong> [URGENT] Servidor web Client ABC caigut — necessito suport<br><br>
+            Bona tarda, Pere,<br><br>
+            El servidor web del Client ABC no respon des de les 14:32h. El client ha reportat error 502. He verificat el servei Apache i sembla aturat. Pots revisar-ho quan puguis? Adjunto el log d'errors.<br><br>
+            Moltes gràcies,<br>
+            Jordi Martí · Tècnic IT · TecnoSupport S.L. · 600 123 456
+          </p>
+        </div>
+      </div>
+      <div class="callout cl-blue fi" style="margin-top:.75rem;padding:1rem">
+        <span class="callout-icon">💡</span>
+        <div><p style="font-size:.88rem"><strong>Per què importa:</strong> L'assumpte descriptiu permet que el filtre automàtic de Gmail apliqui l'etiqueta "Urgent" correctament. La signatura professional dóna credibilitat. El contingut detallat permet que Pere actuï sense demanar més informació.</p></div>
+      </div>
+    </div>
+
+    <!-- Estructura etiquetes -->
+    <div class="fi" style="margin-bottom:2.5rem">
+      <h3 style="margin-bottom:1rem">🏷️ Estructura d'etiquetes a Gmail</h3>
+      <div class="compare-wrap">
+        <div class="compare-bad">
+          <div class="compare-lbl">❌ Malament — caòtic</div>
+          <p>
+            📁 misc<br>
+            📁 coses<br>
+            📁 important<br>
+            📁 Clients (tots els clients barrejats)<br>
+            📁 feina<br>
+            📁 no borrar<br>
+            📁 2024<br><br>
+            <em style="font-size:.8rem;color:#b31412">Resultat: impossible trobar un correu específic en menys de 2 minuts.</em>
+          </p>
+        </div>
+        <div class="compare-good">
+          <div class="compare-lbl">✅ Bé — estructurat</div>
+          <p>
+            🔴 Urgent<br>
+            🔧 Incidències<br>
+            &nbsp;&nbsp;└ 🔧 Incidències/Client ABC<br>
+            &nbsp;&nbsp;└ 🔧 Incidències/Client XYZ<br>
+            📋 Factures<br>
+            📁 Projectes<br>
+            📌 Seguiment<br><br>
+            <em style="font-size:.8rem;color:#0a6b3c">Resultat: qualsevol correu localitzable en &lt;30 segons.</em>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Permisos Drive -->
+    <div class="fi" style="margin-bottom:2.5rem">
+      <h3 style="margin-bottom:1rem">🔑 Permisos de Google Drive en un projecte</h3>
+      <div class="compare-wrap">
+        <div class="compare-bad">
+          <div class="compare-lbl">❌ Malament</div>
+          <p>
+            Compartir tota la carpeta del projecte com a <strong>Editor</strong> amb tothom: client, companys i cap.<br><br>
+            <em style="font-size:.8rem;color:#b31412">Riscos: el client pot esborrar documents tècnics per error. Un tècnic júnior pot modificar la proposta comercial. No hi ha traçabilitat de qui va fer cada canvi.</em>
+          </p>
+        </div>
+        <div class="compare-good">
+          <div class="compare-lbl">✅ Bé</div>
+          <p>
+            👑 <strong>Cap de projecte:</strong> Propietari<br>
+            ✏️ <strong>Tècnic sènior:</strong> Editor<br>
+            💬 <strong>Tècnic júnior:</strong> Comentarista<br>
+            👁️ <strong>Client extern:</strong> Visualitzador<br><br>
+            <em style="font-size:.8rem;color:#0a6b3c">Cada persona té exactament el que necessita, ni més ni menys.</em>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Signatura gmail -->
+    <div class="fi">
+      <h3 style="margin-bottom:1rem">✍️ Signatura de Gmail</h3>
+      <div class="compare-wrap">
+        <div class="compare-bad">
+          <div class="compare-lbl">❌ Malament</div>
+          <p>
+            Enviat des del meu iPhone<br><br>
+            —<br>
+            Joan<br><br>
+            <em style="font-size:.8rem;color:#b31412">El receptor no sap qui és Joan, on treballa, com contactar-lo ni en quina empresa. Aspecte molt poc professional en un entorn corporatiu.</em>
+          </p>
+        </div>
+        <div class="compare-good">
+          <div class="compare-lbl">✅ Bé</div>
+          <p>
+            Joan Puig Vidal<br>
+            Tècnic de Sistemes · TecnoSupport S.L.<br>
+            📞 93 123 45 67 · 📱 600 987 654<br>
+            ✉️ j.puig@tecnosupport.cat<br>
+            🌐 www.tecnosupport.cat<br><br>
+            <em style="font-size:.8rem;color:#0a6b3c">Nom complet, càrrec, empresa, múltiples vies de contacte. Professional i funcional.</em>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════
+     DRECERES DE TECLAT
+════════════════════════════════════ -->
+<section id="dreceres" style="padding:5rem 2rem; background:white;">
+  <div class="container">
+    <div class="section-tag tag-gmail fi">Productivitat</div>
+    <h2 class="fi">⌨️ Dreceres de teclat essencials</h2>
+    <p class="lead fi" style="margin-bottom:2rem">Un tècnic SMX que gestiona 50+ correus al dia guanya molt de temps dominant les dreceres. Activa-les a Gmail: <strong>Configuració → General → Dreceres de teclat → Activar</strong>.</p>
+
+    <div class="fi" style="margin-bottom:2.5rem">
+      <h3 style="margin-bottom:1rem;color:var(--gmail)">📧 Gmail — dreceres principals</h3>
+      <div class="kbd-grid">
+        <div class="kbd-row"><span class="action">Redactar correu nou</span><span class="keys"><kbd>c</kbd></span></div>
+        <div class="kbd-row"><span class="action">Respondre</span><span class="keys"><kbd>r</kbd></span></div>
+        <div class="kbd-row"><span class="action">Respondre a tots</span><span class="keys"><kbd>a</kbd></span></div>
+        <div class="kbd-row"><span class="action">Reenviar</span><span class="keys"><kbd>f</kbd></span></div>
+        <div class="kbd-row"><span class="action">Arxivar (sense eliminar)</span><span class="keys"><kbd>e</kbd></span></div>
+        <div class="kbd-row"><span class="action">Eliminar</span><span class="keys"><kbd>#</kbd></span></div>
+        <div class="kbd-row"><span class="action">Marcar com a llegit</span><span class="keys"><kbd>Shift</kbd>+<kbd>i</kbd></span></div>
+        <div class="kbd-row"><span class="action">Marcar com a no llegit</span><span class="keys"><kbd>Shift</kbd>+<kbd>u</kbd></span></div>
+        <div class="kbd-row"><span class="action">Marcar com a important</span><span class="keys"><kbd>+</kbd></span></div>
+        <div class="kbd-row"><span class="action">Anar a Safata d'entrada</span><span class="keys"><kbd>g</kbd>+<kbd>i</kbd></span></div>
+        <div class="kbd-row"><span class="action">Anar a Enviats</span><span class="keys"><kbd>g</kbd>+<kbd>t</kbd></span></div>
+        <div class="kbd-row"><span class="action">Anar a Esborranys</span><span class="keys"><kbd>g</kbd>+<kbd>d</kbd></span></div>
+        <div class="kbd-row"><span class="action">Cerca en tots els correus</span><span class="keys"><kbd>/</kbd></span></div>
+        <div class="kbd-row"><span class="action">Seleccionar tots</span><span class="keys"><kbd>*</kbd>+<kbd>a</kbd></span></div>
+        <div class="kbd-row"><span class="action">Enviar correu</span><span class="keys"><kbd>Ctrl</kbd>+<kbd>Enter</kbd></span></div>
+        <div class="kbd-row"><span class="action">Veure totes les dreceres</span><span class="keys"><kbd>?</kbd></span></div>
+      </div>
+    </div>
+
+    <div class="fi" style="margin-bottom:2.5rem">
+      <h3 style="margin-bottom:1rem;color:var(--gcal)">📅 Google Calendar — dreceres principals</h3>
+      <div class="kbd-grid">
+        <div class="kbd-row"><span class="action">Crear event nou</span><span class="keys"><kbd>c</kbd></span></div>
+        <div class="kbd-row"><span class="action">Vista dia</span><span class="keys"><kbd>d</kbd></span></div>
+        <div class="kbd-row"><span class="action">Vista setmana</span><span class="keys"><kbd>w</kbd></span></div>
+        <div class="kbd-row"><span class="action">Vista mes</span><span class="keys"><kbd>m</kbd></span></div>
+        <div class="kbd-row"><span class="action">Anar a avui</span><span class="keys"><kbd>t</kbd></span></div>
+        <div class="kbd-row"><span class="action">Dia anterior / següent</span><span class="keys"><kbd>k</kbd> / <kbd>j</kbd></span></div>
+        <div class="kbd-row"><span class="action">Cerca</span><span class="keys"><kbd>/</kbd></span></div>
+        <div class="kbd-row"><span class="action">Vista 4 dies</span><span class="keys"><kbd>x</kbd></span></div>
+      </div>
+    </div>
+
+    <div class="callout cl-blue fi">
+      <span class="callout-icon">🏢</span>
+      <div>
+        <strong>En el món professional</strong>
+        <p style="margin-top:.3rem">Els tècnics de helpdesk que gestionen centenars de tickets i correus al dia usen quasi exclusivament el teclat. La drecera <kbd>e</kbd> (arxivar) és probablement la més valuosa: permet buidar la safata sense perdre res, fent que la safata d'entrada sigui una "llista de tasques pendents" real.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ════════════════════════════════════
      PRÀCTIQUES
 ════════════════════════════════════ -->
@@ -1038,8 +1496,7 @@ html
       </div>
     </div>
 
-    <div class="section-tag" style="color:#c4b5fd;margin-bottom:.75rem" class="fi">
-      <span style="display:inline-block;width:20px;height:2px;background:#c4b5fd;margin-right:.5rem;vertical-align:middle"></span>
+    <div class="section-tag tag-light-purple fi">
       Activitats pràctiques
     </div>
     <h2 class="fi">Practica el que has après</h2>
@@ -1055,6 +1512,15 @@ html
         </div>
       </div>
       <div class="practice-body">
+        <div style="display:flex;gap:.5rem;align-items:center;margin-bottom:1.25rem;flex-wrap:wrap">
+          <span class="dif-badge dif-mid">⚡ Dificultat mitjana</span>
+          <span class="time-badge">⏱ ~90 min total</span>
+        </div>
+
+        <div class="real-world" style="margin-bottom:1.25rem">
+          <div class="rw-lbl">🏢 Connexió amb el món real</div>
+          <p>Aquesta configuració és exactament el que fa un tècnic SMX el primer dia de feina: organitzar el correu corporatiu, crear filtres automàtics per prioritzar incidències, i configurar un client de correu per accedir des de múltiples dispositius. Les empreses amb volums de correu alt (>50 missatges/dia) depenen d'etiquetes i filtres per no perdre res important.</p>
+        </div>
         <div class="grid g2">
           <div>
             <h4>🎯 Objectiu</h4>
@@ -1105,6 +1571,20 @@ html
               <span class="callout-icon">⚠️</span>
               <p><strong>Nota important:</strong> Per connectar Thunderbird a Gmail, Google exigeix una "contrasenya d'aplicació" (no la contrasenya normal). Primer activa la verificació en dos passos al teu compte Google, i des de "Seguretat" genera una contrasenya específica per a Thunderbird.</p>
             </div>
+
+            <div class="delivery-check">
+              <h4>☑️ Checklist de lliurament — P1 Gmail</h4>
+              <ul class="check-list">
+                <li><input type="checkbox"><span>Safata d'entrada prioritària activada (captura)</span></li>
+                <li><input type="checkbox"><span>4 etiquetes creades amb colors personalitzats (captura)</span></li>
+                <li><input type="checkbox"><span>Filtre automàtic configurat i provat amb correu real (captura)</span></li>
+                <li><input type="checkbox"><span>Signatura professional creada i activa (captura)</span></li>
+                <li><input type="checkbox"><span>Thunderbird configurat amb IMAP (imap.gmail.com:993) i SMTP (smtp.gmail.com:587) (captura)</span></li>
+                <li><input type="checkbox"><span>Correu enviat des de Thunderbird visible a Gmail "Enviats" (captura)</span></li>
+                <li><input type="checkbox"><span>Qüestions de reflexió a), b) i c) respondudes (mínim 3 línies cadascuna)</span></li>
+                <li><input type="checkbox"><span>Lliurat a Moodle en el format demanat (PDF o document)</span></li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
@@ -1120,6 +1600,16 @@ html
         </div>
       </div>
       <div class="practice-body">
+        <div style="display:flex;gap:.5rem;align-items:center;margin-bottom:1.25rem;flex-wrap:wrap">
+          <span class="dif-badge dif-basic">🟢 Dificultat bàsica</span>
+          <span class="time-badge">⏱ ~60 min total</span>
+        </div>
+
+        <div class="real-world" style="margin-bottom:1.25rem">
+          <div class="rw-lbl">🏢 Connexió amb el món real</div>
+          <p>En qualsevol empresa de suport IT, el calendari compartit és l'eina central per coordinar qui fa guàrdia, quan hi ha finestres de manteniment i on és cada tècnic. Sense un calendari compartit, és habitual que dos tècnics apareguin al mateix client, o que ningú recordi el manteniment del servidor. Moltes empreses usen Google Calendar integrat amb sistemes de ticketing com Jira o Zendesk.</p>
+        </div>
+
         <div class="grid g2">
           <div>
             <h4>🎯 Objectiu</h4>
@@ -1169,6 +1659,20 @@ html
               <span class="callout-icon">💡</span>
               <p><strong>Consell:</strong> Useu comptes reals de Gmail (podeu crear comptes de prova). La funcionalitat de calendaris compartits requereix que ambdós comptes siguin Google. Alternativament, l'administrador de Google Workspace de l'institut pot crear comptes de pràctiques.</p>
             </div>
+
+            <div class="delivery-check">
+              <h4>☑️ Checklist de lliurament — P2 Calendar</h4>
+              <ul class="check-list">
+                <li><input type="checkbox"><span>3 calendaris creats amb colors (Reunions, Manteniment, Guàrdies) (captura)</span></li>
+                <li><input type="checkbox"><span>Calendari "Reunions" compartit amb companys amb permisos correctes (captura)</span></li>
+                <li><input type="checkbox"><span>Reunió setmanal recurrent configurada (cada dilluns, 2 mesos) amb recordatoris (captura)</span></li>
+                <li><input type="checkbox"><span>Manteniment preventiu recurrent configurat (1r dimecres/mes) amb descripció detallada (captura)</span></li>
+                <li><input type="checkbox"><span>Event de guàrdia setmanal creat i visible al calendari compartit (captura)</span></li>
+                <li><input type="checkbox"><span>Invitació acceptada/refusada visible per a tothom (captura)</span></li>
+                <li><input type="checkbox"><span>Qüestions de reflexió a), b) i c) respondudes</span></li>
+                <li><input type="checkbox"><span>Lliurat a Moodle en el format demanat</span></li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
@@ -1184,6 +1688,16 @@ html
         </div>
       </div>
       <div class="practice-body">
+        <div style="display:flex;gap:.5rem;align-items:center;margin-bottom:1.25rem;flex-wrap:wrap">
+          <span class="dif-badge dif-advanced">🔴 Dificultat alta</span>
+          <span class="time-badge">⏱ ~75 min total</span>
+        </div>
+
+        <div class="real-world" style="margin-bottom:1.25rem">
+          <div class="rw-lbl">🏢 Connexió amb el món real</div>
+          <p>Gestionar la documentació d'un projecte IT a Drive és la pràctica estàndard en empreses de servei. El client vol seguir el progrés però no tocar els documents tècnics; el tècnic sènior edita, el júnior llegeix i proposa canvis. Sense una gestió correcta de permisos, és molt fàcil que un client esborri per error un document crític, o que l'historial de versions salvi un projecte d'un error greu.</p>
+        </div>
+
         <div class="grid g2">
           <div>
             <h4>🎯 Objectiu</h4>
@@ -1234,8 +1748,102 @@ html
               <span class="callout-icon">⭐</span>
               <p><strong>Ampliació opcional (+1 punt):</strong> Instal·la "Google Drive per a l'escriptori" al teu ordinador. Verifica que la carpeta del projecte apareix sincronitzada localment. Crea un fitxer des de Windows (o Mac) i comprova que apareix automàticament al Drive web. Adjunta evidències.</p>
             </div>
+
+            <div class="delivery-check">
+              <h4>☑️ Checklist de lliurament — P3 Drive</h4>
+              <ul class="check-list">
+                <li><input type="checkbox"><span>Estructura de 4 carpetes creada correctament al Drive (captura)</span></li>
+                <li><input type="checkbox"><span>Google Doc "Pla de xarxa" amb contingut realista i complet (captura)</span></li>
+                <li><input type="checkbox"><span>Google Sheet "Inventari" amb ≥8 elements i fórmula TOTAL (captura)</span></li>
+                <li><input type="checkbox"><span>Permisos diferenciats: company/a com a Editor, client fictici com a Visualitzador (captura)</span></li>
+                <li><input type="checkbox"><span>Col·laboració en temps real amb dos cursors visibles (captura)</span></li>
+                <li><input type="checkbox"><span>Historial de versions mostrant ≥3 canvis (captura)</span></li>
+                <li><input type="checkbox"><span>Versió restaurada amb evidència del canvi (captura)</span></li>
+                <li><input type="checkbox"><span>Qüestions de reflexió a), b) i c) respondudes</span></li>
+                <li><input type="checkbox"><span>Lliurat a Moodle en el format demanat</span></li>
+              </ul>
+            </div>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════
+     RÚBRICA DE CORRECCIÓ
+════════════════════════════════════ -->
+<section id="rubrica" style="padding:5rem 2rem; background:white;">
+  <div class="container">
+    <div class="section-tag tag-cobalt fi">Avaluació</div>
+    <h2 class="fi">📊 Rúbrica de correcció — RA8</h2>
+    <p class="lead fi" style="margin-bottom:1rem">Cada pràctica s'avalua amb els mateixos criteris. La nota final del RA8 és la mitjana de les 3 pràctiques. Llegeix la rúbrica <strong>abans</strong> de lliurar.</p>
+
+    <div class="rubric-wrap fi">
+      <table class="rubric-table">
+        <thead>
+          <tr>
+            <th style="width:20%;text-align:left">Criteri</th>
+            <th style="width:8%">Pes</th>
+            <th class="col-ex" style="width:18%">🟢 Excel·lent (9–10)</th>
+            <th class="col-be" style="width:18%">🔵 Bé (7–8)</th>
+            <th class="col-ok" style="width:18%">🟡 Suficient (5–6)</th>
+            <th class="col-no" style="width:18%">🔴 Insuficient (0–4)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Configuració tècnica correcta</td>
+            <td style="text-align:center;font-weight:700">25%</td>
+            <td class="col-ex">Tots els paràmetres tècnics correctes (ports, protocols, permisos). Cap error de configuració. Funciona al primer intent.</td>
+            <td class="col-be">Configuració correcta amb 1–2 errors menors que no afecten el funcionament global.</td>
+            <td class="col-ok">Configuració parcial. Alguna funció no funciona però s'entén el procediment.</td>
+            <td class="col-no">Configuració incorrecta o incompleta. No s'ha fet un pas clau (p.ex. no s'ha configurat Thunderbird).</td>
+          </tr>
+          <tr>
+            <td>Captures d'evidència completes</td>
+            <td style="text-align:center;font-weight:700">25%</td>
+            <td class="col-ex">Totes les captures demanades, ben il·luminades, amb la informació visible i rellevant en primer pla.</td>
+            <td class="col-be">Totes les captures presents però alguna talla informació important o és de baixa qualitat.</td>
+            <td class="col-ok">Falten 1–2 captures o algunes no demostren clarament el que se demana.</td>
+            <td class="col-no">Falten 3 o més captures, o les captures no corresponen al que se demana.</td>
+          </tr>
+          <tr>
+            <td>Qualitat de les respostes de reflexió</td>
+            <td style="text-align:center;font-weight:700">25%</td>
+            <td class="col-ex">Respostes completes, raonades i amb exemples propis. Demostren comprensió profunda, no memorització.</td>
+            <td class="col-be">Respostes correctes però sense exemples o amb raonaments superficials.</td>
+            <td class="col-ok">Respostes massa curtes o que repeteixen literalment el text del document sense elaborar.</td>
+            <td class="col-no">Respostes incorrectes, buides, d'una línia o que no responen la pregunta.</td>
+          </tr>
+          <tr>
+            <td>Aplicació de bones pràctiques professionals</td>
+            <td style="text-align:center;font-weight:700">15%</td>
+            <td class="col-ex">Noms de fitxers i carpetes coherents. Signatura professional. Permisos mínims necessaris. Estructura lògica. Aspecte professional.</td>
+            <td class="col-be">Bones pràctiques aplicades en la majoria de casos. Algun detall descurat.</td>
+            <td class="col-ok">Pràctiques bàsiques aplicades però sense criteri professional evident.</td>
+            <td class="col-no">Cap criteri professional. Noms genèrics, permisos incorrectes, estructura caòtica.</td>
+          </tr>
+          <tr>
+            <td>Lliurament i format</td>
+            <td style="text-align:center;font-weight:700">10%</td>
+            <td class="col-ex">Lliurat en el format demanat, amb nom correcte, dins del termini, accessible al professor.</td>
+            <td class="col-be">Lliurat correctament però en format incorrecte o nom d'arxiu erroni.</td>
+            <td class="col-ok">Lliurat fora de termini (menys de 24h) o amb errors menors d'accessibilitat.</td>
+            <td class="col-no">No lliurat, o lliurat de forma que el professor no pot accedir-hi o avaluar-lo.</td>
+          </tr>
+          <tr class="rubric-total">
+            <td colspan="2">TOTAL</td>
+            <td colspan="4" style="text-align:center">100% · Nota final sobre 10</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout cl-amber fi" style="margin-top:1.5rem">
+      <span class="callout-icon">💡</span>
+      <div>
+        <p><strong>Consell clau:</strong> El criteri de "Captures d'evidència" val un 25%. Assegura't que cada captura és nítida i mostra clarament el que demana l'enunciat. Una captura on no es veu el nom del compte configurat a Thunderbird no demostra res. Usa captures de la finestra completa o retalla amb zoom on calgui.</p>
       </div>
     </div>
   </div>
@@ -1411,28 +2019,226 @@ html
   </div>
 </section>
 
-<!-- RESUM FINAL -->
-<section class="s-cream">
+<!-- ════════════════════════════════════
+     AUTOAVALUACIÓ INTERACTIVA
+════════════════════════════════════ -->
+<section id="quiz" class="quiz-section">
+  <div class="container">
+    <div class="section-tag fi" style="color:#7c3aed;display:flex;align-items:center;gap:.5rem"><span style="display:block;width:20px;height:2px;background:#7c3aed"></span>Autoavaluació</div>
+    <h2 class="fi">🧠 Test ràpid: saps el contingut del RA8?</h2>
+    <p class="lead fi" style="margin-bottom:2rem">5 preguntes per saber si has entès els conceptes clau. <strong>Sense nota</strong>, és només per a tu. Respon-les abans de l'examen!</p>
+
+    <!-- Q1 -->
+    <div class="quiz-card fi" id="q1">
+      <div class="quiz-q">1. Estàs configurant un compte de correu a Thunderbird per a un treballador que accedeix al correu des del PC de feina, el portàtil i el mòbil. Quin protocol has d'usar i per quin motiu?</div>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="checkQ('q1',this,false)">A) POP3, perquè és més ràpid i descarrega els correus localment</button>
+        <button class="quiz-opt" onclick="checkQ('q1',this,true)">B) IMAP, perquè sincronitza l'estat del correu entre tots els dispositius sense eliminar-los del servidor</button>
+        <button class="quiz-opt" onclick="checkQ('q1',this,false)">C) SMTP, perquè és el protocol estàndard per rebre correu</button>
+        <button class="quiz-opt" onclick="checkQ('q1',this,false)">D) POP3 amb l'opció "deixar còpia al servidor" és equivalent a IMAP</button>
+      </div>
+      <div class="quiz-feedback" id="q1-fb"></div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="quiz-card fi" id="q2">
+      <div class="quiz-q">2. Estàs configurant Thunderbird amb un compte Gmail. Introdueixes el servidor imap.gmail.com:993 i smtp.gmail.com:587, però Thunderbird et dóna un error d'autenticació. Quina és la causa més probable?</div>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="checkQ('q2',this,false)">A) El port 993 és incorrecte, hauria de ser el 143</button>
+        <button class="quiz-opt" onclick="checkQ('q2',this,false)">B) Gmail no és compatible amb Thunderbird</button>
+        <button class="quiz-opt" onclick="checkQ('q2',this,true)">C) Estàs usant la contrasenya normal del compte en lloc d'una contrasenya d'aplicació generada a la seguretat de Google</button>
+        <button class="quiz-opt" onclick="checkQ('q2',this,false)">D) El servidor SMTP hauria de ser mail.gmail.com, no smtp.gmail.com</button>
+      </div>
+      <div class="quiz-feedback" id="q2-fb"></div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="quiz-card fi" id="q3">
+      <div class="quiz-q">3. Comparteixes una carpeta de Google Drive amb el client d'un projecte perquè pugui veure l'estat dels informes setmanals. Quin permís has de donar-li?</div>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="checkQ('q3',this,false)">A) Editor, perquè pugui afegir comentaris als informes</button>
+        <button class="quiz-opt" onclick="checkQ('q3',this,false)">B) Comentarista, perquè pugui participar activament</button>
+        <button class="quiz-opt" onclick="checkQ('q3',this,true)">C) Visualitzador, perquè el client ha de poder llegir però no modificar ni esborrar cap document</button>
+        <button class="quiz-opt" onclick="checkQ('q3',this,false)">D) Propietari, perquè és el client i ha de tenir control total</button>
+      </div>
+      <div class="quiz-feedback" id="q3-fb"></div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="quiz-card fi" id="q4">
+      <div class="quiz-q">4. Un company t'ha enviat un fitxer .ics per correu. Quin és el format .ics i quin és l'estàndard al qual correspon?</div>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="checkQ('q4',this,false)">A) És un format propietari de Google Calendar, incompatible amb Outlook</button>
+        <button class="quiz-opt" onclick="checkQ('q4',this,true)">B) És el format iCalendar (RFC 5545), un estàndard obert compatible amb Google Calendar, Outlook i Apple Calendar</button>
+        <button class="quiz-opt" onclick="checkQ('q4',this,false)">C) És un fitxer de configuració d'Internet Explorer</button>
+        <button class="quiz-opt" onclick="checkQ('q4',this,false)">D) És el format de Microsoft per a events de calendari, incompatible amb Google</button>
+      </div>
+      <div class="quiz-feedback" id="q4-fb"></div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="quiz-card fi" id="q5">
+      <div class="quiz-q">5. L'empresa on treballaràs usa Google Workspace. La documentació corporativa (manuals, procediments, contractes) s'ha de guardar al Drive personal de cada tècnic o en un Drive compartit de l'organització?</div>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="checkQ('q5',this,false)">A) Al Drive personal, perquè cada tècnic és responsable dels seus fitxers</button>
+        <button class="quiz-opt" onclick="checkQ('q5',this,false)">B) A ambdós llocs, per tenir còpia de seguretat doble</button>
+        <button class="quiz-opt" onclick="checkQ('q5',this,true)">C) Al Drive compartit de l'organització, perquè si el tècnic marxa els fitxers continuen sent accessibles per a l'empresa</button>
+        <button class="quiz-opt" onclick="checkQ('q5',this,false)">D) Al Drive personal és suficient si es comparteix amb tots els companys</button>
+      </div>
+      <div class="quiz-feedback" id="q5-fb"></div>
+    </div>
+
+    <div id="quiz-result" style="display:none;text-align:center;margin-top:1.5rem;padding:1.5rem;background:white;border-radius:var(--radius);border:1px solid var(--border)">
+      <div class="quiz-score" id="quiz-score-txt"></div>
+      <p id="quiz-score-msg" style="color:var(--muted);font-size:.95rem"></p>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════
+     MÈTODE FEYNMAN
+════════════════════════════════════ -->
+<section id="feynman" style="padding:4rem 2rem; background:white;">
   <div class="container fi">
-    <div class="section-tag tag-cobalt">Resum del RA8</div>
-    <h2>El que heu après</h2>
-    <p class="lead">Un resum dels conceptes clau de l'RA8 i la seva aplicació professional com a tècnics SMX.</p>
-    <div class="grid g3 fi">
-      <div class="card bl-gmail">
-        <div class="card-icon" style="background:#fef2f2">📧</div>
-        <h3>Gmail i Protocols</h3>
-        <p><strong>SMTP</strong> envia (port 587). <strong>IMAP</strong> sincronitza (port 993). <strong>POP3</strong> descarrega (port 995). Gmail s'organitza amb etiquetes i filtres. SPF, DKIM i DMARC protegeixen de spoofing. Thunderbird es connecta via IMAP+SMTP amb contrasenya d'aplicació.</p>
+    <div class="feynman">
+      <h3>🧠 Tècnica d'estudi: El Mètode Feynman</h3>
+      <p style="margin-top:.5rem">Si pots explicar un concepte en paraules senzilles a algú que no en sap res, vol dir que l'has entès de debò. Prova amb aquests conceptes del RA8:</p>
+      <div class="feyn-prompts">
+        <div class="feyn-card">
+          <p>"Explica la diferència entre IMAP i POP3 com si ho expliquessis a un familiar que no sap res d'informàtica però té mòbil i portàtil."</p>
+        </div>
+        <div class="feyn-card">
+          <p>"Explica per quin motiu Google exigeix una 'contrasenya d'aplicació' en comptes de la normal, com si parlessis amb algú que s'acaba d'instal·lar Thunderbird."</p>
+        </div>
+        <div class="feyn-card">
+          <p>"Explica la diferència entre el Drive personal i el Drive compartit posant un exemple d'empresa on el Drive personal podria causar un problema greu."</p>
+        </div>
+        <div class="feyn-card">
+          <p>"Explica per quin motiu és millor compartir un fitxer de Drive com a Visualitzador en lloc d'Editor, usant un exemple on el permís incorrecte hauria causat un problema."</p>
+        </div>
       </div>
-      <div class="card" style="border-left:3px solid var(--gcal)">
-        <div class="card-icon" style="background:#eff6ff">📅</div>
-        <h3>Google Calendar</h3>
-        <p>Calendaris múltiples per organitzar per àmbits. Compartir amb permisos granulars. Invitacions via iCalendar (.ics). Esdeveniments recurrents per manteniments. Integració directa amb Gmail i Meet. Essencial per coordinar equips tècnics.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════
+     VÍDEOS RECOMANATS
+════════════════════════════════════ -->
+<section id="videos" style="padding:5rem 2rem; background:var(--cream);">
+  <div class="container">
+    <div class="section-tag tag-gmail fi">Recursos audiovisuals</div>
+    <h2 class="fi">▶️ Vídeos per entendre les funcions clau</h2>
+    <p class="lead fi" style="margin-bottom:2rem">Algunes funcions del RA8 s'entenen molt millor veient-les que llegint-les. Aquí tens els vídeos oficials de Google per a les parts més complexes.</p>
+
+    <div class="grid g2 fi">
+      <div>
+        <h3 style="margin-bottom:.75rem;color:var(--gmail)">📧 Gmail</h3>
+        <a class="video-card" href="https://www.youtube.com/watch?v=6CqbW2_DQZU" target="_blank" rel="noopener">
+          <div class="video-thumb">▶</div>
+          <div>
+            <div class="v-title">Configurar Gmail: filtres i etiquetes</div>
+            <div class="v-desc">Com crear filtres automàtics i organitzar amb etiquetes. Exactament el que necessites per a la P1.</div>
+            <span class="v-tag">YouTube · Google Workspace</span>
+          </div>
+        </a>
+        <a class="video-card" href="https://www.youtube.com/watch?v=VKjbmVnvDow" target="_blank" rel="noopener">
+          <div class="video-thumb">▶</div>
+          <div>
+            <div class="v-title">Configurar Thunderbird amb Gmail (IMAP)</div>
+            <div class="v-desc">Pas a pas: contrasenya d'aplicació, paràmetres IMAP i SMTP, verificació del compte.</div>
+            <span class="v-tag">YouTube · Tutorial</span>
+          </div>
+        </a>
+        <a class="video-card" href="https://workspace.google.com/learning-center/products/gmail/get-started/" target="_blank" rel="noopener">
+          <div class="video-thumb">▶</div>
+          <div>
+            <div class="v-title">Gmail: Guia oficial Google Workspace</div>
+            <div class="v-desc">Tutorials interactius oficials de Google. Cobreix totes les funcions de la P1.</div>
+            <span class="v-tag">Oficial · Google Learning Center</span>
+          </div>
+        </a>
       </div>
-      <div class="card" style="border-left:3px solid var(--gdrive)">
-        <div class="card-icon" style="background:#f0fdf4">💾</div>
-        <h3>Google Drive</h3>
-        <p>Emmagatzematge SaaS al núvol. Permisos de Visualitzador, Comentarista, Editor i Propietari. Col·laboració en temps real. Historial de versions automàtic. Drive compartit per a documentació corporativa. Xifrat TLS + AES-256.</p>
+      <div>
+        <h3 style="margin-bottom:.75rem;color:var(--gcal)">📅 Calendar &amp; 💾 Drive</h3>
+        <a class="video-card" href="https://workspace.google.com/learning-center/products/calendar/get-started/" target="_blank" rel="noopener">
+          <div class="video-thumb" style="background:var(--gcal)">▶</div>
+          <div>
+            <div class="v-title">Google Calendar: guia oficial</div>
+            <div class="v-desc">Compartir calendaris, eventos recurrents, invitacions. Tot el que necessites per a la P2.</div>
+            <span class="v-tag">Oficial · Google Learning Center</span>
+          </div>
+        </a>
+        <a class="video-card" href="https://workspace.google.com/learning-center/products/drive/get-started/" target="_blank" rel="noopener">
+          <div class="video-thumb" style="background:var(--gdrive)">▶</div>
+          <div>
+            <div class="v-title">Google Drive: guia oficial</div>
+            <div class="v-desc">Organitzar carpetes, gestionar permisos, historial de versions i col·laboració en temps real. Essencial per a la P3.</div>
+            <span class="v-tag">Oficial · Google Learning Center</span>
+          </div>
+        </a>
+        <a class="video-card" href="https://www.youtube.com/@GoogleWorkspace" target="_blank" rel="noopener">
+          <div class="video-thumb" style="background:#1a1f4e">▶</div>
+          <div>
+            <div class="v-title">Canal oficial de Google Workspace</div>
+            <div class="v-desc">Vídeos curts sobre funcions noves i casos d'ús professionals. Actualitzat regularment per Google.</div>
+            <span class="v-tag">YouTube · Oficial · Google</span>
+          </div>
+        </a>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════
+     RECURSOS EXTERNS
+════════════════════════════════════ -->
+<section id="recursos" style="padding:5rem 2rem; background:var(--cream);">
+  <div class="container">
+    <div class="section-tag tag-gcal fi">Bibliografia i recursos</div>
+    <h2 class="fi">📚 Recursos externs recomanats</h2>
+    <p class="lead fi" style="margin-bottom:2rem">Fonts oficials i curades per aprofundir. Consulta-les quan tinguis dubtes concrets sobre una funció o un protocol.</p>
+
+    <div class="fi">
+      <a class="resource-link" href="https://support.google.com/mail" target="_blank" rel="noopener">
+        <span class="resource-icon">📘</span>
+        <div>
+          <div class="r-title">Centre d'Ajuda oficial de Gmail</div>
+          <div class="r-desc">Documentació oficial i actualitzada de totes les funcions de Gmail: filtres, etiquetes, configuració IMAP/SMTP, signatures i molt més. Primera font de consulta per a qualsevol dubte sobre Gmail.</div>
+          <span class="r-tag">Oficial · Google</span>
+        </div>
+      </a>
+      <a class="resource-link" href="https://support.google.com/calendar" target="_blank" rel="noopener">
+        <span class="resource-icon">📅</span>
+        <div>
+          <div class="r-title">Centre d'Ajuda oficial de Google Calendar</div>
+          <div class="r-desc">Tota la documentació sobre calendaris compartits, invitacions, format iCalendar, esdeveniments recurrents i integració amb Google Meet. Útil per a la P2.</div>
+          <span class="r-tag">Oficial · Google</span>
+        </div>
+      </a>
+      <a class="resource-link" href="https://support.google.com/drive" target="_blank" rel="noopener">
+        <span class="resource-icon">💾</span>
+        <div>
+          <div class="r-title">Centre d'Ajuda oficial de Google Drive</div>
+          <div class="r-desc">Documentació completa sobre permisos, historial de versions, Drives compartits, sincronització d'escriptori i seguretat. Essencial per a la P3.</div>
+          <span class="r-tag">Oficial · Google</span>
+        </div>
+      </a>
+      <a class="resource-link" href="https://workspace.google.com/learning-center/" target="_blank" rel="noopener">
+        <span class="resource-icon">🎓</span>
+        <div>
+          <div class="r-title">Google Workspace Learning Center</div>
+          <div class="r-desc">Tutorials guiats i interactius oficials de Google. Cobreix Gmail, Calendar i Drive amb casos d'ús professionals. Ideal per repassar i practicar abans de l'examen.</div>
+          <span class="r-tag">Oficial · Tutorials guiats</span>
+        </div>
+      </a>
+      <a class="resource-link" href="https://datatracker.ietf.org/doc/html/rfc3501" target="_blank" rel="noopener">
+        <span class="resource-icon">📋</span>
+        <div>
+          <div class="r-title">RFC 3501 — Especificació oficial del protocol IMAP</div>
+          <div class="r-desc">El document tècnic oficial que defineix com funciona IMAP. No cal llegir-lo tot, però consultar les seccions de ports i autenticació ajuda a entendre per quin motiu es configura com es configura. Per als alumnes que volen entendre el "per quin motiu" dels ports i no només el "com".</div>
+          <span class="r-tag">RFC · IETF · Tècnic</span>
+        </div>
+      </a>
     </div>
   </div>
 </section>
@@ -1444,10 +2250,97 @@ html
 </footer>
 
 <script>
+  // ── Fade-in on scroll ──
   const io = new IntersectionObserver(entries => {
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
   }, { threshold: 0.07, rootMargin: '0px 0px -30px 0px' });
   document.querySelectorAll('.fi').forEach(el => io.observe(el));
+
+  // ── Progress bar ──
+  window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    const bar = document.getElementById('progress-bar');
+    if (bar) bar.style.width = pct + '%';
+  });
+
+  // ── Checklist: toggle line-through on checkbox change ──
+  document.querySelectorAll('.check-list input[type=checkbox]').forEach(cb => {
+    cb.addEventListener('change', () => {
+      cb.closest('li').classList.toggle('checked', cb.checked);
+    });
+  });
+
+  // ── Quiz ──
+  const quizFeedback = {
+    q1: {
+      ok: '✅ Correcte! IMAP (port 993) manté els correus al servidor i sincronitza l\'estat (llegit/no llegit, arxivat) entre tots els dispositius. POP3 descarrega i elimina del servidor, incompatible amb accés multi-dispositiu.',
+      ko: '❌ Incorrecte. SMTP és per enviar correu, no per rebre\'l. POP3 elimina els correus del servidor en descarregar-los: si llegeixes al mòbil, no hi seran al PC. L\'opció correcta és IMAP.'
+    },
+    q2: {
+      ok: '✅ Correcte! Google bloqueja l\'autenticació amb la contrasenya normal per a clients externs quan la verificació en dos passos està activa. Cal generar una "contrasenya d\'aplicació" específica a myaccount.google.com → Seguretat.',
+      ko: '❌ Incorrecte. Els ports 993 (IMAP SSL) i 587 (SMTP STARTTLS) són correctes. El servidor smtp.gmail.com és l\'oficial. El problema típic és usar la contrasenya normal del compte en comptes d\'una contrasenya d\'aplicació.'
+    },
+    q3: {
+      ok: '✅ Correcte! El permís Visualitzador permet llegir i descarregar però no modificar ni esborrar. Per a un client que només ha de fer seguiment, és exactament el permís mínim necessari.',
+      ko: '❌ Incorrecte. Un client extern no ha d\'editar documentació tècnica. El permís Comentarista permet afegir comentaris (que pot ser útil, però no era el que demanava). El Visualitzador és el mínim necessari i el correcte aquí.'
+    },
+    q4: {
+      ok: '✅ Correcte! iCalendar (RFC 5545) és un estàndard obert per a dades de calendari. El fitxer .ics és compatible amb Google Calendar, Microsoft Outlook i Apple Calendar. Permet intercanviar events entre aplicacions de qualsevol fabricant.',
+      ko: '❌ Incorrecte. .ics és el format iCalendar, un estàndard obert definit a la RFC 5545. No és propietari de Google ni de Microsoft: funciona amb qualsevol aplicació de calendari moderna, inclosos els tres grans (Google, Outlook, Apple).'
+    },
+    q5: {
+      ok: '✅ Correcte! El Drive compartit pertany a l\'organització. Si el tècnic marxa o l\'empresa li desactiva el compte, els fitxers romanen accessibles per a la resta de l\'equip. El Drive personal queda en "suspens" si es desactiva el compte.',
+      ko: '❌ Incorrecte. Si la documentació és corporativa (manuals, procediments, contractes), ha d\'estar al Drive compartit de l\'organització. Si es guarda al Drive personal d\'un tècnic i aquest marxa, l\'empresa perd l\'accés als fitxers fins que l\'administrador intervingui.'
+    }
+  };
+
+  let quizAnswered = {};
+  let quizScore = 0;
+
+  function checkQ(qid, btn, isCorrect) {
+    if (quizAnswered[qid]) return;
+    quizAnswered[qid] = true;
+
+    const card = document.getElementById(qid);
+    const fb   = document.getElementById(qid + '-fb');
+    const opts = card.querySelectorAll('.quiz-opt');
+
+    opts.forEach(opt => opt.classList.add('disabled'));
+
+    if (isCorrect) {
+      btn.classList.add('correct');
+      quizScore++;
+      fb.textContent = quizFeedback[qid].ok;
+      fb.className = 'quiz-feedback show ok';
+    } else {
+      btn.classList.add('wrong');
+      fb.textContent = quizFeedback[qid].ko;
+      fb.className = 'quiz-feedback show ko';
+      opts.forEach(opt => {
+        if (opt.getAttribute('onclick') && opt.getAttribute('onclick').includes(',true)')) {
+          opt.classList.add('correct');
+        }
+      });
+    }
+
+    if (Object.keys(quizAnswered).length === 5) {
+      const result   = document.getElementById('quiz-result');
+      const scoreTxt = document.getElementById('quiz-score-txt');
+      const scoreMsg = document.getElementById('quiz-score-msg');
+      result.style.display = 'block';
+      scoreTxt.textContent = quizScore + ' / 5';
+      if (quizScore === 5) {
+        scoreMsg.textContent = '🎉 Perfecte! Domines els conceptes del RA8. Estàs a punt per a l\'examen.';
+      } else if (quizScore >= 3) {
+        scoreMsg.textContent = '👍 Molt bé! Repassa les preguntes fallades i el seu feedback per consolidar.';
+      } else {
+        scoreMsg.textContent = '📖 Cal repassar el material. Torna a llegir les seccions on has fallat.';
+      }
+      result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  }
 </script>
 </body>
 </html>

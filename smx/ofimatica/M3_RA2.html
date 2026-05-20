@@ -49,10 +49,11 @@
   }
   .nav-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1rem; color: var(--navy); letter-spacing: -0.02em; }
   .nav-logo span { color: var(--gdocs); }
-  .nav-pills { display: flex; gap: .4rem; list-style: none; }
+  .nav-pills { display: flex; gap: .4rem; list-style: none; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; flex-shrink: 1; max-width: calc(100% - 140px); padding-bottom: 2px; }
+  .nav-pills::-webkit-scrollbar { display: none; }
   .nav-pills a {
-    text-decoration: none; font-size: 0.78rem; font-weight: 600;
-    padding: .3rem .85rem; border-radius: 100px;
+    text-decoration: none; font-size: 0.73rem; font-weight: 600;
+    padding: .25rem .7rem; border-radius: 100px; white-space: nowrap;
     color: var(--muted); transition: all .2s;
     border: 1px solid transparent;
   }
@@ -326,25 +327,228 @@
   .fi { opacity: 0; transform: translateY(18px); transition: opacity .55s ease, transform .55s ease; }
   .fi.in { opacity: 1; transform: none; }
 
+
+  /* ── FIX: practice-body is on WHITE bg inside s-dark (navy) section ── */
+  .s-dark .practice-body { color: var(--ink); }
+  .s-dark .practice-body h4 { color: var(--navy); }
+  .s-dark .practice-body p { color: var(--muted); }
+  .s-dark .practice-body .ex { background: var(--cream); border-color: var(--border); }
+  .s-dark .practice-body .ex p { color: var(--ink); }
+  .s-dark .practice-body .real-world { background: #fff8f2; }
+  .s-dark .practice-body .real-world p { color: var(--ink); }
+  .s-dark .practice-body .callout p,
+  .s-dark .practice-body .callout li { color: var(--ink); }
+  .s-dark .practice-body .callout strong { color: var(--navy); }
+  .s-dark .practice-body .steps li { background: var(--cream); }
+  .s-dark .practice-body .steps li p { color: var(--ink); }
+  .s-dark .practice-body .steps li strong { color: var(--navy); }
+  .s-dark .practice-body .time-badge { color: var(--muted); background: var(--cream); border-color: var(--border); }
+  .s-dark .practice-body .delivery-check { background: #f0fdf8; border-color: rgba(14,164,114,0.3); }
+  .s-dark .practice-body .delivery-check h4 { color: #077a52; }
+  .s-dark .practice-body .check-list li { color: var(--ink); }
+  .s-dark .practice-body .check-list li.checked { color: var(--muted); }
+
   @media (max-width: 640px) {
     .nav-pills { display: none; }
     .doc-preview { padding: 1.5rem; }
   }
+
+  /* ═══ MILLORES ADDICIONALS ═══ */
+
+  /* Barra de progrés de lectura */
+  #progress-bar {
+    position: fixed; top: 0; left: 0; height: 3px; z-index: 200;
+    background: linear-gradient(90deg, var(--gdocs), var(--ggreen));
+    width: 0%; transition: width .1s linear;
+  }
+
+  /* Glossari tooltip */
+  .glos {
+    border-bottom: 1.5px dashed var(--gdocs); cursor: help;
+    position: relative; color: inherit;
+  }
+  .glos::after {
+    content: attr(data-def);
+    position: absolute; bottom: 130%; left: 50%; transform: translateX(-50%);
+    background: var(--navy); color: white; font-size: 0.78rem;
+    padding: .5rem .85rem; border-radius: 8px; white-space: nowrap;
+    max-width: 280px; white-space: normal; line-height: 1.4;
+    opacity: 0; pointer-events: none; transition: opacity .2s;
+    z-index: 50; box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+  }
+  .glos:hover::after { opacity: 1; }
+
+  /* Nivells de dificultat */
+  .dif-badge {
+    display: inline-flex; align-items: center; gap: .4rem;
+    font-size: 0.72rem; font-weight: 700; padding: .2rem .65rem;
+    border-radius: 100px; margin-bottom: .5rem;
+  }
+  .dif-basic    { background: rgba(52,168,83,0.12);  color: #1e7e44; }
+  .dif-mid      { background: rgba(251,188,4,0.18);  color: #8a6500; }
+  .dif-advanced { background: rgba(234,67,53,0.12);  color: #b31412; }
+
+  /* Estimació de temps */
+  .time-badge {
+    display: inline-flex; align-items: center; gap: .35rem;
+    font-size: 0.72rem; font-weight: 600; color: var(--muted);
+    background: var(--cream); border: 1px solid var(--border);
+    padding: .2rem .65rem; border-radius: 100px; margin-left: .4rem;
+  }
+
+  /* Checklist de lliurament */
+  .delivery-check {
+    background: #f0fdf4; border: 1px solid rgba(52,168,83,0.3);
+    border-radius: var(--radius); padding: 1.5rem;
+    margin-top: 1.25rem;
+  }
+  .delivery-check h4 { color: #1e7e44; margin-bottom: .75rem; }
+  .check-list { list-style: none; display: flex; flex-direction: column; gap: .45rem; }
+  .check-list li {
+    display: flex; align-items: center; gap: .65rem;
+    font-size: 0.88rem; color: var(--ink);
+  }
+  .check-list li input[type=checkbox] {
+    width: 17px; height: 17px; accent-color: var(--ggreen); cursor: pointer; flex-shrink: 0;
+  }
+  .check-list li.checked { text-decoration: line-through; color: var(--muted); }
+
+  /* Rúbrica */
+  .rubric-wrap { overflow-x: auto; margin-top: 1.5rem; }
+  .rubric-table { width: 100%; border-collapse: collapse; font-size: 0.83rem; }
+  .rubric-table th, .rubric-table td { padding: .7rem .85rem; border: 1px solid var(--border); vertical-align: top; }
+  .rubric-table th { background: var(--navy); color: white; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.78rem; text-align: center; }
+  .rubric-table th:first-child { border-radius: 8px 0 0 0; } .rubric-table th:last-child { border-radius: 0 8px 0 0; }
+  .rubric-table td:first-child { font-weight: 600; color: var(--navy); background: #fafafa; min-width: 140px; }
+  .rubric-table .col-ex  { background: rgba(52,168,83,0.06); }
+  .rubric-table .col-be  { background: rgba(66,133,244,0.05); }
+  .rubric-table .col-ok  { background: rgba(251,188,4,0.06); }
+  .rubric-table .col-no  { background: rgba(234,67,53,0.05); }
+  .rubric-table .col-ex td, .rubric-table .col-be td,
+  .rubric-table .col-ok td, .rubric-table .col-no td { color: var(--muted); font-size: 0.8rem; }
+  .rubric-total { background: var(--navy) !important; color: white !important; font-weight: 700 !important; }
+  .rubric-total td { color: white !important; font-weight: 700 !important; background: transparent !important; }
+
+  /* Autoavaluació */
+  .quiz-section { padding: 4rem 2rem; background: #f5f3ff; }
+  .quiz-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 1.5rem; margin-bottom: 1rem;
+  }
+  .quiz-q { font-weight: 600; font-size: 0.95rem; color: var(--navy); margin-bottom: .85rem; }
+  .quiz-options { display: flex; flex-direction: column; gap: .5rem; }
+  .quiz-opt {
+    display: flex; align-items: center; gap: .75rem;
+    padding: .65rem 1rem; border-radius: 8px; cursor: pointer;
+    border: 1.5px solid var(--border); background: white;
+    font-size: 0.88rem; color: var(--ink); transition: all .2s;
+    text-align: left;
+  }
+  .quiz-opt:hover { border-color: var(--gdocs); background: rgba(66,133,244,0.05); }
+  .quiz-opt.correct { border-color: var(--ggreen); background: rgba(52,168,83,0.1); color: #1e7e44; font-weight: 600; }
+  .quiz-opt.wrong   { border-color: var(--gred);   background: rgba(234,67,53,0.08); color: #b31412; }
+  .quiz-opt.disabled { cursor: not-allowed; }
+  .quiz-feedback { margin-top: .65rem; font-size: 0.83rem; padding: .5rem .85rem; border-radius: 6px; display: none; }
+  .quiz-feedback.show { display: block; }
+  .quiz-feedback.ok  { background: rgba(52,168,83,0.1);  color: #1e7e44; }
+  .quiz-feedback.ko  { background: rgba(234,67,53,0.08); color: #b31412; }
+  .quiz-score { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.5rem; color: var(--navy); margin: 1rem 0 .3rem; }
+
+  /* Trampes freqüents */
+  .trap-card {
+    background: #fff8f0; border: 1px solid rgba(234,67,53,0.25);
+    border-left: 4px solid var(--gred); border-radius: var(--radius);
+    padding: 1.25rem 1.5rem; margin-bottom: .85rem;
+  }
+  .trap-card .trap-head { display: flex; align-items: center; gap: .65rem; margin-bottom: .4rem; }
+  .trap-card h4 { color: #b31412; margin: 0; font-size: 0.95rem; }
+  .trap-card p  { color: var(--muted); font-size: 0.88rem; }
+  .trap-card .fix { margin-top: .5rem; padding: .5rem .85rem; border-radius: 6px; background: rgba(52,168,83,0.09); font-size: 0.85rem; color: #1e7e44; }
+
+  /* Dreceres teclat */
+  .kbd-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: .6rem; }
+  .kbd-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: .55rem .9rem; background: var(--card); border: 1px solid var(--border);
+    border-radius: 8px; font-size: 0.86rem;
+  }
+  .kbd-row .action { color: var(--muted); }
+  .kbd-row .keys   { display: flex; gap: .3rem; }
+  kbd {
+    display: inline-block; background: var(--cream); border: 1px solid var(--border);
+    border-bottom: 2px solid #bbb; border-radius: 5px;
+    padding: .1rem .45rem; font-size: 0.75rem; font-family: monospace; color: var(--ink);
+  }
+
+  /* Bé vs Malament */
+  .compare-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0; }
+  @media(max-width:600px){ .compare-wrap { grid-template-columns: 1fr; } }
+  .compare-bad { background: rgba(234,67,53,0.05); border: 1px solid rgba(234,67,53,0.25); border-radius: var(--radius); padding: 1.1rem 1.25rem; }
+  .compare-good { background: rgba(52,168,83,0.06); border: 1px solid rgba(52,168,83,0.28); border-radius: var(--radius); padding: 1.1rem 1.25rem; }
+  .compare-lbl { font-size: 0.68rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; margin-bottom: .5rem; display: flex; align-items: center; gap: .4rem; }
+  .compare-bad .compare-lbl  { color: #b31412; }
+  .compare-good .compare-lbl { color: #1e7e44; }
+  .compare-bad p, .compare-good p { font-size: 0.87rem; color: var(--ink); line-height: 1.55; }
+
+  /* Recursos externs */
+  .resource-link {
+    display: flex; align-items: center; gap: 1rem;
+    background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 1rem 1.25rem; text-decoration: none; color: inherit; transition: all .2s;
+    margin-bottom: .6rem;
+  }
+  .resource-link:hover { border-color: var(--gdocs); transform: translateX(4px); }
+  .resource-icon { font-size: 1.6rem; flex-shrink: 0; }
+  .resource-link .r-title { font-weight: 700; font-size: 0.92rem; color: var(--navy); }
+  .resource-link .r-desc  { font-size: 0.8rem; color: var(--muted); }
+  .resource-link .r-tag   { font-size: 0.68rem; font-weight: 700; background: rgba(66,133,244,0.1); color: var(--gdocs); padding: .1rem .5rem; border-radius: 100px; margin-top: .2rem; display: inline-block; }
+
+  /* Connexió món real */
+  .real-world { border-left: 3px solid var(--gyellow); background: #fffdf0; border-radius: 0 var(--radius) var(--radius) 0; padding: .75rem 1.1rem; margin: .65rem 0; font-size: 0.88rem; }
+  .real-world .rw-lbl { font-size: 0.67rem; font-weight: 800; letter-spacing: .1em; color: #8a6500; margin-bottom: .2rem; text-transform: uppercase; }
+  .real-world p { color: var(--ink); }
+
+  /* Feynman */
+  .feynman { background: linear-gradient(135deg, #1a1f4e, #2d3bb5); color: white; border-radius: var(--radius); padding: 2rem 2.25rem; margin: 2rem 0; }
+  .feynman h3 { color: white; }
+  .feynman p  { color: rgba(255,255,255,.75); font-size: 0.92rem; }
+  .feynman .feyn-prompts { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: .75rem; margin-top: 1.25rem; }
+  .feyn-card { background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.15); border-radius: 10px; padding: 1rem; }
+  .feyn-card p { color: rgba(255,255,255,.8); font-size: 0.85rem; font-style: italic; }
+
+  /* Mapa conceptual visual */
+  .concept-map { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1px; background: var(--border); border-radius: var(--radius); overflow: hidden; margin: 1.5rem 0; }
+  .cm-node { background: var(--card); padding: 1.1rem; text-align: center; }
+  .cm-node .cm-icon { font-size: 1.5rem; margin-bottom: .3rem; }
+  .cm-node .cm-lbl { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.82rem; color: var(--navy); }
+  .cm-node .cm-sub { font-size: 0.72rem; color: var(--muted); margin-top: .2rem; }
+  .cm-center { background: var(--navy); }
+  .cm-center .cm-lbl { color: white; }
+  .cm-center .cm-sub { color: rgba(255,255,255,.6); }
+
+  /* FI animation (original) */
+  .fi { opacity: 0; transform: translateY(22px); transition: opacity .55s ease, transform .55s ease; }
+  .fi.in { opacity: 1; transform: translateY(0); }
+
 </style>
 </head>
 <body>
 
 <!-- ══════════════════ NAV ══════════════════ -->
+<div id="progress-bar"></div>
 <nav>
   <div class="nav-logo">SMX · <span>RA2</span> Ofimàtica</div>
   <ul class="nav-pills">
     <li><a href="#intro">Introducció</a></li>
-    <li><a href="#format" class="docs">Format</a></li>
+    <li><a href="#format" class="docs">Formats</a></li>
     <li><a href="#estructura" class="docs">Estructura</a></li>
     <li><a href="#elements" class="docs">Elements</a></li>
     <li><a href="#avançat" class="docs">Avançat</a></li>
     <li><a href="#practiques" class="prac">Pràctiques</a></li>
+    <li><a href="#rubrica">Rúbrica</a></li>
     <li><a href="#preguntes" class="pregs">Preguntes</a></li>
+    <li><a href="#quiz">Quiz</a></li>
+    <li><a href="#recursos">Recursos</a></li>
   </ul>
 </nav>
 
@@ -416,6 +620,135 @@
         <p style="margin-top:.3rem">L'alumnat ha de ser capaç de crear documents professionals ben estructurats, aplicar estils de manera coherent, usar elements avançats (taules, imatges, taula de continguts) i crear plantilles reutilitzables, tot amb Google Docs.</p>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- ══════════ MAPA CONCEPTUAL + DRECERES ══════════ -->
+<section id="mapa" style="padding:4rem 2rem; background:var(--cream)">
+  <div class="container">
+
+    <!-- MAPA CONCEPTUAL -->
+    <div class="section-tag tag-docs fi">Visió general</div>
+    <h2 class="fi">Mapa de continguts del RA2</h2>
+    <p class="lead fi" style="margin-bottom:1.5rem">Abans de submergir-te en els detalls, aquí tens la fotografia completa de tot el que aprendràs i com es relaciona.</p>
+    <div class="concept-map fi">
+      <div class="cm-node"><div class="cm-icon">✏️</div><div class="cm-lbl">Format</div><div class="cm-sub">Caràcter · Paràgraf</div></div>
+      <div class="cm-node"><div class="cm-icon">🎨</div><div class="cm-lbl">Estils</div><div class="cm-sub">Títol 1/2/3 · Normal</div></div>
+      <div class="cm-node cm-center"><div class="cm-icon">📄</div><div class="cm-lbl">Google Docs</div><div class="cm-sub">RA2 Ofimàtica · SMX</div></div>
+      <div class="cm-node"><div class="cm-icon">🖼️</div><div class="cm-lbl">Elements</div><div class="cm-sub">Imatges · TOC · Notes</div></div>
+      <div class="cm-node"><div class="cm-icon">🤝</div><div class="cm-lbl">Col·laboració</div><div class="cm-sub">Permisos · Suggeriments</div></div>
+      <div class="cm-node"><div class="cm-icon">📐</div><div class="cm-lbl">Disseny</div><div class="cm-sub">Taules · Columnes · Marges</div></div>
+      <div class="cm-node"><div class="cm-icon">📋</div><div class="cm-lbl">Plantilles</div><div class="cm-sub">Corporatives · Reutilitzables</div></div>
+    </div>
+
+    <!-- DRECERES DE TECLAT -->
+    <div class="section-tag tag-docs fi" style="margin-top:3rem">Productivitat</div>
+    <h2 class="fi">Dreceres de teclat essencials</h2>
+    <p style="color:var(--muted);font-size:.95rem;margin-bottom:1.5rem" class="fi">Un professional no fa servir el ratolí per a tot. Aprendre les dreceres principals multiplica la velocitat de treball. Imprimeix aquesta taula i tingues-la a la taula fins que les tinguis memoritzades.</p>
+    <div class="kbd-grid fi">
+      <div class="kbd-row"><span class="action">Negreta</span><span class="keys"><kbd>Ctrl</kbd><kbd>B</kbd></span></div>
+      <div class="kbd-row"><span class="action">Cursiva</span><span class="keys"><kbd>Ctrl</kbd><kbd>I</kbd></span></div>
+      <div class="kbd-row"><span class="action">Subratllat</span><span class="keys"><kbd>Ctrl</kbd><kbd>U</kbd></span></div>
+      <div class="kbd-row"><span class="action">Títol 1</span><span class="keys"><kbd>Ctrl</kbd><kbd>Alt</kbd><kbd>1</kbd></span></div>
+      <div class="kbd-row"><span class="action">Títol 2</span><span class="keys"><kbd>Ctrl</kbd><kbd>Alt</kbd><kbd>2</kbd></span></div>
+      <div class="kbd-row"><span class="action">Text normal</span><span class="keys"><kbd>Ctrl</kbd><kbd>Alt</kbd><kbd>0</kbd></span></div>
+      <div class="kbd-row"><span class="action">Copiar format</span><span class="keys"><kbd>Ctrl</kbd><kbd>Maj</kbd><kbd>C</kbd></span></div>
+      <div class="kbd-row"><span class="action">Enganxar format</span><span class="keys"><kbd>Ctrl</kbd><kbd>Maj</kbd><kbd>V</kbd></span></div>
+      <div class="kbd-row"><span class="action">Inserir enllaç</span><span class="keys"><kbd>Ctrl</kbd><kbd>K</kbd></span></div>
+      <div class="kbd-row"><span class="action">Cerca i substitueix</span><span class="keys"><kbd>Ctrl</kbd><kbd>H</kbd></span></div>
+      <div class="kbd-row"><span class="action">Historial de versions</span><span class="keys"><kbd>Ctrl</kbd><kbd>Alt</kbd><kbd>Maj</kbd><kbd>H</kbd></span></div>
+      <div class="kbd-row"><span class="action">Afegir comentari</span><span class="keys"><kbd>Ctrl</kbd><kbd>Alt</kbd><kbd>M</kbd></span></div>
+      <div class="kbd-row"><span class="action">Mode Suggeriment</span><span class="keys"><kbd>Ctrl</kbd><kbd>Maj</kbd><kbd>X</kbd></span></div>
+      <div class="kbd-row"><span class="action">Desfà última acció</span><span class="keys"><kbd>Ctrl</kbd><kbd>Z</kbd></span></div>
+      <div class="kbd-row"><span class="action">Seleccionar tot</span><span class="keys"><kbd>Ctrl</kbd><kbd>A</kbd></span></div>
+      <div class="kbd-row"><span class="action">Enganxar sense format</span><span class="keys"><kbd>Ctrl</kbd><kbd>Maj</kbd><kbd>V</kbd></span></div>
+    </div>
+
+    <!-- BÉ vs MALAMENT -->
+    <div class="section-tag tag-docs fi" style="margin-top:3rem">Bé vs. Malament</div>
+    <h2 class="fi">Errors de format que no pots cometre</h2>
+    <p style="color:var(--muted);font-size:.95rem;margin-bottom:1.25rem" class="fi">Veure l'error ajuda molt més que llegir que no s'ha de fer. Aquí tens els errors més freqüents i la seva solució correcta.</p>
+
+    <div class="compare-wrap fi">
+      <div class="compare-bad">
+        <div class="compare-lbl">❌ Malament</div>
+        <p><strong>Separar paràgrafs amb la tecla Intro dues vegades</strong><br><br>
+        Hola, soc un text.<br><br>
+        (Intro)(Intro)<br><br>
+        Aquí comença el segon paràgraf.
+        </p>
+      </div>
+      <div class="compare-good">
+        <div class="compare-lbl">✅ Correcte</div>
+        <p><strong>Configurar l'espaiat posterior del paràgraf</strong><br><br>
+        Format → Estils de paràgraf → Espaiat posterior: 10 pt.<br><br>
+        Hola, soc un text.<br><br>
+        El segon paràgraf apareix separat automàticament sense línies buides.
+        </p>
+      </div>
+    </div>
+    <div class="compare-wrap fi">
+      <div class="compare-bad">
+        <div class="compare-lbl">❌ Malament</div>
+        <p><strong>Aplicar format manual a cada títol</strong><br><br>
+        Seleccionar text → posar font Arial 18 negreta blava → repetir per a cada títol... Si vols canviar el format de tots els títols, has de fer-ho un per un (pot ser 50 vegades en un document llarg).
+        </p>
+      </div>
+      <div class="compare-good">
+        <div class="compare-lbl">✅ Correcte</div>
+        <p><strong>Usar l'Estil "Títol 1"</strong><br><br>
+        Seleccionar text → aplicar Estil "Títol 1". Per canviar el format de TOTS els títols del document: clic dret a l'estil → Actualitza "Títol 1" perquè coincideixi. Un clic, canvi global instantani.
+        </p>
+      </div>
+    </div>
+    <div class="compare-wrap fi">
+      <div class="compare-bad">
+        <div class="compare-lbl">❌ Malament</div>
+        <p><strong>Modificar la plantilla original directament</strong><br><br>
+        Obres la plantilla → comences a escriure → deses. Ara la plantilla ha canviat i la pròxima vegada que la usis tindrà el contingut del teu document anterior.
+        </p>
+      </div>
+      <div class="compare-good">
+        <div class="compare-lbl">✅ Correcte</div>
+        <p><strong>Fer una còpia de la plantilla</strong><br><br>
+        Obres la plantilla → Fitxer → Fes una còpia → li poses nom → treballes sobre la còpia. La plantilla original mai es toca. Pots usar-la infinites vegades.
+        </p>
+      </div>
+    </div>
+
+    <!-- TRAMPES FREQÜENTS -->
+    <div class="section-tag tag-docs fi" style="margin-top:3rem;color:var(--gred)"><span style="display:block;width:20px;height:2px;background:var(--gred)"></span>Trampes freqüents</div>
+    <h2 class="fi">Errors típics que fan tots els alumnes</h2>
+    <p style="color:var(--muted);font-size:.95rem;margin-bottom:1.25rem" class="fi">Llegeix-los abans de la pràctica. Si els coneixes, no els comets.</p>
+
+    <div class="fi">
+      <div class="trap-card">
+        <div class="trap-head"><span>⚠️</span><h4>Compartir amb permís Editor quan hauria de ser Comentarista</h4></div>
+        <p>Quan el professor demana que li comparteixis el document, sovint es demana el mode Comentarista (pot llegir i comentar però no editar). Si li dones Editor, podria modificar el teu treball accidentalment.</p>
+        <div class="fix">✅ Solució: a "Compartir" → al costat del correu → tria "Comentarista".</div>
+      </div>
+      <div class="trap-card">
+        <div class="trap-head"><span>⚠️</span><h4>Perdre el format en exportar a .docx (Microsoft Word)</h4></div>
+        <p>Google Docs i Word no usen exactament el mateix sistema d'estils. En exportar, les fonts, els marges i alguns elements de disseny poden canviar. Si el document es lliurarà en Word, comprova sempre com queda l'exportació.</p>
+        <div class="fix">✅ Solució: fes la prova d'exportació durant la pràctica, no al últim moment. Si cal, exporta en PDF per als lliuraments formals.</div>
+      </div>
+      <div class="trap-card">
+        <div class="trap-head"><span>⚠️</span><h4>La Taula de continguts no s'actualitza sola</h4></div>
+        <p>Quan afegeixes nous títols o canvies el text d'un títol existent, la Taula de Continguts NO s'actualitza automàticament. Molts alumnes lliuren el document amb un índex que no coincideix amb el contingut real.</p>
+        <div class="fix">✅ Solució: justo antes de lliurar, fes clic a la TOC → botó de refresca (⟳) que apareix a la cantonada superior esquerra.</div>
+      </div>
+      <div class="trap-card">
+        <div class="trap-head"><span>⚠️</span><h4>Usar Intro per separar paràgrafs (múltiples línies en blanc)</h4></div>
+        <p>Prémer Intro dues vegades per separar paràgrafs és l'error de format més comú. Crea problemes en canviar la mida de la font o exportar a altres formats, i fa el document molt difícil de mantenir.</p>
+        <div class="fix">✅ Solució: Format → Estils de paràgraf → Espaiat posterior. Configura l'espaiat a nivell d'estil, no afegint línies buides.</div>
+      </div>
+      <div class="trap-card">
+        <div class="trap-head"><span>⚠️</span><h4>Inserir imatges "en línia" sense ajustar el text</h4></div>
+        <p>Per defecte, les imatges s'insereixen "en línia" (com si fossin un caràcter de text gigant). Quan la imatge és gran, desplaça tot el text de manera estranya i és difícil de posicionar.</p>
+        <div class="fix">✅ Solució: selecciona la imatge → a les opcions que apareixen, tria "Ajust del text" per a més flexibilitat de posicionament.</div>
+      </div>
+    </div>
+
   </div>
 </section>
 
@@ -1086,7 +1419,7 @@
           <div class="practice-num">P1</div>
           <div>
             <h3>El meu primer document professional</h3>
-            <p>Nivell bàsic · Format de text i paràgraf · ~45 min</p>
+            <p><span class="dif-badge dif-basic">🟢 Bàsic</span><span class="time-badge">⏱ ~45 min</span></p>
           </div>
         </div>
         <div class="practice-body">
@@ -1135,7 +1468,7 @@
           <div class="practice-num">P2</div>
           <div>
             <h3>Guia de llistes i taules de components</h3>
-            <p>Nivell bàsic-mitjà · Llistes i taules · ~60 min</p>
+            <p><span class="dif-badge dif-basic">🟢 Bàsic-Mitjà</span><span class="time-badge">⏱ ~60 min</span></p>
           </div>
         </div>
         <div class="practice-body">
@@ -1180,7 +1513,7 @@
           <div class="practice-num">P3</div>
           <div>
             <h3>Díptic informatiu amb imatges i columnes</h3>
-            <p>Nivell mitjà · Imatges, columnes i disseny · ~75 min</p>
+            <p><span class="dif-badge dif-mid">🟡 Mitjà</span><span class="time-badge">⏱ ~75 min</span></p>
           </div>
         </div>
         <div class="practice-body">
@@ -1229,7 +1562,7 @@
           <div class="practice-num">P4</div>
           <div>
             <h3>Informe tècnic amb índex automàtic</h3>
-            <p>Nivell mitjà-alt · Estils, taula de continguts, capçaleres · ~90 min</p>
+            <p><span class="dif-badge dif-mid">🟡 Mitjà-Alt</span><span class="time-badge">⏱ ~90 min</span></p>
           </div>
         </div>
         <div class="practice-body">
@@ -1277,7 +1610,7 @@
           <div class="practice-num">P5</div>
           <div>
             <h3>Creació d'una plantilla corporativa</h3>
-            <p>Nivell alt · Plantilles, estils personalitzats, col·laboració · ~90 min</p>
+            <p><span class="dif-badge dif-advanced">🔴 Alt</span><span class="time-badge">⏱ ~90 min</span></p>
           </div>
         </div>
         <div class="practice-body">
@@ -1324,7 +1657,7 @@
           <div class="practice-num">P6</div>
           <div>
             <h3>Document final: Memòria de projecte col·laboratiu</h3>
-            <p>Nivell avançat · Document complet + col·laboració + tots els elements · ~3-4 hores (treball en grup)</p>
+            <p><span class="dif-badge dif-advanced">🔴 Avançat</span><span class="time-badge">⏱ ~3-4 hores · Grup</span></p>
           </div>
         </div>
         <div class="practice-body">
@@ -1365,6 +1698,23 @@
                   <strong>Lliurament final:</strong>
                   <p>Compartiu el document amb el professor (Editor). El professor avaluarà: qualitat del contingut, ús correcte de tots els elements de Docs, evidències de col·laboració (comentaris, suggeriments, historial de versions).</p>
                 </div>
+              </div>
+              <!-- Checklist de lliurament -->
+              <div class="delivery-check">
+                <h4>✅ Checklist abans de lliurar</h4>
+                <ul class="check-list" id="check-p6">
+                  <li><input type="checkbox" onchange="markCheck(this)"> El document té portada amb tots els camps</li>
+                  <li><input type="checkbox" onchange="markCheck(this)"> La Taula de Continguts s'ha actualitzat (⟳)</li>
+                  <li><input type="checkbox" onchange="markCheck(this)"> Tots els títols usen Estils (Títol 1, 2, 3)</li>
+                  <li><input type="checkbox" onchange="markCheck(this)"> Hi ha capçalera a partir de la pàgina 2</li>
+                  <li><input type="checkbox" onchange="markCheck(this)"> El peu de pàgina té numeració "X de Y"</li>
+                  <li><input type="checkbox" onchange="markCheck(this)"> Mínim 3 comentaris per membre del grup</li>
+                  <li><input type="checkbox" onchange="markCheck(this)"> Cada membre ha revisat una secció en mode Suggeriment</li>
+                  <li><input type="checkbox" onchange="markCheck(this)"> Hi ha almenys 2 notes al peu</li>
+                  <li><input type="checkbox" onchange="markCheck(this)"> S'han donat noms a 3 versions clau de l'historial</li>
+                  <li><input type="checkbox" onchange="markCheck(this)"> Exportació final: PDF ✓ i .docx ✓</li>
+                  <li><input type="checkbox" onchange="markCheck(this)"> El professor té accés Editor al document</li>
+                </ul>
               </div>
             </div>
           </div>
@@ -1501,8 +1851,248 @@
   </div>
 </section>
 
+<!-- ══════════════════ RÚBRICA GLOBAL ══════════════════ -->
+<section id="rubrica" style="padding:5rem 2rem; background:#f0f4ff;">
+  <div class="container">
+    <div class="ra-banner ra-docs fi">
+      <div class="ra-num">📊</div>
+      <div>
+        <h2>Rúbrica d'avaluació global</h2>
+        <p>Criteris de correcció sobre 10 per a les pràctiques del RA2. Cada criteri indica els nivells d'assoliment.</p>
+      </div>
+    </div>
+
+    <h3 class="fi" style="margin-bottom:1rem">Rúbrica general (aplicable a totes les pràctiques)</h3>
+    <div class="rubric-wrap fi">
+      <table class="rubric-table">
+        <thead>
+          <tr>
+            <th style="width:20%">Criteri</th>
+            <th style="width:8%">Pes</th>
+            <th class="col-ex" style="width:18%">🟢 Excel·lent (9–10)</th>
+            <th class="col-be" style="width:18%">🔵 Bé (7–8)</th>
+            <th class="col-ok" style="width:18%">🟡 Suficient (5–6)</th>
+            <th class="col-no" style="width:18%">🔴 Insuficient (0–4)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Format i estils de paràgraf</td>
+            <td style="text-align:center;font-weight:700">20%</td>
+            <td class="col-ex">Usa Estils de Google Docs de forma coherent en tot el document. No hi ha format manual barrejat. Interlineat i espaiat configurats correctament.</td>
+            <td class="col-be">Usa Estils a la major part del document. Petits errors de format manual aïllats.</td>
+            <td class="col-ok">Usa Estils parcialment. Hi ha format manual evident però el resultat és acceptable.</td>
+            <td class="col-no">No usa Estils de Google Docs. Tot el format és manual i inconsistent.</td>
+          </tr>
+          <tr>
+            <td>Estructura i organització del document</td>
+            <td style="text-align:center;font-weight:700">20%</td>
+            <td class="col-ex">Jerarquia clara de Títol 1/2/3. TOC actualitzada i coherent. Portada, capçalera i peu de pàgina correctes.</td>
+            <td class="col-be">Estructura clara però TOC no actualitzada o capçalera incompleta.</td>
+            <td class="col-ok">Estructura bàsica present però sense alguns elements (TOC, numeració, etc.).</td>
+            <td class="col-no">Sense estructura. No usa Títols. No hi ha TOC, capçalera ni peu.</td>
+          </tr>
+          <tr>
+            <td>Elements del document (taules, imatges, elements)</td>
+            <td style="text-align:center;font-weight:700">20%</td>
+            <td class="col-ex">Tots els elements demanats presents i ben formats. Imatges amb peu de figura. Taules amb capçalera destacada. Ajust de text correcte.</td>
+            <td class="col-be">Elements presents però amb algun error de format o sense peu de figura.</td>
+            <td class="col-ok">Alguns elements presents però incomplets o mal configurats.</td>
+            <td class="col-no">Falten elements clau o estan mal inserits.</td>
+          </tr>
+          <tr>
+            <td>Qualitat i presentació professional</td>
+            <td style="text-align:center;font-weight:700">20%</td>
+            <td class="col-ex">El document és visualment professional i net. Colors coherents. Espai blanc adequat. Sembla un document real d'empresa.</td>
+            <td class="col-be">Aspecte correcte però podria millorar en coherència visual o detalls de disseny.</td>
+            <td class="col-ok">Aspecte bàsic acceptable però amb elements visuals descurats.</td>
+            <td class="col-no">L'aspecte visual és descurat, inconsistent o poc professional.</td>
+          </tr>
+          <tr>
+            <td>Col·laboració (P6) / Plantilla (P5)</td>
+            <td style="text-align:center;font-weight:700">10%</td>
+            <td class="col-ex">Evidències clares: comentaris, suggeriments acceptats/rebutjats, historial amb noms. Plantilla corporativa completa i funcional.</td>
+            <td class="col-be">Evidències presents però escasses (pocs comentaris o historial sense noms).</td>
+            <td class="col-ok">Evidències mínimes de col·laboració o plantilla incompleta.</td>
+            <td class="col-no">Sense evidències de col·laboració. Plantilla inexistent o no funcional.</td>
+          </tr>
+          <tr>
+            <td>Lliurament i format de l'arxiu</td>
+            <td style="text-align:center;font-weight:700">10%</td>
+            <td class="col-ex">Lliurat en el format demanat, compartit correctament, amb el nom correcte, dins del termini.</td>
+            <td class="col-be">Lliurat correctament però en format incorrecte o nom d'arxiu erroni.</td>
+            <td class="col-ok">Lliurat fora de termini o amb errors de compartició.</td>
+            <td class="col-no">No lliurat o lliurat de forma que no es pot avaluar.</td>
+          </tr>
+          <tr class="rubric-total">
+            <td colspan="2">TOTAL</td>
+            <td colspan="4" style="text-align:center">100% · Nota final sobre 10</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout cl-blue fi" style="margin-top:1.5rem">
+      <span class="callout-icon">💡</span>
+      <div>
+        <p><strong>Consell:</strong> el professor s'ajustarà a aquesta rúbrica per corregir. Llegeix-la <strong>abans</strong> de lliurar i comprova que el teu document compleix cada criteri. Si un criteri val un 20% i no el tens, no pots treure més d'un 8.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ AUTOAVALUACIÓ ══════════════════ -->
+<section id="quiz" class="quiz-section">
+  <div class="container">
+    <div class="section-tag tag-purp fi" style="color:var(--purple)"><span style="display:block;width:20px;height:2px;background:var(--purple)"></span>Autoavaluació</div>
+    <h2 class="fi">Test ràpid: saps el contingut del RA2?</h2>
+    <p class="lead fi" style="margin-bottom:2rem">5 preguntes per saber si has entès els conceptes clau. <strong>Sense nota</strong>, és només per a tu. Respon abans de l'examen!</p>
+
+    <!-- Q1 -->
+    <div class="quiz-card fi" id="q1">
+      <div class="quiz-q">1. Quin és el principal avantatge d'usar l'Estil "Títol 1" en lloc de formatar el text manualment?</div>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="checkQ('q1',this,false)">A) Permet usar una font més gran que amb el format manual</button>
+        <button class="quiz-opt" onclick="checkQ('q1',this,true)">B) Permet canviar el format de tots els títols alhora i genera la Taula de Continguts automàticament</button>
+        <button class="quiz-opt" onclick="checkQ('q1',this,false)">C) Desa el document en un format compatible amb Word</button>
+        <button class="quiz-opt" onclick="checkQ('q1',this,false)">D) Aplica un color blau predefinit que no es pot canviar</button>
+      </div>
+      <div class="quiz-feedback" id="q1-fb"></div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="quiz-card fi" id="q2">
+      <div class="quiz-q">2. Un company ha eliminat accidentalment una secció important del document compartit. Quina és la manera correcta de recuperar-la?</div>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="checkQ('q2',this,false)">A) Prémer Ctrl+Z moltes vegades fins que aparegui</button>
+        <button class="quiz-opt" onclick="checkQ('q2',this,false)">B) No es pot recuperar si ja s'ha desat el document</button>
+        <button class="quiz-opt" onclick="checkQ('q2',this,true)">C) Fitxer → Historial de versions → Veure l'historial de versions → seleccionar una versió anterior i restaurar-la</button>
+        <button class="quiz-opt" onclick="checkQ('q2',this,false)">D) Demanar-li al company que ho torni a escriure</button>
+      </div>
+      <div class="quiz-feedback" id="q2-fb"></div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="quiz-card fi" id="q3">
+      <div class="quiz-q">3. Quin permís has de donar a un client extern que ha de llegir el teu informe però NO ha de poder editar-lo ni comentar-lo?</div>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="checkQ('q3',this,false)">A) Editor</button>
+        <button class="quiz-opt" onclick="checkQ('q3',this,false)">B) Comentarista</button>
+        <button class="quiz-opt" onclick="checkQ('q3',this,true)">C) Visualitzador</button>
+        <button class="quiz-opt" onclick="checkQ('q3',this,false)">D) Propietari</button>
+      </div>
+      <div class="quiz-feedback" id="q3-fb"></div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="quiz-card fi" id="q4">
+      <div class="quiz-q">4. Has afegit 3 seccions noves amb Títol 2 al teu informe, però la Taula de Continguts no les mostra. Quin és el problema?</div>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="checkQ('q4',this,false)">A) La Taula de Continguts no suporta Títol 2, només Títol 1</button>
+        <button class="quiz-opt" onclick="checkQ('q4',this,true)">B) Cal actualitzar manualment la Taula de Continguts fent clic al botó de refresca (⟳)</button>
+        <button class="quiz-opt" onclick="checkQ('q4',this,false)">C) S'ha d'esborrar la taula i inserir-ne una de nova</button>
+        <button class="quiz-opt" onclick="checkQ('q4',this,false)">D) El problema és que els títols no estan en negreta</button>
+      </div>
+      <div class="quiz-feedback" id="q4-fb"></div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="quiz-card fi" id="q5">
+      <div class="quiz-q">5. Vols usar una plantilla corporativa per a un document nou sense modificar la plantilla original. Quin és el procediment correcte?</div>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="checkQ('q5',this,false)">A) Obrir la plantilla i començar a escriure directament</button>
+        <button class="quiz-opt" onclick="checkQ('q5',this,false)">B) Descarregar la plantilla a l'ordinador i obrir-la amb Word</button>
+        <button class="quiz-opt" onclick="checkQ('q5',this,true)">C) Obrir la plantilla → Fitxer → Fes una còpia → treballar sobre la còpia</button>
+        <button class="quiz-opt" onclick="checkQ('q5',this,false)">D) Copiar i enganxar el contingut de la plantilla a un document nou en blanc</button>
+      </div>
+      <div class="quiz-feedback" id="q5-fb"></div>
+    </div>
+
+    <div id="quiz-result" style="display:none; text-align:center; margin-top:1.5rem; padding:1.5rem; background:white; border-radius:var(--radius); border:1px solid var(--border);">
+      <div class="quiz-score" id="quiz-score-txt"></div>
+      <p id="quiz-score-msg" style="color:var(--muted);font-size:.95rem;"></p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ RECURSOS EXTERNS ══════════════════ -->
+<section id="recursos" style="padding:5rem 2rem; background:white;">
+  <div class="container">
+    <div class="section-tag tag-docs fi">Bibliografia i recursos</div>
+    <h2 class="fi">Recursos externs recomanats</h2>
+    <p class="lead fi" style="margin-bottom:2rem">Fonts oficials i curades. No busquis "tutorials de Google Docs a YouTube" sense criteri: aquí tens el millor per a cada tema.</p>
+
+    <div class="fi">
+      <a class="resource-link" href="https://support.google.com/docs" target="_blank" rel="noopener">
+        <span class="resource-icon">📘</span>
+        <div>
+          <div class="r-title">Centre d'Ajuda oficial de Google Docs</div>
+          <div class="r-desc">Documentació oficial, actualitzada i en català. Primera font de consulta per a qualsevol dubte sobre una funció concreta.</div>
+          <span class="r-tag">Oficial · Google</span>
+        </div>
+      </a>
+      <a class="resource-link" href="https://workspace.google.com/learning-center/products/docs/get-started/" target="_blank" rel="noopener">
+        <span class="resource-icon">🎓</span>
+        <div>
+          <div class="r-title">Google Workspace Learning Center</div>
+          <div class="r-desc">Tutorials guiats i vídeos oficials de Google. Cobreix tots els temes del RA2: format, col·laboració, plantilles, taules de continguts.</div>
+          <span class="r-tag">Oficial · Tutorials guiats</span>
+        </div>
+      </a>
+      <a class="resource-link" href="https://www.youtube.com/@GoogleWorkspace" target="_blank" rel="noopener">
+        <span class="resource-icon">▶️</span>
+        <div>
+          <div class="r-title">Canal YouTube de Google Workspace</div>
+          <div class="r-desc">Vídeos curts i oficials sobre funcions específiques. Molt útil per entendre visualment com funcionen el control de canvis, la TOC i la col·laboració en temps real.</div>
+          <span class="r-tag">YouTube · Oficial</span>
+        </div>
+      </a>
+      <a class="resource-link" href="https://docs.google.com/document/u/0/d/1ycDs7ufSJAHrR_-NFRTKAmAPHcv2fTEMPLATE" target="_blank" rel="noopener">
+        <span class="resource-icon">📋</span>
+        <div>
+          <div class="r-title">Galeria de plantilles de Google Docs</div>
+          <div class="r-desc">Col·lecció de plantilles professionals creades per Google. Útil per inspirar-se en el disseny de la P5 (plantilla corporativa). Accedeix des de drive.google.com → Nou → Google Docs → Des d'una plantilla.</div>
+          <span class="r-tag">Plantilles · Exemples</span>
+        </div>
+      </a>
+      <a class="resource-link" href="https://support.google.com/docs/answer/190843" target="_blank" rel="noopener">
+        <span class="resource-icon">⌨️</span>
+        <div>
+          <div class="r-title">Llista completa de dreceres de teclat de Google Docs</div>
+          <div class="r-desc">La llista oficial i completa de totes les dreceres disponibles. Dins de Docs, prem Ctrl+/ per veure-les directament a l'aplicació.</div>
+          <span class="r-tag">Dreceres · Referència ràpida</span>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ MÈTODE FEYNMAN ══════════════════ -->
+<section id="feynman" style="padding:4rem 2rem; background:var(--cream);">
+  <div class="container fi">
+    <div class="feynman">
+      <h3>🧠 Tècnica d'estudi: El Mètode Feynman</h3>
+      <p style="margin-top:.5rem">La millor manera de saber si has entès un concepte és intentar explicar-lo de forma senzilla. Si no pots explicar-ho sense tecnicismes, és que no ho has entès del tot. Prova-ho amb aquests conceptes del RA2:</p>
+      <div class="feyn-prompts">
+        <div class="feyn-card">
+          <p>"Explica per a quin motiu és millor usar l'Estil Títol 1 en lloc de posar la lletra gran i en negreta, com si ho expliquessis a un amic que no sap res d'informàtica."</p>
+        </div>
+        <div class="feyn-card">
+          <p>"Explica la diferència entre un Editor, un Comentarista i un Visualitzador a Google Docs, posant exemples de persones reals en una empresa."</p>
+        </div>
+        <div class="feyn-card">
+          <p>"Explica per a quin motiu la Taula de Continguts no s'actualitza sola i quin és el pas que s'ha de fer sempre abans de lliurar un document."</p>
+        </div>
+        <div class="feyn-card">
+          <p>"Explica la diferència entre una nota al peu i un marcador. En quin cas usaries cadascun en un informe tècnic real?"</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ══════════════════ RESUM FINAL ══════════════════ -->
-<section class="s-cream">
+<section id="resum" class="s-cream">
   <div class="container fi">
     <div class="section-tag tag-cobalt">Resum del RA2</div>
     <h2>El que heu après</h2>
@@ -1534,18 +2124,84 @@
 </footer>
 
 <script>
+  // ── Fade-in on scroll ──
   const io = new IntersectionObserver(entries => {
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
   }, { threshold: 0.07, rootMargin: '0px 0px -30px 0px' });
   document.querySelectorAll('.fi').forEach(el => io.observe(el));
 
-  // Fix section-tag tag-purp before color
-  document.querySelectorAll('.tag-purp').forEach(el => {
-    el.style.color = 'var(--purple)';
-    const before = document.createElement('style');
-    before.textContent = '.tag-purp::before { background: var(--purple) !important; }';
-    document.head.appendChild(before);
+  // ── Progress bar ──
+  window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    const bar = document.getElementById('progress-bar');
+    if (bar) bar.style.width = pct + '%';
   });
+
+  // ── Checklist: toggle line-through on checkbox change ──
+  document.querySelectorAll('.check-list input[type=checkbox]').forEach(cb => {
+    cb.addEventListener('change', () => {
+      cb.closest('li').classList.toggle('checked', cb.checked);
+    });
+  });
+
+  // ── Quiz ──
+  const quizFeedback = {
+    q1: { ok: '✅ Correcte! Els Estils permeten canviar el format globalment i generen la TOC automàticament.', ko: '❌ Incorrecte. La raó principal és la generació automàtica de la TOC i el canvi global de format.' },
+    q2: { ok: '✅ Correcte! L\'Historial de versions permet restaurar qualsevol estat anterior del document.', ko: '❌ Incorrecte. Ctrl+Z no funciona un cop tancat i redesat. Usa Fitxer → Historial de versions.' },
+    q3: { ok: '✅ Correcte! El rol Visualitzador permet llegir però no editar ni comentar.', ko: '❌ Incorrecte. El Visualitzador és l\'únic rol que no permet cap modificació.' },
+    q4: { ok: '✅ Correcte! La TOC no s\'actualitza sola; cal fer clic al botó de refresca (⟳).', ko: '❌ Incorrecte. La TOC detecta els títols però no s\'actualitza automàticament; cal refrescar-la.' },
+    q5: { ok: '✅ Correcte! "Fes una còpia" crea un document nou independent sense alterar la plantilla original.', ko: '❌ Incorrecte. Obrir i editar directament modifica la plantilla. Sempre usa "Fitxer → Fes una còpia".' }
+  };
+
+  let quizAnswered = {};
+  let quizScore = 0;
+
+  function checkQ(qid, btn, isCorrect) {
+    if (quizAnswered[qid]) return;
+    quizAnswered[qid] = true;
+
+    const card = document.getElementById(qid);
+    const fb = document.getElementById(qid + '-fb');
+    const opts = card.querySelectorAll('.quiz-opt');
+
+    opts.forEach(opt => opt.classList.add('disabled'));
+
+    if (isCorrect) {
+      btn.classList.add('correct');
+      quizScore++;
+      fb.textContent = quizFeedback[qid].ok;
+      fb.className = 'quiz-feedback show ok';
+    } else {
+      btn.classList.add('wrong');
+      fb.textContent = quizFeedback[qid].ko;
+      fb.className = 'quiz-feedback show ko';
+      // Highlight the correct one
+      opts.forEach(opt => {
+        if (opt.getAttribute('onclick') && opt.getAttribute('onclick').includes(',true)')) {
+          opt.classList.add('correct');
+        }
+      });
+    }
+
+    // Show result if all answered
+    const totalQ = 5;
+    if (Object.keys(quizAnswered).length === totalQ) {
+      const result = document.getElementById('quiz-result');
+      const scoreTxt = document.getElementById('quiz-score-txt');
+      const scoreMsg = document.getElementById('quiz-score-msg');
+      result.style.display = 'block';
+      scoreTxt.textContent = quizScore + ' / ' + totalQ;
+      if (quizScore === totalQ) {
+        scoreMsg.textContent = '🎉 Perfecte! Domines els conceptes del RA2.';
+      } else if (quizScore >= 3) {
+        scoreMsg.textContent = '👍 Molt bé! Repassa els errors per consolidar.';
+      } else {
+        scoreMsg.textContent = '📖 Revisa el material. Torna a llegir les seccions corresponents.';
+      }
+      result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  }
 </script>
 </body>
-</html>
