@@ -40,7 +40,7 @@
   /* ── NAV ── */
   nav {
     position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-    background: rgba(244,242,237,0.94);
+    background: rgba(244,242,237,0.96);
     backdrop-filter: blur(14px);
     border-bottom: 1px solid var(--border);
     padding: 0 2rem;
@@ -49,17 +49,21 @@
   }
   .nav-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1rem; color: var(--navy); letter-spacing: -0.02em; }
   .nav-logo span { color: var(--gsheets); }
-  .nav-pills { display: flex; gap: .4rem; list-style: none; }
+  .nav-pills { display: flex; gap: .35rem; list-style: none; flex-wrap: wrap; }
   .nav-pills a {
-    text-decoration: none; font-size: 0.78rem; font-weight: 600;
-    padding: .3rem .85rem; border-radius: 100px;
+    text-decoration: none; font-size: 0.75rem; font-weight: 600;
+    padding: .28rem .75rem; border-radius: 100px;
     color: var(--muted); transition: all .2s;
     border: 1px solid transparent;
   }
   .nav-pills a:hover { color: var(--gsheets); border-color: var(--gsheets); background: rgba(15,157,88,0.07); }
-  .nav-pills a.sheets { color: var(--gsheets); }
-  .nav-pills a.prac   { color: var(--purple); }
-  .nav-pills a.pregs  { color: var(--amber); }
+  .nav-pills a.teoria   { color: var(--gsheets); }
+  .nav-pills a.dreceres { color: var(--gblue); }
+  .nav-pills a.recursos { color: var(--cobalt); }
+  .nav-pills a.prac     { color: var(--purple); }
+  .nav-pills a.rubrica  { color: var(--amber); }
+  .nav-pills a.autoav   { color: var(--gred); }
+  .nav-pills a.pregs    { color: var(--amber); }
 
   /* ── HERO ── */
   .hero {
@@ -133,6 +137,8 @@
   .tag-pregs    { color: var(--amber);  } .tag-pregs::before    { background: var(--amber); }
   .tag-green    { color: var(--gsheets);} .tag-green::before    { background: var(--gsheets); }
   .tag-blue     { color: var(--gblue); } .tag-blue::before     { background: var(--gblue); }
+  .tag-red      { color: var(--gred);  } .tag-red::before      { background: var(--gred); }
+  .tag-purple   { color: var(--purple);} .tag-purple::before   { background: var(--purple); }
 
   h2 {
     font-family: 'Syne', sans-serif; font-weight: 800;
@@ -180,18 +186,19 @@
     display: flex; gap: 1rem; align-items: flex-start;
   }
   .callout-icon { font-size: 1.4rem; flex-shrink: 0; margin-top: .1rem; }
-  .callout p, .callout li { font-size: 0.92rem; }
+  .callout p, .callout li { font-size: 0.92rem; color: var(--ink); }
   .callout ul { padding-left: 1.2rem; }
-  .callout li { margin-bottom: .25rem; }
+  .callout li { margin-bottom: .25rem; color: var(--ink); }
   .cl-green  { background: rgba(15,157,88,0.08);   border: 1px solid rgba(15,157,88,0.2); }
   .cl-blue   { background: rgba(66,133,244,0.08);  border: 1px solid rgba(66,133,244,0.2); }
   .cl-amber  { background: rgba(251,188,4,0.1);    border: 1px solid rgba(251,188,4,0.3); }
   .cl-purp   { background: rgba(124,58,237,0.07);  border: 1px solid rgba(124,58,237,0.2); }
   .cl-red    { background: rgba(234,67,53,0.07);   border: 1px solid rgba(234,67,53,0.2); }
+  .cl-navy   { background: rgba(26,31,78,0.06);    border: 1px solid rgba(26,31,78,0.15); }
 
   /* ── TABLE ── */
   .ptable { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
-  .ptable th, .ptable td { padding: .85rem 1rem; text-align: left; border-bottom: 1px solid var(--border); }
+  .ptable th, .ptable td { padding: .85rem 1rem; text-align: left; border-bottom: 1px solid var(--border); color: var(--ink); }
   .ptable th { background: var(--navy); color: white; font-family: 'Syne', sans-serif; font-weight: 700; }
   .ptable th:first-child { border-radius: 8px 0 0 0; } .ptable th:last-child { border-radius: 0 8px 0 0; }
   .ptable tr:hover td { background: var(--cream); }
@@ -205,12 +212,18 @@
   /* ── SECTION THEMES ── */
   .s-dark { background: var(--navy); color: white; }
   .s-dark h2, .s-dark h3, .s-dark h4 { color: white; }
-  .s-dark .lead { color: rgba(255,255,255,0.58); }
+  .s-dark .lead { color: rgba(255,255,255,0.75); }
+  .s-dark p { color: rgba(255,255,255,0.75); }
   .s-dark .card { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1); }
-  .s-dark .card h3 { color: white; } .s-dark .card p { color: rgba(255,255,255,0.6); }
+  .s-dark .card h3 { color: white; }
+  .s-dark .card p { color: rgba(255,255,255,0.7); }
+  .s-dark .section-tag { color: rgba(255,255,255,0.5); }
+  .s-dark .section-tag::before { background: rgba(255,255,255,0.3); }
   .s-cream  { background: var(--cream); }
   .s-sheets { background: #f0fdf4; }
   .s-blue   { background: #f0f4ff; }
+  .s-purple { background: #f5f3ff; }
+  .s-amber  { background: #fffbeb; }
 
   /* ── RA BANNER ── */
   .ra-banner {
@@ -219,12 +232,15 @@
   }
   .ra-num { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 2.4rem; opacity: .25; flex-shrink: 0; line-height: 1; }
   .ra-banner h2 { color: white; font-size: 1.35rem; margin-bottom: .2rem; }
-  .ra-banner p  { color: rgba(255,255,255,0.7); font-size: 0.88rem; }
+  .ra-banner p  { color: rgba(255,255,255,0.8); font-size: 0.88rem; }
   .ra-sheets    { background: linear-gradient(135deg, #0b7a44, #0f9d58); }
   .ra-practica  { background: linear-gradient(135deg, #5b21b6, #7c3aed); }
   .ra-preguntes { background: linear-gradient(135deg, #92400e, #d97706); }
   .ra-resum     { background: linear-gradient(135deg, #064e3b, #0f9d58); }
   .ra-blue      { background: linear-gradient(135deg, #1a56d6, #4285f4); }
+  .ra-red       { background: linear-gradient(135deg, #b31412, #ea4335); }
+  .ra-navy      { background: linear-gradient(135deg, #0d1a3a, #1a1f4e); }
+  .ra-amber     { background: linear-gradient(135deg, #78350f, #d97706); }
 
   /* ── PRACTICE CARDS ── */
   .practice-card {
@@ -238,8 +254,10 @@
   }
   .practice-num { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.8rem; opacity: .35; line-height: 1; flex-shrink:0; }
   .practice-header h3 { color: white; font-size: 1.15rem; margin: 0; }
-  .practice-header p  { color: rgba(255,255,255,0.7); font-size: 0.82rem; margin: .2rem 0 0; }
+  .practice-header p  { color: rgba(255,255,255,0.8); font-size: 0.82rem; margin: .2rem 0 0; }
   .practice-body { padding: 2rem; }
+  .practice-body p { color: var(--muted); }
+  .practice-body h4 { color: var(--navy); }
   .p1-bg { background: linear-gradient(135deg, #0b7a44, #0f9d58); }
   .p2-bg { background: linear-gradient(135deg, #0a5e36, #15803d); }
   .p3-bg { background: linear-gradient(135deg, #1a56d6, #4285f4); }
@@ -262,6 +280,7 @@
 
   /* ── CODE INLINE ── */
   code { background: var(--cream); border: 1px solid var(--border); border-radius: 4px; padding: .1rem .45rem; font-size: 0.85em; font-family: 'Courier New', monospace; color: #0b7a44; }
+  kbd { background: var(--navy); color: white; border-radius: 5px; padding: .15rem .5rem; font-size: 0.8em; font-family: 'Syne', sans-serif; font-weight: 700; }
 
   /* ── QUESTION CARDS ── */
   .q-card {
@@ -286,7 +305,7 @@
   .qt-avan   { background: rgba(217,119,6,0.1);   color: #92400e; }
   .qt-diseny { background: rgba(234,67,53,0.1);   color: #b31412; }
 
-  /* ── SHORTCUTS ── */
+  /* ── SHORTCUTS TABLE ── */
   .shortcuts { display: flex; flex-direction: column; gap: .45rem; }
   .sc-item { display: flex; align-items: center; gap: .75rem; }
   .sc-key {
@@ -295,6 +314,167 @@
     white-space: nowrap; min-width: fit-content; letter-spacing: 0.03em;
   }
   .sc-desc { font-size: 0.87rem; color: var(--muted); }
+
+  /* ── BIG SHORTCUTS TABLE ── */
+  .sc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); gap: .5rem; }
+  .sc-row {
+    display: flex; align-items: center; gap: .75rem;
+    padding: .6rem .9rem; background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); transition: background .15s;
+  }
+  .sc-row:hover { background: var(--cream); }
+  .sc-badge {
+    font-family: 'Syne', sans-serif; font-size: 0.7rem; font-weight: 700;
+    background: var(--navy); color: white; padding: .2rem .6rem; border-radius: 5px;
+    white-space: nowrap; flex-shrink: 0; letter-spacing: .03em;
+  }
+  .sc-label { font-size: 0.86rem; color: var(--ink); font-weight: 500; }
+  .sc-cat { font-size: 0.68rem; color: var(--muted); margin-left: auto; white-space: nowrap; }
+  .print-card {
+    background: var(--navy); border-radius: var(--radius); padding: 1.5rem 2rem; margin-top: 1.5rem;
+    display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
+  }
+  .print-card p { color: rgba(255,255,255,0.7); font-size: .88rem; margin: .25rem 0 0; }
+  .print-card h3 { color: white; margin-bottom: 0; }
+  .btn-print {
+    background: white; color: var(--navy); border: none; border-radius: 8px;
+    padding: .6rem 1.4rem; font-family: 'Syne', sans-serif; font-weight: 700; font-size: .85rem;
+    cursor: pointer; transition: all .2s; white-space: nowrap;
+  }
+  .btn-print:hover { background: var(--gsheets); color: white; }
+
+  /* ── BÉ VS MALAMENT ── */
+  .bvm-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0; }
+  @media (max-width: 600px) { .bvm-grid { grid-template-columns: 1fr; } }
+  .bvm-bad, .bvm-good {
+    border-radius: var(--radius-sm); padding: 1rem 1.25rem; font-size: .88rem;
+  }
+  .bvm-bad  { background: rgba(234,67,53,0.07); border: 1px solid rgba(234,67,53,0.25); }
+  .bvm-good { background: rgba(15,157,88,0.07); border: 1px solid rgba(15,157,88,0.25); }
+  .bvm-label { font-size: .68rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; margin-bottom: .5rem; }
+  .bvm-bad  .bvm-label { color: var(--gred); }
+  .bvm-good .bvm-label { color: var(--gsheets); }
+  .bvm-bad  p, .bvm-good p { color: var(--ink); margin: 0; }
+
+  /* ── TRAMPES FREQÜENTS ── */
+  .trap-card {
+    background: var(--card); border: 1px solid rgba(234,67,53,0.2);
+    border-left: 4px solid var(--gred);
+    border-radius: var(--radius-sm); padding: 1rem 1.25rem; margin-bottom: .75rem;
+  }
+  .trap-card h4 { color: var(--gred); font-size: .88rem; margin-bottom: .3rem; }
+  .trap-card p  { color: var(--muted); font-size: .85rem; margin: 0; }
+  .fix-tag { font-size: .72rem; font-weight: 700; color: var(--gsheets); background: rgba(15,157,88,0.1); padding: .15rem .55rem; border-radius: 100px; display: inline-block; margin-top: .4rem; }
+
+  /* ── CHECKLIST ── */
+  .checklist { list-style: none; display: flex; flex-direction: column; gap: .5rem; }
+  .checklist li {
+    display: flex; align-items: flex-start; gap: .75rem;
+    padding: .7rem 1rem; background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); font-size: .9rem; color: var(--ink);
+    cursor: pointer; transition: background .15s;
+    user-select: none;
+  }
+  .checklist li:hover { background: var(--cream); }
+  .checklist li.checked { background: rgba(15,157,88,0.06); border-color: rgba(15,157,88,0.3); text-decoration: line-through; color: var(--muted); }
+  .check-box {
+    width: 20px; height: 20px; border: 2px solid var(--border); border-radius: 5px;
+    flex-shrink: 0; display: grid; place-items: center; transition: all .2s; margin-top: 1px;
+  }
+  .checklist li.checked .check-box { background: var(--gsheets); border-color: var(--gsheets); }
+  .check-box::after { content: ''; display: none; width: 5px; height: 9px; border: 2px solid white; border-top: none; border-left: none; transform: rotate(45deg) translateY(-1px); }
+  .checklist li.checked .check-box::after { display: block; }
+  .checklist-reset { background: none; border: 1px solid var(--border); border-radius: 8px; padding: .4rem 1rem; font-size: .82rem; color: var(--muted); cursor: pointer; margin-top: .75rem; transition: all .2s; }
+  .checklist-reset:hover { color: var(--gred); border-color: var(--gred); }
+
+  /* ── TEMPS ── */
+  .time-badge {
+    display: inline-flex; align-items: center; gap: .4rem;
+    background: rgba(251,188,4,0.12); border: 1px solid rgba(251,188,4,0.35);
+    color: #78350f; font-size: .72rem; font-weight: 700; padding: .15rem .6rem;
+    border-radius: 100px; font-family: 'Syne', sans-serif; margin-left: .5rem;
+  }
+
+  /* ── AUTOAVALUACIÓ ── */
+  .quiz-container { max-width: 760px; margin: 0 auto; }
+  .quiz-q {
+    background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 1.5rem 2rem; margin-bottom: 1rem; transition: all .2s;
+  }
+  .quiz-q p { color: var(--ink); font-size: .95rem; font-weight: 500; margin-bottom: 1rem; }
+  .quiz-options { display: flex; flex-direction: column; gap: .5rem; }
+  .quiz-opt {
+    display: flex; align-items: center; gap: .75rem;
+    padding: .75rem 1rem; border: 2px solid var(--border); border-radius: var(--radius-sm);
+    cursor: pointer; font-size: .9rem; color: var(--ink); transition: all .2s;
+    background: var(--paper);
+  }
+  .quiz-opt:hover { border-color: var(--gsheets); background: rgba(15,157,88,0.04); }
+  .quiz-opt.correct { border-color: var(--gsheets); background: rgba(15,157,88,0.08); color: #0b7a44; font-weight: 600; }
+  .quiz-opt.wrong   { border-color: var(--gred);    background: rgba(234,67,53,0.07); color: #b31412; }
+  .quiz-opt.disabled { pointer-events: none; }
+  .quiz-opt .opt-icon { width: 24px; height: 24px; border-radius: 50%; background: var(--cream); border: 2px solid var(--border); display: grid; place-items: center; font-size: .7rem; flex-shrink: 0; }
+  .quiz-opt.correct .opt-icon { background: var(--gsheets); border-color: var(--gsheets); color: white; }
+  .quiz-opt.wrong   .opt-icon { background: var(--gred); border-color: var(--gred); color: white; }
+  .quiz-explanation { display: none; margin-top: .75rem; padding: .75rem 1rem; background: rgba(15,157,88,0.07); border-radius: var(--radius-sm); font-size: .85rem; color: #0b7a44; border: 1px solid rgba(15,157,88,0.2); }
+  .quiz-explanation.show { display: block; }
+  .quiz-score {
+    text-align: center; padding: 2rem; background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius); display: none;
+  }
+  .quiz-score.show { display: block; }
+  .score-num { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 3.5rem; color: var(--gsheets); line-height: 1; }
+  .score-label { color: var(--muted); font-size: 1rem; margin-top: .25rem; }
+  .btn-quiz {
+    background: var(--gsheets); color: white; border: none; border-radius: 10px;
+    padding: .7rem 1.8rem; font-family: 'Syne', sans-serif; font-weight: 700;
+    font-size: .9rem; cursor: pointer; transition: all .2s; margin-top: 1rem;
+  }
+  .btn-quiz:hover { background: var(--gsheets-d); transform: translateY(-1px); }
+  .btn-quiz.secondary { background: var(--cream); color: var(--navy); border: 1px solid var(--border); }
+  .btn-quiz.secondary:hover { background: var(--border); }
+
+  /* ── RECURSOS ── */
+  .resource-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 1.25rem 1.5rem; display: flex; gap: 1rem; align-items: flex-start;
+    transition: transform .2s, box-shadow .2s; text-decoration: none; color: inherit;
+  }
+  .resource-card:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(26,31,78,0.09); }
+  .resource-icon {
+    width: 48px; height: 48px; border-radius: 12px; flex-shrink: 0;
+    display: grid; place-items: center; font-size: 1.4rem;
+  }
+  .resource-card h4 { color: var(--navy); font-size: .95rem; margin-bottom: .2rem; }
+  .resource-card p  { color: var(--muted); font-size: .83rem; margin: 0; line-height: 1.5; }
+  .resource-tag { font-size: .68rem; font-weight: 700; padding: .12rem .5rem; border-radius: 100px; display: inline-block; margin-top: .4rem; }
+  .rt-video { background: rgba(234,67,53,0.1); color: #b31412; }
+  .rt-doc   { background: rgba(66,133,244,0.1); color: #1a56d6; }
+  .rt-tool  { background: rgba(15,157,88,0.1); color: #0b7a44; }
+  .rt-web   { background: rgba(124,58,237,0.1); color: #5b21b6; }
+
+  /* ── RÚBRICA ── */
+  .rubrica-table { width: 100%; border-collapse: collapse; font-size: .85rem; }
+  .rubrica-table th, .rubrica-table td {
+    padding: .8rem 1rem; border: 1px solid var(--border); text-align: left; vertical-align: top; color: var(--ink);
+  }
+  .rubrica-table th { background: var(--navy); color: white; font-family: 'Syne', sans-serif; font-weight: 700; }
+  .rubrica-table tr:nth-child(even) td { background: var(--cream); }
+  .rubrica-table tr:hover td { background: rgba(15,157,88,0.05); }
+  .punt-badge {
+    display: inline-block; background: var(--gsheets); color: white;
+    font-family: 'Syne', sans-serif; font-weight: 800; font-size: .78rem;
+    padding: .2rem .55rem; border-radius: 6px; white-space: nowrap;
+  }
+  .total-row td { background: var(--navy) !important; color: white !important; font-family: 'Syne', sans-serif; font-weight: 700; }
+
+  /* ── CONNEXIÓ PROFESSIONAL ── */
+  .pro-tag {
+    display: inline-flex; align-items: center; gap: .3rem;
+    background: rgba(251,188,4,0.12); border: 1px solid rgba(251,188,4,0.3);
+    color: #78350f; font-size: .72rem; font-weight: 700; padding: .15rem .6rem;
+    border-radius: 100px; font-family: 'Syne', sans-serif; margin-bottom: .4rem;
+  }
 
   /* ── PILLS ── */
   .pills { display: flex; flex-wrap: wrap; gap: .35rem; }
@@ -321,6 +501,12 @@
     padding: 2.5rem 2rem; font-size: 0.85rem;
   }
   footer strong { color: white; }
+
+  @media print {
+    .sc-print-section { display: block !important; }
+    nav, .hero, footer { display: none !important; }
+    section { padding: 1rem; }
+  }
 </style>
 </head>
 <body>
@@ -329,8 +515,12 @@
 <nav>
   <div class="nav-logo">SMX · <span>RA3</span> · Ofimàtica</div>
   <ul class="nav-pills">
-    <li><a href="#teoria" class="sheets">Teoria</a></li>
+    <li><a href="#teoria" class="teoria">Teoria</a></li>
+    <li><a href="#dreceres" class="dreceres">Dreceres</a></li>
+    <li><a href="#recursos" class="recursos">Recursos</a></li>
     <li><a href="#practiques" class="prac">Pràctiques</a></li>
+    <li><a href="#rubrica" class="rubrica">Rúbrica</a></li>
+    <li><a href="#autoavaluacio" class="autoav">Autoavaluació</a></li>
     <li><a href="#preguntes" class="pregs">Preguntes</a></li>
   </ul>
 </nav>
@@ -406,7 +596,7 @@
   </div>
 </section>
 
-<!-- ══════════════════ TEORIA BLOC 1 — INTERFÍCIE I CONCEPTES BÀSICS ══════════════════ -->
+<!-- ══════════════════ TEORIA BLOC 1 ══════════════════ -->
 <section id="teoria" class="s-sheets">
   <div class="container">
     <div class="ra-banner ra-sheets fi">
@@ -432,6 +622,8 @@
           <li style="padding:.35rem 0; border-bottom:1px solid var(--border); font-size:.9rem; color:var(--muted)">🔢 <strong style="color:var(--ink)">Capçaleres de columna/fila:</strong> lletres (columnes) i números (files) que identifiquen cada cel·la.</li>
           <li style="padding:.35rem 0; font-size:.9rem; color:var(--muted)">🔍 <strong style="color:var(--ink)">Barra d'estat:</strong> a la part inferior dreta, mostra suma, mitjana i recompte de la selecció actual.</li>
         </ul>
+        <div class="pro-tag" style="margin-top:1rem">💼 Ús professional</div>
+        <p style="font-size:.83rem;margin:0">A les empreses, els analistes financers usen la barra d'estat per fer comprovacions ràpides de totals sense crear fórmules addicionals.</p>
       </div>
       <div class="card bl-sheets">
         <div class="card-icon" style="background:#f0fdf4">⌨️</div>
@@ -446,6 +638,7 @@
           <div class="sc-item"><span class="sc-key">F2</span><span class="sc-desc">Editar la cel·la activa</span></div>
           <div class="sc-item"><span class="sc-key">Ctrl + Maj + :</span><span class="sc-desc">Inserir data d'avui</span></div>
         </div>
+        <p style="font-size:.8rem;color:var(--muted);margin-top:.75rem">👉 Veure la taula completa de dreceres a la secció <a href="#dreceres" style="color:var(--gsheets)">Dreceres de teclat</a></p>
       </div>
     </div>
 
@@ -490,7 +683,7 @@
   </div>
 </section>
 
-<!-- ══════════════════ TEORIA BLOC 2 — FÓRMULES I FUNCIONS ══════════════════ -->
+<!-- ══════════════════ TEORIA BLOC 2 — FÓRMULES ══════════════════ -->
 <section class="s-blue">
   <div class="container">
     <div class="ra-banner ra-blue fi">
@@ -503,7 +696,7 @@
 
     <div class="section-tag tag-blue fi">Tipus de referències</div>
     <h2 class="fi">Referències relatives, absolutes i mixtes</h2>
-    <p class="lead fi">Entendre les referències és fonamental per copiar fórmules correctament. Una referència indica quines cel·les participa en el càlcul.</p>
+    <p class="lead fi">Entendre les referències és fonamental per copiar fórmules correctament. Una referència indica quines cel·les participen en el càlcul.</p>
 
     <div class="grid g3 fi">
       <div class="card bl-sheets">
@@ -529,6 +722,24 @@
       </div>
     </div>
 
+    <!-- BÉ vs MALAMENT — REFERÈNCIES -->
+    <div class="callout cl-navy fi" style="margin-top:2rem;padding:1.5rem 2rem">
+      <span class="callout-icon">🔍</span>
+      <div style="width:100%">
+        <strong style="color:var(--navy)">Exemple visual: Bé vs. Malament — ús de referències</strong>
+        <div class="bvm-grid" style="margin-top:.75rem">
+          <div class="bvm-bad">
+            <div class="bvm-label">❌ Error típic</div>
+            <p>Copiar <code>=A2*B1</code> cap avall quan B1 és el % d'IVA. Resultat: <code>B2, B3, B4...</code> canvien i donen errors o càlculs incorrectes.</p>
+          </div>
+          <div class="bvm-good">
+            <div class="bvm-label">✅ Solució correcta</div>
+            <p>Usar <code>=A2*$B$1</code>. La cel·la B1 (IVA) queda bloquejada amb <kbd>F4</kbd>. En copiar cap avall, sempre fa referència a l'IVA correcte.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="section-tag tag-blue fi" style="margin-top:4rem">Funcions per categoria</div>
     <h2 class="fi">Funcions essencials de Google Sheets</h2>
 
@@ -549,6 +760,8 @@
             <tr><td><code>ARRODONIR(n;decimals)</code></td><td>Arrodoneix un nombre.</td></tr>
           </tbody>
         </table>
+        <div class="pro-tag" style="margin-top:.75rem">💼 Ús professional</div>
+        <p style="font-size:.82rem;margin:0">A la comptabilitat empresarial s'usa <code>SUMASICONJUNTO</code> per calcular vendes per venedor, per mes i per producte alhora.</p>
       </div>
       <div class="card bl-blue">
         <div class="card-icon" style="background:#eff6ff">🔀</div>
@@ -565,7 +778,7 @@
           </tbody>
         </table>
         <div class="ex ex-sheets" style="margin-top:.75rem">
-          <div class="ex-lbl">💡 Exemple SI anidado</div>
+          <div class="ex-lbl">💡 Exemple SI anidat</div>
           <div class="formula-box">=SI(B2>=9;"Excel·lent";SI(B2>=5;"Aprovat";"Suspès"))</div>
         </div>
       </div>
@@ -589,6 +802,17 @@
           <div class="ex-lbl">💡 Exemple BUSCARV</div>
           <div class="formula-box">=BUSCARV(A2;Productes!A:C;2;FALS)</div>
         </div>
+        <!-- BÉ vs MALAMENT — BUSCARV -->
+        <div class="bvm-grid" style="margin-top:.75rem">
+          <div class="bvm-bad">
+            <div class="bvm-label">❌ Malament</div>
+            <p><code>=BUSCARV(A2;A:C;2;CERT)</code> — Cerca aproximada en dades no ordenades: resultats aleatoris incorrectes.</p>
+          </div>
+          <div class="bvm-good">
+            <div class="bvm-label">✅ Bé</div>
+            <p><code>=BUSCARV(A2;A:C;2;FALS)</code> — Cerca exacta. Sempre usa <code>FALS</code> per a coincidències exactes.</p>
+          </div>
+        </div>
       </div>
       <div class="card bl-purp">
         <div class="card-icon" style="background:#f5f3ff">🔤</div>
@@ -605,6 +829,8 @@
             <tr><td><code>DIA / MES / ANY</code></td><td>Extreu parts d'una data.</td></tr>
           </tbody>
         </table>
+        <div class="pro-tag" style="margin-top:.75rem">💼 Ús professional</div>
+        <p style="font-size:.82rem;margin:0">A RRHH s'usa <code>AVUI()-DATA(ANY(B2),MES(B2),DIA(B2))</code> per calcular l'antiguitat d'un empleat automàticament.</p>
       </div>
     </div>
 
@@ -613,6 +839,10 @@
       <div>
         <strong>Consell: Funcions d'array (ARRAYFORMULA)</strong>
         <p style="margin-top:.3rem">La funció <code>ARRAYFORMULA</code> permet aplicar una fórmula a tot un rang de cop, sense necessitat de copiar-la cel·la per cel·la. Exemple: <code>=ARRAYFORMULA(A2:A100*B2:B100)</code> calcula el producte de dues columnes amb una sola fórmula.</p>
+        <div class="bvm-grid" style="margin-top:.75rem">
+          <div class="bvm-bad"><div class="bvm-label">❌ Sense ARRAYFORMULA</div><p>Copiar =A2*B2 a 100 files. Si s'afegeix una fila, cal recordar copiar la fórmula manualment.</p></div>
+          <div class="bvm-good"><div class="bvm-label">✅ Amb ARRAYFORMULA</div><p><code>=ARRAYFORMULA(A2:A*B2:B)</code> cobreix tot el rang automàticament, fins i tot les files noves.</p></div>
+        </div>
       </div>
     </div>
   </div>
@@ -648,6 +878,11 @@
             <tr><td><span class="badge b-sheets">Combinat</span></td><td>Dues sèries amb escales diferents (barres + línia).</td></tr>
           </tbody>
         </table>
+        <!-- BÉ vs MALAMENT — GRÀFICS -->
+        <div class="bvm-grid" style="margin-top:.75rem">
+          <div class="bvm-bad"><div class="bvm-label">❌ Malament</div><p>Gràfic de sectors (pastís) amb 12 categories: impossible de llegir, colors indistingibles, no transmet cap missatge clar.</p></div>
+          <div class="bvm-good"><div class="bvm-label">✅ Bé</div><p>Gràfic de barres horitzontal: cada barra és llegible, fàcil d'ordenar per valor, ideal per comparar 10+ categories.</p></div>
+        </div>
       </div>
       <div class="card bl-blue">
         <div class="card-icon" style="background:#eff6ff">⚙️</div>
@@ -660,6 +895,10 @@
           <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted);border-bottom:1px solid var(--border)">🗒️ <strong style="color:var(--ink)">Llegenda:</strong> posició i format de la llegenda.</li>
           <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted)">🔢 <strong style="color:var(--ink)">Etiquetes de dades:</strong> mostrar el valor de cada punt/barra.</li>
         </ul>
+        <div class="callout cl-amber" style="margin-top:.75rem;padding:.85rem 1rem">
+          <span class="callout-icon" style="font-size:1rem">📐</span>
+          <p style="margin:0"><strong>Elements obligatoris d'un gràfic professional:</strong> títol descriptiu, etiquetes als eixos, llegenda (si hi ha > 1 sèrie), font de les dades i unitats de mesura.</p>
+        </div>
       </div>
     </div>
 
@@ -679,6 +918,8 @@
           <li><p>A "Valors" tria l'operació: Suma, Comptatge, Mitjana, Màx, Mín…</p></li>
           <li><p>Ordena o filtra els resultats directament a la taula dinàmica.</p></li>
         </ol>
+        <div class="pro-tag" style="margin-top:1rem">💼 Ús professional</div>
+        <p style="font-size:.82rem;margin:0">Un analista de vendes usa taules dinàmiques per respondre en 30 segons preguntes com "quin venedor ha venut més al Q3 a Catalunya?"</p>
       </div>
       <div class="card bl-blue">
         <div class="card-icon" style="background:#eff6ff">✅</div>
@@ -715,7 +956,7 @@
         <p style="margin-bottom:.6rem;font-size:.9rem"><strong>Dades → Validació de dades</strong>: controla el tipus de valor que es pot introduir a una cel·la.</p>
         <ul style="list-style:none;padding:0">
           <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted);border-bottom:1px solid var(--border)">📋 <strong style="color:var(--ink)">Llista d'elements:</strong> crea un menú desplegable amb opcions predefinides.</li>
-          <li style="padding:.3rem 0;font-size:.88mm;color:var(--muted);border-bottom:1px solid var(--border)">🔢 <strong style="color:var(--ink)">Número en rang:</strong> p.ex. entre 1 i 100.</li>
+          <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted);border-bottom:1px solid var(--border)">🔢 <strong style="color:var(--ink)">Número en rang:</strong> p.ex. entre 1 i 100.</li>
           <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted);border-bottom:1px solid var(--border)">📅 <strong style="color:var(--ink)">Data vàlida:</strong> evita introduir text en camps de data.</li>
           <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted)">⚠️ <strong style="color:var(--ink)">Missatge d'error personalitzat:</strong> informa l'usuari quan introdueix un valor incorrecte.</li>
         </ul>
@@ -747,6 +988,8 @@
           <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted);border-bottom:1px solid var(--border)">📋 <strong style="color:var(--ink)">Protegir un full sencer:</strong> permet llegir però no editar.</li>
           <li style="padding:.3rem 0;font-size:.88rem;color:var(--muted)">👥 <strong style="color:var(--ink)">Excepcions:</strong> pots permetre que determinats usuaris sí que editin el rang protegit.</li>
         </ul>
+        <div class="pro-tag" style="margin-top:.75rem">💼 Ús professional</div>
+        <p style="font-size:.82rem;margin:0">A RRHH s'usen rangs protegits per compartir fulls de salaris on els empleats poden veure les seves dades però no les dels companys.</p>
       </div>
       <div class="card bl-blue">
         <div class="card-icon" style="background:#eff6ff">👥</div>
@@ -813,6 +1056,214 @@ function enviarCorreu() {<br>
   </div>
 </section>
 
+<!-- ══════════════════ DRECERES DE TECLAT (VISUAL COMPLETA) ══════════════════ -->
+<section id="dreceres" class="s-cream">
+  <div class="container">
+    <div class="ra-banner ra-navy fi">
+      <div class="ra-num">⌨</div>
+      <div>
+        <h2>Dreceres de teclat de Google Sheets</h2>
+        <p>Les 20 dreceres més útils per treballar com un professional. Guarda-les o imprimeix la targeta.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-cobalt fi">Taula de dreceres completa</div>
+    <h2 class="fi">20 dreceres essencials</h2>
+    <p class="lead fi">Dominar les dreceres de teclat pot estalviar-te fins a 2 hores diàries en feina repetitiva. Cada cop que uses el ratolí per fer alguna d'aquestes accions, recorda que hi ha una drecera.</p>
+
+    <div class="sc-grid fi">
+      <!-- Navegació -->
+      <div class="sc-row"><span class="sc-badge">Ctrl + Inici</span><span class="sc-label">Anar a la cel·la A1</span><span class="sc-cat">Navegació</span></div>
+      <div class="sc-row"><span class="sc-badge">Ctrl + Fi</span><span class="sc-label">Última cel·la amb dades</span><span class="sc-cat">Navegació</span></div>
+      <div class="sc-row"><span class="sc-badge">Ctrl + ↑↓←→</span><span class="sc-label">Saltar al límit del rang</span><span class="sc-cat">Navegació</span></div>
+      <div class="sc-row"><span class="sc-badge">Ctrl + G</span><span class="sc-label">Anar a rang específic</span><span class="sc-cat">Navegació</span></div>
+      <!-- Selecció -->
+      <div class="sc-row"><span class="sc-badge">Ctrl + Maj + ↓</span><span class="sc-label">Seleccionar fins al final</span><span class="sc-cat">Selecció</span></div>
+      <div class="sc-row"><span class="sc-badge">Ctrl + A</span><span class="sc-label">Seleccionar tot el full</span><span class="sc-cat">Selecció</span></div>
+      <div class="sc-row"><span class="sc-badge">Ctrl + Maj + Espai</span><span class="sc-label">Seleccionar tota la columna</span><span class="sc-cat">Selecció</span></div>
+      <!-- Edició -->
+      <div class="sc-row"><span class="sc-badge">Ctrl + C / V / X</span><span class="sc-label">Copiar / Enganxar / Tallar</span><span class="sc-cat">Edició</span></div>
+      <div class="sc-row"><span class="sc-badge">Ctrl + Z / Y</span><span class="sc-label">Desfer / Refer</span><span class="sc-cat">Edició</span></div>
+      <div class="sc-row"><span class="sc-badge">Ctrl + D</span><span class="sc-label">Emplenar cap avall</span><span class="sc-cat">Edició</span></div>
+      <div class="sc-row"><span class="sc-badge">Ctrl + R</span><span class="sc-label">Emplenar cap a la dreta</span><span class="sc-cat">Edició</span></div>
+      <div class="sc-row"><span class="sc-badge">Del</span><span class="sc-label">Esborrar contingut cel·la</span><span class="sc-cat">Edició</span></div>
+      <!-- Format -->
+      <div class="sc-row"><span class="sc-badge">Ctrl + B</span><span class="sc-label">Negreta</span><span class="sc-cat">Format</span></div>
+      <div class="sc-row"><span class="sc-badge">Ctrl + I</span><span class="sc-label">Cursiva</span><span class="sc-cat">Format</span></div>
+      <div class="sc-row"><span class="sc-badge">Ctrl + U</span><span class="sc-label">Subratllat</span><span class="sc-cat">Format</span></div>
+      <div class="sc-row"><span class="sc-badge">Ctrl + Maj + ~</span><span class="sc-label">Format número general</span><span class="sc-cat">Format</span></div>
+      <div class="sc-row"><span class="sc-badge">Ctrl + Maj + $</span><span class="sc-label">Format moneda</span><span class="sc-cat">Format</span></div>
+      <div class="sc-row"><span class="sc-badge">Ctrl + Maj + %</span><span class="sc-label">Format percentatge</span><span class="sc-cat">Format</span></div>
+      <!-- Fórmules -->
+      <div class="sc-row"><span class="sc-badge">F4</span><span class="sc-label">Ciclar tipus referència ($A$1 → A$1 → $A1 → A1)</span><span class="sc-cat">Fórmules</span></div>
+      <div class="sc-row"><span class="sc-badge">Ctrl + Maj + :</span><span class="sc-label">Inserir data actual</span><span class="sc-cat">Dades</span></div>
+    </div>
+
+    <div class="print-card fi">
+      <div>
+        <h3>🖨️ Targeta per imprimir</h3>
+        <p>Imprimeix aquesta pàgina i retalla la secció de dreceres per tenir-la a la taula de treball.</p>
+      </div>
+      <button class="btn-print" onclick="window.print()">Imprimir dreceres</button>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ TRAMPES FREQÜENTS ══════════════════ -->
+<section class="s-amber">
+  <div class="container">
+    <div class="ra-banner ra-amber fi">
+      <div class="ra-num">⚠</div>
+      <div>
+        <h2>Trampes freqüents a Google Sheets</h2>
+        <p>Els errors que fa tothom la primera vegada. Llegeix-los ara per no cometre'ls tu.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-pregs fi">Errors típics dels alumnes</div>
+    <h2 class="fi">Errors i com evitar-los</h2>
+    <p class="lead fi">Aquests errors apareixen en el 90% dels treballs de primera entrega. Conèixer-los d'antuvi et pot estalviar molt de temps i frustració.</p>
+
+    <div class="fi">
+      <div class="trap-card">
+        <h4>⚠️ Treballar sobre el fitxer original en comptes d'una còpia</h4>
+        <p>Molts alumnes obren el fitxer de plantilla proporcionat pel professor i l'editen directament, en lloc de fer primer <strong>Fitxer → Fes una còpia</strong>. Resultat: tots els alumnes modifiquen el mateix fitxer.</p>
+        <span class="fix-tag">✅ Solució: Fitxer → Fes una còpia SEMPRE primer</span>
+      </div>
+      <div class="trap-card">
+        <h4>⚠️ Compartir amb permís d'Editor quan hauria de ser Visualitzador</h4>
+        <p>En lliurar el treball, si compartiu amb permís d'"Editor", el professor (o qualsevol altra persona) pot modificar el vostre treball accidentalment. Per a entregues, usa sempre <strong>Visualitzador</strong>.</p>
+        <span class="fix-tag">✅ Solució: Configuració de compartició → Visualitzador</span>
+      </div>
+      <div class="trap-card">
+        <h4>⚠️ Introduir dates com a text (escrivint "01/01/2024" com si fos text)</h4>
+        <p>Si Sheets no reconeix la data, la guarda com a text alineat a l'esquerra. Les funcions de data (<code>AVUI()</code>, <code>DIES()</code>, taules dinàmiques per mes) no funcionaran correctament.</p>
+        <span class="fix-tag">✅ Solució: Comprova que les dates estan alineades a la dreta (son números)</span>
+      </div>
+      <div class="trap-card">
+        <h4>⚠️ Perdre el format en exportar a .xlsx (Excel)</h4>
+        <p>Alguns formats específics de Sheets (validació avançada, certes fórmules d'array, format condicional complex) no es tradueixen perfectament a format Excel. Si el treball s'ha de lliurar en .xlsx, prova-ho ABANS.</p>
+        <span class="fix-tag">✅ Solució: Revisa sempre el fitxer .xlsx exportat abans de lliurar</span>
+      </div>
+      <div class="trap-card">
+        <h4>⚠️ Cel·les combinades en les dades originals</h4>
+        <p>Combinar cel·les a la capçalera o dins de les dades trenca les taules dinàmiques, els filtres i les fórmules de cerca. Les cel·les combinades només s'han d'usar en interfícies visuals finals, mai en dades.</p>
+        <span class="fix-tag">✅ Solució: Usa "Centrar en una selecció" en comptes de combinar cel·les</span>
+      </div>
+      <div class="trap-card">
+        <h4>⚠️ BUSCARV cercant en columnes que no estan a la primera posició</h4>
+        <p><code>BUSCARV</code> sempre busca a la primera columna del rang indicat. Si busques per codi de producte però el codi no és la primera columna, obtindràs errors. En aquests casos, usa <code>ÍNDEX+COINCIDIR</code>.</p>
+        <span class="fix-tag">✅ Solució: Usa ÍNDEX+COINCIDIR per a cerques en qualsevol columna</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ RECURSOS DIDÀCTICS ══════════════════ -->
+<section id="recursos" class="s-cream">
+  <div class="container">
+    <div class="ra-banner ra-blue fi">
+      <div class="ra-num">📚</div>
+      <div>
+        <h2>Recursos didàctics</h2>
+        <p>Vídeos, documentació oficial, eines i tutorials seleccionats per aprofundir en Google Sheets.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-blue fi">Vídeos recomanats</div>
+    <h2 class="fi">Vídeos i tutorials en línia</h2>
+    <p class="lead fi">Vídeos oficials de Google i tutorials de qualitat per veure en moviment les funcions més complexes del curs.</p>
+
+    <div class="grid g2 fi">
+      <a href="https://www.youtube.com/watch?v=N2opj8XzYBY" target="_blank" class="resource-card">
+        <div class="resource-icon" style="background:rgba(234,67,53,0.08)">▶️</div>
+        <div>
+          <h4>Google Sheets — Curs complet per a principiants</h4>
+          <p>Tutorial que cobreix des de la interfície fins a fórmules bàsiques. Ideal per als primers passos amb Sheets.</p>
+          <span class="resource-tag rt-video">📹 Vídeo</span>
+        </div>
+      </a>
+      <a href="https://www.youtube.com/watch?v=GBXQ5yq4INY" target="_blank" class="resource-card">
+        <div class="resource-icon" style="background:rgba(234,67,53,0.08)">▶️</div>
+        <div>
+          <h4>BUSCARV i ÍNDEX+COINCIDIR explicats</h4>
+          <p>Vídeo que compara les dues funcions de cerca amb exemples pràctics i explica quan usar cadascuna.</p>
+          <span class="resource-tag rt-video">📹 Vídeo</span>
+        </div>
+      </a>
+      <a href="https://www.youtube.com/watch?v=9NUjHBNWe9M" target="_blank" class="resource-card">
+        <div class="resource-icon" style="background:rgba(234,67,53,0.08)">▶️</div>
+        <div>
+          <h4>Taules dinàmiques a Google Sheets (Pivot Tables)</h4>
+          <p>Tutorial pràctic sobre com crear i configurar taules dinàmiques pas a pas, incloent filtres i segments.</p>
+          <span class="resource-tag rt-video">📹 Vídeo</span>
+        </div>
+      </a>
+      <a href="https://www.youtube.com/watch?v=a9ypVtQCOYE" target="_blank" class="resource-card">
+        <div class="resource-icon" style="background:rgba(234,67,53,0.08)">▶️</div>
+        <div>
+          <h4>Macros i Google Apps Script bàsic</h4>
+          <p>Introducció a l'automatització: com gravar una macro, editar el codi generat i crear funcions personalitzades.</p>
+          <span class="resource-tag rt-video">📹 Vídeo</span>
+        </div>
+      </a>
+    </div>
+
+    <div class="section-tag tag-cobalt fi" style="margin-top:4rem">Documentació oficial</div>
+    <h2 class="fi">Fonts oficials i eines</h2>
+    <div class="grid g2 fi">
+      <a href="https://support.google.com/docs/table/25273?hl=ca" target="_blank" class="resource-card">
+        <div class="resource-icon" style="background:rgba(66,133,244,0.08)">📖</div>
+        <div>
+          <h4>Llista completa de funcions de Google Sheets</h4>
+          <p>Referència oficial de totes les funcions disponibles, amb descripció, sintaxi i exemples. Indispensable.</p>
+          <span class="resource-tag rt-doc">📄 Documentació</span>
+        </div>
+      </a>
+      <a href="https://support.google.com/a/users/answer/9282959?hl=ca" target="_blank" class="resource-card">
+        <div class="resource-icon" style="background:rgba(66,133,244,0.08)">📖</div>
+        <div>
+          <h4>Guia ràpida de Google Sheets (Google)</h4>
+          <p>Guia oficial de Google Workspace per als conceptes fonamentals: fulls, fórmules, gràfics i compartició.</p>
+          <span class="resource-tag rt-doc">📄 Documentació</span>
+        </div>
+      </a>
+      <a href="https://developers.google.com/apps-script/guides/sheets" target="_blank" class="resource-card">
+        <div class="resource-icon" style="background:rgba(15,157,88,0.08)">⚙️</div>
+        <div>
+          <h4>Google Apps Script — Referència per a Sheets</h4>
+          <p>Documentació per a developers sobre com automatitzar Sheets amb JavaScript. Ideal per a la pràctica 6.</p>
+          <span class="resource-tag rt-tool">🛠️ Eina</span>
+        </div>
+      </a>
+      <a href="https://workspace.google.com/intl/ca/features/" target="_blank" class="resource-card">
+        <div class="resource-icon" style="background:rgba(124,58,237,0.08)">🌐</div>
+        <div>
+          <h4>Google Workspace — Totes les funcions</h4>
+          <p>Pàgina oficial de Google Workspace amb totes les eines integrades: Sheets, Docs, Slides, Meet, Drive…</p>
+          <span class="resource-tag rt-web">🌐 Web</span>
+        </div>
+      </a>
+      <a href="https://sheet.best/" target="_blank" class="resource-card">
+        <div class="resource-icon" style="background:rgba(15,157,88,0.08)">🔗</div>
+        <div>
+          <h4>Sheet.best — API per a Google Sheets</h4>
+          <p>Eina que transforma qualsevol full de Sheets en una API REST. Exemple de com Sheets s'usa en entorns professionals com a base de dades lleugera.</p>
+          <span class="resource-tag rt-tool">🛠️ Eina</span>
+        </div>
+      </a>
+      <a href="https://sheetsgo.com/" target="_blank" class="resource-card">
+        <div class="resource-icon" style="background:rgba(251,188,4,0.1)">📊</div>
+        <div>
+          <h4>Sheetsgo — Automatitzacions per a Sheets</h4>
+          <p>Plataforma per connectar i automatitzar múltiples fulls de Google. Ideal per veure casos d'ús professionals avançats.</p>
+          <span class="resource-tag rt-tool">🛠️ Eina</span>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
 <!-- ══════════════════ PRÀCTIQUES ══════════════════ -->
 <section id="practiques" class="s-dark">
   <div class="container">
@@ -825,7 +1276,7 @@ function enviarCorreu() {<br>
       <div class="practice-header p1-bg">
         <div class="practice-num">01</div>
         <div>
-          <h3>Full de pressupost familiar mensual</h3>
+          <h3>Full de pressupost familiar mensual <span class="time-badge">⏱ ~45 min</span></h3>
           <p>Bàsic · Introducció de dades, format i funcions bàsiques</p>
         </div>
       </div>
@@ -833,7 +1284,7 @@ function enviarCorreu() {<br>
         <div class="grid g2">
           <div>
             <h4>📋 Descripció</h4>
-            <p style="font-size:.92rem;color:var(--muted);margin-bottom:1rem">Crea un full de càlcul per controlar ingressos i despeses d'una llar durant un mes. L'objectiu és familiaritzar-se amb la introducció de dades, els formats bàsics i les funcions essencials.</p>
+            <p style="font-size:.92rem;margin-bottom:1rem">Crea un full de càlcul per controlar ingressos i despeses d'una llar durant un mes. L'objectiu és familiaritzar-se amb la introducció de dades, els formats bàsics i les funcions essencials.</p>
             <h4>🎯 Objectius d'aprenentatge</h4>
             <ul class="steps" style="margin-top:.5rem">
               <li><p>Crear i reanomenar fulls dins d'un mateix fitxer.</p></li>
@@ -841,6 +1292,10 @@ function enviarCorreu() {<br>
               <li><p>Usar <code>SUMA</code>, <code>PROMEDI</code>, <code>MAX</code> i <code>MIN</code>.</p></li>
               <li><p>Ajustar amplada de columnes i alçada de files. Congelar la fila de capçalera.</p></li>
             </ul>
+            <div class="callout cl-green" style="margin-top:1rem;padding:.85rem 1rem">
+              <span class="callout-icon">💼</span>
+              <p><strong>Connexió professional:</strong> les empreses usen exactament aquest mateix format per al control de despeses departamentals mensuals. Un tècnic SMX pot ser qui el mantingui.</p>
+            </div>
           </div>
           <div>
             <h4>📝 Tasques</h4>
@@ -852,7 +1307,7 @@ function enviarCorreu() {<br>
             </ul>
             <div class="callout cl-green" style="margin-top:1rem;padding:.85rem 1rem">
               <span class="callout-icon">📦</span>
-              <p><strong>Entrega:</strong> fitxer Google Sheets compartit amb permís de visualització. Captura de pantalla del resum.</p>
+              <p><strong>Entrega:</strong> fitxer Google Sheets compartit amb permís de <strong>visualització</strong> (no edició). Captura de pantalla del resum.</p>
             </div>
           </div>
         </div>
@@ -864,7 +1319,7 @@ function enviarCorreu() {<br>
       <div class="practice-header p2-bg">
         <div class="practice-num">02</div>
         <div>
-          <h3>Registre de notes d'una classe</h3>
+          <h3>Registre de notes d'una classe <span class="time-badge">⏱ ~60 min</span></h3>
           <p>Elemental · Funcions condicionals i format automàtic</p>
         </div>
       </div>
@@ -872,7 +1327,7 @@ function enviarCorreu() {<br>
         <div class="grid g2">
           <div>
             <h4>📋 Descripció</h4>
-            <p style="font-size:.92rem;color:var(--muted);margin-bottom:1rem">Crea un full per registrar i analitzar les notes de 20 alumnes en 4 assignatures. Usa funcions <code>SI</code> per calcular la qualificació final i aplica format condicional per visualitzar l'estat de cada alumne.</p>
+            <p style="font-size:.92rem;margin-bottom:1rem">Crea un full per registrar i analitzar les notes de 20 alumnes en 4 assignatures. Usa funcions <code>SI</code> per calcular la qualificació final i aplica format condicional per visualitzar l'estat de cada alumne.</p>
             <h4>🎯 Objectius d'aprenentatge</h4>
             <ul class="steps" style="margin-top:.5rem">
               <li><p>Usar funcions <code>SI</code> i <code>SI</code> anidat per assignar qualificacions (Suspès/Aprovat/Notable/Excel·lent).</p></li>
@@ -898,7 +1353,7 @@ function enviarCorreu() {<br>
       <div class="practice-header p3-bg">
         <div class="practice-num">03</div>
         <div>
-          <h3>Catàleg de productes amb BUSCARV</h3>
+          <h3>Catàleg de productes amb BUSCARV <span class="time-badge">⏱ ~75 min</span></h3>
           <p>Intermedi · Funcions de cerca i validació de dades</p>
         </div>
       </div>
@@ -906,7 +1361,7 @@ function enviarCorreu() {<br>
         <div class="grid g2">
           <div>
             <h4>📋 Descripció</h4>
-            <p style="font-size:.92rem;color:var(--muted);margin-bottom:1rem">Simula el sistema de gestió d'una botiga. En un full tens el catàleg de productes i en un altre full crees un formulari de comanda on, en introduir el codi del producte, s'omplen automàticament el nom, preu i categoria usant <code>BUSCARV</code>.</p>
+            <p style="font-size:.92rem;margin-bottom:1rem">Simula el sistema de gestió d'una botiga. En un full tens el catàleg de productes i en un altre full crees un formulari de comanda on, en introduir el codi del producte, s'omplen automàticament el nom, preu i categoria usant <code>BUSCARV</code>.</p>
             <h4>🎯 Objectius d'aprenentatge</h4>
             <ul class="steps" style="margin-top:.5rem">
               <li><p>Usar <code>BUSCARV</code> per cercar dades entre fulls.</p></li>
@@ -914,6 +1369,10 @@ function enviarCorreu() {<br>
               <li><p>Usar <code>SIIERROR</code> per gestionar errors de cerca.</p></li>
               <li><p>Calcular subtotals, IVA i total amb referències absolutes.</p></li>
             </ul>
+            <div class="callout cl-blue" style="margin-top:1rem;padding:.85rem 1rem">
+              <span class="callout-icon">💼</span>
+              <p><strong>Connexió professional:</strong> els sistemes ERP de moltes PIMES funcionen exactament amb aquest principi: un codi de producte que omple automàticament les dades de la comanda.</p>
+            </div>
           </div>
           <div>
             <h4>📝 Tasques</h4>
@@ -933,7 +1392,7 @@ function enviarCorreu() {<br>
       <div class="practice-header p4-bg">
         <div class="practice-num">04</div>
         <div>
-          <h3>Anàlisi de vendes amb gràfics i taula dinàmica</h3>
+          <h3>Anàlisi de vendes amb gràfics i taula dinàmica <span class="time-badge">⏱ ~90 min</span></h3>
           <p>Intermedi-Alt · Taules dinàmiques, gràfics i SUMASI</p>
         </div>
       </div>
@@ -941,7 +1400,7 @@ function enviarCorreu() {<br>
         <div class="grid g2">
           <div>
             <h4>📋 Descripció</h4>
-            <p style="font-size:.92rem;color:var(--muted);margin-bottom:1rem">Treballaràs amb un conjunt de dades de vendes d'una empresa amb almenys 100 registres (pots usar dades inventades o descarregar un dataset de mostra). L'objectiu és analitzar les vendes per regió, producte i mes usant taules dinàmiques i gràfics.</p>
+            <p style="font-size:.92rem;margin-bottom:1rem">Treballaràs amb un conjunt de dades de vendes d'una empresa amb almenys 100 registres (pots usar dades inventades o descarregar un dataset de mostra). L'objectiu és analitzar les vendes per regió, producte i mes usant taules dinàmiques i gràfics.</p>
             <h4>🎯 Objectius d'aprenentatge</h4>
             <ul class="steps" style="margin-top:.5rem">
               <li><p>Crear taules dinàmiques per resumir dades per múltiples dimensions.</p></li>
@@ -968,7 +1427,7 @@ function enviarCorreu() {<br>
       <div class="practice-header p5-bg">
         <div class="practice-num">05</div>
         <div>
-          <h3>Planificador de projecte amb Gantt i macros</h3>
+          <h3>Planificador de projecte amb Gantt i macros <span class="time-badge">⏱ ~120 min</span></h3>
           <p>Avançat · Gràfic de Gantt, format condicional avançat i macros</p>
         </div>
       </div>
@@ -976,7 +1435,7 @@ function enviarCorreu() {<br>
         <div class="grid g2">
           <div>
             <h4>📋 Descripció</h4>
-            <p style="font-size:.92rem;color:var(--muted);margin-bottom:1rem">Crea una eina de gestió de projectes amb un diagrama de Gantt interactiu. El diagrama es genera automàticament a partir d'una taula de tasques usant format condicional basat en fórmules.</p>
+            <p style="font-size:.92rem;margin-bottom:1rem">Crea una eina de gestió de projectes amb un diagrama de Gantt interactiu. El diagrama es genera automàticament a partir d'una taula de tasques usant format condicional basat en fórmules.</p>
             <h4>🎯 Objectius d'aprenentatge</h4>
             <ul class="steps" style="margin-top:.5rem">
               <li><p>Construir un gràfic de Gantt amb format condicional basat en fórmules de data.</p></li>
@@ -1003,7 +1462,7 @@ function enviarCorreu() {<br>
       <div class="practice-header p6-bg">
         <div class="practice-num">06</div>
         <div>
-          <h3>Panell de control empresarial complet (Dashboard)</h3>
+          <h3>Panell de control empresarial complet (Dashboard) <span class="time-badge">⏱ ~180 min</span></h3>
           <p>Molt avançat · Dashboard professional integrant totes les competències del RA3</p>
         </div>
       </div>
@@ -1011,7 +1470,7 @@ function enviarCorreu() {<br>
         <div class="grid g2">
           <div>
             <h4>📋 Descripció</h4>
-            <p style="font-size:.92rem;color:var(--muted);margin-bottom:1rem">Crea un panell de control (dashboard) professional per a una empresa fictícia. El fitxer ha de tenir diverses pestanyes de dades i un full de "Panell" que consolida tots els indicadors clau de negoci (KPIs) amb gràfics, fórmules avançades, format condicional, validació, protecció i una macro d'actualització.</p>
+            <p style="font-size:.92rem;margin-bottom:1rem">Crea un panell de control (dashboard) professional per a una empresa fictícia. El fitxer ha de tenir diverses pestanyes de dades i un full de "Panell" que consolida tots els indicadors clau de negoci (KPIs) amb gràfics, fórmules avançades, format condicional, validació, protecció i una macro d'actualització.</p>
             <h4>🎯 Objectius d'aprenentatge</h4>
             <ul class="steps" style="margin-top:.5rem">
               <li><p>Integrar múltiples fulls amb <code>IMPORTRANGE</code> i referències creuades.</p></li>
@@ -1027,9 +1486,9 @@ function enviarCorreu() {<br>
               <li style="margin-bottom:.5rem"><strong>Full "Vendes":</strong> dataset de vendes mensuals per producte i regió (mínim 200 registres).</li>
               <li style="margin-bottom:.5rem"><strong>Full "RH":</strong> empleats, departament, salari, antiguitat, avaluació de rendiment.</li>
               <li style="margin-bottom:.5rem"><strong>Full "Finances":</strong> ingressos, despeses, benefici per mes. Ràtios financers calculats.</li>
-              <li style="margin-bottom:.5rem"><strong>Full "Panell":</strong> KPIs visuals (vendes totals, creixement %, empleats actius, benefici net), gràfic d'evolució mensual, top 5 productes, alertes automàtiques amb format condicional si algun KPI és negatiu.</li>
+              <li style="margin-bottom:.5rem"><strong>Full "Panell":</strong> KPIs visuals amb alertes automàtiques si algun KPI és negatiu.</li>
               <li style="margin-bottom:.5rem">Slicer o validació desplegable per filtrar el Panell per any o trimestre.</li>
-              <li><strong>Script:</strong> funció que generi un resum en text de tots els KPIs i l'enviï per correu electrònic o el guardi en un nou document de Google Docs.</li>
+              <li><strong>Script:</strong> funció que generi un resum en text de tots els KPIs i l'enviï per correu electrònic.</li>
             </ul>
             <div class="callout cl-purp" style="margin-top:1rem;padding:.85rem 1rem">
               <span class="callout-icon">🏆</span>
@@ -1037,6 +1496,242 @@ function enviarCorreu() {<br>
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ RÚBRICA ══════════════════ -->
+<section id="rubrica" class="s-blue">
+  <div class="container">
+    <div class="ra-banner ra-sheets fi">
+      <div class="ra-num">📋</div>
+      <div>
+        <h2>Rúbrica d'avaluació — RA3</h2>
+        <p>Criteris de correcció amb pesos clars. Total: 10 punts.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-sheets fi">Criteris de correcció</div>
+    <h2 class="fi">Pesos per criteri</h2>
+    <p class="lead fi">Cada criteri té un pes específic sobre la nota final de 10 punts. Assegura't de cobrir tots els apartats abans de lliurar.</p>
+
+    <div class="fi" style="overflow-x:auto;border-radius:var(--radius);border:1px solid var(--border)">
+      <table class="rubrica-table">
+        <thead>
+          <tr>
+            <th>Criteri</th>
+            <th>Insuficient (0-4)</th>
+            <th>Suficient (5-6)</th>
+            <th>Notable (7-8)</th>
+            <th>Excel·lent (9-10)</th>
+            <th>Pes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Estructura i organització</strong><br><small>Fulls ben nomenats, capçaleres clares, sense files/columnes buides innecessàries</small></td>
+            <td>Desorganitzat, sense estructura clara</td>
+            <td>Estructura bàsica, alguns problemes</td>
+            <td>Ben organitzat, noms descriptius</td>
+            <td>Estructura professional, impecable</td>
+            <td><span class="punt-badge">1,5 pt</span></td>
+          </tr>
+          <tr>
+            <td><strong>Fórmules i funcions</strong><br><small>Ús correcte de SUMA, SI, BUSCARV, SIIERROR i altres funcions requerides</small></td>
+            <td>Fórmules incorrectes o absents</td>
+            <td>Fórmules bàsiques correctes</td>
+            <td>Funcions avançades usades correctament</td>
+            <td>Fórmules optimitzades, uso d'ARRAYFORMULA o equivalents</td>
+            <td><span class="punt-badge">2,5 pt</span></td>
+          </tr>
+          <tr>
+            <td><strong>Gràfics i visualització</strong><br><small>Tipus de gràfic adequat, títol, llegenda, eixos etiquetats, colors coherents</small></td>
+            <td>Gràfics absents o totalment incorrectes</td>
+            <td>Gràfic creat però amb elements que manquen</td>
+            <td>Gràfic adequat amb tots els elements obligatoris</td>
+            <td>Gràfics professionals, formats personalitzats, insight clar</td>
+            <td><span class="punt-badge">2 pt</span></td>
+          </tr>
+          <tr>
+            <td><strong>Format i presentació</strong><br><small>Format de número, moneda, dates, format condicional, colors de capçalera</small></td>
+            <td>Cap format aplicat</td>
+            <td>Format bàsic (negreta en capçaleres)</td>
+            <td>Format consistent i coherent</td>
+            <td>Format professional, format condicional funcional</td>
+            <td><span class="punt-badge">1,5 pt</span></td>
+          </tr>
+          <tr>
+            <td><strong>Taula dinàmica</strong><br><small>Creació, configuració de camps i interpretació dels resultats</small></td>
+            <td>Absent o incorrecta</td>
+            <td>Creada però mal configurada</td>
+            <td>Correcta amb camps ben assignats</td>
+            <td>Múltiples taules dinàmiques, filtres i segments</td>
+            <td><span class="punt-badge">1,5 pt</span></td>
+          </tr>
+          <tr>
+            <td><strong>Col·laboració i entrega</strong><br><small>Compartit amb permís correcte, fitxer organitzat, presentat al termini</small></td>
+            <td>No lliurat o no accessible</td>
+            <td>Lliurat però amb permisos incorrectes</td>
+            <td>Lliurat correctament al termini</td>
+            <td>Lliurat, ben documentat, presentat correctament</td>
+            <td><span class="punt-badge">1 pt</span></td>
+          </tr>
+          <tr class="total-row">
+            <td colspan="4"><strong>TOTAL</strong></td>
+            <td colspan="2"><strong>10 punts</strong></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- CHECKLIST DE LLIURAMENT -->
+    <div class="section-tag tag-sheets fi" style="margin-top:4rem">Checklist de lliurament</div>
+    <h2 class="fi">Comprova abans de lliurar ✅</h2>
+    <p class="lead fi">Fes clic a cada element per marcar-lo. Tots han d'estar marcats abans d'enviar el treball.</p>
+
+    <div class="fi" style="max-width:720px">
+      <ul class="checklist" id="deliveryChecklist">
+        <li onclick="toggleCheck(this)"><span class="check-box"></span>He fet una còpia del fitxer original abans d'editar (no he treballat sobre la plantilla del professor)</li>
+        <li onclick="toggleCheck(this)"><span class="check-box"></span>Tots els fulls tenen noms descriptius (no "Full1", "Full2"...)</li>
+        <li onclick="toggleCheck(this)"><span class="check-box"></span>La primera fila de cada full de dades és la capçalera</li>
+        <li onclick="toggleCheck(this)"><span class="check-box"></span>Totes les fórmules requerides estan implementades i funcionant</li>
+        <li onclick="toggleCheck(this)"><span class="check-box"></span>He usat SIIERROR per gestionar possibles errors en les cerques</li>
+        <li onclick="toggleCheck(this)"><span class="check-box"></span>Els gràfics tenen títol, eixos etiquetats i llegenda</li>
+        <li onclick="toggleCheck(this)"><span class="check-box"></span>La taula dinàmica té els camps correctament assignats</li>
+        <li onclick="toggleCheck(this)"><span class="check-box"></span>He aplicat format condicional on s'indica</li>
+        <li onclick="toggleCheck(this)"><span class="check-box"></span>Les dates estan en format data (alineades a la dreta, no com a text)</li>
+        <li onclick="toggleCheck(this)"><span class="check-box"></span>He compartit el fitxer amb permís de <strong>Visualitzador</strong> (no Editor)</li>
+        <li onclick="toggleCheck(this)"><span class="check-box"></span>He comprovat que l'enllaç de compartició funciona en mode incògnit</li>
+        <li onclick="toggleCheck(this)"><span class="check-box"></span>He lliurat l'enllaç a la plataforma del curs antes del termini</li>
+      </ul>
+      <button class="checklist-reset" onclick="resetChecklist()">↺ Reiniciar checklist</button>
+      <div id="checkProgress" style="margin-top:.75rem;font-size:.88rem;color:var(--gsheets);font-weight:600;display:none"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════ AUTOAVALUACIÓ ══════════════════ -->
+<section id="autoavaluacio">
+  <div class="container">
+    <div class="ra-banner ra-red fi">
+      <div class="ra-num">🧠</div>
+      <div>
+        <h2>Autoavaluació interactiva</h2>
+        <p>5 preguntes tipus test per comprovar si has entès els conceptes clau del RA3. Resposta immediata.</p>
+      </div>
+    </div>
+
+    <div class="section-tag tag-red fi">Test d'autoavaluació</div>
+    <h2 class="fi">Saps prou per a l'examen?</h2>
+    <p class="lead fi">Respon les 5 preguntes per saber on estàs. No compta per nota, és per a la teva pròpia orientació.</p>
+
+    <div class="quiz-container fi">
+      <!-- Q1 -->
+      <div class="quiz-q" id="q1">
+        <p>1. Tens la fórmula <code>=A1*B1</code> a la cel·la C1. Quin tipus de referència és <code>A1</code>?</p>
+        <div class="quiz-options">
+          <div class="quiz-opt" onclick="checkAnswer(this, false, 'q1', 'Absoluta significa que no canvia quan copies la fórmula, i s\'escriu amb el signe $, com $A$1.')">
+            <div class="opt-icon">A</div>Absoluta
+          </div>
+          <div class="quiz-opt" onclick="checkAnswer(this, true, 'q1', 'Correcte! Una referència relativa s\'ajusta automàticament quan copies la fórmula. Si copies C1 cap avall a C2, la fórmula es convertirà en =A2*B2.')">
+            <div class="opt-icon">B</div>Relativa
+          </div>
+          <div class="quiz-opt" onclick="checkAnswer(this, false, 'q1', 'Mixta significa que fixa o bé la fila o bé la columna, com $A1 o A$1, però no totes dues a la vegada.')">
+            <div class="opt-icon">C</div>Mixta
+          </div>
+          <div class="quiz-opt" onclick="checkAnswer(this, false, 'q1', 'Una referència circular és quan una fórmula es fa referència a ella mateixa directament o indirectament.')">
+            <div class="opt-icon">D</div>Circular
+          </div>
+        </div>
+        <div class="quiz-explanation" id="exp-q1"></div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="quiz-q" id="q2">
+        <p>2. Quin error dona <code>=BUSCARV("P001";B2:D50;2;FALS)</code> si el codi "P001" no existeix al rang B2:B50?</p>
+        <div class="quiz-options">
+          <div class="quiz-opt" onclick="checkAnswer(this, false, 'q2', '#VALOR! apareix quan el tipus de dada és incorrecte, com intentar sumar text i números.')">
+            <div class="opt-icon">A</div><code>#VALOR!</code>
+          </div>
+          <div class="quiz-opt" onclick="checkAnswer(this, false, 'q2', '#REF! apareix quan una referència de cel·la no és vàlida, per exemple si has eliminat una cel·la a la qual es feia referència.')">
+            <div class="opt-icon">B</div><code>#REF!</code>
+          </div>
+          <div class="quiz-opt" onclick="checkAnswer(this, true, 'q2', 'Correcte! #N/A significa "Not Available" (no disponible). BUSCARV retorna aquest error quan no troba el valor cercat al rang. Pots evitar-lo envoltant la fórmula amb SIIERROR: =SIIERROR(BUSCARV(...);"No trobat").')">
+            <div class="opt-icon">C</div><code>#N/A</code>
+          </div>
+          <div class="quiz-opt" onclick="checkAnswer(this, false, 'q2', '#NOM? apareix quan Sheets no reconeix el nom d\'una funció, generalment per un error ortogràfic.')">
+            <div class="opt-icon">D</div><code>#NOM?</code>
+          </div>
+        </div>
+        <div class="quiz-explanation" id="exp-q2"></div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="quiz-q" id="q3">
+        <p>3. Vols calcular les vendes totals de la regió "Nord" durant el mes de "Gener". Quina funció uses?</p>
+        <div class="quiz-options">
+          <div class="quiz-opt" onclick="checkAnswer(this, false, 'q3', 'SUMASI permet un sol criteri. Si necessites dos criteris simultanis (regió I mes), SUMASI no és suficient.')">
+            <div class="opt-icon">A</div><code>SUMASI</code>
+          </div>
+          <div class="quiz-opt" onclick="checkAnswer(this, true, 'q3', 'Correcte! SUMASICONJUNTO permet sumar amb múltiples criteris simultanis. Exemple: =SUMASICONJUNTO(Vendes;Regió;"Nord";Mes;"Gener"). Quan necessites més d\'un criteri, sempre usa SUMASICONJUNTO.')">
+            <div class="opt-icon">B</div><code>SUMASICONJUNTO</code>
+          </div>
+          <div class="quiz-opt" onclick="checkAnswer(this, false, 'q3', 'COMPTARSI compta cel·les que compleixen un criteri, però no suma valors numèrics.')">
+            <div class="opt-icon">C</div><code>COMPTARSI</code>
+          </div>
+          <div class="quiz-opt" onclick="checkAnswer(this, false, 'q3', 'ARRAYFORMULA aplica fórmules en rang, però no és la funció específica per sumar amb múltiples criteris.')">
+            <div class="opt-icon">D</div><code>ARRAYFORMULA</code>
+          </div>
+        </div>
+        <div class="quiz-explanation" id="exp-q3"></div>
+      </div>
+
+      <!-- Q4 -->
+      <div class="quiz-q" id="q4">
+        <p>4. Un company t'envia un full de Google Sheets i et demana que hi afegeixis comentaris però que no puguis modificar les dades. Quin permís t'ha de donar?</p>
+        <div class="quiz-options">
+          <div class="quiz-opt" onclick="checkAnswer(this, false, 'q4', 'El Visualitzador pot llegir el document però NO pot afegir comentaris. Amb Visualitzador no pots fer res d\'interactiu.')">
+            <div class="opt-icon">A</div>Visualitzador
+          </div>
+          <div class="quiz-opt" onclick="checkAnswer(this, true, 'q4', 'Correcte! El rol Comentarista permet llegir el document i afegir comentaris o suggeriments, però NO modificar les dades directament. És el permís perfecte per a revisions sense risc d\'alteració.')">
+            <div class="opt-icon">B</div>Comentarista
+          </div>
+          <div class="quiz-opt" onclick="checkAnswer(this, false, 'q4', 'L\'Editor pot modificar tot el contingut del full. Si et donen accés d\'Editor, podries (accidentalment o no) modificar les dades.')">
+            <div class="opt-icon">C</div>Editor
+          </div>
+          <div class="quiz-opt" onclick="checkAnswer(this, false, 'q4', 'Propietari és qui ha creat el fitxer. Normalment hi ha un sol propietari i el rol no es pot assignar des del menú de compartició estàndard.')">
+            <div class="opt-icon">D</div>Propietari
+          </div>
+        </div>
+        <div class="quiz-explanation" id="exp-q4"></div>
+      </div>
+
+      <!-- Q5 -->
+      <div class="quiz-q" id="q5">
+        <p>5. Quin avantatge principal té <code>ÍNDEX+COINCIDIR</code> sobre <code>BUSCARV</code>?</p>
+        <div class="quiz-options">
+          <div class="quiz-opt" onclick="checkAnswer(this, false, 'q5', 'No és cert. BUSCARV és generalment més fàcil d\'escriure. La complexitat lleugerament superior d\'ÍNDEX+COINCIDIR es compensa amb la seva flexibilitat.')">
+            <div class="opt-icon">A</div>És més fàcil d'escriure
+          </div>
+          <div class="quiz-opt" onclick="checkAnswer(this, false, 'q5', 'Totes dues funcionen tant en fulls locals com entre fulls de Sheets.')">
+            <div class="opt-icon">B</div>Funciona en més versions de Sheets
+          </div>
+          <div class="quiz-opt" onclick="checkAnswer(this, true, 'q5', 'Correcte! BUSCARV sempre busca a la primera columna del rang i retorna un valor de les columnes de la dreta. ÍNDEX+COINCIDIR pot cercar en qualsevol columna i retornar valors de qualsevol altra columna, fins i tot a l\'esquerra. A més, és més ràpid en datasets grans.')">
+            <div class="opt-icon">C</div>Pot cercar en qualsevol columna (no només la primera) i retornar valors a l'esquerra
+          </div>
+          <div class="quiz-opt" onclick="checkAnswer(this, false, 'q5', 'BUSCARV i ÍNDEX+COINCIDIR funcionen igual amb dades amb i sense distincions de majúscules.')">
+            <div class="opt-icon">D</div>Distingeix entre majúscules i minúscules
+          </div>
+        </div>
+        <div class="quiz-explanation" id="exp-q5"></div>
+      </div>
+
+      <div class="quiz-score" id="quizScore">
+        <div class="score-num" id="scoreNum">0/5</div>
+        <div class="score-label" id="scoreLabel">Responent...</div>
+        <div id="scoreMessage" style="margin-top:1rem;color:var(--muted);font-size:.9rem"></div>
+        <button class="btn-quiz secondary" onclick="resetQuiz()" style="margin-top:1rem">↺ Tornar a intentar</button>
       </div>
     </div>
   </div>
@@ -1063,7 +1758,7 @@ function enviarCorreu() {<br>
           <h4>Explica la diferència entre una referència relativa, una d'absoluta i una de mixta a Google Sheets. Per a cada tipus, posa un exemple pràctic on l'ús incorrecte del tipus de referència provoqués un error de càlcul en copiar la fórmula.</h4>
           <p>Com usaries la tecla F4 per ciclar entre els quatre tipus de referència? En quin ordre canvien?</p>
           <span class="q-tag qt-sheets">Fórmules</span>
-          <span class="q-tag qt-form">referències</span>
+          <span class="q-tag qt-form">Referències</span>
         </div>
       </div>
 
@@ -1115,7 +1810,7 @@ function enviarCorreu() {<br>
       <div class="q-card">
         <div class="q-num">6</div>
         <div class="q-body">
-          <h4>Explica el concepte de "taula dinàmica" (Pivot Table). Quin problema resoldrà en comparació amb usar <code>SUMASI</code> manualment? Descriu els quatre zones d'una taula dinàmica (Files, Columnes, Valors, Filtres) i posa un exemple pràctic per a cada zona.</h4>
+          <h4>Explica el concepte de "taula dinàmica" (Pivot Table). Quin problema resol en comparació amb usar <code>SUMASI</code> manualment? Descriu les quatre zones d'una taula dinàmica (Files, Columnes, Valors, Filtres) i posa un exemple pràctic per a cada zona.</h4>
           <p>Si les dades originals canvien, la taula dinàmica s'actualitza automàticament o cal fer alguna acció?</p>
           <span class="q-tag qt-sheets">Pivot</span>
           <span class="q-tag qt-form">Anàlisi</span>
@@ -1203,10 +1898,100 @@ function enviarCorreu() {<br>
 </footer>
 
 <script>
+  // ── Fade in on scroll ──
   const io = new IntersectionObserver(entries => {
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
   }, { threshold: 0.07, rootMargin: '0px 0px -30px 0px' });
   document.querySelectorAll('.fi').forEach(el => io.observe(el));
+
+  // ── Checklist ──
+  function toggleCheck(li) {
+    li.classList.toggle('checked');
+    updateProgress();
+  }
+  function updateProgress() {
+    const items = document.querySelectorAll('#deliveryChecklist li');
+    const checked = document.querySelectorAll('#deliveryChecklist li.checked').length;
+    const prog = document.getElementById('checkProgress');
+    prog.style.display = 'block';
+    prog.textContent = `${checked} de ${items.length} elements completats${checked === items.length ? ' 🎉 Tot llest per lliurar!' : ''}`;
+    prog.style.color = checked === items.length ? 'var(--gsheets)' : 'var(--amber)';
+  }
+  function resetChecklist() {
+    document.querySelectorAll('#deliveryChecklist li').forEach(li => li.classList.remove('checked'));
+    document.getElementById('checkProgress').style.display = 'none';
+  }
+
+  // ── Quiz ──
+  let quizAnswers = {};
+  let quizTotal = 5;
+
+  function checkAnswer(optEl, isCorrect, qId, explanation) {
+    const qEl = document.getElementById(qId);
+    if (qEl.dataset.answered) return;
+    qEl.dataset.answered = 'true';
+    quizAnswers[qId] = isCorrect;
+
+    const opts = qEl.querySelectorAll('.quiz-opt');
+    opts.forEach(o => o.classList.add('disabled'));
+
+    if (isCorrect) {
+      optEl.classList.add('correct');
+      optEl.querySelector('.opt-icon').textContent = '✓';
+    } else {
+      optEl.classList.add('wrong');
+      optEl.querySelector('.opt-icon').textContent = '✗';
+      // highlight correct
+      opts.forEach(o => {
+        if (o !== optEl && o.getAttribute('onclick') && o.getAttribute('onclick').includes('true')) {
+          o.classList.add('correct');
+          o.querySelector('.opt-icon').textContent = '✓';
+        }
+      });
+    }
+
+    const expEl = document.getElementById('exp-' + qId);
+    expEl.textContent = explanation;
+    expEl.classList.add('show');
+
+    if (Object.keys(quizAnswers).length === quizTotal) showScore();
+  }
+
+  function showScore() {
+    const correct = Object.values(quizAnswers).filter(Boolean).length;
+    const scoreEl = document.getElementById('quizScore');
+    document.getElementById('scoreNum').textContent = correct + '/5';
+    const msgs = [
+      [0,1,'Cal repassar els conceptes bàsics. Llegeix la secció de teoria i torna-ho a intentar.'],
+      [2,2,'Anem bé, però alguns conceptes necessiten més repàs. Revisa les seccions de fórmules i permisos.'],
+      [3,3,'Bona base! Fes un repàs dels errors i ja estaràs a punt.'],
+      [4,4,'Molt bé! Gairebé perfecte. Revisa l\'error i estàs preparat.'],
+      [5,5,'Perfecte! Domines els conceptes clau del RA3. Preparat per a l\'examen. 🎉']
+    ];
+    const [,, msg] = msgs.find(([min,max]) => correct >= min && correct <= max);
+    document.getElementById('scoreLabel').textContent = correct === 5 ? 'Excel·lent!' : correct >= 3 ? 'Ben encaminat' : 'Necessita repàs';
+    document.getElementById('scoreMessage').textContent = msg;
+    scoreEl.classList.add('show');
+    scoreEl.scrollIntoView({behavior:'smooth', block:'center'});
+  }
+
+  function resetQuiz() {
+    quizAnswers = {};
+    document.querySelectorAll('.quiz-q').forEach(q => {
+      delete q.dataset.answered;
+      q.querySelectorAll('.quiz-opt').forEach(o => {
+        o.classList.remove('correct','wrong','disabled');
+        o.querySelector('.opt-icon').textContent = o.getAttribute('onclick').includes(',true,') ? '✓' : '';
+        // restore letters
+        const idx = Array.from(o.parentNode.children).indexOf(o);
+        o.querySelector('.opt-icon').textContent = ['A','B','C','D'][idx];
+      });
+      const expId = 'exp-' + q.id;
+      const expEl = document.getElementById(expId);
+      if(expEl) { expEl.textContent=''; expEl.classList.remove('show'); }
+    });
+    document.getElementById('quizScore').classList.remove('show');
+  }
 </script>
 </body>
 </html>
