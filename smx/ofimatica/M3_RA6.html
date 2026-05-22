@@ -196,13 +196,151 @@
   .fi.in { opacity: 1; transform: none; }
 
   @media (max-width: 640px) { .nav-pills { display: none; } }
+
+  /* ── PROGRESS BAR ── */
+  #progress-bar{position:fixed;top:0;left:0;height:3px;z-index:200;background:linear-gradient(90deg,var(--accent),var(--orange),var(--teal));width:0%;transition:width .1s linear;}
+  .time-badge{display:inline-flex;align-items:center;gap:.35rem;font-size:0.72rem;font-weight:600;color:var(--muted);background:var(--cream);border:1px solid var(--border);padding:.2rem .65rem;border-radius:100px;margin-left:.4rem;}
+  .dif-badge{display:inline-flex;align-items:center;gap:.4rem;font-size:0.72rem;font-weight:700;padding:.2rem .65rem;border-radius:100px;margin-bottom:.5rem;}
+  .dif-basic{background:rgba(22,163,74,0.12);color:#14532d;} .dif-mid{background:rgba(217,119,6,0.18);color:#78350f;} .dif-advanced{background:rgba(220,38,38,0.12);color:#7f1d1d;}
+  .compare-wrap{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1rem 0;}
+  @media(max-width:600px){.compare-wrap{grid-template-columns:1fr;}}
+  .compare-bad{background:rgba(220,38,38,0.05);border:1px solid rgba(220,38,38,0.25);border-radius:var(--radius);padding:1.1rem 1.25rem;}
+  .compare-good{background:rgba(22,163,74,0.05);border:1px solid rgba(22,163,74,0.25);border-radius:var(--radius);padding:1.1rem 1.25rem;}
+  .compare-lbl{font-size:0.68rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.5rem;display:flex;align-items:center;gap:.4rem;}
+  .compare-bad .compare-lbl{color:#7f1d1d;} .compare-good .compare-lbl{color:#14532d;}
+  .compare-bad p,.compare-good p{font-size:0.87rem;color:var(--ink);line-height:1.6;}
+  .kbd-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:.6rem;}
+  .kbd-row{display:flex;align-items:center;justify-content:space-between;padding:.55rem .9rem;background:var(--card);border:1px solid var(--border);border-radius:8px;font-size:0.86rem;}
+  .kbd-row .action{color:var(--muted);font-size:0.82rem;} .kbd-row .keys{display:flex;gap:.3rem;flex-shrink:0;}
+  kbd{display:inline-block;background:var(--cream);border:1px solid var(--border);border-bottom:2px solid #bbb;border-radius:5px;padding:.1rem .45rem;font-size:0.75rem;font-family:monospace;color:var(--ink);}
+  .trap-card{background:#fff8f0;border:1px solid rgba(220,38,38,0.25);border-left:4px solid var(--accent);border-radius:var(--radius);padding:1.25rem 1.5rem;margin-bottom:.85rem;}
+  .trap-card .trap-head{display:flex;align-items:center;gap:.65rem;margin-bottom:.4rem;}
+  .trap-card h4{color:#7f1d1d;margin:0;font-size:0.95rem;} .trap-card p{color:var(--muted);font-size:0.88rem;}
+  .trap-card .fix{margin-top:.5rem;padding:.5rem .85rem;border-radius:6px;background:rgba(22,163,74,0.09);font-size:0.85rem;color:#14532d;}
+  .real-world{border-left:3px solid var(--amber);background:#fffdf0;border-radius:0 var(--radius) var(--radius) 0;padding:.75rem 1.1rem;margin:.65rem 0;font-size:0.88rem;}
+  .real-world .rw-lbl{font-size:0.67rem;font-weight:800;letter-spacing:.1em;color:#78350f;margin-bottom:.2rem;text-transform:uppercase;}
+  .real-world p{color:var(--ink);}
+  .delivery-check{background:#f0fdf4;border:1px solid rgba(22,163,74,0.3);border-radius:var(--radius);padding:1.5rem;margin-top:1.25rem;}
+  .delivery-check h4{color:#14532d;margin-bottom:.75rem;}
+  .check-list{list-style:none;display:flex;flex-direction:column;gap:.45rem;}
+  .check-list li{display:flex;align-items:flex-start;gap:.65rem;font-size:0.88rem;color:var(--ink);line-height:1.5;}
+  .check-list li input[type=checkbox]{width:17px;height:17px;accent-color:var(--teal);cursor:pointer;flex-shrink:0;margin-top:2px;}
+  .check-list li.checked{text-decoration:line-through;color:var(--muted);}
+  .rubric-wrap{overflow-x:auto;margin-top:1.5rem;}
+  .rubric-table{width:100%;border-collapse:collapse;font-size:0.83rem;}
+  .rubric-table th,.rubric-table td{padding:.7rem .85rem;border:1px solid var(--border);vertical-align:top;}
+  .rubric-table th{background:var(--navy);color:white;font-family:'Syne',sans-serif;font-weight:700;font-size:0.78rem;text-align:center;}
+  .rubric-table th:first-child{border-radius:8px 0 0 0;} .rubric-table th:last-child{border-radius:0 8px 0 0;}
+  .rubric-table td:first-child{font-weight:600;color:var(--navy);background:#fafafa;min-width:150px;}
+  .rubric-table .col-ex{background:rgba(22,163,74,0.06);} .rubric-table .col-be{background:rgba(74,108,247,0.05);}
+  .rubric-table .col-ok{background:rgba(251,188,4,0.06);} .rubric-table .col-no{background:rgba(220,38,38,0.05);}
+  .rubric-table .col-ex td,.rubric-table .col-be td,.rubric-table .col-ok td,.rubric-table .col-no td{color:var(--muted);font-size:0.8rem;}
+  .rubric-total{background:var(--navy) !important;} .rubric-total td{color:white !important;font-weight:700 !important;background:transparent !important;}
+  .resource-link{display:flex;align-items:center;gap:1rem;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1rem 1.25rem;text-decoration:none;color:inherit;transition:all .2s;margin-bottom:.6rem;}
+  .resource-link:hover{border-color:var(--accent);transform:translateX(4px);}
+  .resource-icon{font-size:1.6rem;flex-shrink:0;}
+  .resource-link .r-title{font-weight:700;font-size:0.92rem;color:var(--navy);}
+  .resource-link .r-desc{font-size:0.8rem;color:var(--muted);}
+  .resource-link .r-tag{font-size:0.68rem;font-weight:700;background:rgba(220,38,38,0.1);color:var(--accent);padding:.1rem .5rem;border-radius:100px;margin-top:.2rem;display:inline-block;}
+  .video-card{display:flex;align-items:center;gap:1rem;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1rem 1.25rem;text-decoration:none;color:inherit;transition:all .2s;margin-bottom:.6rem;}
+  .video-card:hover{border-color:var(--orange);transform:translateX(4px);}
+  .video-thumb{width:48px;height:48px;background:var(--accent);border-radius:10px;display:grid;place-items:center;font-size:1.3rem;flex-shrink:0;}
+  .video-card .v-title{font-weight:700;font-size:0.9rem;color:var(--navy);}
+  .video-card .v-desc{font-size:0.78rem;color:var(--muted);}
+  .video-card .v-tag{font-size:0.68rem;font-weight:700;background:rgba(220,38,38,0.1);color:var(--accent);padding:.1rem .5rem;border-radius:100px;margin-top:.2rem;display:inline-block;}
+  .quiz-section{padding:4rem 2rem;background:#fef2f2;}
+  .quiz-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;margin-bottom:1rem;}
+  .quiz-q{font-weight:600;font-size:0.95rem;color:var(--navy);margin-bottom:.85rem;}
+  .quiz-options{display:flex;flex-direction:column;gap:.5rem;}
+  .quiz-opt{display:flex;align-items:center;gap:.75rem;padding:.65rem 1rem;border-radius:8px;cursor:pointer;border:1.5px solid var(--border);background:white;font-size:0.88rem;color:var(--ink);transition:all .2s;text-align:left;}
+  .quiz-opt:hover:not(.disabled){border-color:var(--accent);background:rgba(220,38,38,0.04);}
+  .quiz-opt.correct{border-color:var(--green);background:rgba(22,163,74,0.1);color:#14532d;font-weight:600;}
+  .quiz-opt.wrong{border-color:var(--accent);background:rgba(220,38,38,0.08);color:#7f1d1d;}
+  .quiz-opt.disabled{cursor:not-allowed;pointer-events:none;}
+  .quiz-feedback{margin-top:.65rem;font-size:0.83rem;padding:.5rem .85rem;border-radius:6px;display:none;}
+  .quiz-feedback.show{display:block;} .quiz-feedback.ok{background:rgba(22,163,74,0.1);color:#14532d;} .quiz-feedback.ko{background:rgba(220,38,38,0.08);color:#7f1d1d;}
+  .quiz-score{font-family:'Syne',sans-serif;font-weight:800;font-size:1.5rem;color:var(--navy);margin:1rem 0 .3rem;}
+  .feynman{background:linear-gradient(135deg,var(--navy),var(--accent-d));color:white;border-radius:var(--radius);padding:2rem 2.25rem;margin:2rem 0;}
+  .feynman h3{color:white;} .feynman p{color:rgba(255,255,255,.8);font-size:0.92rem;}
+  .feynman .feyn-prompts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.75rem;margin-top:1.25rem;}
+  .feyn-card{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:10px;padding:1rem;}
+  .feyn-card p{color:rgba(255,255,255,.9);font-size:0.85rem;font-style:italic;}
+
+
+  /* ── NAV extra link type ── */
+  .nav-pills a.extra { color: var(--cobalt, #1a6fb5); }
+  .nav-pills a.extra:hover { color: var(--cobalt, #1a6fb5); border-color: var(--cobalt, #1a6fb5); }
+
+  /* ── Fix contrast: real-world box ── */
+  .real-world {
+    border-left: 3px solid #d97706 !important;
+    background: #fffbeb !important;
+    border-radius: 0 var(--radius) var(--radius) 0;
+    padding: .85rem 1.1rem;
+    margin: .75rem 0;
+    font-size: 0.88rem;
+  }
+  .real-world .rw-lbl {
+    font-size: 0.67rem; font-weight: 800; letter-spacing: .1em;
+    color: #92400e !important; margin-bottom: .3rem; text-transform: uppercase;
+  }
+  .real-world p { color: #1c1917 !important; line-height: 1.6; }
+
+  /* ── Fix contrast: time-badge ── */
+  .time-badge {
+    display: inline-flex; align-items: center; gap: .35rem;
+    font-size: 0.72rem; font-weight: 600;
+    color: #44403c !important;
+    background: #f5f5f4 !important;
+    border: 1px solid #d6d3d1 !important;
+    padding: .2rem .65rem; border-radius: 100px; margin-left: .4rem;
+  }
+
+  /* ── Fix contrast: dif badges ── */
+  .dif-basic    { background: #dcfce7 !important; color: #14532d !important; }
+  .dif-mid      { background: #fef3c7 !important; color: #78350f !important; }
+  .dif-advanced { background: #fee2e2 !important; color: #7f1d1d !important; }
+
+  /* ── Fix contrast: trap-card ── */
+  .trap-card { background: #fff7ed !important; }
+  .trap-card p { color: #44403c !important; }
+  .trap-card .fix { color: #14532d !important; background: #dcfce7 !important; }
+
+  /* ── Fix contrast: compare boxes ── */
+  .compare-bad p, .compare-good p { color: #1c1917 !important; }
+  .compare-bad  { background: #fff1f2 !important; }
+  .compare-good { background: #f0fdf4 !important; }
+
+  /* ── Fix contrast: delivery-check ── */
+  .delivery-check { background: #f0fdf4 !important; }
+  .delivery-check h4 { color: #14532d !important; }
+  .check-list li { color: #1c1917 !important; }
+  .check-list li.checked { color: #78716c !important; }
+
+  /* ── Fix contrast: quiz ── */
+  .quiz-opt { color: #1c1917 !important; }
+  .quiz-feedback.ok { color: #14532d !important; background: #dcfce7 !important; }
+  .quiz-feedback.ko { color: #7f1d1d !important; background: #fee2e2 !important; }
+
+  /* ── Fix contrast: kbd rows ── */
+  .kbd-row .action { color: #44403c !important; }
+
+  /* ── Fix contrast: resource/video cards ── */
+  .resource-link .r-desc, .video-card .v-desc { color: #44403c !important; }
+
+  /* ── Nav pills scrollable on wide screens ── */
+  .nav-pills { flex-wrap: wrap; gap: .2rem; }
+
 </style>
 </head>
 <body>
 
+<!-- PROGRESS BAR -->
+<div id="progress-bar"></div>
+
 <!-- NAV -->
 <nav>
-  <div class="nav-logo">SMX · <span>RA6</span> Ofimàtica</div>
+  <div class="nav-logo">SMX · <span>RA6</span> · Vídeo Digital</div>
   <ul class="nav-pills">
     <li><a href="#intro">Introducció</a></li>
     <li><a href="#conceptes" class="teoria">Conceptes</a></li>
@@ -211,6 +349,12 @@
     <li><a href="#edicio" class="teoria">Edició</a></li>
     <li><a href="#practica" class="prac">Pràctica</a></li>
     <li><a href="#preguntes" class="pregs">Preguntes</a></li>
+    <li><a href="#trampes" class="extra">Trampes</a></li>
+    <li><a href="#exemples" class="extra">Bé/Malament</a></li>
+    <li><a href="#dreceres" class="extra">Dreceres</a></li>
+    <li><a href="#rubrica" class="extra">Rúbrica</a></li>
+    <li><a href="#quiz" class="extra">Test</a></li>
+    <li><a href="#recursos" class="extra">Recursos</a></li>
   </ul>
 </nav>
 
@@ -741,6 +885,17 @@
         </div>
       </div>
       <div class="practice-body">
+        <div style="display:flex;gap:.5rem;align-items:center;margin-bottom:1.25rem;flex-wrap:wrap">
+          <span class="dif-badge dif-advanced">🔴 Dificultat molt alta</span>
+          <span class="time-badge">⏱ Fase 1–2: ~75 min</span>
+          <span class="time-badge">⏱ Fase 3: ~90 min</span>
+          <span class="time-badge">⏱ Fase 4: ~60 min</span>
+          <span class="time-badge">⏱ Fase 5: ~45 min</span>
+        </div>
+        <div class="real-world" style="margin-bottom:1.25rem">
+          <div class="rw-lbl">🏢 Connexió amb el món real</div>
+          <p>Gravar, editar i exportar un vídeo corporatiu (presentació d'empresa, tutorial de producte, formació interna) és una tasca cada vegada més habitual en equips IT que no disposen de pressupost per a productores externes. Kdenlive + OBS + Audacity és exactament el stack de eines que usa un tècnic de suport o un creador de contingut amb pressupost zero. El control de còdecs, bitrates i formats és essencial per a publicació a YouTube, LinkedIn i intranets corporatives.</p>
+        </div>
         <div class="callout cl-accent" style="margin-bottom:1.5rem">
           <span class="callout-icon">🎯</span>
           <div>
@@ -808,6 +963,28 @@
               <li>Document de memòria (guió + procés + taula de formats)</li>
             </ul>
           </div>
+        </div>
+
+        <div class="delivery-check">
+          <h4>☑️ Checklist de lliurament — P1 RA6</h4>
+          <ul class="check-list">
+            <li><input type="checkbox"><span><strong>Fase 1:</strong> Guió tècnic escrit (títol 15", explicació 60", demo 30", crèdits 15"). Carpetes creades. Música CC0/CC BY descarregada.</span></li>
+            <li><input type="checkbox"><span><strong>Fase 1:</strong> OBS configurat (1920×1080, 25fps, MKV, CRF 20).</span></li>
+            <li><input type="checkbox"><span><strong>Fase 2:</strong> Screencast de 45–60" gravat amb OBS mostrant tasca SMX real.</span></li>
+            <li><input type="checkbox"><span><strong>Fase 2:</strong> Locució gravada, editada a Audacity (reducció de soroll + compressor) i exportada com a WAV 48000 Hz.</span></li>
+            <li><input type="checkbox"><span><strong>Fase 2:</strong> Música de fons preparada (fade-in 3" + fade-out 5").</span></li>
+            <li><input type="checkbox"><span><strong>Fase 3:</strong> Projecte Kdenlive creat (1080p, 25fps). 5 pistes estructurades (V3, V2, V1, A1, A2).</span></li>
+            <li><input type="checkbox"><span><strong>Fase 3:</strong> Efecte Ken Burns aplicat a les imatges fixes. Locució sincronitzada. Volum de música al 20-30% amb ducking.</span></li>
+            <li><input type="checkbox"><span><strong>Fase 4:</strong> Títol d'obertura animat (fade in 1"). Lower thirds al screencast. Crèdits finals amb scroll.</span></li>
+            <li><input type="checkbox"><span><strong>Fase 4:</strong> Color grading aplicat (corba en S). Balanç de blancs corregit si calia.</span></li>
+            <li><input type="checkbox"><span><strong>Fase 5:</strong> smx_reportatge_web.mp4 (1080p, H.264, AAC 192kbps)</span></li>
+            <li><input type="checkbox"><span><strong>Fase 5:</strong> smx_reportatge_stories.mp4 (1080×1920)</span></li>
+            <li><input type="checkbox"><span><strong>Fase 5:</strong> smx_reportatge_arxiu.mkv (H.265, CRF 18, FLAC)</span></li>
+            <li><input type="checkbox"><span><strong>Fase 5:</strong> smx_reportatge.webm (VP9, FFmpeg)</span></li>
+            <li><input type="checkbox"><span><strong>Fase 5:</strong> smx_preview.gif (5", 15fps, 480px)</span></li>
+            <li><input type="checkbox"><span>Arxiu del projecte .kdenlive</span></li>
+            <li><input type="checkbox"><span>Document de memòria: guió + captures del procés + taula comparativa de formats. Lliurat a Moodle en ZIP.</span></li>
+          </ul>
         </div>
 
         <div style="overflow-x:auto;margin-top:2rem">
@@ -972,6 +1149,370 @@
   </div>
 </section>
 
+<!-- ════ TRAMPES ════ -->
+<section id="trampes" style="padding:5rem 2rem;background:#fff8f7;">
+  <div class="container">
+    <div class="section-tag tag-accent fi">Errors habituals</div>
+    <h2 class="fi">⚠️ Trampes freqüents del RA6</h2>
+    <p class="lead fi" style="margin-bottom:2rem">Errors que fan quasi tots els alumnes la primera vegada amb vídeo, còdecs i edició. Llegeix-los ara.</p>
+    <div class="fi">
+      <div class="trap-card">
+        <div class="trap-head">⚠️ <h4>Confondre còdec i contenidor (p.ex. "format MP4")</h4></div>
+        <p>Molts alumnes diuen "exporta en MP4" sense entendre que MP4 és un contenidor i H.264 és el còdec. Un MP4 pot contenir vídeo H.264, H.265 o fins i tot VP9. Quan la impremta o plataforma demana especificacions, cal indicar TANT el contenidor com el còdec i el bitrate.</p>
+        <div class="fix">✅ Solució: Pensa en el contenidor com una caixa i el còdec com el contingut. MP4 (caixa) + H.264 (compressió de vídeo) + AAC (compressió d'àudio) = especificació completa. YouTube accepta MP4/H.264; per a màxima compatibilitat, usa sempre aquesta combinació.</div>
+      </div>
+      <div class="trap-card">
+        <div class="trap-head">⚠️ <h4>Gravar l'OBS en MP4 en lloc de MKV</h4></div>
+        <p>Si graves en MP4 i l'ordinador es penja o l'OBS es tanca inesperadament, el fitxer MP4 queda corrupte i és irrecuperable. MP4 escriu la capçalera (índex) al final; si no s'escriu, el fitxer no es pot llegir.</p>
+        <div class="fix">✅ Solució: Grava sempre en MKV (Matroska) a l'OBS. MKV escriu les dades de forma contínua: si es talla, el que s'ha gravat fins aquell moment és recuperable. Quan acabis, pots convertir fàcilment a MP4 amb FFmpeg: <code>ffmpeg -i gravacio.mkv -c copy gravacio.mp4</code></div>
+      </div>
+      <div class="trap-card">
+        <div class="trap-head">⚠️ <h4>Usar música de YouTube o Spotify a la locució sense verificar la llicència</h4></div>
+        <p>La majoria de música comercial (inclosa la de YouTube Music o Spotify) té drets d'autor. Si puges un vídeo amb aquesta música a YouTube, el sistema Content ID la detectarà i pot silenciar el vídeo, redirigir els ingressos al propietari dels drets o fins i tot eliminar el vídeo. En un projecte empresarial, podria comportar accions legals.</p>
+        <div class="fix">✅ Solució: Usa música amb llicència CC0 o CC BY de Free Music Archive (freemusicarchive.org), ccMixter, Incompetech o YouTube Audio Library (que és gratuïta per a vídeos de YouTube). Sempre anota la font i la llicència al document de memòria.</div>
+      </div>
+      <div class="trap-card">
+        <div class="trap-head">⚠️ <h4>No aplicar reducció de soroll a Audacity ABANS de gravar la mostra de silenci</h4></div>
+        <p>L'ordre és crítica: primer graves uns 2-3 segons de silenci (sense parlar), llavors selecciones aquell fragment, uses Efecte → Reducció de soroll → "Obtenir perfil de soroll", i LLAVORS selecciones tota la pista i apliques la reducció. Molts alumnes salten el perfil de soroll i el resultat és una locució amb sorolls robotics o un silenci que no s'elimina.</p>
+        <div class="fix">✅ Solució: L'ordre correcta és (1) gravar 2" de silenci al principi, (2) seleccionar-lo, (3) Efecte → Reducció de soroll → Perfil, (4) Ctrl+A per seleccionar tot, (5) Efecte → Reducció de soroll → OK. Ajusta la intensitat al mínim necessari per no sonar a ràdio.</div>
+      </div>
+      <div class="trap-card">
+        <div class="trap-head">⚠️ <h4>Exportar a alta qualitat per a Instagram Stories (1080×1920) sense recadrar</h4></div>
+        <p>Agafar un vídeo horitzontal 1920×1080 i simplement canviar-ne les dimensions a 1080×1920 comprimirà o estirarà el vídeo de forma incorrecta. Instagram Stories és format vertical 9:16 i el contingut horitzontal no es pot convertir directament sense decisions de composició.</p>
+        <div class="fix">✅ Solució: A Kdenlive, usa l'efecte Transformació per recadrar la part central i important del vídeo original al format vertical. O afegeix barres de color a dalt i baix (letterbox vertical) per mantenir el vídeo original sense distorsionar. La decisió compositiva és part de l'aprenentatge.</div>
+      </div>
+      <div class="trap-card">
+        <div class="trap-head">⚠️ <h4>No usar proxy clips a Kdenlive per a fitxers MKV grans</h4></div>
+        <p>Treballar amb el fitxer MKV original (500MB+) a la línia de temps de Kdenlive fa que la previsualització vagi molt a poc poc o es congeli en ordinadors amb pocs recursos. Molts alumnes passen mitja hora esperant que la previsualització es posi al dia, pensant que el programa no funciona.</p>
+        <div class="fix">✅ Solució: Activa els proxy clips a Kdenlive: Configuració del projecte → Proxy clips → Activar. Kdenlive crearà automàticament còpies de baixa resolució per a l'edició. En renderitzar el producte final, usarà els fitxers originals d'alta qualitat. La edició serà fluida.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ BÉ VS MALAMENT ════ -->
+<section id="exemples" style="padding:5rem 2rem;background:var(--cream);">
+  <div class="container">
+    <div class="section-tag tag-cobalt fi">Exemples visuals</div>
+    <h2 class="fi">Bé vs. Malament — vídeo i edició</h2>
+    <p class="lead fi" style="margin-bottom:2rem">Exemples concrets del RA6 per entendre els errors típics.</p>
+
+    <div class="fi" style="margin-bottom:2.5rem">
+      <h3 style="margin-bottom:1rem">🎥 Qualitat d'exportació</h3>
+      <div class="compare-wrap">
+        <div class="compare-bad">
+          <div class="compare-lbl">❌ Malament</div>
+          <p>Exportació del reportatge:<br>• Format: AVI sense compressió<br>• Mida: 15 GB per 2 minuts<br>• Àudio: WAV sense compressió<br><br><em style="font-size:.8rem;color:#7f1d1d">Inviable per enviar per email o pujar a YouTube. No és millor qualitat que H.264 ben configurat.</em></p>
+        </div>
+        <div class="compare-good">
+          <div class="compare-lbl">✅ Bé</div>
+          <p>Exportació del reportatge:<br>• Web: MP4, H.264, 8000 kbps, AAC 192kbps → ~120 MB<br>• Arxiu: MKV, H.265 CRF 18, FLAC → ~400 MB<br>• Stories: MP4, 1080×1920, 8000 kbps → ~120 MB<br><br><em style="font-size:.8rem;color:#14532d">Cada format adaptat al seu destí, qualitat professional.</em></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="fi" style="margin-bottom:2.5rem">
+      <h3 style="margin-bottom:1rem">📊 Organització de la línia de temps</h3>
+      <div class="compare-wrap">
+        <div class="compare-bad">
+          <div class="compare-lbl">❌ Malament</div>
+          <p>Línies de temps a Kdenlive:<br>Video_1: "sense nom"<br>Video_2: "sense nom #2"<br>Audio_1: "pista_audio"<br>Audio_2: "pista_audio #2"<br>Audio_3: "pista_audio #3"<br><br><em style="font-size:.8rem;color:#7f1d1d">Impossible saber quin clip és la locució i quin la música. Un error i pots eliminar la locució pensant que era un efecte.</em></p>
+        </div>
+        <div class="compare-good">
+          <div class="compare-lbl">✅ Bé</div>
+          <p>Línies de temps organitzades:<br>V3: TÍTOLS I GRÀFICS<br>V2: IMATGES FIXES (Ken Burns)<br>V1: VÍDEO PRINCIPAL (screencast)<br>A1: LOCUCIÓ (veu en off)<br>A2: MÚSICA FONS (20% volum)<br><br><em style="font-size:.8rem;color:#14532d">Estructura clara. Editar i corregir és senzill.</em></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="fi" style="margin-bottom:2.5rem">
+      <h3 style="margin-bottom:1rem">🎵 Balanceig d'àudio</h3>
+      <div class="compare-wrap">
+        <div class="compare-bad">
+          <div class="compare-lbl">❌ Malament</div>
+          <p>Locució i música al 100% de volum durant tot el vídeo.<br><br><em style="font-size:.8rem;color:#7f1d1d">La música tapa la veu i és impossible entendre el que es diu. Problemes de clipping (distorsió per saturació) a l'àudio exportat.</em></p>
+        </div>
+        <div class="compare-good">
+          <div class="compare-lbl">✅ Bé</div>
+          <p>Locució: 100% de volum (pista dominant).<br>Música: 20–30% de volum base.<br>Ducking: quan parla la locució, la música baixa automàticament al 10%. Fade-in 1" i fade-out 3" a la música.<br><br><em style="font-size:.8rem;color:#14532d">Àudio professional. La veu sempre és clara i intel·ligible.</em></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="fi">
+      <h3 style="margin-bottom:1rem">🎬 Transitions i títols</h3>
+      <div class="compare-wrap">
+        <div class="compare-bad">
+          <div class="compare-lbl">❌ Malament</div>
+          <p>20 clips de vídeo amb 15 tipus de transicions diferents (dissolució, estel·lar, volet, espiral...). Títols en Comic Sans vermell sobre fons groc. Crèdits finals en 3 idiomes.<br><br><em style="font-size:.8rem;color:#7f1d1d">Efecte de fira de poble. Distreu i fa que el contingut sembli poc professional.</em></p>
+        </div>
+        <div class="compare-good">
+          <div class="compare-lbl">✅ Bé</div>
+          <p>Màxim 2 tipus de transicions: dissolució creuada (12 fotogrames) entre clips i Fade to Black al final. Tots els títols en la mateixa font sans-serif blanca. Lower thirds coherents amb color corporatiu.<br><br><em style="font-size:.8rem;color:#14532d">Coherència visual. L'espectador no es distreu amb les transicions.</em></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ DRECERES ════ -->
+<section id="dreceres" style="padding:5rem 2rem;background:white;">
+  <div class="container">
+    <div class="section-tag tag-teal fi">Productivitat</div>
+    <h2 class="fi">⌨️ Dreceres de teclat: Kdenlive, OBS i FFmpeg</h2>
+    <p class="lead fi" style="margin-bottom:2rem">Les dreceres que fan la diferència en un flux de producció de vídeo professional.</p>
+    <div class="fi" style="margin-bottom:2.5rem">
+      <h3 style="margin-bottom:1rem;color:var(--teal)">🎬 Kdenlive — edició de vídeo</h3>
+      <div class="kbd-grid">
+        <div class="kbd-row"><span class="action">Reproduir / Parar</span><span class="keys"><kbd>Espai</kbd></span></div>
+        <div class="kbd-row"><span class="action">Dividir clip a la posició actual</span><span class="keys"><kbd>Shift</kbd>+<kbd>R</kbd></span></div>
+        <div class="kbd-row"><span class="action">Eina de tall (Razor)</span><span class="keys"><kbd>X</kbd></span></div>
+        <div class="kbd-row"><span class="action">Eina de selecció</span><span class="keys"><kbd>F1</kbd></span></div>
+        <div class="kbd-row"><span class="action">Desfer / Refer</span><span class="keys"><kbd>Ctrl</kbd>+<kbd>Z</kbd> / <kbd>Ctrl</kbd>+<kbd>Y</kbd></span></div>
+        <div class="kbd-row"><span class="action">Renderitzar / Exportar</span><span class="keys"><kbd>Ctrl</kbd>+<kbd>Enter</kbd></span></div>
+        <div class="kbd-row"><span class="action">Marca d'entrada (In point)</span><span class="keys"><kbd>I</kbd></span></div>
+        <div class="kbd-row"><span class="action">Marca de sortida (Out point)</span><span class="keys"><kbd>O</kbd></span></div>
+        <div class="kbd-row"><span class="action">Afegir clip a la línia de temps</span><span class="keys"><kbd>V</kbd></span></div>
+        <div class="kbd-row"><span class="action">Zoom in/out a la línia de temps</span><span class="keys"><kbd>Ctrl</kbd>+<kbd>+</kbd> / <kbd>Ctrl</kbd>+<kbd>-</kbd></span></div>
+        <div class="kbd-row"><span class="action">Moure cap a frame anterior/següent</span><span class="keys"><kbd>←</kbd> / <kbd>→</kbd></span></div>
+        <div class="kbd-row"><span class="action">Moure 1 segon enrere/endavant</span><span class="keys"><kbd>Shift</kbd>+<kbd>←</kbd> / <kbd>→</kbd></span></div>
+      </div>
+    </div>
+    <div class="fi" style="margin-bottom:2.5rem">
+      <h3 style="margin-bottom:1rem;color:var(--orange)">🎙️ OBS Studio — captura</h3>
+      <div class="kbd-grid">
+        <div class="kbd-row"><span class="action">Iniciar / Aturar gravació</span><span class="keys"><kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>R</kbd></span></div>
+        <div class="kbd-row"><span class="action">Iniciar / Aturar streaming</span><span class="keys"><kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>S</kbd></span></div>
+        <div class="kbd-row"><span class="action">Silenciar micròfon</span><span class="keys"><kbd>Ctrl</kbd>+<kbd>M</kbd></span></div>
+        <div class="kbd-row"><span class="action">Canviar escena (1–9)</span><span class="keys"><kbd>Ctrl</kbd>+<kbd>1-9</kbd></span></div>
+        <div class="kbd-row"><span class="action">Previsualització del Studio Mode</span><span class="keys"><kbd>Ctrl</kbd>+<kbd>P</kbd></span></div>
+      </div>
+    </div>
+    <div class="callout cl-blue fi">
+      <span class="callout-icon">💡</span>
+      <div><strong>Comandes FFmpeg essencials per al RA6</strong>
+        <div style="margin-top:.75rem;display:flex;flex-direction:column;gap:.4rem;font-size:.83rem">
+          <code>ffmpeg -i entrada.mkv -c copy sortida.mp4</code><span style="color:var(--muted);font-size:.78rem">Convertir MKV a MP4 sense recodificar (ràpid i sense pèrdua)</span>
+          <code>ffmpeg -i entrada.mp4 -c:v libvpx-vp9 -crf 30 -b:v 0 -c:a libopus sortida.webm</code><span style="color:var(--muted);font-size:.78rem">Convertir a WebM (VP9 + Opus)</span>
+          <code>ffmpeg -i entrada.mp4 -ss 00:00:30 -t 5 -vf "fps=15,scale=480:-1" -loop 0 previsualitzacio.gif</code><span style="color:var(--muted);font-size:.78rem">Generar GIF animat de 5 segons des del segon 30</span>
+          <code>ffmpeg -i entrada.mp4 -vf "scale=1080:1920:force_original_aspect_ratio=decrease,pad=1080:1920:(ow-iw)/2:(oh-ih)/2" stories.mp4</code><span style="color:var(--muted);font-size:.78rem">Convertir a format Stories vertical (9:16) amb barres negres</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ VÍDEOS ════ -->
+<section id="videos" style="padding:5rem 2rem;background:var(--cream);">
+  <div class="container">
+    <div class="section-tag tag-accent fi">Recursos audiovisuals</div>
+    <h2 class="fi">▶️ Vídeos i documentació per a les parts difícils</h2>
+    <p class="lead fi" style="margin-bottom:2rem">Les eines del RA6 (Kdenlive, OBS, Audacity, FFmpeg) s'aprenen molt millor en vídeo.</p>
+    <div class="grid g2 fi">
+      <div>
+        <h3 style="margin-bottom:.75rem;color:var(--teal)">🎬 Kdenlive i edició</h3>
+        <a class="video-card" href="https://kdenlive.org/en/learn/" target="_blank" rel="noopener">
+          <div class="video-thumb" style="background:var(--teal)">▶</div>
+          <div><div class="v-title">Tutorials oficials Kdenlive.org</div><div class="v-desc">Vídeos oficials per a totes les funcions: muntatge, efectes, transicions, color grading i exportació.</div><span class="v-tag">Oficial · Kdenlive.org</span></div>
+        </a>
+        <a class="video-card" href="https://manual.kdenlive.org/en/index.html" target="_blank" rel="noopener">
+          <div class="video-thumb" style="background:var(--teal)">▶</div>
+          <div><div class="v-title">Manual oficial Kdenlive (en línia)</div><div class="v-desc">Documentació completa. Útil per entendre proxy clips, keyframes d'àudio i perfils d'exportació.</div><span class="v-tag">Oficial · Manual Kdenlive</span></div>
+        </a>
+        <a class="video-card" href="https://www.audacityteam.org/help/" target="_blank" rel="noopener">
+          <div class="video-thumb" style="background:var(--navy)">▶</div>
+          <div><div class="v-title">Tutorials oficials Audacity</div><div class="v-desc">Reducció de soroll, compressor, normalitzar i exportar a WAV/MP3. Tot el necessari per a la Fase 2.</div><span class="v-tag">Oficial · Audacity</span></div>
+        </a>
+      </div>
+      <div>
+        <h3 style="margin-bottom:.75rem;color:var(--orange)">🔴 OBS i FFmpeg</h3>
+        <a class="video-card" href="https://obsproject.com/wiki/" target="_blank" rel="noopener">
+          <div class="video-thumb" style="background:var(--orange)">▶</div>
+          <div><div class="v-title">Wiki oficial OBS Studio</div><div class="v-desc">Configuració de captures, escenes, àudio i opcions de sortida. Inclou guia de CRF i bitrates recomanats.</div><span class="v-tag">Oficial · OBS Wiki</span></div>
+        </a>
+        <a class="video-card" href="https://ffmpeg.org/documentation.html" target="_blank" rel="noopener">
+          <div class="video-thumb">▶</div>
+          <div><div class="v-title">Documentació oficial FFmpeg</div><div class="v-desc">Referència completa de tots els còdecs, filtres i opcions. Per entendre les comandes de la Fase 5.</div><span class="v-tag">Oficial · FFmpeg.org</span></div>
+        </a>
+        <a class="resource-link" href="https://freemusicarchive.org/" target="_blank" rel="noopener" style="margin-bottom:.6rem">
+          <span class="resource-icon">🎵</span>
+          <div><div class="r-title">Free Music Archive — Música CC0/CC BY</div><div class="r-desc">Milers de cançons amb llicències lliures per a vídeos comercials i educatius. Filtra per gènere, BPM i llicència específica.</div><span class="r-tag">Gratuït · CC0 / CC BY</span></div>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ RÚBRICA ════ -->
+<section id="rubrica" style="padding:5rem 2rem;background:white;">
+  <div class="container">
+    <div class="section-tag tag-cobalt fi">Avaluació</div>
+    <h2 class="fi">📊 Rúbrica de correcció detallada — RA6</h2>
+    <p class="lead fi" style="margin-bottom:1rem">La versió anterior era simplificada. Aquesta és la definitiva amb pesos per criteri.</p>
+    <div class="rubric-wrap fi">
+      <table class="rubric-table">
+        <thead><tr>
+          <th style="width:20%;text-align:left">Criteri</th><th style="width:8%">Pes</th>
+          <th class="col-ex" style="width:18%">🟢 Excel·lent (9–10)</th>
+          <th class="col-be" style="width:18%">🔵 Bé (7–8)</th>
+          <th class="col-ok" style="width:18%">🟡 Suficient (5–6)</th>
+          <th class="col-no" style="width:18%">🔴 Insuficient (0–4)</th>
+        </tr></thead>
+        <tbody>
+          <tr><td>Captura i qualitat del material</td><td style="text-align:center;font-weight:700">20%</td>
+          <td class="col-ex">Screencast 1080p/25fps nítid. Locució processada (reducció soroll + compressor). Música CC0 documentada. Imatges fixes &gt;1920px.</td>
+          <td class="col-be">Screencast acceptable. Locució amb alguns sorolls de fons o sense compressor. Música present.</td>
+          <td class="col-ok">Screencast llegible però baix bitrate o resolució. Locució sense processar. Sense imatges fixes.</td>
+          <td class="col-no">Vídeo borrós, ilegible o tallat. Sense locució. Material insuficient per muntar.</td></tr>
+          <tr><td>Muntatge i estructura narrativa</td><td style="text-align:center;font-weight:700">20%</td>
+          <td class="col-ex">5 pistes estructurades. Efecte Ken Burns a imatges. J-cuts entre locució i vídeo. Timing precís seguint el guió.</td>
+          <td class="col-be">Estructura correcta amb 4-5 pistes. Transicions presents. Falta Ken Burns o alguns J-cuts.</td>
+          <td class="col-ok">Clips ordenats però sense estructura de pistes clara. Transicions mínimes.</td>
+          <td class="col-no">Clips sense ordenar o sequència incoherent. Un sol tipus de pista per a tot.</td></tr>
+          <tr><td>Títols, gràfics i crèdits</td><td style="text-align:center;font-weight:700">15%</td>
+          <td class="col-ex">Títol d'obertura animat (fade 1"). Lower thirds coherents amb entrada animada. Crèdits finals amb scroll i color corporatiu.</td>
+          <td class="col-be">Títol d'obertura present. Lower thirds estàtics sense animació. Sense crèdits de scroll.</td>
+          <td class="col-ok">Títol d'obertura bàsic sense animació. Sense lower thirds.</td>
+          <td class="col-no">Sense títols. O títols que tapen el contingut de forma inadmissible.</td></tr>
+          <tr><td>So i música (mixatge)</td><td style="text-align:center;font-weight:700">20%</td>
+          <td class="col-ex">Locució dominant. Música al 20-30% amb ducking (manual o automàtic). Fade-in/out. Cap clipping. Llicència documentada.</td>
+          <td class="col-be">Locució i música balancejades. Sense ducking però volums correctes. Sense clipping.</td>
+          <td class="col-ok">Música present però tapa la locució en alguns moments. O sense fade-in/out.</td>
+          <td class="col-no">Àudio no editat. Música al 100% tapa la locució. Clipping audible. Música sense llicència documentada.</td></tr>
+          <tr><td>Color grading</td><td style="text-align:center;font-weight:700">10%</td>
+          <td class="col-ex">Corba de color en S aplicada al screencast. Balanç de blancs corregit. LUT aplicat amb intensitat controlada.</td>
+          <td class="col-be">Corba de color present. Balanç de blancs sense corregir.</td>
+          <td class="col-ok">Brillo/contrast bàsic amb l'efecte integrat de Kdenlive. Sense corba pròpia.</td>
+          <td class="col-no">Sense cap correcció de color.</td></tr>
+          <tr><td>Exportació multipropòsit</td><td style="text-align:center;font-weight:700">15%</td>
+          <td class="col-ex">5 formats correctes (MP4 web, MP4 stories, MKV arxiu, WebM, GIF). Taula comparativa amb mides i comentaris. .kdenlive inclòs.</td>
+          <td class="col-be">4 formats. Taula present. Falta un format o el GIF.</td>
+          <td class="col-ok">3 formats (MP4 + Stories + un altre). Sense taula comparativa.</td>
+          <td class="col-no">Menys de 3 formats. Sense .kdenlive. Sense documentació.</td></tr>
+          <tr class="rubric-total"><td colspan="2">TOTAL</td><td colspan="4" style="text-align:center">100% · Nota sobre 10</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ════ QUIZ ════ -->
+<section class="quiz-section" id="quiz">
+  <div class="container">
+    <div class="section-tag fi" style="color:var(--accent);display:flex;align-items:center;gap:.5rem"><span style="display:block;width:20px;height:2px;background:var(--accent)"></span>Autoavaluació</div>
+    <h2 class="fi">🧠 Test ràpid: saps el contingut del RA6?</h2>
+    <p class="lead fi" style="margin-bottom:2rem">5 preguntes sobre vídeo, còdecs i edició. Sense nota!</p>
+
+    <div class="quiz-card fi" id="q1">
+      <div class="quiz-q">1. Estàs gravant un screencast llarg amb OBS (90 minuts). A mitja gravació, l'ordinador es penja. Tenies configurat l'OBS per gravar en MP4. Quin és el resultat i com s'hauria evitat?</div>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="checkQ('q1',this,false)">A) El MP4 es guarda automàticament cada 10 minuts; es perd el darrer segment</button>
+        <button class="quiz-opt" onclick="checkQ('q1',this,true)">B) El fitxer MP4 queda corrupte i és irrecuperable. S'hauria d'haver gravat en MKV, que és recuperable si es talla inesperadament</button>
+        <button class="quiz-opt" onclick="checkQ('q1',this,false)">C) OBS té auto-recuperació i restaura el fitxer quan es reinicia</button>
+        <button class="quiz-opt" onclick="checkQ('q1',this,false)">D) El MP4 es pot reparar amb FFmpeg sense cap pèrdua de qualitat</button>
+      </div>
+      <div class="quiz-feedback" id="q1-fb"></div>
+    </div>
+
+    <div class="quiz-card fi" id="q2">
+      <div class="quiz-q">2. Un client et demana un vídeo per a "YouTube i xarxes socials". Quines especificacions tècniques has d'usar per a YouTube i per quin motiu?</div>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="checkQ('q2',this,false)">A) AVI sense compressió, perquè YouTube prefereix la màxima qualitat original</button>
+        <button class="quiz-opt" onclick="checkQ('q2',this,true)">B) MP4 amb còdec H.264, resolució 1920×1080, 25fps, bitrate 8000-12000 kbps, àudio AAC 192kbps. És el format que YouTube recomana per a la millor qualitat d'encàrrega i reprojecció</button>
+        <button class="quiz-opt" onclick="checkQ('q2',this,false)">C) MOV, perquè és el format professional d'Apple i YouTube el processa millor</button>
+        <button class="quiz-opt" onclick="checkQ('q2',this,false)">D) WebM, perquè YouTube usa internament VP9 i és millor enviar-lo ja en WebM</button>
+      </div>
+      <div class="quiz-feedback" id="q2-fb"></div>
+    </div>
+
+    <div class="quiz-card fi" id="q3">
+      <div class="quiz-q">3. Quin és l'avantatge de H.265 (HEVC) respecte a H.264 per a l'arxiu d'alta qualitat del reportatge?</div>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="checkQ('q3',this,false)">A) H.265 és més compatible: tots els reproductors antics el suporten</button>
+        <button class="quiz-opt" onclick="checkQ('q3',this,true)">B) H.265 ofereix qualitat equivalent a H.264 amb aproximadament la meitat del pes del fitxer (mateixa qualitat visual amb 40-50% menys de bitrate), ideal per a arxius d'alta qualitat a llarg termini</button>
+        <button class="quiz-opt" onclick="checkQ('q3',this,false)">C) H.265 és més ràpid de processar que H.264 per als processadors actuals</button>
+        <button class="quiz-opt" onclick="checkQ('q3',this,false)">D) H.265 és un format obert sense patents, mentre que H.264 és propietari</button>
+      </div>
+      <div class="quiz-feedback" id="q3-fb"></div>
+    </div>
+
+    <div class="quiz-card fi" id="q4">
+      <div class="quiz-q">4. Quina comanda FFmpeg converteix el MP4 del reportatge a WebM (VP9) sense recodificar l'àudio?</div>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="checkQ('q4',this,false)">A) <code>ffmpeg -i video.mp4 -c copy video.webm</code></button>
+        <button class="quiz-opt" onclick="checkQ('q4',this,true)">B) <code>ffmpeg -i video.mp4 -c:v libvpx-vp9 -crf 30 -b:v 0 -c:a libopus video.webm</code></button>
+        <button class="quiz-opt" onclick="checkQ('q4',this,false)">C) <code>ffmpeg -i video.mp4 -format webm video.webm</code></button>
+        <button class="quiz-opt" onclick="checkQ('q4',this,false)">D) <code>ffmpeg -convert video.mp4 webm -quality high</code></button>
+      </div>
+      <div class="quiz-feedback" id="q4-fb"></div>
+    </div>
+
+    <div class="quiz-card fi" id="q5">
+      <div class="quiz-q">5. En el mixatge d'àudio del reportatge, la locució (veu en off) i la música de fons estan al 100% de volum cadascuna. Quin problema tècnic i quina solució cal aplicar?</div>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="checkQ('q5',this,false)">A) Cap problema, el sistema de so del reproductor ja equalitza automàticament</button>
+        <button class="quiz-opt" onclick="checkQ('q5',this,true)">B) La música tapa la locució i hi pot haver clipping (distorsió per saturació). Solució: Baixar la música al 20-30% base i aplicar ducking (baixar la música a 10% quan parla la veu) amb keyframes o l'efecte sidechain</button>
+        <button class="quiz-opt" onclick="checkQ('q5',this,false)">C) El problema es resol normalitzant l'àudio final a -14 LUFS sense canviar els volums relatius</button>
+        <button class="quiz-opt" onclick="checkQ('q5',this,false)">D) Cal usar pistes d'àudio mono en lloc d'estèreo per evitar el problema</button>
+      </div>
+      <div class="quiz-feedback" id="q5-fb"></div>
+    </div>
+
+    <div id="quiz-result" style="display:none;text-align:center;margin-top:1.5rem;padding:1.5rem;background:white;border-radius:var(--radius);border:1px solid var(--border)">
+      <div class="quiz-score" id="quiz-score-txt"></div>
+      <p id="quiz-score-msg" style="color:var(--muted);font-size:.95rem"></p>
+    </div>
+  </div>
+</section>
+
+<!-- ════ FEYNMAN ════ -->
+<section id="feynman" style="padding:4rem 2rem;background:white;">
+  <div class="container fi">
+    <div class="feynman">
+      <h3>🧠 Mètode Feynman — RA6</h3>
+      <p style="margin-top:.5rem">Prova d'explicar-ho senzill per comprovar si ho has entès realment:</p>
+      <div class="feyn-prompts">
+        <div class="feyn-card"><p>"Explica la diferència entre un còdec (H.264) i un contenidor (MP4) a un amic no tècnic, usant una analogia del món real."</p></div>
+        <div class="feyn-card"><p>"Explica per quin motiu gravar en MKV en lloc de MP4 a l'OBS pot salvar una gravació important d'un tall de llum inesperat."</p></div>
+        <div class="feyn-card"><p>"Explica per quin motiu la locució ha d'estar a un volum molt més alt que la música de fons, i com funciona el ducking per fer-ho automàticament."</p></div>
+        <div class="feyn-card"><p>"Explica per quin motiu H.265 ocupa menys que H.264 amb la mateixa qualitat, usant una analogia de compressió."</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ RECURSOS ════ -->
+<section id="recursos" style="padding:5rem 2rem;background:var(--cream);">
+  <div class="container">
+    <div class="section-tag tag-violet fi">Bibliografia</div>
+    <h2 class="fi">📚 Recursos externs recomanats — RA6</h2>
+    <p class="lead fi" style="margin-bottom:2rem">Fonts oficials i curades per al vídeo digital, edició i còdecs.</p>
+    <div class="fi">
+      <a class="resource-link" href="https://kdenlive.org/en/learn/" target="_blank" rel="noopener">
+        <span class="resource-icon">🎬</span>
+        <div><div class="r-title">Tutorials oficials Kdenlive</div><div class="r-desc">Vídeos i guies oficials. Cobren muntatge, efectes, transicions, color grading, títols animats i exportació. Primera referència per a dubtes de la pràctica.</div><span class="r-tag">Oficial · Kdenlive.org</span></div>
+      </a>
+      <a class="resource-link" href="https://obsproject.com/wiki/" target="_blank" rel="noopener">
+        <span class="resource-icon">🔴</span>
+        <div><div class="r-title">Wiki oficial OBS Studio</div><div class="r-desc">Configuració de captures de pantalla, webcam, escenes, àudio i paràmetres d'exportació. Inclou la guia de configuració recomanada per a screencasting.</div><span class="r-tag">Oficial · OBS Wiki</span></div>
+      </a>
+      <a class="resource-link" href="https://www.audacityteam.org/help/" target="_blank" rel="noopener">
+        <span class="resource-icon">🎙️</span>
+        <div><div class="r-title">Ajuda oficial Audacity</div><div class="r-desc">Tutorials per a reducció de soroll, compressor, normalitzar i exportar. Indispensable per a la Fase 2 de la pràctica (tractament de la locució).</div><span class="r-tag">Oficial · Audacity Team</span></div>
+      </a>
+      <a class="resource-link" href="https://ffmpegwasm.netlify.app/" target="_blank" rel="noopener">
+        <span class="resource-icon">⚙️</span>
+        <div><div class="r-title">FFmpeg.wasm — Eina de conversió en línia</div><div class="r-desc">Convertidor FFmpeg al navegador, sense instal·lació. Útil per provar les comandes de la Fase 5 sense configurar FFmpeg localment.</div><span class="r-tag">Eina web · FFmpeg.wasm</span></div>
+      </a>
+      <a class="resource-link" href="https://freemusicarchive.org/" target="_blank" rel="noopener">
+        <span class="resource-icon">🎵</span>
+        <div><div class="r-title">Free Music Archive — Música CC0/CC BY</div><div class="r-desc">Milers de cançons per a ús en projectes de vídeo. Llicències clares i documentades. Filtra per BPM, gènere i llicència específica. Obligatori per a la Fase 1.</div><span class="r-tag">Gratuït · CC0 / CC BY</span></div>
+      </a>
+    </div>
+  </div>
+</section>
+
+
 <footer>
   <p><strong>RA6 — Manipulació de Seqüències de Vídeo · SMX · Ofimàtica</strong></p>
   <p style="margin-top:.4rem">FPS · Resolució · Còdecs · Kdenlive · OBS · FFmpeg · HandBrake · Color Grading</p>
@@ -983,41 +1524,41 @@
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
   }, { threshold: 0.07, rootMargin: '0px 0px -30px 0px' });
   document.querySelectorAll('.fi').forEach(el => io.observe(el));
-
-  // Tool card styles
-  document.querySelectorAll('.tool-card').forEach(card => {
-    card.style.background = 'white';
-    card.style.border = '2px solid var(--border)';
-    card.style.borderRadius = 'var(--radius)';
-    card.style.padding = '1.5rem';
-    card.style.transition = 'all .2s';
+  window.addEventListener('scroll', () => {
+    const pct = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+    const bar = document.getElementById('progress-bar');
+    if (bar) bar.style.width = Math.min(pct,100) + '%';
   });
-  document.querySelectorAll('.tool-name').forEach(el => {
-    el.style.fontFamily = "'Syne', sans-serif";
-    el.style.fontWeight = '700';
-    el.style.color = 'var(--navy)';
+  document.querySelectorAll('.check-list input[type=checkbox]').forEach(cb => {
+    cb.addEventListener('change', () => cb.closest('li').classList.toggle('checked', cb.checked));
   });
-  document.querySelectorAll('.tool-type').forEach(el => {
-    el.style.fontSize = '0.72rem';
-    el.style.fontWeight = '600';
-    el.style.letterSpacing = '.08em';
-    el.style.textTransform = 'uppercase';
-  });
-  document.querySelectorAll('.tool-header').forEach(el => {
-    el.style.display = 'flex';
-    el.style.alignItems = 'center';
-    el.style.gap = '.75rem';
-    el.style.marginBottom = '.75rem';
-  });
-  document.querySelectorAll('.tool-icon').forEach(el => {
-    el.style.width = '40px';
-    el.style.height = '40px';
-    el.style.borderRadius = '10px';
-    el.style.display = 'grid';
-    el.style.placeItems = 'center';
-    el.style.fontSize = '1.2rem';
-    el.style.flexShrink = '0';
-  });
+    const qFB = {
+    q1:{ok:"Correcte! MP4 escriu la capcalera al final. Si es talla la gravacio, el fitxer es irrecuperable. MKV escriu les dades de forma continua: el material gravat fins al tall es sempre recuperable.",ko:"Incorrecte. MP4 no te auto-recuperacio. En tallar inesperadament, la capcalera no s'escriu i el fitxer no pot llegir-se. MKV es el format recomanat per a gravacions llargues o critiques."},
+    q2:{ok:"Correcte! YouTube recomana MP4/H.264/AAC. Amb bitrate 8000-12000 kbps per a 1080p obtens excel·lent qualitat. YouTube recodifica tots els videos internament, pero partir d'H.264 minimitza perdues.",ko:"Incorrecte. AVI sense compressio generaria fitxers de 10-20 GB per 2 minuts. MOV es de Mac. WebM/VP9 es compatible pero no es el format recomanat per YouTube per a upload. MP4/H.264/AAC es l'estandard."},
+    q3:{ok:"Correcte! H.265 usa algoritmes mes eficients que H.264, assolint la mateixa qualitat visual amb aproximadament el 40-50% menys de bitrate. Un arxiu H.265 CRF 18 pot tenir la mateixa qualitat que H.264 CRF 18 pero ocupar la meitat.",ko:"Incorrecte. H.265 NO es mes compatible (es menys compatible amb maquinari antic). NO es mes rapid d'encodar (es molt mes lent). El seu avantatge unic es l'eficiencia de compressio: mateixa qualitat, menys pes."},
+    q4:{ok:"Correcte! Aquesta es la comanda correcta: -c:v libvpx-vp9 especifica VP9, -crf 30 -b:v 0 activa la qualitat constant, i -c:a libopus especifica Opus. Es la combinacio recomanada per a WebM de qualitat.",ko:"Incorrecte. L'opcio A (-c copy) intentaria copiar H.264/AAC a WebM que no els suporta. Les opcions C i D no existeixen com a comandes FFmpeg valides. Cal libvpx-vp9 per al video i libopus per a l'audio."},
+    q5:{ok:"Correcte! Amb dues pistes al 100%, la suma pot provocar clipping i la musica tapa la locucio. La solucio: locucio dominant (100%), musica al 20-30% base, i ducking (baixar la musica al 10% quan parla la veu).",ko:"Incorrecte. La normalitzacio ajusta el volum global pero no canvia el balanc relatiu entre locucio i musica. El problema de la musica que tapa la veu cal resoldre'l ajustant els volums relatius de cada pista."}
+  };
+  let answered = {}, score = 0;
+  function checkQ(qid, btn, ok) {
+    if (answered[qid]) return;
+    answered[qid] = true;
+    const card = document.getElementById(qid);
+    const fb = document.getElementById(qid+'-fb');
+    card.querySelectorAll('.quiz-opt').forEach(o => o.classList.add('disabled'));
+    btn.classList.add(ok ? 'correct' : 'wrong');
+    if (ok) { score++; fb.textContent = qFB[qid].ok; fb.className = 'quiz-feedback show ok'; }
+    else { fb.textContent = qFB[qid].ko; fb.className = 'quiz-feedback show ko';
+      card.querySelectorAll('.quiz-opt').forEach(o => { if (o.getAttribute('onclick') && o.getAttribute('onclick').includes(',true)')) o.classList.add('correct'); });
+    }
+    if (Object.keys(answered).length === 5) {
+      const r = document.getElementById('quiz-result');
+      document.getElementById('quiz-score-txt').textContent = score + ' / 5';
+      document.getElementById('quiz-score-msg').textContent = score===5 ? '🎉 Perfecte! Domini total del RA6.' : score>=3 ? '👍 Molt bé! Repassa les fallades.' : '📖 Cal repassar teoria de còdecs, OBS i Kdenlive.';
+      r.style.display = 'block';
+      r.scrollIntoView({behavior:'smooth',block:'nearest'});
+    }
+  }
 </script>
 </body>
 </html>

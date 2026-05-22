@@ -232,13 +232,171 @@
   .tool-type { font-size: 0.72rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; }
 
   @media (max-width: 640px) { .nav-pills { display: none; } }
+
+  /* ── PROGRESS BAR ── */
+  #progress-bar { position:fixed;top:0;left:0;height:3px;z-index:200;background:linear-gradient(90deg,var(--accent),var(--teal),var(--violet));width:0%;transition:width .1s linear; }
+  /* ── TOOLTIP ── */
+  .glos{border-bottom:1.5px dashed var(--accent);cursor:help;position:relative;color:inherit;}
+  .glos::after{content:attr(data-def);position:absolute;bottom:130%;left:50%;transform:translateX(-50%);background:var(--navy);color:white;font-size:0.78rem;padding:.5rem .85rem;border-radius:8px;max-width:280px;white-space:normal;line-height:1.4;opacity:0;pointer-events:none;transition:opacity .2s;z-index:50;box-shadow:0 4px 16px rgba(0,0,0,0.25);}
+  .glos:hover::after{opacity:1;}
+  /* ── TIME/DIF BADGES ── */
+  .time-badge{display:inline-flex;align-items:center;gap:.35rem;font-size:0.72rem;font-weight:600;color:var(--muted);background:var(--cream);border:1px solid var(--border);padding:.2rem .65rem;border-radius:100px;margin-left:.4rem;}
+  .dif-badge{display:inline-flex;align-items:center;gap:.4rem;font-size:0.72rem;font-weight:700;padding:.2rem .65rem;border-radius:100px;margin-bottom:.5rem;}
+  .dif-basic{background:rgba(22,163,74,0.12);color:#14532d;}
+  .dif-mid{background:rgba(217,119,6,0.18);color:#78350f;}
+  .dif-advanced{background:rgba(244,63,94,0.12);color:#9f1239;}
+  /* ── COMPARE ── */
+  .compare-wrap{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1rem 0;}
+  @media(max-width:600px){.compare-wrap{grid-template-columns:1fr;}}
+  .compare-bad{background:rgba(244,63,94,0.05);border:1px solid rgba(244,63,94,0.25);border-radius:var(--radius);padding:1.1rem 1.25rem;}
+  .compare-good{background:rgba(22,163,74,0.05);border:1px solid rgba(22,163,74,0.25);border-radius:var(--radius);padding:1.1rem 1.25rem;}
+  .compare-lbl{font-size:0.68rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.5rem;display:flex;align-items:center;gap:.4rem;}
+  .compare-bad .compare-lbl{color:#9f1239;}.compare-good .compare-lbl{color:#14532d;}
+  .compare-bad p,.compare-good p{font-size:0.87rem;color:var(--ink);line-height:1.6;}
+  /* ── KBD ── */
+  .kbd-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:.6rem;}
+  .kbd-row{display:flex;align-items:center;justify-content:space-between;padding:.55rem .9rem;background:var(--card);border:1px solid var(--border);border-radius:8px;font-size:0.86rem;}
+  .kbd-row .action{color:var(--muted);font-size:0.82rem;} .kbd-row .keys{display:flex;gap:.3rem;flex-shrink:0;}
+  kbd{display:inline-block;background:var(--cream);border:1px solid var(--border);border-bottom:2px solid #bbb;border-radius:5px;padding:.1rem .45rem;font-size:0.75rem;font-family:monospace;color:var(--ink);}
+  /* ── TRAP CARDS ── */
+  .trap-card{background:#fff8f0;border:1px solid rgba(244,63,94,0.25);border-left:4px solid var(--rose);border-radius:var(--radius);padding:1.25rem 1.5rem;margin-bottom:.85rem;}
+  .trap-card .trap-head{display:flex;align-items:center;gap:.65rem;margin-bottom:.4rem;}
+  .trap-card h4{color:#9f1239;margin:0;font-size:0.95rem;}
+  .trap-card p{color:var(--muted);font-size:0.88rem;}
+  .trap-card .fix{margin-top:.5rem;padding:.5rem .85rem;border-radius:6px;background:rgba(22,163,74,0.09);font-size:0.85rem;color:#14532d;}
+  /* ── REAL WORLD ── */
+  .real-world{border-left:3px solid var(--amber);background:#fffdf0;border-radius:0 var(--radius) var(--radius) 0;padding:.75rem 1.1rem;margin:.65rem 0;font-size:0.88rem;}
+  .real-world .rw-lbl{font-size:0.67rem;font-weight:800;letter-spacing:.1em;color:#78350f;margin-bottom:.2rem;text-transform:uppercase;}
+  .real-world p{color:var(--ink);}
+  /* ── DELIVERY CHECKLIST ── */
+  .delivery-check{background:#f0fdf4;border:1px solid rgba(22,163,74,0.3);border-radius:var(--radius);padding:1.5rem;margin-top:1.25rem;}
+  .delivery-check h4{color:#14532d;margin-bottom:.75rem;}
+  .check-list{list-style:none;display:flex;flex-direction:column;gap:.45rem;}
+  .check-list li{display:flex;align-items:flex-start;gap:.65rem;font-size:0.88rem;color:var(--ink);line-height:1.5;}
+  .check-list li input[type=checkbox]{width:17px;height:17px;accent-color:var(--accent);cursor:pointer;flex-shrink:0;margin-top:2px;}
+  .check-list li.checked{text-decoration:line-through;color:var(--muted);}
+  /* ── RUBRIC ── */
+  .rubric-wrap{overflow-x:auto;margin-top:1.5rem;}
+  .rubric-table{width:100%;border-collapse:collapse;font-size:0.83rem;}
+  .rubric-table th,.rubric-table td{padding:.7rem .85rem;border:1px solid var(--border);vertical-align:top;}
+  .rubric-table th{background:var(--navy);color:white;font-family:'Syne',sans-serif;font-weight:700;font-size:0.78rem;text-align:center;}
+  .rubric-table th:first-child{border-radius:8px 0 0 0;} .rubric-table th:last-child{border-radius:0 8px 0 0;}
+  .rubric-table td:first-child{font-weight:600;color:var(--navy);background:#fafafa;min-width:150px;}
+  .rubric-table .col-ex{background:rgba(22,163,74,0.06);} .rubric-table .col-be{background:rgba(74,108,247,0.05);}
+  .rubric-table .col-ok{background:rgba(251,188,4,0.06);} .rubric-table .col-no{background:rgba(244,63,94,0.05);}
+  .rubric-table .col-ex td,.rubric-table .col-be td,.rubric-table .col-ok td,.rubric-table .col-no td{color:var(--muted);font-size:0.8rem;}
+  .rubric-total{background:var(--navy) !important;}
+  .rubric-total td{color:white !important;font-weight:700 !important;background:transparent !important;}
+  /* ── RESOURCE / VIDEO ── */
+  .resource-link{display:flex;align-items:center;gap:1rem;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1rem 1.25rem;text-decoration:none;color:inherit;transition:all .2s;margin-bottom:.6rem;}
+  .resource-link:hover{border-color:var(--accent);transform:translateX(4px);}
+  .resource-icon{font-size:1.6rem;flex-shrink:0;}
+  .resource-link .r-title{font-weight:700;font-size:0.92rem;color:var(--navy);}
+  .resource-link .r-desc{font-size:0.8rem;color:var(--muted);}
+  .resource-link .r-tag{font-size:0.68rem;font-weight:700;background:rgba(8,145,178,0.1);color:var(--accent);padding:.1rem .5rem;border-radius:100px;margin-top:.2rem;display:inline-block;}
+  .video-card{display:flex;align-items:center;gap:1rem;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1rem 1.25rem;text-decoration:none;color:inherit;transition:all .2s;margin-bottom:.6rem;}
+  .video-card:hover{border-color:var(--violet);transform:translateX(4px);}
+  .video-thumb{width:48px;height:48px;background:var(--violet);border-radius:10px;display:grid;place-items:center;font-size:1.3rem;flex-shrink:0;}
+  .video-card .v-title{font-weight:700;font-size:0.9rem;color:var(--navy);}
+  .video-card .v-desc{font-size:0.78rem;color:var(--muted);}
+  .video-card .v-tag{font-size:0.68rem;font-weight:700;background:rgba(139,92,246,0.1);color:var(--violet);padding:.1rem .5rem;border-radius:100px;margin-top:.2rem;display:inline-block;}
+  /* ── QUIZ ── */
+  .quiz-section{padding:4rem 2rem;background:#faf5ff;}
+  .quiz-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;margin-bottom:1rem;}
+  .quiz-q{font-weight:600;font-size:0.95rem;color:var(--navy);margin-bottom:.85rem;}
+  .quiz-options{display:flex;flex-direction:column;gap:.5rem;}
+  .quiz-opt{display:flex;align-items:center;gap:.75rem;padding:.65rem 1rem;border-radius:8px;cursor:pointer;border:1.5px solid var(--border);background:white;font-size:0.88rem;color:var(--ink);transition:all .2s;text-align:left;}
+  .quiz-opt:hover:not(.disabled){border-color:var(--accent);background:rgba(8,145,178,0.05);}
+  .quiz-opt.correct{border-color:var(--green);background:rgba(22,163,74,0.1);color:#14532d;font-weight:600;}
+  .quiz-opt.wrong{border-color:var(--rose);background:rgba(244,63,94,0.08);color:#9f1239;}
+  .quiz-opt.disabled{cursor:not-allowed;pointer-events:none;}
+  .quiz-feedback{margin-top:.65rem;font-size:0.83rem;padding:.5rem .85rem;border-radius:6px;display:none;}
+  .quiz-feedback.show{display:block;}
+  .quiz-feedback.ok{background:rgba(22,163,74,0.1);color:#14532d;}
+  .quiz-feedback.ko{background:rgba(244,63,94,0.08);color:#9f1239;}
+  .quiz-score{font-family:'Syne',sans-serif;font-weight:800;font-size:1.5rem;color:var(--navy);margin:1rem 0 .3rem;}
+  /* ── FEYNMAN ── */
+  .feynman{background:linear-gradient(135deg,var(--navy),var(--cobalt));color:white;border-radius:var(--radius);padding:2rem 2.25rem;margin:2rem 0;}
+  .feynman h3{color:white;} .feynman p{color:rgba(255,255,255,.8);font-size:0.92rem;}
+  .feynman .feyn-prompts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.75rem;margin-top:1.25rem;}
+  .feyn-card{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:1rem;}
+  .feyn-card p{color:rgba(255,255,255,.85);font-size:0.85rem;font-style:italic;}
+
+
+  /* ── NAV extra link type ── */
+  .nav-pills a.extra { color: var(--cobalt, #1a6fb5); }
+  .nav-pills a.extra:hover { color: var(--cobalt, #1a6fb5); border-color: var(--cobalt, #1a6fb5); }
+
+  /* ── Fix contrast: real-world box ── */
+  .real-world {
+    border-left: 3px solid #d97706 !important;
+    background: #fffbeb !important;
+    border-radius: 0 var(--radius) var(--radius) 0;
+    padding: .85rem 1.1rem;
+    margin: .75rem 0;
+    font-size: 0.88rem;
+  }
+  .real-world .rw-lbl {
+    font-size: 0.67rem; font-weight: 800; letter-spacing: .1em;
+    color: #92400e !important; margin-bottom: .3rem; text-transform: uppercase;
+  }
+  .real-world p { color: #1c1917 !important; line-height: 1.6; }
+
+  /* ── Fix contrast: time-badge ── */
+  .time-badge {
+    display: inline-flex; align-items: center; gap: .35rem;
+    font-size: 0.72rem; font-weight: 600;
+    color: #44403c !important;
+    background: #f5f5f4 !important;
+    border: 1px solid #d6d3d1 !important;
+    padding: .2rem .65rem; border-radius: 100px; margin-left: .4rem;
+  }
+
+  /* ── Fix contrast: dif badges ── */
+  .dif-basic    { background: #dcfce7 !important; color: #14532d !important; }
+  .dif-mid      { background: #fef3c7 !important; color: #78350f !important; }
+  .dif-advanced { background: #fee2e2 !important; color: #7f1d1d !important; }
+
+  /* ── Fix contrast: trap-card ── */
+  .trap-card { background: #fff7ed !important; }
+  .trap-card p { color: #44403c !important; }
+  .trap-card .fix { color: #14532d !important; background: #dcfce7 !important; }
+
+  /* ── Fix contrast: compare boxes ── */
+  .compare-bad p, .compare-good p { color: #1c1917 !important; }
+  .compare-bad  { background: #fff1f2 !important; }
+  .compare-good { background: #f0fdf4 !important; }
+
+  /* ── Fix contrast: delivery-check ── */
+  .delivery-check { background: #f0fdf4 !important; }
+  .delivery-check h4 { color: #14532d !important; }
+  .check-list li { color: #1c1917 !important; }
+  .check-list li.checked { color: #78716c !important; }
+
+  /* ── Fix contrast: quiz ── */
+  .quiz-opt { color: #1c1917 !important; }
+  .quiz-feedback.ok { color: #14532d !important; background: #dcfce7 !important; }
+  .quiz-feedback.ko { color: #7f1d1d !important; background: #fee2e2 !important; }
+
+  /* ── Fix contrast: kbd rows ── */
+  .kbd-row .action { color: #44403c !important; }
+
+  /* ── Fix contrast: resource/video cards ── */
+  .resource-link .r-desc, .video-card .v-desc { color: #44403c !important; }
+
+  /* ── Nav pills scrollable on wide screens ── */
+  .nav-pills { flex-wrap: wrap; gap: .2rem; }
+
 </style>
 </head>
 <body>
 
+<!-- PROGRESS BAR -->
+<div id="progress-bar"></div>
+
 <!-- NAV -->
 <nav>
-  <div class="nav-logo">SMX · <span>RA5</span> Ofimàtica</div>
+  <div class="nav-logo">SMX · <span>RA5</span> · Imatge Digital</div>
   <ul class="nav-pills">
     <li><a href="#intro">Introducció</a></li>
     <li><a href="#conceptes" class="teoria">Conceptes</a></li>
@@ -247,6 +405,12 @@
     <li><a href="#edicio" class="teoria">Edició</a></li>
     <li><a href="#practica" class="prac">Pràctica</a></li>
     <li><a href="#preguntes" class="pregs">Preguntes</a></li>
+    <li><a href="#trampes" class="extra">Trampes</a></li>
+    <li><a href="#exemples" class="extra">Bé/Malament</a></li>
+    <li><a href="#dreceres" class="extra">Dreceres</a></li>
+    <li><a href="#rubrica" class="extra">Rúbrica</a></li>
+    <li><a href="#quiz" class="extra">Test</a></li>
+    <li><a href="#recursos" class="extra">Recursos</a></li>
   </ul>
 </nav>
 
@@ -829,6 +993,17 @@
         </div>
       </div>
       <div class="practice-body">
+        <div style="display:flex;gap:.5rem;align-items:center;margin-bottom:1.25rem;flex-wrap:wrap">
+          <span class="dif-badge dif-advanced">🔴 Dificultat molt alta</span>
+          <span class="time-badge">⏱ Fase 1–2: ~60 min</span>
+          <span class="time-badge">⏱ Fase 3: ~60 min</span>
+          <span class="time-badge">⏱ Fase 4–5: ~90 min</span>
+          <span class="time-badge">⏱ Fase 6: ~30 min</span>
+        </div>
+        <div class="real-world" style="margin-bottom:1.25rem">
+          <div class="rw-lbl">🏢 Connexió amb el món real</div>
+          <p>El flux GIMP + Inkscape + exportació multipropòsit és exactament el que usa un tècnic o dissenyador en una PIME quan no té pressupost per Adobe CC. Cartells per a impressió (300 DPI, TIFF), web (WebP) i xarxes (1080×1920) en un sol projecte és un cas d'ús diari en màrqueting. La verificació del mode de color (RGB vs CMYK) i la resolució és una competència clau per evitar problemes costosos a la impremta.</p>
+        </div>
         <div class="callout cl-accent" style="margin-bottom:1.5rem">
           <span class="callout-icon">🎯</span>
           <div>
@@ -901,6 +1076,24 @@
               <li>Document de text (LibreOffice Writer) explicant les decisions preses i la taula comparativa de formats</li>
             </ul>
           </div>
+        </div>
+
+        <div class="delivery-check">
+          <h4>☑️ Checklist de lliurament — P1 RA5</h4>
+          <ul class="check-list">
+            <li><input type="checkbox"><span><strong>Fase 1:</strong> Estructura de carpetes creada (originals/, recursos/, exportacions/). 3 fotos CC0 descarregades &gt;2000px.</span></li>
+            <li><input type="checkbox"><span><strong>Fase 2:</strong> Fons composat (foto + màscara de gradient + fons de color corporatiu). Capes nombrades correctament.</span></li>
+            <li><input type="checkbox"><span><strong>Fase 3:</strong> Retrat retallat amb màscara de capa (no selecció destructiva), rim light i skin softening aplicats.</span></li>
+            <li><input type="checkbox"><span><strong>Fase 4:</strong> Logotip i elements vectorials creats a Inkscape, exportats com a PNG transparent 300 DPI i importats a GIMP.</span></li>
+            <li><input type="checkbox"><span><strong>Fase 5:</strong> Títol amb efecte glow, subtítol llegible, barra corporativa a la part inferior. Revisat dins de la zona de seguretat.</span></li>
+            <li><input type="checkbox"><span><strong>Fase 6:</strong> Arxiu .xcf natiu desat amb totes les capes.</span></li>
+            <li><input type="checkbox"><span><strong>Fase 6:</strong> Exportació TIFF 300 DPI per a impressió.</span></li>
+            <li><input type="checkbox"><span><strong>Fase 6:</strong> Exportació JPG 85% i WebP 80% per a web (mides comparades).</span></li>
+            <li><input type="checkbox"><span><strong>Fase 6:</strong> Exportació JPG 1080×1920 per a xarxes socials (Stories).</span></li>
+            <li><input type="checkbox"><span><strong>Fase 6:</strong> Arxiu SVG d'Inkscape amb logo i elements vectorials.</span></li>
+            <li><input type="checkbox"><span>Document LibreOffice Writer amb decisions preses i taula comparativa de formats (dimensions, mida arxiu, qualitat, ús).</span></li>
+            <li><input type="checkbox"><span>Lliurat en format ZIP a Moodle amb estructura de carpetes correcta.</span></li>
+          </ul>
         </div>
 
         <div style="overflow-x:auto;margin-top:2rem">
@@ -1064,6 +1257,363 @@
   </div>
 </section>
 
+<!-- ════ TRAMPES FREQÜENTS ════ -->
+<section id="trampes" style="padding:5rem 2rem;background:#fff8f7;">
+  <div class="container">
+    <div class="section-tag tag-rose fi">Errors habituals</div>
+    <h2 class="fi">⚠️ Trampes freqüents del RA5</h2>
+    <p class="lead fi" style="margin-bottom:2rem">Errors que fan quasi tots els alumnes amb GIMP, Inkscape i formats d'imatge. Llegeix-los ara per no caure-hi.</p>
+    <div class="fi">
+      <div class="trap-card">
+        <div class="trap-head">⚠️ <h4>Treballar directament sobre la capa original (flux destructiu)</h4></div>
+        <p>Aplicar ajustos de color, filtres o retallades directament sobre la capa original de la fotografia fa que els canvis siguin permanents i irreversibles. Si més tard vols canviar el retoc, hauràs de tornar a importar la foto des de zero.</p>
+        <div class="fix">✅ Solució: Duplica sempre la capa original abans de fer qualsevol modificació. Anomena-la "foto_original_BACKUP" i fes-la invisible. Tots els canvis van a la còpia. Així pots tornar enrere en qualsevol moment.</div>
+      </div>
+      <div class="trap-card">
+        <div class="trap-head">⚠️ <h4>Exportar per a impressió en JPG en lloc de TIFF</h4></div>
+        <p>JPG és un format amb pèrdua (lossy): cada vegada que deses en JPG, la qualitat empitjora. Per a impressió a 300 DPI, una imatge en JPG pot mostrar artefactes visibles quan s'imprimeix en gran format. A més, la majoria de impremtes professionals exigeixen TIFF o PDF.</p>
+        <div class="fix">✅ Solució: Per a impressió, exporta sempre com a TIFF (compressió LZW, sense pèrdua). Per a web, JPG qualitat 80-85% o WebP. Mai no enviïs un JPG a la impremta si pots evitar-ho.</div>
+      </div>
+      <div class="trap-card">
+        <div class="trap-head">⚠️ <h4>Confondre resolució (DPI/PPI) amb dimensions (píxels)</h4></div>
+        <p>Molts alumnes creen un document de 300×210 px pensant que és un A4 a 300 DPI. Un A4 a 300 DPI son 2480×3508 píxels. La resolució (DPI) indica quants píxels entren en una polzada quan s'imprimeix: no afecta les dimensions en píxels a la pantalla.</p>
+        <div class="fix">✅ Solució: A GIMP, quan crees el document, configura TANT les dimensions en píxels (2480×3508) COM la resolució (300 PPI). La resolució només importa quan s'imprimeix o s'exporta per a impressió.</div>
+      </div>
+      <div class="trap-card">
+        <div class="trap-head">⚠️ <h4>Desar el projecte final en JPG en lloc de .xcf</h4></div>
+        <p>Si deses el projecte acabat com a JPG o PNG, perds totes les capes, màscares i elements editables. El fitxer s'aplana i és impossible editar-lo posteriorment. L'error és no distingir entre "Desar" (format natiu) i "Exportar" (format de distribució).</p>
+        <div class="fix">✅ Solució: Usa sempre "Fitxer → Desa com" (.xcf) per guardar el projecte editable. Usa "Fitxer → Exportar com" per generar JPG, PNG, TIFF. Mantén el .xcf com a arxiu mestre.</div>
+      </div>
+      <div class="trap-card">
+        <div class="trap-head">⚠️ <h4>Usar imatges de Google sense comprovar la llicència</h4></div>
+        <p>Descarregar qualsevol imatge de Google Imatges i usar-la en un treball publicable és una violació dels drets d'autor. Les fotos als resultats de Google no son lliures d'ús per defecte. En un projecte professional, podria comportar demandes econòmiques.</p>
+        <div class="fix">✅ Solució: Usa sempre fonts amb llicència CC0 (Unsplash, Pexels, Pixabay) o CC BY (Flickr amb filtre). A Google Imatges pots filtrar per "Creative Commons" però verifica sempre la llicència específica de cada imatge.</div>
+      </div>
+      <div class="trap-card">
+        <div class="trap-head">⚠️ <h4>Escalar imatges petites a mida gran (upscaling)</h4></div>
+        <p>Agafar una imatge de 400×300 px i escalar-la a 2000×1500 px per omplir el cartell fa que la imatge surti pixelada i borrosa. GIMP no pot "inventar" píxels que no existien: l'algoritme de mostreig superior només suavitza la pixelació, no la soluciona.</p>
+        <div class="fix">✅ Solució: Comprova sempre les dimensions de la imatge abans d'importar-la. Per a un cartell A4 a 300 DPI, les fotos han de tenir com a mínim 2000 px d'amplada. Si necessites una imatge gran, cerca en fonts d'alta resolució (Unsplash ofereix fotos de fins a 6000+ px).</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ BÉ VS MALAMENT ════ -->
+<section id="exemples" style="padding:5rem 2rem;background:var(--cream);">
+  <div class="container">
+    <div class="section-tag tag-cobalt fi">Exemples visuals</div>
+    <h2 class="fi">Bé vs. Malament — GIMP i edició d'imatge</h2>
+    <p class="lead fi" style="margin-bottom:2rem">Veure l'error és molt millor que llegir que no s'ha de fer. Exemples reals del RA5.</p>
+
+    <div class="fi" style="margin-bottom:2.5rem">
+      <h3 style="margin-bottom:1rem">🎨 Organització de capes</h3>
+      <div class="compare-wrap">
+        <div class="compare-bad">
+          <div class="compare-lbl">❌ Malament</div>
+          <p>Pila de capes a GIMP:<br>"Capa sense nom", "Capa sense nom #2", "Còpia de Capa sense nom", "Fons", "Còpia de Fons #3"...<br><br><em style="font-size:.8rem;color:#9f1239">Impossible saber què conté cada capa. Si has de modificar "el retrat" una setmana després, hauràs de fer proves en totes les capes.</em></p>
+        </div>
+        <div class="compare-good">
+          <div class="compare-lbl">✅ Bé</div>
+          <p>Pila de capes organitzada:<br>🔲 <strong>text_titol</strong><br>🔲 <strong>glow_titol</strong><br>🔲 <strong>logo_inkscape</strong><br>🔲 <strong>retrat_mascara</strong><br>🔲 <strong>foto_fons [60%]</strong><br>🔲 <strong>fons_color_BACKUP</strong><br><br><em style="font-size:.8rem;color:#14532d">Cada capa identificada. Qualsevol pot editar el projecte.</em></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="fi" style="margin-bottom:2.5rem">
+      <h3 style="margin-bottom:1rem">✂️ Selecció i retallada d'un retrat</h3>
+      <div class="compare-wrap">
+        <div class="compare-bad">
+          <div class="compare-lbl">❌ Malament</div>
+          <p>Selecció rectangular al voltant de la persona → Invertir selecció → Suprimir.<br><br><em style="font-size:.8rem;color:#9f1239">Resultat: quadrat de fons blanc al voltant de la persona. Les vores dels cabells i la roba es tallen de forma rectilínia. Completament no professional.</em></p>
+        </div>
+        <div class="compare-good">
+          <div class="compare-lbl">✅ Bé</div>
+          <p>Eines Intel·ligents (Scissors/Foreground Select) → Refinar vores → Feather 2-3px → <strong>Afegir màscara de capa des de selecció</strong> (no eliminar fons!).<br><br><em style="font-size:.8rem;color:#14532d">Vores naturals. Retocables. Si la selecció no és perfecta, pintes la màscara amb blanc/negre per corregir.</em></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="fi" style="margin-bottom:2.5rem">
+      <h3 style="margin-bottom:1rem">💾 Formats d'exportació</h3>
+      <div class="compare-wrap">
+        <div class="compare-bad">
+          <div class="compare-lbl">❌ Malament</div>
+          <p>Cartell per a la impremta enviat com a:<br>• JPG 72 DPI, 800×1131 px, qualitat 60%<br><br><em style="font-size:.8rem;color:#9f1239">La impremta ho rebutjarà o imprimirà pixelat. 72 DPI és resolució de pantalla, no d'impressió. El JPG amb pèrdua afegeix artefactes visibles.</em></p>
+        </div>
+        <div class="compare-good">
+          <div class="compare-lbl">✅ Bé</div>
+          <p>Arxiu per a impressió:<br>• TIFF, 300 DPI, 2480×3508 px, LZW<br><br>Arxiu per a web:<br>• WebP 80%, 794×1123 px<br><br>Arxiu per a xarxes:<br>• JPG 90%, 1080×1920 px<br><br><em style="font-size:.8rem;color:#14532d">Cada format adaptat al seu destí.</em></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="fi">
+      <h3 style="margin-bottom:1rem">🔢 Resolució correcta per a impressió</h3>
+      <div class="compare-wrap">
+        <div class="compare-bad">
+          <div class="compare-lbl">❌ Malament</div>
+          <p>Document creat a GIMP:<br>Amplada: 210 px · Alçada: 297 px · Resolució: 300 DPI<br><br><em style="font-size:.8rem;color:#9f1239">Confusió total: 210×297 px a 300 DPI s'imprimirà del mida d'una targeta de visita. A4 a 300 DPI = 2480×3508 PÍXELS.</em></p>
+        </div>
+        <div class="compare-good">
+          <div class="compare-lbl">✅ Bé</div>
+          <p>Document creat a GIMP:<br>Amplada: <strong>2480 px</strong> · Alçada: <strong>3508 px</strong> · Resolució: <strong>300 PPI</strong><br><br><em style="font-size:.8rem;color:#14532d">Quan s'imprimeix a 300 DPI, mesura exactament 210×297 mm (A4).</em></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ DRECERES TECLAT ════ -->
+<section id="dreceres" style="padding:5rem 2rem;background:white;">
+  <div class="container">
+    <div class="section-tag tag-teal fi">Productivitat</div>
+    <h2 class="fi">⌨️ Dreceres de teclat: GIMP i Inkscape</h2>
+    <p class="lead fi" style="margin-bottom:2rem">Les dreceres que separen un usuari ocasional d'un professional. Aprèn-les durant la pràctica.</p>
+    <div class="fi" style="margin-bottom:2.5rem">
+      <h3 style="margin-bottom:1rem;color:var(--accent)">🖌️ GIMP — eines i navegació</h3>
+      <div class="kbd-grid">
+        <div class="kbd-row"><span class="action">Eina de Pinzell</span><span class="keys"><kbd>P</kbd></span></div>
+        <div class="kbd-row"><span class="action">Eina de Goma d'esborrar</span><span class="keys"><kbd>Shift</kbd>+<kbd>E</kbd></span></div>
+        <div class="kbd-row"><span class="action">Eina de Gradient</span><span class="keys"><kbd>G</kbd></span></div>
+        <div class="kbd-row"><span class="action">Eina de Selecció rectangular</span><span class="keys"><kbd>R</kbd></span></div>
+        <div class="kbd-row"><span class="action">Eines intel·ligents (Scissors)</span><span class="keys"><kbd>I</kbd></span></div>
+        <div class="kbd-row"><span class="action">Eina de Transformació (escalar)</span><span class="keys"><kbd>Shift</kbd>+<kbd>T</kbd></span></div>
+        <div class="kbd-row"><span class="action">Eina de Mou</span><span class="keys"><kbd>M</kbd></span></div>
+        <div class="kbd-row"><span class="action">Eines de Text</span><span class="keys"><kbd>T</kbd></span></div>
+        <div class="kbd-row"><span class="action">Desfer / Refer</span><span class="keys"><kbd>Ctrl</kbd>+<kbd>Z</kbd> / <kbd>Ctrl</kbd>+<kbd>Y</kbd></span></div>
+        <div class="kbd-row"><span class="action">Zoom in / out</span><span class="keys"><kbd>+</kbd> / <kbd>-</kbd></span></div>
+        <div class="kbd-row"><span class="action">Ajustar a la finestra</span><span class="keys"><kbd>Shift</kbd>+<kbd>Ctrl</kbd>+<kbd>E</kbd></span></div>
+        <div class="kbd-row"><span class="action">Nova capa</span><span class="keys"><kbd>Shift</kbd>+<kbd>Ctrl</kbd>+<kbd>N</kbd></span></div>
+        <div class="kbd-row"><span class="action">Aplanar la imatge</span><span class="keys"><kbd>Imatge → Aplana</kbd></span></div>
+        <div class="kbd-row"><span class="action">Exportar com a</span><span class="keys"><kbd>Shift</kbd>+<kbd>Ctrl</kbd>+<kbd>E</kbd></span></div>
+        <div class="kbd-row"><span class="action">Desar com a (.xcf)</span><span class="keys"><kbd>Shift</kbd>+<kbd>Ctrl</kbd>+<kbd>S</kbd></span></div>
+        <div class="kbd-row"><span class="action">Mida del pinzell +/-</span><span class="keys"><kbd>[</kbd> / <kbd>]</kbd></span></div>
+      </div>
+    </div>
+    <div class="fi">
+      <h3 style="margin-bottom:1rem;color:var(--violet)">🔷 Inkscape — disseny vectorial</h3>
+      <div class="kbd-grid">
+        <div class="kbd-row"><span class="action">Selecció</span><span class="keys"><kbd>F1</kbd></span></div>
+        <div class="kbd-row"><span class="action">Eina de nodes</span><span class="keys"><kbd>F2</kbd></span></div>
+        <div class="kbd-row"><span class="action">Eina de Bézier/ploma</span><span class="keys"><kbd>B</kbd></span></div>
+        <div class="kbd-row"><span class="action">Eina de rectangle</span><span class="keys"><kbd>R</kbd></span></div>
+        <div class="kbd-row"><span class="action">Eina de text</span><span class="keys"><kbd>T</kbd></span></div>
+        <div class="kbd-row"><span class="action">Agrupar objectes</span><span class="keys"><kbd>Ctrl</kbd>+<kbd>G</kbd></span></div>
+        <div class="kbd-row"><span class="action">Desagrupar</span><span class="keys"><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>G</kbd></span></div>
+        <div class="kbd-row"><span class="action">Duplicar</span><span class="keys"><kbd>Ctrl</kbd>+<kbd>D</kbd></span></div>
+        <div class="kbd-row"><span class="action">Exportar PNG (selecció)</span><span class="keys"><kbd>Shift</kbd>+<kbd>Ctrl</kbd>+<kbd>E</kbd></span></div>
+        <div class="kbd-row"><span class="action">Alinear i distribuir</span><span class="keys"><kbd>Shift</kbd>+<kbd>Ctrl</kbd>+<kbd>A</kbd></span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ VÍDEOS ════ -->
+<section id="videos" style="padding:5rem 2rem;background:var(--cream);">
+  <div class="container">
+    <div class="section-tag tag-violet fi">Recursos audiovisuals</div>
+    <h2 class="fi">▶️ Vídeos per a les parts difícils</h2>
+    <p class="lead fi" style="margin-bottom:2rem">Les funcions de GIMP i Inkscape s'entenen molt millor en vídeo que llegint-les.</p>
+    <div class="grid g2 fi">
+      <div>
+        <h3 style="margin-bottom:.75rem;color:var(--accent)">🖌️ GIMP</h3>
+        <a class="video-card" href="https://www.gimp.org/tutorials/" target="_blank" rel="noopener">
+          <div class="video-thumb">▶</div>
+          <div><div class="v-title">Tutorials oficials GIMP.org</div><div class="v-desc">Tutorials pas a pas de la fundació GIMP. Cobreixen màscares, retallades i ajustos de color.</div><span class="v-tag">Oficial · GIMP.org</span></div>
+        </a>
+        <a class="video-card" href="https://www.youtube.com/@GIMPtutorialschannel" target="_blank" rel="noopener">
+          <div class="video-thumb">▶</div>
+          <div><div class="v-title">GIMP Tutorials — YouTube</div><div class="v-desc">Canal amb vídeos específics de màscares de capa, efectes de text i composicions fotogràfiques.</div><span class="v-tag">YouTube · Tutorial</span></div>
+        </a>
+        <a class="video-card" href="https://docs.gimp.org/en/gimp-tool-foreground-select.html" target="_blank" rel="noopener">
+          <div class="video-thumb">▶</div>
+          <div><div class="v-title">Documentació Foreground Select</div><div class="v-desc">Guia oficial de l'eina de selecció de primer pla. La clau per retallar retrats de forma precisa.</div><span class="v-tag">Oficial · docs.gimp.org</span></div>
+        </a>
+      </div>
+      <div>
+        <h3 style="margin-bottom:.75rem;color:var(--violet)">🔷 Inkscape i formats</h3>
+        <a class="video-card" href="https://inkscape.org/learn/tutorials/" target="_blank" rel="noopener">
+          <div class="video-thumb" style="background:var(--violet)">▶</div>
+          <div><div class="v-title">Tutorials oficials Inkscape.org</div><div class="v-desc">Tutorials integrats a la pròpia aplicació. Des de zero fins a Bézier avançat.</div><span class="v-tag">Oficial · Inkscape.org</span></div>
+        </a>
+        <a class="video-card" href="https://www.youtube.com/watch?v=rWj1A3-0TYY" target="_blank" rel="noopener">
+          <div class="video-thumb" style="background:var(--violet)">▶</div>
+          <div><div class="v-title">Inkscape per a principiants — YouTube</div><div class="v-desc">Introducció completa: formes, text, paths, exportació PNG. Tot el necessari per a la Fase 4.</div><span class="v-tag">YouTube · Tutorial</span></div>
+        </a>
+        <a class="video-card" href="https://helpx.adobe.com/acrobat/using/pdf-x-pdf-a-pdf.html" target="_blank" rel="noopener">
+          <div class="video-thumb" style="background:var(--cobalt)">▶</div>
+          <div><div class="v-title">Guia de formats d'imatge (comprensió conceptual)</div><div class="v-desc">Diferència entre TIFF, JPG, PNG, WebP i per quin s'usa cada un. Fonamental per a la Fase 6.</div><span class="v-tag">Web · Referència tècnica</span></div>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ RÚBRICA ════ -->
+<section id="rubrica" style="padding:5rem 2rem;background:white;">
+  <div class="container">
+    <div class="section-tag tag-cobalt fi">Avaluació</div>
+    <h2 class="fi">📊 Rúbrica de correcció detallada — RA5</h2>
+    <p class="lead fi" style="margin-bottom:1rem">Llegeix-la <strong>abans</strong> de lliurar. La versió anterior al document era simplificada; aquesta és la definitiva amb pesos.</p>
+    <div class="rubric-wrap fi">
+      <table class="rubric-table">
+        <thead><tr>
+          <th style="width:20%;text-align:left">Criteri</th><th style="width:8%">Pes</th>
+          <th class="col-ex" style="width:18%">🟢 Excel·lent (9–10)</th>
+          <th class="col-be" style="width:18%">🔵 Bé (7–8)</th>
+          <th class="col-ok" style="width:18%">🟡 Suficient (5–6)</th>
+          <th class="col-no" style="width:18%">🔴 Insuficient (0–4)</th>
+        </tr></thead>
+        <tbody>
+          <tr><td>Ús de capes i màscares</td><td style="text-align:center;font-weight:700">25%</td>
+          <td class="col-ex">Flux totalment no destructiu. Totes les capes nombrades. Màscares de gradient + màscara de retrat. Backup de l'original visible.</td>
+          <td class="col-be">Capes nombrades i màscara de retrat correcta. Flux parcialment no destructiu (1-2 ajustos directes sobre capa).</td>
+          <td class="col-ok">Màscara de capa present però sense gradient. Algunes capes sense nom. Retrat retallat amb selecció i supressió del fons.</td>
+          <td class="col-no">Una sola capa. Sense màscares. Retall destructiu. No es pot editar el projecte sense tornar a importar.</td></tr>
+          <tr><td>Qualitat del retrat i selecció</td><td style="text-align:center;font-weight:700">20%</td>
+          <td class="col-ex">Vores netes amb feathering 2-3px. Rim light aplicat en mode Screen. Skin softening amb pinzell sobre màscara.</td>
+          <td class="col-be">Selecció amb eines intel·ligents, vores netes. Feathering aplicat. Sense rim light ni skin softening.</td>
+          <td class="col-ok">Selecció acceptable però amb vores irregulars o sense feathering. No hi ha efectes de llum.</td>
+          <td class="col-no">Selecció rectangular o magnètica bàsica amb vores dures visibles. Fons no eliminat completament.</td></tr>
+          <tr><td>Integració Inkscape + composició</td><td style="text-align:center;font-weight:700">20%</td>
+          <td class="col-ex">Logo i elements vectorials originals creats a Inkscape, exportats a 300 DPI i integrats correctament a GIMP. Elements geomètrics decoratius presents.</td>
+          <td class="col-be">Logo d'Inkscape integrat. Exportació a 300 DPI correcta. Sense elements geomètrics decoratius.</td>
+          <td class="col-ok">Logo importat però creat a mà a GIMP (raster, no vector) o resolució d'exportació incorrecta.</td>
+          <td class="col-no">Sense cap element d'Inkscape. Tot creat a GIMP com a raster.</td></tr>
+          <tr><td>Tipografia i text</td><td style="text-align:center;font-weight:700">15%</td>
+          <td class="col-ex">Títol amb efecte glow, jerarquia tipogràfica clara (títol / subtítol / cos). Text llegible (contrast suficient). Barra corporativa inferior present.</td>
+          <td class="col-be">Jerarquia de text present. Glow absent però text llegible. Barra corporativa present.</td>
+          <td class="col-ok">Text present però sense jerarquia clara o contrast insuficient sobre el fons.</td>
+          <td class="col-no">Text absent o il·legible per contrast insuficient.</td></tr>
+          <tr><td>Exportació multipropòsit</td><td style="text-align:center;font-weight:700">20%</td>
+          <td class="col-ex">.xcf + TIFF 300 DPI + JPG/WebP web + JPG Stories 1080×1920 + SVG Inkscape + taula comparativa documentada.</td>
+          <td class="col-be">4 dels 5 formats correctes. Taula comparativa present.</td>
+          <td class="col-ok">3 formats (xcf + JPG web + un altre). Sense taula comparativa.</td>
+          <td class="col-no">Només JPG o PNG. Sense .xcf. Sense documentació de formats.</td></tr>
+          <tr class="rubric-total"><td colspan="2">TOTAL</td><td colspan="4" style="text-align:center">100% · Nota sobre 10</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ════ AUTOAVALUACIÓ ════ -->
+<section id="quiz" class="quiz-section">
+  <div class="container">
+    <div class="section-tag fi" style="color:var(--violet);display:flex;align-items:center;gap:.5rem"><span style="display:block;width:20px;height:2px;background:var(--violet)"></span>Autoavaluació</div>
+    <h2 class="fi">🧠 Test ràpid: saps el contingut del RA5?</h2>
+    <p class="lead fi" style="margin-bottom:2rem">5 preguntes sobre imatge digital, formats i edició. Sense nota — és per a tu!</p>
+
+    <div class="quiz-card fi" id="q1">
+      <div class="quiz-q">1. Un fotògraf et passa una imatge de 800×600 px per usar-la en un cartell A4 d'impressió a 300 DPI (que requereix 2480×3508 px). Pots ampliar-la amb GIMP i usar-la?</div>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="checkQ('q1',this,false)">A) Sí, GIMP té algoritmes d'escala de gran qualitat que no perden resolució</button>
+        <button class="quiz-opt" onclick="checkQ('q1',this,true)">B) No. Escalar de 800 a 2480 px (×3) farà la imatge pixelada. Cal buscar una foto d'alta resolució (mínim 2000 px d'amplada)</button>
+        <button class="quiz-opt" onclick="checkQ('q1',this,false)">C) Sí, si s'augmenta la resolució a 300 DPI a GIMP, la qualitat millora</button>
+        <button class="quiz-opt" onclick="checkQ('q1',this,false)">D) Depèn: si el cartell s'imprimirà a 150 DPI en comptes de 300, sí que és vàlid</button>
+      </div>
+      <div class="quiz-feedback" id="q1-fb"></div>
+    </div>
+
+    <div class="quiz-card fi" id="q2">
+      <div class="quiz-q">2. Treballes en un cartell a GIMP amb 15 capes. Has de lliurar el projecte a un company perquè l'acabi. Quin format uses per desar-lo i per quin motiu?</div>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="checkQ('q2',this,false)">A) JPG, perquè és el format més compatible</button>
+        <button class="quiz-opt" onclick="checkQ('q2',this,false)">B) PNG, perquè conserva transparències</button>
+        <button class="quiz-opt" onclick="checkQ('q2',this,true)">C) .XCF (format natiu de GIMP), perquè és l'únic que conserva totes les capes, màscares i configuració del projecte editables</button>
+        <button class="quiz-opt" onclick="checkQ('q2',this,false)">D) TIFF, perquè és el format professional d'alta qualitat</button>
+      </div>
+      <div class="quiz-feedback" id="q2-fb"></div>
+    </div>
+
+    <div class="quiz-card fi" id="q3">
+      <div class="quiz-q">3. Quin és el mode de color adequat per a un cartell destinat a ser imprès en una impremta professional, i per quin motiu?</div>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="checkQ('q3',this,false)">A) RGB, perquè totes les pantalles usen RGB i és el mode estàndard</button>
+        <button class="quiz-opt" onclick="checkQ('q3',this,true)">B) CMYK (cian, magenta, groc, negre), perquè les impremtes usen tintes CMYK. Un arxiu RGB pot donar colors imprecisos en sortir de la impremta</button>
+        <button class="quiz-opt" onclick="checkQ('q3',this,false)">C) Escala de grisos, perquè les impremtes no poden reproduir colors RGB</button>
+        <button class="quiz-opt" onclick="checkQ('q3',this,false)">D) RGB i CMYK són equivalents; qualsevol dels dos funciona igual a la impremta</button>
+      </div>
+      <div class="quiz-feedback" id="q3-fb"></div>
+    </div>
+
+    <div class="quiz-card fi" id="q4">
+      <div class="quiz-q">4. Quin és l'avantatge principal d'un logo creat amb Inkscape (SVG, vectorial) respecte a un logo creat directament a GIMP (raster)?</div>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="checkQ('q4',this,false)">A) Els logos vectorials pesen menys en bytes que els rasteritzats</button>
+        <button class="quiz-opt" onclick="checkQ('q4',this,true)">B) El logo vectorial pot escalar-se a qualsevol mida (des d'una targeta de visita fins a una lona de 10 metres) sense perdre qualitat, perquè es defineix per fórmules matemàtiques i no per píxels</button>
+        <button class="quiz-opt" onclick="checkQ('q4',this,false)">C) Els logos vectorials suporten transparència, però els rasteritzats no</button>
+        <button class="quiz-opt" onclick="checkQ('q4',this,false)">D) Els logos vectorials es poden editar a GIMP però els rasteritzats no</button>
+      </div>
+      <div class="quiz-feedback" id="q4-fb"></div>
+    </div>
+
+    <div class="quiz-card fi" id="q5">
+      <div class="quiz-q">5. Vols publicar el cartell al web. Tens dos arxius: cartell.jpg (85%, 320 KB) i cartell.webp (80%, 180 KB). Quin uses i per quin motiu?</div>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="checkQ('q5',this,false)">A) JPG, perquè és més compatible amb tots els navegadors i sistemes</button>
+        <button class="quiz-opt" onclick="checkQ('q5',this,true)">B) WebP quan el navegador el suporta (tots els moderns sí), perquè ofereix qualitat similar amb un 40% menys de pes, millorant la velocitat de càrrega. Pots oferir JPG com a fallback per a navegadors antics</button>
+        <button class="quiz-opt" onclick="checkQ('q5',this,false)">C) JPG, perquè WebP és propietari de Google i pot tenir problemes legals</button>
+        <button class="quiz-opt" onclick="checkQ('q5',this,false)">D) Són equivalents; el que importa és la resolució, no el format</button>
+      </div>
+      <div class="quiz-feedback" id="q5-fb"></div>
+    </div>
+
+    <div id="quiz-result" style="display:none;text-align:center;margin-top:1.5rem;padding:1.5rem;background:white;border-radius:var(--radius);border:1px solid var(--border)">
+      <div class="quiz-score" id="quiz-score-txt"></div>
+      <p id="quiz-score-msg" style="color:var(--muted);font-size:.95rem"></p>
+    </div>
+  </div>
+</section>
+
+<!-- ════ FEYNMAN ════ -->
+<section id="feynman" style="padding:4rem 2rem;background:white;">
+  <div class="container fi">
+    <div class="feynman">
+      <h3>🧠 Mètode Feynman — RA5</h3>
+      <p style="margin-top:.5rem">Explica-ho de forma senzilla i hauràs demostrat que ho entens. Prova amb aquests:</p>
+      <div class="feyn-prompts">
+        <div class="feyn-card"><p>"Explica per quin motiu escalar una imatge de 800px a 2500px fa que surti pixelada, com si li expliquessis a un amic que acaba de comprar la seva primera càmera."</p></div>
+        <div class="feyn-card"><p>"Explica per quin motiu un logo vectorial (SVG/Inkscape) és millor que un logo en JPG per a un negoci que imprimirà cartells de tots els tamanys."</p></div>
+        <div class="feyn-card"><p>"Explica la diferència entre 'Desar' (.xcf) i 'Exportar' (JPG/PNG) a GIMP, posant un exemple de quan l'error de confondre-les pot causar un problema real."</p></div>
+        <div class="feyn-card"><p>"Explica per quin motiu WebP és millor que JPG per a imatges web, però per quin motiu continuem veient molts JPG als webs actuals."</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ RECURSOS ════ -->
+<section id="recursos" style="padding:5rem 2rem;background:var(--cream);">
+  <div class="container">
+    <div class="section-tag tag-violet fi">Bibliografia</div>
+    <h2 class="fi">📚 Recursos externs recomanats</h2>
+    <p class="lead fi" style="margin-bottom:2rem">Fonts oficials i curades per al RA5.</p>
+    <div class="fi">
+      <a class="resource-link" href="https://www.gimp.org/tutorials/" target="_blank" rel="noopener">
+        <span class="resource-icon">🖌️</span>
+        <div><div class="r-title">Tutorials oficials de GIMP</div><div class="r-desc">Col·lecció de tutorials oficials per a totes les funcions de GIMP. Inclou màscares, composicions, retocs i eines de selecció. La primera referència per a qualsevol dubte de la pràctica.</div><span class="r-tag">Oficial · GIMP.org</span></div>
+      </a>
+      <a class="resource-link" href="https://docs.gimp.org/en/" target="_blank" rel="noopener">
+        <span class="resource-icon">📘</span>
+        <div><div class="r-title">Documentació oficial GIMP (manual complet)</div><div class="r-desc">Manual complet en línia de GIMP. Cobreix cada eina, cada menú i cada opció. Indispensable per entendre les opcions avançades de màscares i modes de fusió.</div><span class="r-tag">Oficial · docs.gimp.org</span></div>
+      </a>
+      <a class="resource-link" href="https://inkscape.org/learn/tutorials/" target="_blank" rel="noopener">
+        <span class="resource-icon">🔷</span>
+        <div><div class="r-title">Tutorials oficials d'Inkscape</div><div class="r-desc">Tutorials integrats a l'aplicació i en línia. Des de bàsic (formes, text) fins a avançat (Bézier, patterns, exportació). Essencial per a la Fase 4 de la pràctica.</div><span class="r-tag">Oficial · Inkscape.org</span></div>
+      </a>
+      <a class="resource-link" href="https://www.unsplash.com" target="_blank" rel="noopener">
+        <span class="resource-icon">📷</span>
+        <div><div class="r-title">Unsplash — Fotografies CC0 d'alta resolució</div><div class="r-desc">Font gratuïta de fotografies d'alta qualitat (fins a 6000+ px) amb llicència CC0. Ideal per a les fotos de la Fase 1 de la pràctica. Tot és gratuït, sense atribució requerida.</div><span class="r-tag">Gratuït · CC0 · Alta resolució</span></div>
+      </a>
+      <a class="resource-link" href="https://www.w3schools.com/css/css3_images.asp" target="_blank" rel="noopener">
+        <span class="resource-icon">🌐</span>
+        <div><div class="r-title">Guia de formats d'imatge per a web (W3Schools)</div><div class="r-desc">Explicació pràctica de quan usar JPG, PNG, WebP, SVG i GIF per a web. Inclou comparatives de qualitat/pes. Útil per a la Fase 6 i per entendre les diferències de format.</div><span class="r-tag">Web · W3Schools</span></div>
+      </a>
+    </div>
+  </div>
+</section>
+
+
 <footer>
   <p><strong>RA5 — Manipulació d'Imatges Digitals · SMX · Ofimàtica</strong></p>
   <p style="margin-top:.4rem">Píxels · Formats · GIMP · Inkscape · Krita · darktable · Capes · Màscares · Color</p>
@@ -1075,6 +1625,44 @@
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
   }, { threshold: 0.07, rootMargin: '0px 0px -30px 0px' });
   document.querySelectorAll('.fi').forEach(el => io.observe(el));
+
+  window.addEventListener('scroll', () => {
+    const pct = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+    const bar = document.getElementById('progress-bar');
+    if (bar) bar.style.width = Math.min(pct, 100) + '%';
+  });
+
+  document.querySelectorAll('.check-list input[type=checkbox]').forEach(cb => {
+    cb.addEventListener('change', () => cb.closest('li').classList.toggle('checked', cb.checked));
+  });
+
+    const qFB = {
+    q1:{ok:"Correcte! Escalar x3 en raster genera pixels interpolats (borrosos). GIMP no crea informacio nova. Per a impressio a 300 DPI cal una foto d'origen d'alta resolucio (minim 2000px d'amplada).",ko:"Incorrecte. Augmentar la resolucio DPI a GIMP no crea nous pixels: simplement canvia com s'interpreten quan s'imprimeix. Per a 2480x3508px, la foto d'origen ha de ser d'alta resolucio."},
+    q2:{ok:"Correcte! .XCF es el format natiu de GIMP. Conserva totes les capes, mascares, canals i historial. Cap altre format ho fa. JPG aplana i perd qualitat; PNG aplana; TIFF pot conservar capes pero no es el format natiu.",ko:"Incorrecte. JPG aplana totes les capes i perd qualitat. PNG aplana i no conserva les mascares GIMP. TIFF pot conservar algunes capes pero no es el format natiu. Usa .XCF per a projectes editables."},
+    q3:{ok:"Correcte! Les impremtes professionals treballen en CMYK (tintes cian, magenta, groc i negre). Un arxiu RGB pot tenir colors que no es poden reproduir exactament en CMYK, especialment els blaus brillants.",ko:"Incorrecte. Les impremtes de qualitat usen tintes CMYK. Enviar un arxiu RGB pot resultar en colors lleugerament incorrectes. Per a impressio professional, converteix a CMYK o informa la impremta del perfil ICC."},
+    q4:{ok:"Correcte! Els grafics vectorials es defineixen amb formules matematiques (coordenades, corbes Bezier), no amb pixels. Aixo permet escalar-los infinitament sense perdua de qualitat.",ko:"Incorrecte. L'avantatge clau no es el pes ni la transparencia (els PNG raster tambe suporten transparencia). La diferencia fonamental es l'escalabilitat infinita sense perdua de qualitat."},
+    q5:{ok:"Correcte! WebP es un format modern obert que ofereix compressio superior a JPG. Tots els navegadors moderns (Chrome, Firefox, Safari 14+, Edge) el suporten. Pots usar l'element picture per servir WebP als moderns i JPG als antics.",ko:"Incorrecte. WebP no es propietari en el sentit restrictiu: es un format obert que tots els navegadors moderns suporten. Usa l'element HTML picture per servir WebP als moderns i JPG als antics simultaneament."}
+  };
+  let answered = {}, score = 0;
+  function checkQ(qid, btn, ok) {
+    if (answered[qid]) return;
+    answered[qid] = true;
+    const card = document.getElementById(qid);
+    const fb = document.getElementById(qid+'-fb');
+    card.querySelectorAll('.quiz-opt').forEach(o => o.classList.add('disabled'));
+    btn.classList.add(ok ? 'correct' : 'wrong');
+    if (ok) { score++; fb.textContent = qFB[qid].ok; fb.className = 'quiz-feedback show ok'; }
+    else { fb.textContent = qFB[qid].ko; fb.className = 'quiz-feedback show ko';
+      card.querySelectorAll('.quiz-opt').forEach(o => { if (o.getAttribute('onclick') && o.getAttribute('onclick').includes(',true)')) o.classList.add('correct'); });
+    }
+    if (Object.keys(answered).length === 5) {
+      const r = document.getElementById('quiz-result');
+      document.getElementById('quiz-score-txt').textContent = score + ' / 5';
+      document.getElementById('quiz-score-msg').textContent = score===5 ? '🎉 Perfecte! Domini total del RA5.' : score>=3 ? '👍 Molt bé! Repassa les fallades.' : '📖 Cal repassar teoria de formats i GIMP.';
+      r.style.display = 'block';
+      r.scrollIntoView({behavior:'smooth',block:'nearest'});
+    }
+  }
 </script>
 </body>
 </html>

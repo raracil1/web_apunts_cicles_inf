@@ -303,17 +303,163 @@
     padding: 2.5rem 2rem; font-size: 0.85rem;
   }
   footer strong { color: white; }
+
+  /* ── PROGRESS BAR ── */
+  #progress-bar{position:fixed;top:0;left:0;height:3px;z-index:200;background:linear-gradient(90deg,var(--pres),var(--teal),var(--gyellow));width:0%;transition:width .1s linear;}
+  .time-badge{display:inline-flex;align-items:center;gap:.35rem;font-size:0.72rem;font-weight:600;color:var(--muted);background:var(--cream);border:1px solid var(--border);padding:.2rem .65rem;border-radius:100px;margin-left:.4rem;}
+  .dif-badge{display:inline-flex;align-items:center;gap:.4rem;font-size:0.72rem;font-weight:700;padding:.2rem .65rem;border-radius:100px;margin-bottom:.5rem;}
+  .dif-basic{background:rgba(13,148,136,0.12);color:#134e4a;} .dif-mid{background:rgba(217,119,6,0.18);color:#78350f;} .dif-advanced{background:rgba(124,58,237,0.12);color:#4c1d95;}
+  .compare-wrap{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1rem 0;}
+  @media(max-width:600px){.compare-wrap{grid-template-columns:1fr;}}
+  .compare-bad{background:rgba(234,67,53,0.05);border:1px solid rgba(234,67,53,0.25);border-radius:var(--radius);padding:1.1rem 1.25rem;}
+  .compare-good{background:rgba(13,148,136,0.06);border:1px solid rgba(13,148,136,0.28);border-radius:var(--radius);padding:1.1rem 1.25rem;}
+  .compare-lbl{font-size:0.68rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.5rem;display:flex;align-items:center;gap:.4rem;}
+  .compare-bad .compare-lbl{color:#7f1d1d;} .compare-good .compare-lbl{color:#134e4a;}
+  .compare-bad p,.compare-good p{font-size:0.87rem;color:var(--ink);line-height:1.6;}
+  .kbd-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:.6rem;}
+  .kbd-row{display:flex;align-items:center;justify-content:space-between;padding:.55rem .9rem;background:var(--card);border:1px solid var(--border);border-radius:8px;font-size:0.86rem;}
+  .kbd-row .action{color:var(--muted);font-size:0.82rem;} .kbd-row .keys{display:flex;gap:.3rem;flex-shrink:0;}
+  kbd{display:inline-block;background:var(--cream);border:1px solid var(--border);border-bottom:2px solid #bbb;border-radius:5px;padding:.1rem .45rem;font-size:0.75rem;font-family:monospace;color:var(--ink);}
+  .trap-card{background:#fdf4ff;border:1px solid rgba(124,58,237,0.2);border-left:4px solid var(--pres);border-radius:var(--radius);padding:1.25rem 1.5rem;margin-bottom:.85rem;}
+  .trap-card .trap-head{display:flex;align-items:center;gap:.65rem;margin-bottom:.4rem;}
+  .trap-card h4{color:#4c1d95;margin:0;font-size:0.95rem;} .trap-card p{color:var(--muted);font-size:0.88rem;}
+  .trap-card .fix{margin-top:.5rem;padding:.5rem .85rem;border-radius:6px;background:rgba(13,148,136,0.09);font-size:0.85rem;color:#134e4a;}
+  .real-world{border-left:3px solid var(--amber);background:#fffdf0;border-radius:0 var(--radius) var(--radius) 0;padding:.75rem 1.1rem;margin:.65rem 0;font-size:0.88rem;}
+  .real-world .rw-lbl{font-size:0.67rem;font-weight:800;letter-spacing:.1em;color:#78350f;margin-bottom:.2rem;text-transform:uppercase;}
+  .real-world p{color:var(--ink);}
+  .delivery-check{background:#f0fdf4;border:1px solid rgba(13,148,136,0.3);border-radius:var(--radius);padding:1.5rem;margin-top:1.25rem;}
+  .delivery-check h4{color:#134e4a;margin-bottom:.75rem;}
+  .check-list{list-style:none;display:flex;flex-direction:column;gap:.45rem;}
+  .check-list li{display:flex;align-items:flex-start;gap:.65rem;font-size:0.88rem;color:var(--ink);line-height:1.5;}
+  .check-list li input[type=checkbox]{width:17px;height:17px;accent-color:var(--pres);cursor:pointer;flex-shrink:0;margin-top:2px;}
+  .check-list li.checked{text-decoration:line-through;color:var(--muted);}
+  .rubric-wrap{overflow-x:auto;margin-top:1.5rem;}
+  .rubric-table{width:100%;border-collapse:collapse;font-size:0.83rem;}
+  .rubric-table th,.rubric-table td{padding:.7rem .85rem;border:1px solid var(--border);vertical-align:top;}
+  .rubric-table th{background:var(--navy);color:white;font-family:'Syne',sans-serif;font-weight:700;font-size:0.78rem;text-align:center;}
+  .rubric-table th:first-child{border-radius:8px 0 0 0;} .rubric-table th:last-child{border-radius:0 8px 0 0;}
+  .rubric-table td:first-child{font-weight:600;color:var(--navy);background:#fafafa;min-width:150px;}
+  .rubric-table .col-ex{background:rgba(13,148,136,0.06);} .rubric-table .col-be{background:rgba(66,133,244,0.05);}
+  .rubric-table .col-ok{background:rgba(251,188,4,0.06);} .rubric-table .col-no{background:rgba(234,67,53,0.05);}
+  .rubric-table .col-ex td,.rubric-table .col-be td,.rubric-table .col-ok td,.rubric-table .col-no td{color:var(--muted);font-size:0.8rem;}
+  .rubric-total{background:var(--navy) !important;} .rubric-total td{color:white !important;font-weight:700 !important;background:transparent !important;}
+  .resource-link{display:flex;align-items:center;gap:1rem;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1rem 1.25rem;text-decoration:none;color:inherit;transition:all .2s;margin-bottom:.6rem;}
+  .resource-link:hover{border-color:var(--pres);transform:translateX(4px);}
+  .resource-icon{font-size:1.6rem;flex-shrink:0;}
+  .resource-link .r-title{font-weight:700;font-size:0.92rem;color:var(--navy);}
+  .resource-link .r-desc{font-size:0.8rem;color:var(--muted);}
+  .resource-link .r-tag{font-size:0.68rem;font-weight:700;background:rgba(124,58,237,0.1);color:var(--pres);padding:.1rem .5rem;border-radius:100px;margin-top:.2rem;display:inline-block;}
+  .video-card{display:flex;align-items:center;gap:1rem;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1rem 1.25rem;text-decoration:none;color:inherit;transition:all .2s;margin-bottom:.6rem;}
+  .video-card:hover{border-color:var(--pres);transform:translateX(4px);}
+  .video-thumb{width:48px;height:48px;background:var(--pres);border-radius:10px;display:grid;place-items:center;font-size:1.3rem;flex-shrink:0;}
+  .video-card .v-title{font-weight:700;font-size:0.9rem;color:var(--navy);}
+  .video-card .v-desc{font-size:0.78rem;color:var(--muted);}
+  .video-card .v-tag{font-size:0.68rem;font-weight:700;background:rgba(124,58,237,0.1);color:var(--pres);padding:.1rem .5rem;border-radius:100px;margin-top:.2rem;display:inline-block;}
+  .quiz-section{padding:4rem 2rem;background:#faf5ff;}
+  .quiz-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;margin-bottom:1rem;}
+  .quiz-q{font-weight:600;font-size:0.95rem;color:var(--navy);margin-bottom:.85rem;}
+  .quiz-options{display:flex;flex-direction:column;gap:.5rem;}
+  .quiz-opt{display:flex;align-items:center;gap:.75rem;padding:.65rem 1rem;border-radius:8px;cursor:pointer;border:1.5px solid var(--border);background:white;font-size:0.88rem;color:var(--ink);transition:all .2s;text-align:left;}
+  .quiz-opt:hover:not(.disabled){border-color:var(--pres);background:rgba(124,58,237,0.04);}
+  .quiz-opt.correct{border-color:var(--teal);background:rgba(13,148,136,0.1);color:#134e4a;font-weight:600;}
+  .quiz-opt.wrong{border-color:var(--gred);background:rgba(234,67,53,0.08);color:#7f1d1d;}
+  .quiz-opt.disabled{cursor:not-allowed;pointer-events:none;}
+  .quiz-feedback{margin-top:.65rem;font-size:0.83rem;padding:.5rem .85rem;border-radius:6px;display:none;}
+  .quiz-feedback.show{display:block;} .quiz-feedback.ok{background:rgba(13,148,136,0.1);color:#134e4a;} .quiz-feedback.ko{background:rgba(234,67,53,0.08);color:#7f1d1d;}
+  .quiz-score{font-family:'Syne',sans-serif;font-weight:800;font-size:1.5rem;color:var(--navy);margin:1rem 0 .3rem;}
+  .feynman{background:linear-gradient(135deg,var(--navy),var(--pres-d));color:white;border-radius:var(--radius);padding:2rem 2.25rem;margin:2rem 0;}
+  .feynman h3{color:white;} .feynman p{color:rgba(255,255,255,.8);font-size:0.92rem;}
+  .feynman .feyn-prompts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.75rem;margin-top:1.25rem;}
+  .feyn-card{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:10px;padding:1rem;}
+  .feyn-card p{color:rgba(255,255,255,.9);font-size:0.85rem;font-style:italic;}
+
+
+  /* ── NAV extra link type ── */
+  .nav-pills a.extra { color: var(--cobalt, #1a6fb5); }
+  .nav-pills a.extra:hover { color: var(--cobalt, #1a6fb5); border-color: var(--cobalt, #1a6fb5); }
+
+  /* ── Fix contrast: real-world box ── */
+  .real-world {
+    border-left: 3px solid #d97706 !important;
+    background: #fffbeb !important;
+    border-radius: 0 var(--radius) var(--radius) 0;
+    padding: .85rem 1.1rem;
+    margin: .75rem 0;
+    font-size: 0.88rem;
+  }
+  .real-world .rw-lbl {
+    font-size: 0.67rem; font-weight: 800; letter-spacing: .1em;
+    color: #92400e !important; margin-bottom: .3rem; text-transform: uppercase;
+  }
+  .real-world p { color: #1c1917 !important; line-height: 1.6; }
+
+  /* ── Fix contrast: time-badge ── */
+  .time-badge {
+    display: inline-flex; align-items: center; gap: .35rem;
+    font-size: 0.72rem; font-weight: 600;
+    color: #44403c !important;
+    background: #f5f5f4 !important;
+    border: 1px solid #d6d3d1 !important;
+    padding: .2rem .65rem; border-radius: 100px; margin-left: .4rem;
+  }
+
+  /* ── Fix contrast: dif badges ── */
+  .dif-basic    { background: #dcfce7 !important; color: #14532d !important; }
+  .dif-mid      { background: #fef3c7 !important; color: #78350f !important; }
+  .dif-advanced { background: #fee2e2 !important; color: #7f1d1d !important; }
+
+  /* ── Fix contrast: trap-card ── */
+  .trap-card { background: #fff7ed !important; }
+  .trap-card p { color: #44403c !important; }
+  .trap-card .fix { color: #14532d !important; background: #dcfce7 !important; }
+
+  /* ── Fix contrast: compare boxes ── */
+  .compare-bad p, .compare-good p { color: #1c1917 !important; }
+  .compare-bad  { background: #fff1f2 !important; }
+  .compare-good { background: #f0fdf4 !important; }
+
+  /* ── Fix contrast: delivery-check ── */
+  .delivery-check { background: #f0fdf4 !important; }
+  .delivery-check h4 { color: #14532d !important; }
+  .check-list li { color: #1c1917 !important; }
+  .check-list li.checked { color: #78716c !important; }
+
+  /* ── Fix contrast: quiz ── */
+  .quiz-opt { color: #1c1917 !important; }
+  .quiz-feedback.ok { color: #14532d !important; background: #dcfce7 !important; }
+  .quiz-feedback.ko { color: #7f1d1d !important; background: #fee2e2 !important; }
+
+  /* ── Fix contrast: kbd rows ── */
+  .kbd-row .action { color: #44403c !important; }
+
+  /* ── Fix contrast: resource/video cards ── */
+  .resource-link .r-desc, .video-card .v-desc { color: #44403c !important; }
+
+  /* ── Nav pills scrollable on wide screens ── */
+  .nav-pills { flex-wrap: wrap; gap: .2rem; }
+
 </style>
 </head>
 <body>
 
+<!-- PROGRESS BAR -->
+<div id="progress-bar"></div>
+
+
 <!-- ══════════════════ NAV ══════════════════ -->
 <nav>
-  <div class="nav-logo">SMX · <span>RA7</span> · Ofimàtica</div>
+  <div class="nav-logo">SMX · <span>RA7</span> · Presentacions</div>
   <ul class="nav-pills">
+    <li><a href="#intro">Introducció</a></li>
     <li><a href="#teoria" class="pres">Teoria</a></li>
     <li><a href="#practiques" class="prac">Pràctica</a></li>
     <li><a href="#preguntes" class="pregs">Preguntes</a></li>
+    <li><a href="#trampes" class="extra">Trampes</a></li>
+    <li><a href="#exemples" class="extra">Bé/Malament</a></li>
+    <li><a href="#dreceres" class="extra">Dreceres</a></li>
+    <li><a href="#rubrica" class="extra">Rúbrica</a></li>
+    <li><a href="#quiz" class="extra">Test</a></li>
+    <li><a href="#recursos" class="extra">Recursos</a></li>
   </ul>
 </nav>
 
@@ -784,6 +930,16 @@
         </div>
       </div>
       <div class="practice-body">
+        <div style="display:flex;gap:.5rem;align-items:center;margin-bottom:1.25rem;flex-wrap:wrap">
+          <span class="dif-badge dif-advanced">🔴 Dificultat molt alta</span>
+          <span class="time-badge">⏱ Disseny i contingut: ~120 min</span>
+          <span class="time-badge">⏱ Multimèdia i animació: ~90 min</span>
+          <span class="time-badge">⏱ Exportació i assaig oral: ~60 min</span>
+        </div>
+        <div class="real-world" style="margin-bottom:1.25rem">
+          <div class="rw-lbl">🏢 Connexió amb el món real</div>
+          <p>Les presentacions multimèdia professionals s'usen diàriament en empreses IT per a demostracions de producte, formació interna, defensa de projectes davant clients i reunions d'equip. Un tècnic SMX que sap crear una presentació clara, coherent i visualment atractiva té un avantatge clar sobre qui simplement domina la part tècnica. Les habilitats de comunicació visual (jerarquia, contrast, regla 6×6) i oral (claredat, contacte visual, gestió del temps) són cada vegada més valorades en els processos de selecció.</p>
+        </div>
         <div class="grid g2">
           <div>
             <h4>📋 Descripció general</h4>
@@ -846,6 +1002,27 @@
             <div class="callout cl-pres" style="margin-top:1rem;padding:.85rem 1rem">
               <span class="callout-icon">📦</span>
               <p><strong>Entrega:</strong> carpeta comprimida (.zip) amb els tres formats exportats (.pptx, .pdf, .odp), les imatges originals usades (carpeta /img), i un document de text breu (màx. 1 pàgina) justificant les decisions de disseny i les eines escollides.</p>
+            </div>
+
+            <div class="delivery-check" style="margin-top:1.5rem">
+              <h4>☑️ Checklist de lliurament — Pràctica RA7</h4>
+              <ul class="check-list">
+                <li><input type="checkbox"><span>Presentació de 15–20 diapositives amb l'estructura obligatòria completa (portada, índex, context, problema, vídeo, solucions, infografia, conclusió, fonts, preguntes).</span></li>
+                <li><input type="checkbox"><span>Paleta de colors de 3–5 colors consistent en tota la presentació. Ràtio de contrast WCAG AA verificat.</span></li>
+                <li><input type="checkbox"><span>Màxim dues famílies tipogràfiques de Google Fonts. Jerarquia tipogràfica visible (títol, subtítol, cos).</span></li>
+                <li><input type="checkbox"><span>Regla 6×6 aplicada: cap diapositiva amb més de 6 punts ni 6 paraules per punt.</span></li>
+                <li><input type="checkbox"><span>Mínim 5 imatges de fonts CC0 (Unsplash/Pexels) optimitzades amb GIMP (compressió i mida correctes).</span></li>
+                <li><input type="checkbox"><span>Vídeo de 30–60" incrustrat o vinculat a la diapositiva 9.</span></li>
+                <li><input type="checkbox"><span>Infografia creada amb Canva o Inkscape i inserida com a imatge a la diapositiva 14.</span></li>
+                <li><input type="checkbox"><span>Animacions d'entrada coherents i uniformes. Màxim 2 tipus de transicions a tota la presentació.</span></li>
+                <li><input type="checkbox"><span>Notes del presentador a totes les diapositives (mínim 2 frases per diapositiva).</span></li>
+                <li><input type="checkbox"><span>Índex de la diapositiva 2 amb hiperenllaços interns a cada secció.</span></li>
+                <li><input type="checkbox"><span>Exportació en 3 formats: .pptx, .pdf i .odp.</span></li>
+                <li><input type="checkbox"><span>Carpeta /img amb totes les imatges originals usades.</span></li>
+                <li><input type="checkbox"><span>Document de justificació (màx. 1 pàgina): eines escollides, decisions de disseny, llicències de les imatges.</span></li>
+                <li><input type="checkbox"><span>Presentació oral preparada: 10 min de presentació + 5 min de preguntes.</span></li>
+                <li><input type="checkbox"><span>Tot lliurat en ZIP a Moodle.</span></li>
+              </ul>
             </div>
           </div>
         </div>
@@ -1008,6 +1185,377 @@
   </div>
 </section>
 
+<!-- ════ TRAMPES ════ -->
+<section id="trampes" style="padding:5rem 2rem;background:#fdf4ff;">
+  <div class="container">
+    <div class="section-tag tag-pres fi">Errors habituals</div>
+    <h2 class="fi">⚠️ Trampes freqüents del RA7</h2>
+    <p class="lead fi" style="margin-bottom:2rem">Errors que fan quasi tots els alumnes la primera vegada amb presentacions multimèdia. Llegeix-los ara.</p>
+    <div class="fi">
+      <div class="trap-card">
+        <div class="trap-head">⚠️ <h4>La diapositiva com a teleprompter: posar tot el text que es dirà</h4></div>
+        <p>L'error més comú i visible. El presentador posa 10 frases completes per diapositiva i llavors les llegeix de la pantalla. L'audiència llegeix més ràpid que el presentador parla, deixa d'escoltar, i la presentació perd tot l'impacte. El professor veu immediatament que no s'ha aplicat la regla 6×6.</p>
+        <div class="fix">✅ Solució: Regla 6×6: màxim 6 punts per diapositiva, màxim 6 paraules per punt. El text a la diapositiva és el titular, no el guió. Tot el que vols dir va a les notes del presentador. L'audiència mira la imatge; tu expliques el contingut.</div>
+      </div>
+      <div class="trap-card">
+        <div class="trap-head">⚠️ <h4>Usar 5 fonts tipogràfiques i 8 colors diferents</h4></div>
+        <p>Una presentació on cada diapositiva té una font diferent, colors que canvien i estils inconsistents dona una sensació d'amateur i dificulta la lectura. L'ull humà necessita consistència per processar informació ràpidament: si cada diapositiva té un estil diferent, el cervell usa energia en processar el disseny en lloc del contingut.</p>
+        <div class="fix">✅ Solució: Defineix una paleta de 3–5 colors al principi (1 color principal, 1 d'acció, 1 neutre, opcionals accent i fons). Tria 2 fonts màxim (1 per a títols, 1 per a cos). Aplica-les de forma consistent a TOTES les diapositives. Crea una diapositiva "mestra" i copia'l.</div>
+      </div>
+      <div class="trap-card">
+        <div class="trap-head">⚠️ <h4>Animar absolutament tot: cada paraula amb un efecte diferent</h4></div>
+        <p>Animacions excessives (cada punt entra amb una transició diferent, el títol rebota, el subtítol apareix en espiral) fan que la presentació sembli un projecte de secundària. A més, distreuen l'audiència del missatge i alenteixen el ritme de la presentació.</p>
+        <div class="fix">✅ Solució: Menys és més. Tria UNA animació d'entrada per a tot el contingut (p.ex. Aparèixer o Esvaïment) i usa-la de forma consistent. Reserva animacions especials per a 1–2 moments clau de la presentació que realment ho necessitin. Màxim 2 tipus de transicions entre diapositives.</div>
+      </div>
+      <div class="trap-card">
+        <div class="trap-head">⚠️ <h4>Usar imatges de Google Imatges sense verificar la llicència</h4></div>
+        <p>Per a una presentació corporativa o publicable, usar imatges sense llicència és una violació dels drets d'autor. En el context d'un treball acadèmic que es publicarà o presentarà davant d'una audiència, és important demostrar que s'han usat fonts lícites.</p>
+        <div class="fix">✅ Solució: Usa fonts CC0 (Unsplash, Pexels, Pixabay) per a fotografies, i Flaticon o The Noun Project (filtrant per CC) per a icones. Documenta les fonts a la diapositiva de fonts (la darrera). El professor comprovarà les fonts.</div>
+      </div>
+      <div class="trap-card">
+        <div class="trap-head">⚠️ <h4>No preparar les notes del presentador i improvisar</h4></div>
+        <p>Les notes del presentador no són opcionals: representen el 10% de la nota. Però, a més, la seva absència es nota durant la presentació oral: el presentador improvisa, perd el fil, torna enrere o passa massa temps en algunes diapositives. Una presentació de 10 minuts sense notes sol durar 6 o 15 minuts.</p>
+        <div class="fix">✅ Solució: Escriu les notes per a TOTES les diapositives (mínim 2-3 frases per diapositiva). Inclou: el missatge principal de la diapositiva, l'estadística o exemple que esmentes, i el temps aproximat que hi dediques. Assaja amb rellotge.</div>
+      </div>
+      <div class="trap-card">
+        <div class="trap-head">⚠️ <h4>Lliurar sense verificar que el vídeo incrustrat funciona en el .pptx</h4></div>
+        <p>Un vídeo que es reprodueix perfectament a l'ordinador on s'ha creat la presentació pot no funcionar a l'ordinador del professor si el fitxer de vídeo no s'ha incrustrat correctament (o si s'ha vinculat i el camí és relatiu). En el dia de la presentació oral, és un problema molt habitual.</p>
+        <div class="fix">✅ Solució: A LibreOffice Impress: Inserir → Vídeo i So → i assegura't de marcar "Incrusta el fitxer" (no vincular). Per a Google Slides: insereix com a URL de YouTube (més estable). Comprova el .pptx en un altre ordinador o màquina virtual abans de lliurar.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ BÉ VS MALAMENT ════ -->
+<section id="exemples" style="padding:5rem 2rem;background:var(--cream);">
+  <div class="container">
+    <div class="section-tag tag-cobalt fi">Exemples visuals</div>
+    <h2 class="fi">Bé vs. Malament — disseny de presentacions</h2>
+    <p class="lead fi" style="margin-bottom:2rem">Exemples concrets de decisions de disseny al RA7. Veure l'error ajuda molt més que llegir que no s'ha de fer.</p>
+
+    <div class="fi" style="margin-bottom:2.5rem">
+      <h3 style="margin-bottom:1rem">📝 Quantitat de text per diapositiva</h3>
+      <div class="compare-wrap">
+        <div class="compare-bad">
+          <div class="compare-lbl">❌ Malament — diapositiva sobrecarregada</div>
+          <p><strong>Els ciberatacs a PIMES</strong><br><br>Cada any, el 60% de les petites i mitjanes empreses que pateixen un atac de ransomware han de tancar en els 6 mesos posteriors a l'atac. Els principals vectors d'entrada són: phishing per email (78%), vulnerabilitats sense pedaç (15%), credencials compromeses (5%), atacs físics (2%). Les empreses que no inverteixen en formació del personal...<em style="font-size:.78rem">(...continua per 8 línies més)</em><br><br><em style="font-size:.8rem;color:#7f1d1d">L'audiència llegeix el text i deixa d'escoltar el presentador. La diapositiva és un teleprompter.</em></p>
+        </div>
+        <div class="compare-good">
+          <div class="compare-lbl">✅ Bé — regla 6×6 aplicada</div>
+          <p><strong>Els ciberatacs a PIMES</strong><br><br>• 60% tanquen als 6 mesos<br>• Principal vector: phishing (78%)<br>• Risc: credencials compromeses<br><br><em style="font-size:.8rem;color:#134e4a">3 punts, màxim 5 paraules cadascun. El presentador explica el context amb la veu. La diapositiva reforça el missatge clau.</em></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="fi" style="margin-bottom:2.5rem">
+      <h3 style="margin-bottom:1rem">🎨 Coherència de colors i tipografia</h3>
+      <div class="compare-wrap">
+        <div class="compare-bad">
+          <div class="compare-lbl">❌ Malament</div>
+          <p>Diapositiva 1: fons blanc, títol en Comic Sans blau elèctric.<br>Diapositiva 2: fons groc, títol en Times New Roman negre.<br>Diapositiva 3: fons vermell, títol en Impact verd fluorescent.<br>Diapositiva 4: fons fotos, text sense ombra il·legible.<br><br><em style="font-size:.8rem;color:#7f1d1d">Cada diapositiva sembla d'una presentació diferent. L'ull no sap on mirar.</em></p>
+        </div>
+        <div class="compare-good">
+          <div class="compare-lbl">✅ Bé</div>
+          <p>Paleta corporativa definida al principi:<br>• Principal: #1a1f4e (navy)<br>• Accent: #7c3aed (violeta)<br>• Neutre: #f4f2ed (crema)<br>Font títols: Syne Bold. Font cos: Inter Regular.<br><br>Aplicada de forma idèntica a les 17 diapositives.<br><br><em style="font-size:.8rem;color:#134e4a">Coherència visual total. Professional i llegible.</em></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="fi" style="margin-bottom:2.5rem">
+      <h3 style="margin-bottom:1rem">🖼️ Ús d'imatges i composició</h3>
+      <div class="compare-wrap">
+        <div class="compare-bad">
+          <div class="compare-lbl">❌ Malament</div>
+          <p>Imatge descarregada de Google Imatges, 300×200px, pixelada en pantalla gran. Posicionada al centre de la diapositiva amb text al damunt sense ombra. Clipart de Word2000 al costat.<br><br><em style="font-size:.8rem;color:#7f1d1d">Imatge il·legal (drets d'autor), baixa resolució i composició caòtica.</em></p>
+        </div>
+        <div class="compare-good">
+          <div class="compare-lbl">✅ Bé</div>
+          <p>Foto d'Unsplash (CC0), 1920×1080px. Optimitzada amb GIMP (comprimida a 300 KB). Posada de fons amb opacitat al 40%. Text en primer pla, font blanca amb ombra lleugera, alt contrast.<br><br><em style="font-size:.8rem;color:#134e4a">Legal, nítida, i el text és perfectament llegible.</em></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="fi">
+      <h3 style="margin-bottom:1rem">🎤 Notes del presentador</h3>
+      <div class="compare-wrap">
+        <div class="compare-bad">
+          <div class="compare-lbl">❌ Malament</div>
+          <p><strong>Notes de la diapositiva 3:</strong><br>"parlar del ciberatac"<br><br><em style="font-size:.8rem;color:#7f1d1d">No serveix de res. Durant la presentació el presentador improvisarà i probablement s'oblidarà de la dada clau o anirà fora de temps.</em></p>
+        </div>
+        <div class="compare-good">
+          <div class="compare-lbl">✅ Bé</div>
+          <p><strong>Notes de la diapositiva 3:</strong><br>"Esmentar l'estudi de l'INCIBE 2023 (font a la diapo 16). Explicar el cas real de l'hospital de Lleida del 2022. Fer pregunta retòrica: 'Algú de vosaltres ha rebut un email de phishing?' Temps: 90 segons."<br><br><em style="font-size:.8rem;color:#134e4a">Guia completa. Dades, exemple, interacció i temps.</em></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ DRECERES ════ -->
+<section id="dreceres" style="padding:5rem 2rem;background:white;">
+  <div class="container">
+    <div class="section-tag tag-teal fi">Productivitat</div>
+    <h2 class="fi">⌨️ Dreceres de teclat: LibreOffice Impress i Google Slides</h2>
+    <p class="lead fi" style="margin-bottom:2rem">Aprèn les dreceres per crear diapositives i presentar de forma professional.</p>
+    <div class="fi" style="margin-bottom:2.5rem">
+      <h3 style="margin-bottom:1rem;color:var(--pres)">📊 LibreOffice Impress — creació</h3>
+      <div class="kbd-grid">
+        <div class="kbd-row"><span class="action">Nova diapositiva</span><span class="keys"><kbd>Ctrl</kbd>+<kbd>M</kbd></span></div>
+        <div class="kbd-row"><span class="action">Duplicar diapositiva actual</span><span class="keys"><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>M</kbd></span></div>
+        <div class="kbd-row"><span class="action">Eliminar diapositiva</span><span class="keys"><kbd>Del</kbd></span></div>
+        <div class="kbd-row"><span class="action">Mode de presentació (des d'inici)</span><span class="keys"><kbd>F5</kbd></span></div>
+        <div class="kbd-row"><span class="action">Mode de presentació (des de diapo actual)</span><span class="keys"><kbd>Shift</kbd>+<kbd>F5</kbd></span></div>
+        <div class="kbd-row"><span class="action">Vista de classificador de diapositives</span><span class="keys"><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>5</kbd></span></div>
+        <div class="kbd-row"><span class="action">Vista de notes</span><span class="keys"><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>6</kbd></span></div>
+        <div class="kbd-row"><span class="action">Inserir imatge</span><span class="keys"><kbd>Ctrl</kbd>+<kbd>I</kbd></span></div>
+        <div class="kbd-row"><span class="action">Agrupar objectes</span><span class="keys"><kbd>Ctrl</kbd>+<kbd>G</kbd></span></div>
+        <div class="kbd-row"><span class="action">Exportar com a PDF</span><span class="keys"><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>S</kbd></span></div>
+        <div class="kbd-row"><span class="action">Desar com a .pptx</span><span class="keys"><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>S</kbd> → format</span></div>
+        <div class="kbd-row"><span class="action">Cercar i substituir</span><span class="keys"><kbd>Ctrl</kbd>+<kbd>H</kbd></span></div>
+      </div>
+    </div>
+    <div class="fi" style="margin-bottom:2.5rem">
+      <h3 style="margin-bottom:1rem;color:var(--gblue)">🎤 Durant la presentació oral</h3>
+      <div class="kbd-grid">
+        <div class="kbd-row"><span class="action">Diapositiva següent</span><span class="keys"><kbd>→</kbd> / <kbd>Espai</kbd> / <kbd>N</kbd></span></div>
+        <div class="kbd-row"><span class="action">Diapositiva anterior</span><span class="keys"><kbd>←</kbd> / <kbd>Retrocés</kbd> / <kbd>P</kbd></span></div>
+        <div class="kbd-row"><span class="action">Anar a diapositiva N</span><span class="keys"><kbd>N</kbd> + <kbd>Enter</kbd></span></div>
+        <div class="kbd-row"><span class="action">Pantalla negra (pausa)</span><span class="keys"><kbd>B</kbd></span></div>
+        <div class="kbd-row"><span class="action">Pantalla blanca</span><span class="keys"><kbd>W</kbd></span></div>
+        <div class="kbd-row"><span class="action">Mode llapis (anotar)</span><span class="keys"><kbd>Ctrl</kbd>+<kbd>P</kbd></span></div>
+        <div class="kbd-row"><span class="action">Sortir de la presentació</span><span class="keys"><kbd>Esc</kbd></span></div>
+        <div class="kbd-row"><span class="action">Mode presentador (notes)</span><span class="keys"><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd></span></div>
+      </div>
+    </div>
+    <div class="callout cl-pres fi">
+      <span class="callout-icon">💡</span>
+      <div><strong>Consell professional per a la presentació oral</strong>
+        <p style="margin-top:.3rem">La tecla <kbd>B</kbd> (pantalla negra) és la més valuosa durant una presentació: quan vols que l'audiència et miri a tu i no a la pantalla (una pregunta, un debat, una reflexió), prem <kbd>B</kbd>. La pantalla es torna negra i tota l'atenció va a tu. Prem qualsevol tecla per continuar. Els presentadors professionals la usen constantment.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ VÍDEOS ════ -->
+<section id="videos" style="padding:5rem 2rem;background:var(--cream);">
+  <div class="container">
+    <div class="section-tag tag-pres fi">Recursos audiovisuals</div>
+    <h2 class="fi">▶️ Vídeos i recursos per a les parts difícils</h2>
+    <p class="lead fi" style="margin-bottom:2rem">Des de principis de disseny fins a eines específiques del RA7.</p>
+    <div class="grid g2 fi">
+      <div>
+        <h3 style="margin-bottom:.75rem;color:var(--pres)">🎨 Disseny i composició</h3>
+        <a class="video-card" href="https://www.youtube.com/watch?v=a5KYlHNKQB8" target="_blank" rel="noopener">
+          <div class="video-thumb">▶</div>
+          <div><div class="v-title">Design Principles — YouTube (Flux Academy)</div><div class="v-desc">Jerarquia visual, contrast, proximitat i alineació explicats de forma visual. Directament aplicable a les diapositives del RA7.</div><span class="v-tag">YouTube · Flux Academy</span></div>
+        </a>
+        <a class="video-card" href="https://www.canva.com/learn/design-elements-principles/" target="_blank" rel="noopener">
+          <div class="video-thumb" style="background:var(--gblue)">▶</div>
+          <div><div class="v-title">Elements de disseny — Canva Learn</div><div class="v-desc">Guia visual de Canva sobre color, tipografia, espaiat i composició. Molt pràctica per crear la plantilla de la presentació.</div><span class="v-tag">Web · Canva Learn</span></div>
+        </a>
+        <a class="video-card" href="https://fonts.google.com/" target="_blank" rel="noopener">
+          <div class="video-thumb" style="background:var(--gyellow)">▶</div>
+          <div><div class="v-title">Google Fonts — Catàleg complet</div><div class="v-desc">Les fonts gratuïtes de Google. Pots previsualitzar combinacions de fonts (títol + cos) i descarregar-les per a LibreOffice o Google Slides.</div><span class="v-tag">Eina · Google Fonts</span></div>
+        </a>
+      </div>
+      <div>
+        <h3 style="margin-bottom:.75rem;color:var(--teal)">🛠️ Eines del RA7</h3>
+        <a class="video-card" href="https://www.libreoffice.org/get-help/documentation/" target="_blank" rel="noopener">
+          <div class="video-thumb" style="background:var(--teal)">▶</div>
+          <div><div class="v-title">Documentació oficial LibreOffice Impress</div><div class="v-desc">Guia completa d'Impress: animacions, transicions, incrustació de vídeo, exportació i notes. Primera referència per a dubtes de la pràctica.</div><span class="v-tag">Oficial · LibreOffice.org</span></div>
+        </a>
+        <a class="video-card" href="https://support.google.com/docs/topic/9054927" target="_blank" rel="noopener">
+          <div class="video-thumb" style="background:var(--gblue)">▶</div>
+          <div><div class="v-title">Ajuda oficial Google Slides</div><div class="v-desc">Com inserir vídeo, crear animacions, usar plantilles i exportar en múltiples formats. Per als alumnes que trien Google Slides.</div><span class="v-tag">Oficial · Google</span></div>
+        </a>
+        <a class="video-card" href="https://www.canva.com/designschool/" target="_blank" rel="noopener">
+          <div class="video-thumb" style="background:var(--pres)">▶</div>
+          <div><div class="v-title">Canva Design School</div><div class="v-desc">Cursos gratuïts de disseny: infografies, presentacions, color i tipografia. Útil per crear la infografia de la diapositiva 14.</div><span class="v-tag">Gratuït · Canva</span></div>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ RÚBRICA ════ -->
+<section id="rubrica" style="padding:5rem 2rem;background:white;">
+  <div class="container">
+    <div class="section-tag tag-cobalt fi">Avaluació</div>
+    <h2 class="fi">📊 Rúbrica de correcció detallada — RA7</h2>
+    <p class="lead fi" style="margin-bottom:1rem">La rúbrica del document original tenia pesos percentuals. Aquí s'amplia amb els nivells de qualitat per criteri.</p>
+    <div class="rubric-wrap fi">
+      <table class="rubric-table">
+        <thead><tr>
+          <th style="width:22%;text-align:left">Criteri</th><th style="width:6%">Pes</th>
+          <th class="col-ex" style="width:18%">🟢 Excel·lent (9–10)</th>
+          <th class="col-be" style="width:18%">🔵 Bé (7–8)</th>
+          <th class="col-ok" style="width:18%">🟡 Suficient (5–6)</th>
+          <th class="col-no" style="width:18%">🔴 Insuficient (0–4)</th>
+        </tr></thead>
+        <tbody>
+          <tr><td>Principis de disseny (jerarquia, color, tipografia, composició)</td><td style="text-align:center;font-weight:700">25%</td>
+          <td class="col-ex">Paleta de 3–5 colors consistent. Màx. 2 fonts de Google Fonts. Jerarquia visual clara. Regla 6×6 aplicada a totes les diapositives. Ràtio WCAG AA verificat.</td>
+          <td class="col-be">Paleta consistent però 3 fonts. O regla 6×6 incompleta (1-2 diapositives sobrecarregades). Jerarquia present.</td>
+          <td class="col-ok">Colors inconsistents entre diapositives. Jerarquia tipogràfica absent. Algunes diapositives amb massa text.</td>
+          <td class="col-no">Cada diapositiva amb estils completament diferents. Comic Sans o fonts inadequades. Text ple en lloc de punts. Sense paleta de colors.</td></tr>
+          <tr><td>Qualitat i coherència visual global</td><td style="text-align:center;font-weight:700">20%</td>
+          <td class="col-ex">Plantilla coherent a totes les diapositives. Imatges d'alta resolució CC0, optimitzades amb GIMP. Alineació i espaiat perfectes. Sensació professional.</td>
+          <td class="col-be">Coherència visual general. 1-2 diapositives desalineades. Alguna imatge de baixa resolució.</td>
+          <td class="col-ok">Plantilla aplicada parcialment. Imatges de mida inconsistent. Espaiat irregular.</td>
+          <td class="col-no">Sense plantilla. Imatges pixelades o sense llicència lliure. Aspecte completament amateur.</td></tr>
+          <tr><td>Elements multimèdia (vídeo, imatges, infografia)</td><td style="text-align:center;font-weight:700">20%</td>
+          <td class="col-ex">Vídeo 30-60" incrustrat i funcional. Infografia original (Canva/Inkscape). Mínim 5 imatges CC0 optimitzades. Fonts documentades.</td>
+          <td class="col-be">Vídeo present. Infografia present però no original (plantilla sense modificar). Imatges correctes.</td>
+          <td class="col-ok">Vídeo vinculat (no incrustrat, pot fallar). Sense infografia pròpia. Menys de 5 imatges.</td>
+          <td class="col-no">Sense vídeo. Sense infografia. Imatges inadequades o sense llicència.</td></tr>
+          <tr><td>Animacions i transicions</td><td style="text-align:center;font-weight:700">10%</td>
+          <td class="col-ex">Màx. 2 tipus de transicions consistents. Animació d'entrada única i discreta (Aparèixer/Esvaïment). Cap animació distractora. Temps d'animació natural.</td>
+          <td class="col-be">Animacions coherents però 3 tipus de transicions. O alguna animació una mica excessiva.</td>
+          <td class="col-ok">Animacions presents però incoherents (5+ tipus). Algunes distreus.</td>
+          <td class="col-no">Cap animació (la presentació sembla estàtica) o excés total (cada element amb efecte diferent).</td></tr>
+          <tr><td>Notes del presentador</td><td style="text-align:center;font-weight:700">10%</td>
+          <td class="col-ex">Notes per a totes les diapositives (mínim 3 frases). Inclouen dades, exemples, preguntes retòriques i temps estimat per diapositiva.</td>
+          <td class="col-be">Notes per a totes les diapositives, mínim 1-2 frases. Sense dades o temps estimat.</td>
+          <td class="col-ok">Notes per a la meitat de les diapositives. Molt genèriques.</td>
+          <td class="col-no">Notes absents o de tipus "parlar del tema" sense cap utilitat real.</td></tr>
+          <tr><td>Presentació oral</td><td style="text-align:center;font-weight:700">10%</td>
+          <td class="col-ex">10 min ±1 min. Contacte visual constant. Discurs fluïd, veu clara. Respon 2+ preguntes amb seguretat. No llegeix les diapositives.</td>
+          <td class="col-be">Temps correcte. Contacte visual intermitent. 1-2 moments de lectura de la diapo. Respon les preguntes.</td>
+          <td class="col-ok">Temps incorrecte (&lt;7 o &gt;13 min). Llegeix les diapositives sovint. Dificultat per respondre preguntes.</td>
+          <td class="col-no">Presentació no realitzada. O totalment llegida. O molt fora de temps (&lt;5 min).</td></tr>
+          <tr><td>Exportació i justificació</td><td style="text-align:center;font-weight:700">5%</td>
+          <td class="col-ex">3 formats correctes (.pptx, .pdf, .odp). Document de justificació amb decisions de disseny, eines triades i llicències de les imatges.</td>
+          <td class="col-be">3 formats. Justificació present però sense llicències.</td>
+          <td class="col-ok">2 formats. Justificació molt breu.</td>
+          <td class="col-no">Menys de 2 formats. Sense justificació.</td></tr>
+          <tr class="rubric-total"><td colspan="2">TOTAL</td><td colspan="4" style="text-align:center">100% · Nota sobre 10</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout cl-pres fi" style="margin-top:1.5rem">
+      <span class="callout-icon">💡</span>
+      <div><p><strong>On es perd més nota:</strong> El 25% de disseny és el criteri amb més impacte. Una presentació amb 3 fonts, 8 colors i la regla 6×6 ignorada perd fins a 2,5 punts sobre 10 en un sol criteri. Investeix temps en definir la paleta i la plantilla des del principi, i aplica-la de forma consistent fins a l'última diapositiva.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ QUIZ ════ -->
+<section class="quiz-section" id="quiz">
+  <div class="container">
+    <div class="section-tag fi" style="color:var(--pres);display:flex;align-items:center;gap:.5rem"><span style="display:block;width:20px;height:2px;background:var(--pres)"></span>Autoavaluació</div>
+    <h2 class="fi">🧠 Test ràpid: saps el contingut del RA7?</h2>
+    <p class="lead fi" style="margin-bottom:2rem">5 preguntes sobre disseny, eines i presentació. Sense nota — és per a tu!</p>
+
+    <div class="quiz-card fi" id="q1">
+      <div class="quiz-q">1. Estàs dissenyant la presentació per al RA7. Una de les teves diapositives té 8 punts, cadascun amb una frase completa de 12 paraules. Quina és la millor acció?</div>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="checkQ('q1',this,false)">A) Reduir la mida de la lletra a 10pt per fer-ho cabre tot</button>
+        <button class="quiz-opt" onclick="checkQ('q1',this,true)">B) Aplicar la regla 6×6: reduir a màxim 6 punts amb màxim 6 paraules cadascun. El contingut que sobra va a les notes del presentador</button>
+        <button class="quiz-opt" onclick="checkQ('q1',this,false)">C) Dividir el contingut en 2 diapositives, mantenint les frases completes</button>
+        <button class="quiz-opt" onclick="checkQ('q1',this,false)">D) Usar un quadre de text de dues columnes per omplir menys espai visualment</button>
+      </div>
+      <div class="quiz-feedback" id="q1-fb"></div>
+    </div>
+
+    <div class="quiz-card fi" id="q2">
+      <div class="quiz-q">2. Vols que el vídeo de la diapositiva 9 funcioni quan el professor obri la presentació al seu ordinador. Quina és la opció més segura per a LibreOffice Impress?</div>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="checkQ('q2',this,false)">A) Vincular el vídeo amb una ruta absoluta (C:/Users/jo/Videos/video.mp4)</button>
+        <button class="quiz-opt" onclick="checkQ('q2',this,false)">B) Vincular el vídeo amb una ruta relativa (video.mp4 a la mateixa carpeta)</button>
+        <button class="quiz-opt" onclick="checkQ('q2',this,true)">C) Incrustar el vídeo al fitxer (Inserir → Vídeo i So → marcar "Incrusta el fitxer"). Verificar que funciona en un altre ordinador abans de lliurar</button>
+        <button class="quiz-opt" onclick="checkQ('q2',this,false)">D) Inserir el vídeo com a objecte OLE; és el format estàndard de presentacions</button>
+      </div>
+      <div class="quiz-feedback" id="q2-fb"></div>
+    </div>
+
+    <div class="quiz-card fi" id="q3">
+      <div class="quiz-q">3. Durant la presentació oral, vols que l'audiència et miri a tu mentre fas una pregunta retòrica. Quin és el gest professional adequat?</div>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="checkQ('q3',this,false)">A) Apagar el projector per eliminar distraccions</button>
+        <button class="quiz-opt" onclick="checkQ('q3',this,true)">B) Prémer la tecla B (pantalla negra) per fosc la pantalla. Tota l'atenció va al presentador. Continuar prement qualsevol tecla</button>
+        <button class="quiz-opt" onclick="checkQ('q3',this,false)">C) Anar a una diapositiva en blanc afegida expressament al mig de la presentació</button>
+        <button class="quiz-opt" onclick="checkQ('q3',this,false)">D) Girar-se d'esquena a la pantalla per forçar el contacte visual amb l'audiència</button>
+      </div>
+      <div class="quiz-feedback" id="q3-fb"></div>
+    </div>
+
+    <div class="quiz-card fi" id="q4">
+      <div class="quiz-q">4. Vols usar una foto d'internet per a la diapositiva de "context". La trobes a Google Imatges i és perfecta. Quina és l'acció correcta?</div>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="checkQ('q4',this,false)">A) Usar-la directament: en una presentació acadèmica no cal llicència</button>
+        <button class="quiz-opt" onclick="checkQ('q4',this,false)">B) Usar-la si la font és un diari o lloc web reconegut (implica llicència)</button>
+        <button class="quiz-opt" onclick="checkQ('q4',this,true)">C) Buscar una imatge equivalent a Unsplash o Pexels (CC0), que no requereix atribució i és lliure per a qualsevol ús, inclòs el comercial</button>
+        <button class="quiz-opt" onclick="checkQ('q4',this,false)">D) Usar-la si l'enganxes al PowerPoint i no la puges a internet</button>
+      </div>
+      <div class="quiz-feedback" id="q4-fb"></div>
+    </div>
+
+    <div class="quiz-card fi" id="q5">
+      <div class="quiz-q">5. Quin és l'avantatge principal de LibreOffice Impress respecte a Google Slides per a aquest treball, i quin el de Google Slides respecte a Impress?</div>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="checkQ('q5',this,false)">A) Impress és millor en tot; Google Slides no té cap avantatge per a ús professional</button>
+        <button class="quiz-opt" onclick="checkQ('q5',this,false)">B) Google Slides és millor en tot; Impress és obsolet i incompatible amb .pptx</button>
+        <button class="quiz-opt" onclick="checkQ('q5',this,true)">C) Impress: funciona offline, control total dels formats d'exportació (.pptx, .pdf, .odp), privacitat. Google Slides: col·laboració en temps real, accessible des de qualsevol dispositiu, incrustació de vídeos de YouTube molt senzilla</button>
+        <button class="quiz-opt" onclick="checkQ('q5',this,false)">D) Impress: millors animacions. Google Slides: millors plantilles. En la resta són idèntics</button>
+      </div>
+      <div class="quiz-feedback" id="q5-fb"></div>
+    </div>
+
+    <div id="quiz-result" style="display:none;text-align:center;margin-top:1.5rem;padding:1.5rem;background:white;border-radius:var(--radius);border:1px solid var(--border)">
+      <div class="quiz-score" id="quiz-score-txt"></div>
+      <p id="quiz-score-msg" style="color:var(--muted);font-size:.95rem"></p>
+    </div>
+  </div>
+</section>
+
+<!-- ════ FEYNMAN ════ -->
+<section id="feynman" style="padding:4rem 2rem;background:white;">
+  <div class="container fi">
+    <div class="feynman">
+      <h3>🧠 Mètode Feynman — RA7</h3>
+      <p style="margin-top:.5rem">Explica-ho de forma simple per demostrar que ho has entès realment:</p>
+      <div class="feyn-prompts">
+        <div class="feyn-card"><p>"Explica la regla 6×6 a un company que acaba de crear una diapositiva amb 10 punts de text llarg. Per quin motiu menys text és una millor presentació?"</p></div>
+        <div class="feyn-card"><p>"Explica per quin motiu una presentació amb 5 fonts tipogràfiques i 8 colors sembla menys professional que una amb 2 fonts i 3 colors, tot i tenir el mateix contingut."</p></div>
+        <div class="feyn-card"><p>"Explica per quin motiu incrustar un vídeo (en lloc de vincular-lo) és la opció recomanada per a lliurar la presentació, usant un escenari real on el vincle podria fallar."</p></div>
+        <div class="feyn-card"><p>"Explica quan triaries LibreOffice Impress i quan Google Slides per a un projecte professional real, posant un exemple concret per a cada cas."</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ RECURSOS ════ -->
+<section id="recursos" style="padding:5rem 2rem;background:var(--cream);">
+  <div class="container">
+    <div class="section-tag tag-pres fi">Bibliografia</div>
+    <h2 class="fi">📚 Recursos externs recomanats — RA7</h2>
+    <p class="lead fi" style="margin-bottom:2rem">Fonts oficials i curades per al disseny de presentacions multimèdia.</p>
+    <div class="fi">
+      <a class="resource-link" href="https://www.libreoffice.org/get-help/documentation/" target="_blank" rel="noopener">
+        <span class="resource-icon">📊</span>
+        <div><div class="r-title">Documentació oficial LibreOffice Impress</div><div class="r-desc">Guia completa d'Impress: animacions, transicions, incrustació de vídeo, exportació a múltiples formats i ús de notes del presentador. Primera referència per a dubtes tècnics de la pràctica.</div><span class="r-tag">Oficial · LibreOffice.org</span></div>
+      </a>
+      <a class="resource-link" href="https://fonts.google.com/" target="_blank" rel="noopener">
+        <span class="resource-icon">🔤</span>
+        <div><div class="r-title">Google Fonts — Fonts gratuïtes per a presentacions</div><div class="r-desc">Catàleg de fonts obertes i gratuïtes. Pots previsualitzar combinacions de fonts (títol + cos) i descarregar-les per a LibreOffice. Usa el filtre "pairing" per trobar combinacions recomanades.</div><span class="r-tag">Gratuït · Google Fonts</span></div>
+      </a>
+      <a class="resource-link" href="https://www.unsplash.com" target="_blank" rel="noopener">
+        <span class="resource-icon">📷</span>
+        <div><div class="r-title">Unsplash — Fotografies CC0 d'alta resolució</div><div class="r-desc">Fonts d'imatge gratuïta i sense atribució requerida. Alta resolució (1920px+). Cerques per paraula clau en anglès. Ideal per a les imatges de totes les diapositives de la pràctica.</div><span class="r-tag">Gratuït · CC0</span></div>
+      </a>
+      <a class="resource-link" href="https://www.canva.com/learn/design-elements-principles/" target="_blank" rel="noopener">
+        <span class="resource-icon">🎨</span>
+        <div><div class="r-title">Guia de principis de disseny — Canva Learn</div><div class="r-desc">Explicació visual de jerarquia, contrast, proximitat, alineació i repetició. Directament aplicable a les decisions de disseny de la presentació. Molt accessible per a principiants.</div><span class="r-tag">Web · Canva Learn</span></div>
+      </a>
+      <a class="resource-link" href="https://webaim.org/resources/contrastchecker/" target="_blank" rel="noopener">
+        <span class="resource-icon">✅</span>
+        <div><div class="r-title">WebAIM Contrast Checker — Verificador WCAG</div><div class="r-desc">Introdueix el color del text i el del fons i verifica si compleix WCAG AA (ràtio 4.5:1 per a text normal). Obligatori per garantir llegibilitat i accessibilitat de la presentació.</div><span class="r-tag">Eina web · WebAIM · Gratuït</span></div>
+      </a>
+    </div>
+  </div>
+</section>
+
+
 <footer>
   <p><strong>RA7 — Presentacions Multimèdia · SMX · Ofimàtica</strong></p>
   <p style="margin-top:.4rem">Disseny · Composició · Eines FOSS · Multimèdia · Animació · Presentació oral</p>
@@ -1019,6 +1567,41 @@
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
   }, { threshold: 0.07, rootMargin: '0px 0px -30px 0px' });
   document.querySelectorAll('.fi').forEach(el => io.observe(el));
+  window.addEventListener('scroll', () => {
+    const pct = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+    const bar = document.getElementById('progress-bar');
+    if (bar) bar.style.width = Math.min(pct,100) + '%';
+  });
+  document.querySelectorAll('.check-list input[type=checkbox]').forEach(cb => {
+    cb.addEventListener('change', () => cb.closest('li').classList.toggle('checked', cb.checked));
+  });
+    const qFB = {
+    q1:{ok:"Correcte! La regla 6x6 (maxim 6 punts, maxim 6 paraules) es el principi fonamental de concisio en presentacions. El contingut que sobra va a les notes del presentador, on el public no el veu pero el presentador el pot consultar.",ko:"Incorrecte. Reduir la lletra a 10pt fa el text il·legible des de les files del darrere. Dividir en 2 diapositives mantenint frases completes duplica el problema. La solucio es aplicar la regla 6x6."},
+    q2:{ok:"Correcte! Incrustar el video al fitxer es l'unica opcio garantida que funciona en qualsevol ordinador. Una ruta absoluta falla en qualsevol altre ordinador. Una ruta relativa falla si no s'envia la carpeta sencera.",ko:"Incorrecte. Una ruta absoluta falla immediatament en qualsevol altre ordinador perque la ruta no existeix. Una ruta relativa falla si el professor no te el video a la mateixa carpeta. L'unica opcio segura es incrustar el video al fitxer."},
+    q3:{ok:"Correcte! La tecla B (Black screen) es una de les mes valuoses per a presentadors professionals. Fosc la pantalla completament i tota l'atencio de l'audiencia va al presentador. S'usa per a preguntes, reflexions i moments de debat.",ko:"Incorrecte. Apagar el projector es massa dramatic i lent. Afegir una diapo en blanc es possible pero la B es molt mes elegant i rapida. La tecla B es la solucio estandard en totes les eines de presentacio."},
+    q4:{ok:"Correcte! Unsplash i Pexels ofereixen milions de fotografies en alta resolucio amb llicencia CC0 (completament lliures, sense atribucio requerida, inclus us comercial). En una presentacio academica, les imatges sense llicencia clara es un risc.",ko:"Incorrecte. En una presentacio academica o professional, les imatges sense llicencia clara exposen a problemes de drets d'autor. Unsplash i Pexels ofereixen alternatives equivalents gratuits i legals."},
+    q5:{ok:"Correcte! Impress: funciona sense internet, control total de l'exportacio (.pptx, .pdf, .odp), privacitat. Google Slides: col·laboracio simultanea molt millor, accessible sense installacio, incrustacio de YouTube nativa i estable.",ko:"Incorrecte. Ambdues eines tenen avantatges i inconvenients reals. Impress no es obsolet. Google Slides no es millor en tot. La resposta C descriu les diferencies reals que justifiquen una o altra tria."}
+  };
+  let answered = {}, score = 0;
+  function checkQ(qid, btn, ok) {
+    if (answered[qid]) return;
+    answered[qid] = true;
+    const card = document.getElementById(qid);
+    const fb = document.getElementById(qid+'-fb');
+    card.querySelectorAll('.quiz-opt').forEach(o => o.classList.add('disabled'));
+    btn.classList.add(ok ? 'correct' : 'wrong');
+    if (ok) { score++; fb.textContent = qFB[qid].ok; fb.className = 'quiz-feedback show ok'; }
+    else { fb.textContent = qFB[qid].ko; fb.className = 'quiz-feedback show ko';
+      card.querySelectorAll('.quiz-opt').forEach(o => { if (o.getAttribute('onclick') && o.getAttribute('onclick').includes(',true)')) o.classList.add('correct'); });
+    }
+    if (Object.keys(answered).length === 5) {
+      const r = document.getElementById('quiz-result');
+      document.getElementById('quiz-score-txt').textContent = score + ' / 5';
+      document.getElementById('quiz-score-msg').textContent = score===5 ? '🎉 Perfecte! Domines tots els conceptes del RA7.' : score>=3 ? '👍 Molt bé! Repassa les fallades i aplica-ho a la pràctica.' : '📖 Cal repassar principis de disseny, eines i presentació oral.';
+      r.style.display = 'block';
+      r.scrollIntoView({behavior:'smooth',block:'nearest'});
+    }
+  }
 </script>
 </body>
 </html>
